@@ -1,0 +1,18 @@
+svg {
+  border: 1px solid black;
+  /* border: 1px solid #87cefa86; */
+  /* border: 1px solid #87cefae2; */
+  /* border: 1px solid #87cefa22; */
+  /* color: #00000000; */
+  cursor: crosshair;
+}
+circle {
+  cursor: pointer;
+}
+#svgCanvas {
+  position: relative;
+}
+
+.first-circle {
+  transition: fill 0.3s ease;
+}
