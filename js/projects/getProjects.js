@@ -7,6 +7,8 @@ export const displayProjects = ($, projects) => {
 
   projects.forEach((project) => {
     const card = $(`
+       <a href="${irePlugin.plugin_url}&project=${project.id}"  class="block">
+
           <div class="border border-gray-100 shadow-md rounded-sm cursor-pointer group">
 
               <div class="w-full relative pt-[60%] overflow-hidden">
@@ -21,6 +23,8 @@ export const displayProjects = ($, projects) => {
                   <h5 class="font-bold">${project.title}</h5>
               </div>
           </div>
+         </a>
+
 `);
 
     container.append(card);

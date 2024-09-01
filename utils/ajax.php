@@ -39,9 +39,9 @@ function ire_create_project()
 
 
 
-add_action('wp_ajax_get_project', 'ire_get_project');
+add_action('wp_ajax_get_projects', 'ire_get_projects');
 
-function ire_get_project()
+function ire_get_projects()
 {
 
     global $wpdb;
@@ -68,25 +68,3 @@ function ire_get_project()
 
 
 add_action('wp_ajax_get_image_url', 'get_image_url_by_id_ajax');
-
-
-/**
- * Handle AJAX request to get image URL by attachment ID
- */
-function get_image_url_by_id_ajax()
-{
-
-
-    ire_check_nonce($_POST['nonce'], 'ire_nonce');
-
-
-
-    // Get the attachment ID from the request
-    $attachment_id = intval($_POST['attachment_id']);
-
-    $image_src = wp_get_attachment_image_src($attachment_id, 'full');
-
-
-
-    return  wp_send_json_success($image_src[0]);
-}

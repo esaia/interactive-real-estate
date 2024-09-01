@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.container {
+.container-fluid {
   padding-right: 20px;
 }
 

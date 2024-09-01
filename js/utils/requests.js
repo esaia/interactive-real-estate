@@ -3,7 +3,7 @@ export const getProjects = ($) => {
     url: irePlugin.ajax_url,
     method: "POST",
     data: {
-      action: "get_project",
+      action: "get_projects",
       nonce: irePlugin.nonce,
     },
   });

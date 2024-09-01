@@ -1,8 +1,3 @@
-<!-- <?php include_once  IRE_PLUGIN_DIR . 'templates/components/toast.php'; ?> -->
-
-
-
-
 <div class="container">
     <div class="flex w-full items-center  mt-3 justify-between">
         <h3 class="text-2xl">Add New Project</h3>
