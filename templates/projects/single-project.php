@@ -23,8 +23,8 @@ $project_image_src = wp_get_attachment_image_url($result->project_image, 90);
 
 <div class=" container-fluid">
 
-    <div class="relative   pt-[60%]  h-full canvas-container overflow-hidden">
-        <svg id="svgCanvas" class="!absolute top-0 left-0 bg-red-500/0 z-50  " viewBox="0 0 977 586">
+    <div class="relative   pt-[50%]  h-full canvas-container overflow-hidden">
+        <svg id="svgCanvas" class="!absolute top-0 left-0 z-50 " viewBox="0 0 1720 860">
 
 
         </svg>

@@ -114,7 +114,7 @@ jQuery(document).ready(function ($) {
     if (updateMode && draggedCircle) {
       // Update the position of the dragged circle and update the path
       $(draggedCircle).attr({ cx: x, cy: y });
-      updatePath();
+      // updatePath();
       return;
     }
 
@@ -143,6 +143,7 @@ jQuery(document).ready(function ($) {
       const now = Date.now();
       if (now - lastCall < delay) return;
       lastCall = now;
+
       fn(...args);
     };
   }
@@ -226,13 +227,13 @@ jQuery(document).ready(function ($) {
 
     if (firstCircle) return;
 
-    const $clickedGroup = $(event.target).parent(); // Get the group of the clicked path
+    group = $(event.target).parent(); // Get the group of the clicked path
     const $circles = $("#svgCanvas g circle");
     const $paths = $("#svgCanvas g path");
 
     if (
-      (updateMode && $clickedGroup.prop("tagName") !== "g") ||
-      (!updateMode && $clickedGroup.prop("tagName") !== "g")
+      (updateMode && group.prop("tagName") !== "g") ||
+      (!updateMode && group.prop("tagName") !== "g")
     ) {
       updateMode = false;
     } else {
@@ -240,7 +241,7 @@ jQuery(document).ready(function ($) {
     }
 
     $circles.each(function () {
-      if ($(this).parent().is($clickedGroup)) {
+      if ($(this).parent().is(group)) {
         $(this).attr("fill", updateMode ? "black" : "#00000000");
       } else {
         $(this).attr("fill", "#00000000");
@@ -249,7 +250,7 @@ jQuery(document).ready(function ($) {
 
     $paths.each(function () {
       const $parentGroup = $(this).parent();
-      if ($parentGroup.is($clickedGroup) && updateMode) {
+      if ($parentGroup.is(group) && updateMode) {
         $(this).attr("fill", "red");
         $parentGroup.appendTo($parentGroup.parent());
       } else {
@@ -257,12 +258,8 @@ jQuery(document).ready(function ($) {
       }
     });
 
-    // Optionally track the last clicked group for reference
-    lastClickedGroup = $clickedGroup;
-
     // Add event listeners to enable dragging circles in update mode
     if (updateMode) {
-      group = $clickedGroup;
       $svgCanvas.on("mousedown", onCircleMouseDown);
       $svgCanvas.on("mouseup", onCircleMouseUp);
       $svgCanvas.on("mousemove", onCircleMouseMoveWhileDragging);
@@ -369,6 +366,7 @@ jQuery(document).ready(function ($) {
       if (e.key === "j") {
         e.preventDefault();
         zoomLevel += 0.4;
+
         applyZoom(lastCursorX, lastCursorY);
       } else if (e.key === "k") {
         resetZoom();
@@ -385,6 +383,7 @@ jQuery(document).ready(function ($) {
   function applyZoom(cursorX, cursorY) {
     let $container = $(".canvas-container");
     let containerOffset = $container.offset();
+
     let containerWidth = $container.width();
     let containerHeight = $container.innerHeight();
 
@@ -397,6 +396,8 @@ jQuery(document).ready(function ($) {
       // Calculate the relative position within the container
       let relativeX = cursorX - containerOffset.left;
       let relativeY = cursorY - containerOffset.top;
+
+      console.log(relativeX, relativeY);
 
       // Calculate transform-origin based on current zoom level
       let transformOriginX = (relativeX / containerWidth) * 100;
