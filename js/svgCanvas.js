@@ -248,8 +248,10 @@ jQuery(document).ready(function ($) {
     });
 
     $paths.each(function () {
-      if ($(this).parent().is($clickedGroup) && updateMode) {
+      const $parentGroup = $(this).parent();
+      if ($parentGroup.is($clickedGroup) && updateMode) {
         $(this).attr("fill", "red");
+        $parentGroup.appendTo($parentGroup.parent());
       } else {
         $(this).attr("fill", updateMode ? "#87cefa22" : "#87cefa86");
       }
