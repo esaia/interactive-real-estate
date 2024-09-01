@@ -1,4 +1,3 @@
-import { showToast } from "../utils/helpers.js";
 import { createProject, getProjects } from "../utils/requests.js";
 import { displayProjects } from "./getProjects.js";
 
@@ -8,24 +7,29 @@ jQuery(document).ready(function ($) {
   let project_image = "";
 
   const resetForm = () => {
-    form[0].reset();
-    image.addClass("d-none");
+    setTimeout(() => {
+      form[0].reset();
+      image.addClass("hidden");
+    }, 300);
   };
 
   form.on("submit", function (event) {
     event.preventDefault();
     const title = $("#project_title").val();
 
+    if (!project_image) return;
+
     createProject($, title, project_image)
       .done((response) => {
         if (response.success) {
-          $('[aria-label="Close"]').click();
-          showToast($, "successToast", "Project added successfully");
           resetForm();
+          $(".close-modal").click();
 
           getProjects($)
             .done((response) => {
               if (response.success && response.data) {
+                console.log("runned");
+
                 displayProjects($, response.data);
               } else {
                 console.log("No projects found.");
@@ -43,8 +47,10 @@ jQuery(document).ready(function ($) {
       });
   });
 
-  $("#create-project-modal").on("hidden.bs.modal", function (e) {
-    resetForm();
+  $(document).on("click", function (e) {
+    if ($(e.target).hasClass("modal")) {
+      resetForm();
+    }
   });
 
   $("#open-media-library").on("click", function (e) {
@@ -62,7 +68,7 @@ jQuery(document).ready(function ($) {
       const selection = mediaFrame.state().get("selection").first().toJSON();
       project_image = selection;
 
-      image.removeClass("d-none");
+      image.removeClass("hidden");
 
       image.attr("src", selection.url).show();
     });

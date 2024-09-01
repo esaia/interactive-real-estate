@@ -1,4 +1,3 @@
-import { showToast } from "../utils/helpers.js";
 import { getProjects } from "../utils/requests.js";
 
 export const displayProjects = ($, projects) => {
@@ -8,17 +7,21 @@ export const displayProjects = ($, projects) => {
 
   projects.forEach((project) => {
     const card = $(`
-            <div class="col">
-                <div class="card h-100">
-                    <img src="${
-                      project.project_image ? project.project_image : ""
-                    }" class="card-img-top" alt="${project.title}">
-                    <div class="card-body">
-                        <h5 class="card-title">${project.title}</h5>
-                    </div>
-                </div>
-            </div>
-        `);
+          <div class="border border-gray-100 shadow-md rounded-sm cursor-pointer group">
+
+              <div class="w-full relative pt-[60%] overflow-hidden">
+                  <img src=" ${
+                    project.project_image ? project.project_image : ""
+                  }" class="w-full h-full absolute left-0 top-0 object-cover group-hover:scale-110 transition-all" alt="${
+      project.title
+    }">
+              </div>
+
+              <div class="p-2">
+                  <h5 class="font-bold">${project.title}</h5>
+              </div>
+          </div>
+`);
 
     container.append(card);
   });

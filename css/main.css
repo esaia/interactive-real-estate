@@ -1,11 +1,11 @@
-svg {
-  border: 1px solid black;
-  /* border: 1px solid #87cefa86; */
-  /* border: 1px solid #87cefae2; */
-  /* border: 1px solid #87cefa22; */
-  /* color: #00000000; */
-  cursor: crosshair;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container {
+  padding-right: 20px;
 }
+
 circle {
   cursor: pointer;
 }
@@ -15,4 +15,8 @@ circle {
 
 .first-circle {
   transition: fill 0.3s ease;
+}
+
+.pointer {
+  cursor: pointer;
 }
