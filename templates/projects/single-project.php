@@ -21,20 +21,21 @@ $project_image_src = wp_get_attachment_image_url($result->project_image, 90);
 ?>
 
 
-<div class="flex container-fluid">
+<div class=" container-fluid">
 
-    <div class="flex-1 relative   pt-[70%]">
-        <img class="absolute top-0 left-0  object-cover w-full h-full" src="<?php echo $project_image_src ?>" alt="">
+    <div class="relative   pt-[60%]  h-full canvas-container overflow-hidden">
+        <svg id="svgCanvas" class="!absolute top-0 left-0 bg-red-500/0 z-50  " viewBox="0 0 977 586">
 
 
-        <svg id="svgCanvas" class="!absolute top-0 left-0 w-full h-full bg-red-300/20" viewBox="0 0 1069 601">
         </svg>
-    </div>
 
+        <img class="absolute top-0 left-0  object-contain    w-full h-full" src="<?php echo $project_image_src ?>" alt="">
+    </div>
+    <!-- 
     <div class="w-56 ">
 
         <a href="<?php echo PLUGIN_URL; ?>" class="button">Return to projects list</a>
-    </div>
+    </div> -->
 
 
 </div>
