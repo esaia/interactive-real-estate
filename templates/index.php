@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
     <div class="flex w-full items-center  mt-3 justify-between">
         <h3 class="text-2xl">Add New Project</h3>
         <button type="submit" class="button" data-modal-target="create-project">Add Project</button>

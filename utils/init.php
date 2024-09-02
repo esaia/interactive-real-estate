@@ -15,8 +15,8 @@ function ire_enqueue_scripts($hook)
         return;
     }
 
-
     wp_enqueue_media();
+    wp_enqueue_style('dashicons');
     wp_enqueue_script('jquery');
     wp_enqueue_script('tailwind-css', 'https://cdn.tailwindcss.com/3.4.5', array(), null);
     wp_enqueue_style('ire-styles', plugin_dir_url(IRE_PLUGIN_FILE) . 'css/main.css');
