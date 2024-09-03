@@ -13,33 +13,8 @@ $project_title = $result->title;
 
 ?>
 
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
 
-    // if (urlParams.get('action') === 'update_project') {
-    //     const url = new URL(window.location.href);
-    //     url.searchParams.delete('action');
-    //     window.location.href = url.toString();
-    // }
 
-    jQuery(document).ready(function($) {
-        let isSidebarShrinked = false;
-        const shapeSidebar = $('#shapes-sidebar')
-        const shrinkIcon = $('.shrink-icon')
-        shrinkIcon.on("click", () => {
-            isSidebarShrinked = !isSidebarShrinked
-            if (isSidebarShrinked) {
-                shapeSidebar.css('transform', 'translate(100%)');
-                shrinkIcon.find('span').css('rotate', '180deg')
-            } else {
-                shapeSidebar.css('transform', 'translate(0px)');
-                shrinkIcon.find('span').css('rotate', '0deg')
-
-            }
-
-        });
-    });
-</script>
 
 
 <div class=" container-fluid ">

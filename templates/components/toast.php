@@ -1,18 +1,18 @@
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-            </div>
-            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+<div id="toast-container" class="toast-container absolute left-1/2 -translate-x-1/2 top-0 p-3 z-[9999]">
+    <div id="successToast" class="bg-green-200 px-6 py-4  my-4 rounded-md text-lg   max-w-lg hidden">
+        <div class="flex items-center">
+            <span class="dashicons dashicons-yes-alt mr-1"></span>
+            <span class="text-green-800 toastText">asgsagasasg</span>
         </div>
     </div>
 
-    <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-            </div>
-            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    <div id="errorToast" class="bg-red-200 px-6 py-4  my-4 rounded-md text-lg   max-w-lg hidden">
+        <div class="flex  items-center">
+            <span class="dashicons dashicons-dismiss mr-1"></span>
+            <span class="text-red-800 toastText">sagsagsagsag sagsga</span>
         </div>
     </div>
+
+
 
 </div>

@@ -39,10 +39,5 @@ function ire_add_admin_menu()
 
 function ire_render_page()
 {
-
-    if (isset($_GET['project'])) {
-        include_once plugin_dir_path(IRE_PLUGIN_FILE) . './templates/projects/single-project.php';
-    } else {
-        include_once plugin_dir_path(IRE_PLUGIN_FILE) . './templates/index.php';
-    }
+    include_once plugin_dir_path(IRE_PLUGIN_FILE) . './templates/index.php';
 }
