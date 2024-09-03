@@ -42,6 +42,5 @@ jQuery(document).ready(function ($) {
     })
     .fail((error) => {
       console.error("Error:", error);
-      showToast($, "errorToast", "something went wrong");
     });
 });

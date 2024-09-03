@@ -6,7 +6,6 @@ jQuery(document).ready(function ($) {
   let currentPath;
   let group;
   let firstCircle;
-  let lastClickedGroup; // Track the last clicked group for circle visibility
   let updateMode = false;
   let draggedCircle = null; // Track the currently dragged circle
   let isDragging = false; // Track dragging status

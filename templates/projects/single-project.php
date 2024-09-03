@@ -9,9 +9,19 @@ $result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE id = %d
 $project_image_src = wp_get_attachment_image_url($result->project_image, 90);
 $project_title = $result->title;
 
+
+
 ?>
 
 <script>
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // if (urlParams.get('action') === 'update_project') {
+    //     const url = new URL(window.location.href);
+    //     url.searchParams.delete('action');
+    //     window.location.href = url.toString();
+    // }
+
     jQuery(document).ready(function($) {
         let isSidebarShrinked = false;
         const shapeSidebar = $('#shapes-sidebar')
@@ -37,7 +47,7 @@ $project_title = $result->title;
     <div class="relative   pt-[50%]  h-full canvas-container overflow-hidden bg-gray-50">
         <svg id="svgCanvas" class="!absolute top-0 left-0 z-50 " viewBox="0 0 1720 860">
         </svg>
-        <img class="absolute top-0 left-0  object-contain  w-full h-full" src="<?php echo $project_image_src ?>" alt="">
+        <img class="absolute top-0 left-0  object-contain  w-full h-full select-none" src="<?php echo $project_image_src ?>" alt="">
 
 
         <div id="shapes-sidebar" class="absolute  right-0 w-60 h-full bg-white/80  transition-all duration-200 top-0 z-[51] cursor-default">
@@ -48,27 +58,18 @@ $project_title = $result->title;
             </div>
 
             <div class="flex flex-col overflow-y-auto h-full">
-                <?php foreach ([[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []] as $row) : ?>
 
-                    <div class="flex items-center justify-between w-full p-3 cursor-pointer hover:bg-white transition-all duration-200">
+                <div class="flex items-center justify-between w-full p-3 cursor-pointer hover:bg-white transition-all duration-200">
 
-                        <p>shape #1</p>
+                    <p>shape #1</p>
 
-                        <div class="flex items-center">
-
-                            <?php foreach ([[], [], []] as $row) : ?>
-
-                                <div class="group  flex items-center justify-center hover:bg-primary transition-all duration-200 border  border-r-0 border-gray-200 first:rounded-l-sm last:rounded-r-sm last:border-r">
-                                    <span class="dashicons dashicons-trash cursor-pointer text-gray-800 group-hover:text-white text-[10px] w-fit p-1 h-fit transition-all duration-200"></span>
-                                </div>
-                            <?php endforeach ?>
-
-
-
+                    <div class="flex items-center">
+                        <div class="group  flex items-center justify-center hover:bg-primary transition-all duration-200 border  border-r-0 border-gray-200 first:rounded-l-sm last:rounded-r-sm last:border-r">
+                            <span class="dashicons dashicons-trash cursor-pointer text-gray-800 group-hover:text-white text-[10px] w-fit p-1 h-fit transition-all duration-200"></span>
                         </div>
-
                     </div>
-                <?php endforeach ?>
+
+                </div>
 
             </div>
         </div>
@@ -94,14 +95,20 @@ $project_title = $result->title;
             </div>
 
 
-            <div class="bg-gray-50 p-3 rounded-sm w-fit">
-                <img class="w-full h-20 rounded-md object-cover" src="<?php echo $project_image_src ?>" alt="">
+            <div class="group bg-gray-50 p-3 rounded-sm w-fit">
+                <div class="overflow-hidden  rounded-md">
+                    <img class="w-full h-20 object-cover group-hover:scale-105 transition-all duration-200 " src="<?php echo $project_image_src ?>" alt="">
+                </div>
+
                 <button id="open-media-library" class="bg-gray-200 hover:bg-gray-300 text-gray-900 w-full  py-2 px-4 rounded flex items-center justify-center mt-3">
 
                     <?php include  IRE_PLUGIN_DIR . 'templates/icons/upload.php'; ?>
 
                     <p class="ml-3">Upload Project Poligon Image</p>
                 </button>
+
+
+
             </div>
 
 
@@ -119,8 +126,9 @@ $project_title = $result->title;
         </div>
 
 
-        <div>
-            <button class="button !px-8">update</button>
+        <div class="flex items-center gap-2 flex-col">
+            <button id="updateProject" class="button !px-8">Update</button>
+            <button id="updateProject" class="button !px-8">Go Bak</button>
         </div>
     </div>
 
