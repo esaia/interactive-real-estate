@@ -1,3 +1,6 @@
+import { generateUniqueId } from "../utils/helpers.js";
+import { pushToSidebar } from "./connectCanvasToData.js";
+
 jQuery(document).ready(function ($) {
   const $svgCanvas = $("#svgCanvas");
 
@@ -178,7 +181,9 @@ jQuery(document).ready(function ($) {
     pathData += " Z";
     currentPath.attr("d", pathData);
 
-    group.attr("el-id", "123");
+    const id = generateUniqueId();
+    group.attr("el-id", id);
+    pushToSidebar(id);
 
     // start create path by circles
 
@@ -395,8 +400,6 @@ jQuery(document).ready(function ($) {
       // Calculate the relative position within the container
       let relativeX = cursorX - containerOffset.left;
       let relativeY = cursorY - containerOffset.top;
-
-      console.log(relativeX, relativeY);
 
       // Calculate transform-origin based on current zoom level
       let transformOriginX = (relativeX / containerWidth) * 100;

@@ -47,30 +47,32 @@ function ire_update_project()
 
     global $wpdb;
 
-    $project_id = intval($_POST['projectId']);
-    $svg = $_POST['svg'];
+    $project_id = isset($_POST['projectId']) ? intval($_POST['projectId']) : null;
+
+    $keys = ['svg', 'title', 'polygon_data'];
+
+    $params = array_filter(
+        $_POST,
+        function ($key) use ($keys) {
+            return in_array($key, $keys);
+        },
+        ARRAY_FILTER_USE_KEY
+    );
+
+
+    if (isset($params['polygon_data'])) {
+        $params['polygon_data'] = json_encode($params['polygon_data']);
+    }
+
 
     $table_name = $wpdb->prefix . 'ire_projects';
 
-    error_log($svg);
-
-    $data = array(
-        // 'title' => $title,
-        'svg' => $svg,
-        // 'project_image' => $project_image,
-        // 'slug' => $slug,
-    );
 
     $where = array('id' => $project_id);
-
-    $updated = $wpdb->update($table_name, $data, $where);
-
-
-
-
+    $updated = $wpdb->update($table_name, $params, $where);
 
     if ($updated !== false) {
-        wp_send_json_success('');
+        wp_send_json_success('project updated');
     } else {
         wp_send_json_error('No projects found.');
     }
@@ -80,33 +82,36 @@ function ire_update_project()
 add_action('wp_ajax_get_projects', 'ire_get_projects');
 
 
-
 function ire_get_projects()
 {
-
     global $wpdb;
     $table_name = $wpdb->prefix . 'ire_projects';
-    $project_id = $_POST['projectId'];
+    $project_id = isset($_POST['projectId']) ? intval($_POST['projectId']) : null;
 
+    // Check nonce for security
     ire_check_nonce($_POST['nonce'], 'ire_nonce');
 
-    if (isset($project_id)) {
+    if ($project_id) {
         $result = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $project_id ORDER BY id DESC");
-        error_log(print_r($result, true));
+
+        if ($result) {
+            // Decode polygon_data as JSON
+            $result->polygon_data = json_decode($result->polygon_data);
+        }
     } else {
         $result = $wpdb->get_results("SELECT * FROM $table_name ORDER BY id DESC");
-        $result = array_map(function ($item) {
-            $item->project_image = wp_get_attachment_image_url($item->project_image, 90);
-            return $item;
-        }, $result);
+
+        if ($result) {
+            $result = array_map(function ($item) {
+                // Decode polygon_data as JSON
+                $item->polygon_data = json_decode($item->polygon_data);
+                $item->project_image = wp_get_attachment_image_url($item->project_image, 90);
+                return $item;
+            }, $result);
+        }
     }
 
-
-
-
-
-
-    if (isset($result)) {
+    if ($result) {
         wp_send_json_success($result);
     } else {
         wp_send_json_error('No projects found.');

@@ -8,6 +8,7 @@ $table_name = $wpdb->prefix . 'ire_projects';
 $result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $projectId));
 $project_image_src = wp_get_attachment_image_url($result->project_image, 90);
 $project_title = $result->title;
+$polygon_data = json_decode($result->polygon_data);
 
 
 
@@ -32,19 +33,29 @@ $project_title = $result->title;
                 <span class="dashicons dashicons-admin-collapse text-gray-800 group-hover:text-white  transition-all duration-200 rotate-180 text-sm p-1  w-fit h-fit "></span>
             </div>
 
-            <div class="flex flex-col overflow-y-auto h-full">
+            <div class="shapes-sidebar-items flex flex-col overflow-y-auto h-full">
 
-                <div class="flex items-center justify-between w-full p-3 cursor-pointer hover:bg-white transition-all duration-200">
 
-                    <p>shape #1</p>
 
-                    <div class="flex items-center">
-                        <div class="group  flex items-center justify-center hover:bg-primary transition-all duration-200 border  border-r-0 border-gray-200 first:rounded-l-sm last:rounded-r-sm last:border-r">
-                            <span class="dashicons dashicons-trash cursor-pointer text-gray-800 group-hover:text-white text-[10px] w-fit p-1 h-fit transition-all duration-200"></span>
+
+
+                <!-- <?php foreach ($polygon_data as $item) : ?>
+
+
+                    <div class="flex items-center justify-between w-full p-3 cursor-pointer hover:bg-white transition-all duration-200">
+
+                        <p>shape #1</p>
+
+                        <div class="flex items-center">
+                            <div class="group  flex items-center justify-center hover:bg-primary transition-all duration-200 border  border-r-0 border-gray-200 first:rounded-l-sm last:rounded-r-sm last:border-r">
+                                <span class="dashicons dashicons-trash cursor-pointer text-gray-800 group-hover:text-white text-[10px] w-fit p-1 h-fit transition-all duration-200"></span>
+                            </div>
                         </div>
+
                     </div>
 
-                </div>
+                <?php endforeach ?> -->
+
 
             </div>
         </div>

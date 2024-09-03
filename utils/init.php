@@ -51,6 +51,7 @@ function ire_create_table()
         svg LONGTEXT NOT NULL,
         project_image INT NOT NULL,
         slug VARCHAR(255) NOT NULL,
+        polygon_data JSON NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY  (id)
