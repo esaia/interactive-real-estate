@@ -15,15 +15,22 @@ function ire_enqueue_scripts($hook)
         return;
     }
 
+
     wp_enqueue_media();
-    wp_enqueue_style('dashicons');
-    wp_enqueue_script('jquery');
-    wp_enqueue_script('tailwind-css', 'https://cdn.tailwindcss.com/3.4.5', array(), null);
-    wp_enqueue_style('ire-styles', plugin_dir_url(IRE_PLUGIN_FILE) . 'css/main.css');
-    wp_enqueue_script('ire-script', plugin_dir_url(IRE_PLUGIN_FILE) . 'js/index.js', array('jquery'), null, true);
+
+    wp_enqueue_script('vue-js',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
+    wp_enqueue_style('vue-styles',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.css');
 
 
-    wp_localize_script('ire-script', 'irePlugin', array(
+
+    // wp_enqueue_style('dashicons');
+    // wp_enqueue_script('jquery');
+    // wp_enqueue_script('tailwind-css', 'https://cdn.tailwindcss.com/3.4.5', array(), null);
+    // wp_enqueue_style('ire-styles', plugin_dir_url(IRE_PLUGIN_FILE) . 'css/main.css');
+    // wp_enqueue_script('ire-script', plugin_dir_url(IRE_PLUGIN_FILE) . 'js/index.js', array('jquery'), null, true);
+
+
+    wp_localize_script('vue-js', 'irePlugin', array(
         'nonce' => wp_create_nonce('ire_nonce'),
         'ajax_url' => admin_url('admin-ajax.php'),
         'plugin_url' => PLUGIN_URL

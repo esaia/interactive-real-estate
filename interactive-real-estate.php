@@ -15,9 +15,11 @@ define('IRE_PLUGIN_FILE', __FILE__);
 define('IRE_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('PLUGIN_URL', admin_url('admin.php?page=ire'));
 
+
 require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/helpers.php';
 require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/init.php';
 require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/ajax.php';
+
 
 
 
@@ -39,5 +41,7 @@ function ire_add_admin_menu()
 
 function ire_render_page()
 {
+
+
     include_once plugin_dir_path(IRE_PLUGIN_FILE) . './templates/index.php';
 }

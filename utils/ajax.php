@@ -84,6 +84,8 @@ add_action('wp_ajax_get_projects', 'ire_get_projects');
 
 function ire_get_projects()
 {
+
+    error_log('runned');
     global $wpdb;
     $table_name = $wpdb->prefix . 'ire_projects';
     $project_id = isset($_POST['projectId']) ? intval($_POST['projectId']) : null;
