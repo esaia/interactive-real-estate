@@ -1,0 +1,12 @@
+// src/shims-vue.d.ts
+import { ComponentCustomProperties } from "vue";
+
+declare module "@vue/runtime-core" {
+  interface ComponentCustomProperties {
+    irePlugin: {
+      nonce: string;
+      ajax_url: string;
+      plugin_url: string;
+    };
+  }
+}
