@@ -60,3 +60,21 @@ export interface imageInterface {
   sizes: Sizes;
   compat: Compat;
 }
+
+export interface ProjectInterface {
+  id: string;
+  title: string;
+  svg: string;
+  project_image: string;
+  slug: string;
+  polygon_data: PolygonDataCollection;
+  created_at: string;
+  updated_at: string;
+}
+export interface PolygonDataCollection {
+  [key: string]: {
+    id: string;
+    key: string;
+    type: string;
+  };
+}

@@ -19,8 +19,6 @@ jQuery(document).ready(function ($) {
     const newSvgContent = tempDiv.find("svg").children();
     $(svgElement).empty().append(newSvgContent);
 
-    console.log();
-
     const sidebarTemplate = Object.values(currentProject.polygon_data).map(
       (item) => {
         return `
@@ -35,8 +33,6 @@ jQuery(document).ready(function ($) {
       `;
       }
     );
-
-    console.log(sidebarTemplate);
 
     $("#shapes-sidebar").find(".shapes-sidebar-items").append(`
             <div class="flex items-center justify-between w-full p-3 cursor-pointer hover:bg-white transition-all duration-200">
@@ -76,7 +72,6 @@ jQuery(document).ready(function ($) {
       ...polygon_data,
       ...currentProject?.polygon_data,
     };
-    console.log(currentProject);
 
     updateProject($, projectNumber, {
       svg: svgString,

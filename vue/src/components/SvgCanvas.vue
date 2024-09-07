@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
+import { useProjectStore } from "../stores/useProject";
+import { generateUniqueId } from "../composables/helpers";
+const projectStore = useProjectStore();
 
 const CIRCLE_RADIUS = 4;
 const HOVER_CIRCLE_RADIUS = 12;
@@ -49,7 +52,6 @@ const getSVGCoordinates = (event, svgElement) => {
 // Event handlers
 const onCanvasClick = (event) => {
   if (shapeClosed.value || updateMode.value) return;
-
   const svg = svgCanvas.value;
   const svgRect = svg.getBoundingClientRect();
   const x = event.clientX - svgRect.left;
@@ -242,7 +244,12 @@ const closeShape = () => {
   pathData += " Z";
   currentPath.value.setAttribute("d", pathData);
 
-  group.value.setAttribute("el-id", "123");
+  const generatedKey = generateUniqueId();
+
+  projectStore.addPoligonData(generatedKey);
+  projectStore.setSvg(svgCanvas.value);
+
+  group.value.setAttribute("el-id", generatedKey);
 
   const circles = group.value.querySelectorAll("circle");
   if (circles.length < 2) {
@@ -377,4 +384,11 @@ onBeforeUnmount(() => {
     class="canvas-svg absolute left-0 top-0 cursor-crosshair [&_.first-circle]:cursor-pointer"
     viewBox="0 0 1720 860"
   ></svg>
+
+  <!-- <div
+    ref="svgCanvas"
+    class="canvas-svg absolute left-0 top-0 h-full w-full cursor-crosshair [&_.first-circle]:cursor-pointer"
+  >
+    <svg></svg>
+  </div> -->
 </template>

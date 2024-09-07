@@ -1,12 +1,15 @@
 <script setup lang="ts">
 // @ts-ignore
 import SvgCanvas from "../components/SvgCanvas.vue";
+import { ProjectInterface } from "../../types/components";
 import ProjectBottomWidgets from "../components/UiComponents/common/ProjectBottomWidgets.vue";
 import Sidebar from "../components/UiComponents/common/Sidebar.vue";
+import { useProjectStore } from "../stores/useProject";
 
 defineProps<{
-  project: any;
+  project: ProjectInterface;
 }>();
+const projectStore = useProjectStore();
 </script>
 
 <template>
@@ -19,8 +22,8 @@ defineProps<{
 
     <ProjectBottomWidgets />
     <pre>
-    {{ project }}
-  </pre
-    >
+    {{ { svg: projectStore.svg, ...projectStore.$state} }}
+    <!-- {{ project }} -->
+  </pre>
   </div>
 </template>

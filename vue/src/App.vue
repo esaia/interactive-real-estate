@@ -3,10 +3,14 @@ import { onMounted, ref } from "vue";
 import Projects from "./pages/Projects.vue";
 import Project from "./pages/Project.vue";
 import ajaxAxios from "./utils/axios";
+import { useProjectStore } from "./stores/useProject";
+import { ProjectInterface } from "../types/components";
+
+const projectStore = useProjectStore();
 
 const urlParams = new URLSearchParams(window.location.search);
 const projectID = ref(urlParams.get("project"));
-const project = ref();
+const project = ref<ProjectInterface>();
 const projects = ref();
 
 onMounted(async () => {
@@ -18,6 +22,9 @@ onMounted(async () => {
 
   if (projectID && data.success && !data.data.length) {
     project.value = data.data;
+    if (project.value) {
+      projectStore.setProject(project.value);
+    }
   } else {
     projects.value = data.data;
   }
