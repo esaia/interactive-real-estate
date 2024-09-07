@@ -18,6 +18,8 @@ function ire_create_project()
     $project_image = isset($_POST['project_image']['id']) ? sanitize_text_field($_POST['project_image']['id']) : '';
     $slug = sanitize_title($title);
 
+
+
     // Insert into database
     $wpdb->insert(
         $table_name,
@@ -97,6 +99,8 @@ function ire_get_projects()
         $result = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $project_id ORDER BY id DESC");
 
         if ($result) {
+            $result->project_image = wp_get_attachment_image_url($result->project_image, 90);
+
             // Decode polygon_data as JSON
             $result->polygon_data = json_decode($result->polygon_data);
         }

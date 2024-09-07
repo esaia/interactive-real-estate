@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.container-fluid {
+  @apply pr-4;
+}
+
+.icon-hover {
+  @apply hover:bg-primary/80 transition-all [&_path]:hover:fill-white;
+}
+
+.icon-hover-text {
+  @apply hover:bg-primary/80 transition-all [&_path]:hover:text-white;
+}

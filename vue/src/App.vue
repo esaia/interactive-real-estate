@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import Projects from "./components/Projects.vue";
-import Project from "./components/Project.vue";
+import Projects from "./pages/Projects.vue";
+import Project from "./pages/Project.vue";
 import ajaxAxios from "./utils/axios";
 
 const urlParams = new URLSearchParams(window.location.search);

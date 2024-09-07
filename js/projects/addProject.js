@@ -15,6 +15,7 @@ jQuery(document).ready(function ($) {
 
   form.on("submit", function (event) {
     event.preventDefault();
+
     const title = $("#project_title").val();
 
     if (!project_image) return;

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
 const CIRCLE_RADIUS = 4;
 const HOVER_CIRCLE_RADIUS = 12;
@@ -372,12 +372,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="canvas-container relative h-full overflow-hidden bg-gray-50 pt-[50%]">
-    <svg
-      ref="svgCanvas"
-      class="canvas-svg absolute left-0 top-0 cursor-crosshair [&_.first-circle]:cursor-pointer"
-      viewBox="0 0 1720 860"
-    ></svg>
-    <img class="canvas-image" :src="projectImageSrc" alt="" />
-  </div>
+  <svg
+    ref="svgCanvas"
+    class="canvas-svg absolute left-0 top-0 cursor-crosshair [&_.first-circle]:cursor-pointer"
+    viewBox="0 0 1720 860"
+  ></svg>
 </template>
