@@ -6,8 +6,15 @@ import { useProjectStore } from "../stores/useProject";
 
 const projectStore = useProjectStore();
 
-const { CIRCLE_COLOR, CIRCLE_RADIUS, HOVER_CIRCLE_RADIUS, NON_SELECTED_PATH_COLOR, PATH_COLOR, SELECTED_PATH_COLOR } =
-  constants;
+const {
+  CIRCLE_COLOR,
+  CIRCLE_RADIUS,
+  HOVER_CIRCLE_RADIUS,
+  NON_SELECTED_PATH_COLOR,
+  PATH_COLOR,
+  SELECTED_PATH_COLOR,
+  CIRCLE_HOVER_COLOR
+} = constants;
 
 // Refs for DOM elements
 const svgCanvas = ref(null);
@@ -49,6 +56,7 @@ const getSVGCoordinates = (event, svgElement) => {
 // Event handlers
 const onCanvasClick = (event) => {
   if (shapeClosed.value || updateMode.value) return;
+
   const svg = svgCanvas.value.querySelector("svg");
   const svgRect = svg.getBoundingClientRect();
   const x = event.clientX - svgRect.left;
@@ -97,10 +105,10 @@ const circleMouseMove = (event) => {
   if (event.target.nodeName === "circle" && event.target.parentNode.isSameNode(group.value)) {
     circleTarget.value = event.target;
 
-    animateRadius(circleTarget.value, HOVER_CIRCLE_RADIUS, "#cb4335");
+    animateRadius(circleTarget.value, HOVER_CIRCLE_RADIUS, CIRCLE_HOVER_COLOR);
   } else {
     if (circleTarget.value) {
-      animateRadius(circleTarget.value, CIRCLE_RADIUS);
+      animateRadius(circleTarget.value, CIRCLE_RADIUS, CIRCLE_COLOR);
     }
   }
 };
@@ -135,7 +143,7 @@ const onCanvasMouseMove = throttle((event) => {
   }
 }, 10);
 
-const onPathContextMenu = (event, activeGroup, disableUpdateMode) => {
+const onPathContextMenu = (event, activeGroup) => {
   circleTarget.value = null;
 
   if (event) {
@@ -192,11 +200,22 @@ const onPathContextMenu = (event, activeGroup, disableUpdateMode) => {
     svgCanvas.value.addEventListener("mouseup", onCircleMouseUp);
     svgCanvas.value.addEventListener("mousemove", onCircleMouseMoveWhileDragging);
   } else {
+    svgCanvas.value.removeEventListener("mousedown", onCircleMouseDown);
+    svgCanvas.value.removeEventListener("mouseup", onCircleMouseUp);
+    svgCanvas.value.removeEventListener("mousemove", onCircleMouseMoveWhileDragging);
+
     projectStore.activeGroup = null;
   }
 };
 
 const onCircleMouseDown = (event) => {
+  if (event.target.nodeName === "svg" && updateMode.value) {
+    setTimeout(() => {
+      onPathContextMenu(undefined, undefined);
+    }, 200);
+    return;
+  }
+
   if (!updateMode.value || event.target.tagName !== "circle") return;
 
   const parentG = event.target.parentNode;

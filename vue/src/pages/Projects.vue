@@ -26,6 +26,7 @@ const isModalOpen = ref(false);
 
       <a
         v-for="project in projects"
+        :key="project.id"
         :href="`${irePlugin.plugin_url}&project=${project?.id}`"
         class="group cursor-pointer focus:shadow-none"
       >

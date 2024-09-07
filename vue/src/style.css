@@ -17,3 +17,7 @@
 .icon-hover-text {
   @apply transition-all hover:bg-primary/80 [&_path]:hover:text-white;
 }
+
+.color {
+  color: #ffffffaf;
+}

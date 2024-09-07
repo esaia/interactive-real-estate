@@ -5,7 +5,7 @@ export const generateUniqueId = (length = 14) => {
     const randomIndex = Math.floor(Math.random() * characters.length);
     uniqueId += characters[randomIndex];
   }
-  return uniqueId;
+  return "ui" + uniqueId;
 };
 
 export const transformSvgString = (svgString: string) => {

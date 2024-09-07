@@ -12,6 +12,7 @@ declare const constants: {
   SELECTED_PATH_COLOR: string;
   NON_SELECTED_PATH_COLOR: string;
   CIRCLE_COLOR: string;
+  CIRCLE_HOVER_COLOR: string;
 };
 
 declare const wp: any;
