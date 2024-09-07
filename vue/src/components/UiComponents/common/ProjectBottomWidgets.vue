@@ -5,9 +5,25 @@ import Button from "../form/Button.vue";
 import ajaxAxios from "../../../utils/axios";
 
 const projectStore = useProjectStore();
-const { id, title, slug, polygon_data, svgRef } = storeToRefs(projectStore);
+const { id, title, slug, polygon_data, svgRef, activeGroup } = storeToRefs(projectStore);
+const { CIRCLE_RADIUS, PATH_COLOR } = constants;
 
 const updateProject = async () => {
+  const svg = svgRef.value?.querySelector("svg");
+
+  if (svg) {
+    const circles = svg.querySelectorAll("circle");
+    circles.forEach((circle) => {
+      circle.setAttribute("fill", "#00000000");
+      circle.setAttribute("r", CIRCLE_RADIUS.toString());
+    });
+
+    const paths = svg.querySelectorAll("path");
+    paths.forEach((path) => {
+      path.setAttribute("fill", PATH_COLOR);
+    });
+  }
+
   const params = {
     projectId: id.value,
     title: title.value,
@@ -21,6 +37,8 @@ const updateProject = async () => {
     nonce: irePlugin.nonce,
     ...params
   });
+
+  activeGroup.value = null;
 };
 </script>
 

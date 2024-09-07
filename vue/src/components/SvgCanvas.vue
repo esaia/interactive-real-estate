@@ -1,16 +1,13 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
-import { useProjectStore } from "../stores/useProject";
 import { generateUniqueId } from "../composables/helpers";
+import { storeToRefs } from "pinia";
+import { useProjectStore } from "../stores/useProject";
+
 const projectStore = useProjectStore();
 
-const CIRCLE_RADIUS = 4;
-const HOVER_CIRCLE_RADIUS = 12;
-
-const PATH_COLOR = "#87cefa86";
-const SELECTED_PATH_COLOR = "red";
-const NON_SELECTED_PATH_COLOR = "#87cefa22";
-const CIRCLE_COLOR = "black";
+const { CIRCLE_COLOR, CIRCLE_RADIUS, HOVER_CIRCLE_RADIUS, NON_SELECTED_PATH_COLOR, PATH_COLOR, SELECTED_PATH_COLOR } =
+  constants;
 
 // Refs for DOM elements
 const svgCanvas = ref(null);
@@ -138,21 +135,24 @@ const onCanvasMouseMove = throttle((event) => {
   }
 }, 10);
 
-const onPathContextMenu = (event, activeGroup) => {
+const onPathContextMenu = (event, activeGroup, disableUpdateMode) => {
+  circleTarget.value = null;
+
   if (event) {
     event.preventDefault();
     updateMode.value = event.target.nodeName === "path";
     group.value = event.target.parentNode;
-  } else {
-    // updateMode.value = activeGroup.nodeName === "path";
 
-    if (activeGroup) {
-      updateMode.value = true;
-      group.value = activeGroup;
+    if (updateMode.value) {
+      projectStore.activeGroup = group.value;
     }
+  } else if (activeGroup) {
+    updateMode.value = true;
+    group.value = activeGroup;
+  } else {
+    updateMode.value = false;
   }
 
-  circleTarget.value = null;
   if (firstCircle.value) return;
 
   const circles = svgCanvas.value.querySelectorAll("g circle");
@@ -178,6 +178,8 @@ const onPathContextMenu = (event, activeGroup) => {
       path.setAttribute("fill", SELECTED_PATH_COLOR);
 
       currentPath.value = path;
+
+      svgCanvas.value?.querySelector("svg").appendChild(group.value);
 
       // parentGroup.appendChild(parentGroup.parentNode);
     } else {
@@ -373,9 +375,7 @@ const resetZoom = () => {
 watch(
   () => projectStore.activeGroup,
   (ns) => {
-    if (projectStore.activeGroup) {
-      onPathContextMenu(undefined, ns);
-    }
+    onPathContextMenu(undefined, ns);
   }
 );
 
