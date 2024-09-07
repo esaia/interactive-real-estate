@@ -72,9 +72,11 @@ export interface ProjectInterface {
   updated_at: string;
 }
 export interface PolygonDataCollection {
-  [key: string]: {
-    id: string;
-    key: string;
-    type: string;
-  };
+  [key: string]: PolygonData;
+}
+
+export interface PolygonData {
+  id: string;
+  key: string;
+  type: string;
 }

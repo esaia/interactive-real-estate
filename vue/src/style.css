@@ -6,10 +6,14 @@
   @apply pr-4;
 }
 
+.svg-canvas-container {
+  @apply absolute left-0 top-0 h-full w-full cursor-crosshair [&_.first-circle]:cursor-pointer;
+}
+
 .icon-hover {
-  @apply hover:bg-primary/80 transition-all [&_path]:hover:fill-white;
+  @apply transition-all hover:bg-primary/80 [&_path]:hover:fill-white;
 }
 
 .icon-hover-text {
-  @apply hover:bg-primary/80 transition-all [&_path]:hover:text-white;
+  @apply transition-all hover:bg-primary/80 [&_path]:hover:text-white;
 }

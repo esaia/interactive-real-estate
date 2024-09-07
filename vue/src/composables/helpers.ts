@@ -16,13 +16,13 @@ export const transformSvgString = (svgString: string) => {
     .replace(/(\s)([a-zA-Z0-9-]+)=""/g, '$1$2=""'); // Fix empty attributes if any
 
   // Ensure the SVG element is properly formatted
-  transformedSvg = transformedSvg
-    .replace(/<svg[^>]*>/, (match) =>
-      match.replace(/class="[^"]*"/, 'class="canvas-svg absolute left-0 top-0 cursor-crosshair"')
-    )
-    .replace(/&lt;/g, "<") // Unescape <
-    .replace(/&gt;/g, ">") // Unescape >
-    .replace(/&quot;/g, '"'); // Unescape "
+  // transformedSvg = transformedSvg
+  //   .replace(/<svg[^>]*>/, (match) =>
+  //     match.replace(/class="[^"]*"/, 'class="canvas-svg absolute left-0 top-0 cursor-crosshair"')
+  //   )
+  //   .replace(/&lt;/g, "<") // Unescape <
+  //   .replace(/&gt;/g, ">") // Unescape >
+  //   .replace(/&quot;/g, '"'); // Unescape "
 
   return transformedSvg;
 };

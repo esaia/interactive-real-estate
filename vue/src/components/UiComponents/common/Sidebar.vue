@@ -4,10 +4,15 @@ import Collapse from "../icons/Collapse.vue";
 import Edit from "../icons/Edit.vue";
 import { useProjectStore } from "../../../stores/useProject";
 import { storeToRefs } from "pinia";
+import { PolygonData } from "../../../../types/components";
 const isClollapsed = ref(false);
 
 const projectStore = useProjectStore();
-const { polygon_data } = storeToRefs(projectStore);
+const { polygon_data, activeGroup, svgRef } = storeToRefs(projectStore);
+
+const setActiveG = (item: PolygonData) => {
+  activeGroup.value = svgRef.value?.querySelector(`#${item.key}`) || null;
+};
 </script>
 
 <template>
@@ -19,7 +24,9 @@ const { polygon_data } = storeToRefs(projectStore);
     }"
     @click="isClollapsed = false"
   >
-    <Collapse class="icon-hover" />
+    <div class="icon-hover p-3">
+      <Collapse />
+    </div>
   </div>
 
   <div
@@ -42,7 +49,11 @@ const { polygon_data } = storeToRefs(projectStore);
         v-if="polygon_data"
         v-for="item in Object.values(polygon_data)"
         :key="item.key"
-        class="group flex w-full min-w-60 cursor-pointer items-center justify-between px-3 py-3 transition-colors hover:bg-gray-100/80"
+        class="group flex w-full min-w-60 cursor-pointer items-center justify-between px-3 py-3 transition-colors hover:bg-gray-200/80"
+        :class="{
+          'bg-gray-200/80': item.key === activeGroup?.getAttribute('id')
+        }"
+        @click="setActiveG(item)"
       >
         <p>shape #{{ item.id }}</p>
 

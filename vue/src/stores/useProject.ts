@@ -15,6 +15,7 @@ export const useProjectStore = defineStore("project", () => {
   const updated_at = ref("");
 
   const svgRef = ref<HTMLDivElement | null>(null);
+  const activeGroup = ref<SVGGElement | null>(null);
 
   const addPoligonData = (key: string) => {
     polygon_data.value = {
@@ -53,6 +54,7 @@ export const useProjectStore = defineStore("project", () => {
     created_at,
     updated_at,
     svgRef,
+    activeGroup,
     addPoligonData,
     setProject
   };

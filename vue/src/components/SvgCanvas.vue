@@ -138,18 +138,25 @@ const onCanvasMouseMove = throttle((event) => {
   }
 }, 10);
 
-const onPathContextMenu = (event) => {
-  event.preventDefault();
+const onPathContextMenu = (event, activeGroup) => {
+  if (event) {
+    event.preventDefault();
+    updateMode.value = event.target.nodeName === "path";
+    group.value = event.target.parentNode;
+  } else {
+    // updateMode.value = activeGroup.nodeName === "path";
+
+    if (activeGroup) {
+      updateMode.value = true;
+      group.value = activeGroup;
+    }
+  }
+
   circleTarget.value = null;
-
   if (firstCircle.value) return;
-
-  group.value = event.target.parentNode;
 
   const circles = svgCanvas.value.querySelectorAll("g circle");
   const paths = svgCanvas.value.querySelectorAll("g path");
-
-  updateMode.value = !updateMode.value && event.target.nodeName === "path" ? true : false;
 
   circles.forEach((circle) => {
     if (updateMode.value) {
@@ -182,6 +189,8 @@ const onPathContextMenu = (event) => {
     svgCanvas.value.addEventListener("mousedown", onCircleMouseDown);
     svgCanvas.value.addEventListener("mouseup", onCircleMouseUp);
     svgCanvas.value.addEventListener("mousemove", onCircleMouseMoveWhileDragging);
+  } else {
+    projectStore.activeGroup = null;
   }
 };
 
@@ -268,7 +277,7 @@ const closeShape = () => {
   svgCanvas.value.removeEventListener("mousemove", onCanvasMouseMove);
 
   const generatedKey = generateUniqueId();
-  group.value.setAttribute("el-id", generatedKey);
+  group.value.setAttribute("id", generatedKey);
 
   projectStore.addPoligonData(generatedKey);
 
@@ -361,6 +370,15 @@ const resetZoom = () => {
   container.querySelector("svg").style.transformOrigin = "center center";
 };
 
+watch(
+  () => projectStore.activeGroup,
+  (ns) => {
+    if (projectStore.activeGroup) {
+      onPathContextMenu(undefined, ns);
+    }
+  }
+);
+
 onMounted(() => {
   projectStore.svgRef = svgCanvas.value;
   svgCanvas.value.addEventListener("click", onCanvasClick);
@@ -378,19 +396,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div
-    v-if="!projectStore.svg"
-    ref="svgCanvas"
-    class="canvas-svg absolute left-0 top-0 h-full w-full cursor-crosshair [&_.first-circle]:cursor-pointer"
-  >
+  <div v-if="!projectStore.svg" ref="svgCanvas" class="svg-canvas-container">
     <svg ref="svgCanvas" viewBox="0 0 1720 860"></svg>
   </div>
 
-  <div
-    v-else
-    v-html="projectStore.svg"
-    ref="svgCanvas"
-    :key="projectStore.svg"
-    class="canvas-svg absolute left-0 top-0 h-full w-full cursor-crosshair [&_.first-circle]:cursor-pointer"
-  ></div>
+  <div v-else v-html="projectStore.svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
+
+  <pre class="absolute bottom-0 right-0 bg-red-600">
+
+  {{ group }}
+  </pre>
 </template>

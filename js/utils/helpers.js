@@ -22,12 +22,20 @@ export const showToast = ($, isSuccess, msg) => {
 };
 
 export const generateUniqueId = (length = 14) => {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"; // First character options
   const characters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let uniqueId = "";
-  for (let i = 0; i < length; i++) {
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"; // Remaining characters
+  let result = "";
+
+  // Ensure the first character is always a letter
+  const firstCharIndex = Math.floor(Math.random() * letters.length);
+  result += letters[firstCharIndex];
+
+  // Generate the remaining characters
+  for (let i = 1; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
-    uniqueId += characters[randomIndex];
+    result += characters[randomIndex];
   }
-  return uniqueId;
+
+  return result;
 };
