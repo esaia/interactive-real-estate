@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { useProjectStore } from "../stores/useProject";
 import { generateUniqueId } from "../composables/helpers";
 const projectStore = useProjectStore();
@@ -52,7 +52,7 @@ const getSVGCoordinates = (event, svgElement) => {
 // Event handlers
 const onCanvasClick = (event) => {
   if (shapeClosed.value || updateMode.value) return;
-  const svg = svgCanvas.value;
+  const svg = svgCanvas.value.querySelector("svg");
   const svgRect = svg.getBoundingClientRect();
   const x = event.clientX - svgRect.left;
   const y = event.clientY - svgRect.top;
@@ -61,7 +61,8 @@ const onCanvasClick = (event) => {
   const svgY = (y / svgRect.height) * viewBox.height;
 
   if (points.value.length > 2 && isCloseToFirstPoint(svgX, svgY, points.value[0])) {
-    animateRadius(firstCircle.value, CIRCLE_RADIUS, "black");
+    firstCircle.value.setAttribute("fill", "black");
+    firstCircle.value.setAttribute("r", CIRCLE_RADIUS);
 
     closeShape();
     return;
@@ -99,7 +100,7 @@ const circleMouseMove = (event) => {
   if (event.target.nodeName === "circle" && event.target.parentNode.isSameNode(group.value)) {
     circleTarget.value = event.target;
 
-    animateRadius(circleTarget.value, HOVER_CIRCLE_RADIUS, "rgba(73, 42, 156, 0.35)");
+    animateRadius(circleTarget.value, HOVER_CIRCLE_RADIUS, "#cb4335");
   } else {
     if (circleTarget.value) {
       animateRadius(circleTarget.value, CIRCLE_RADIUS);
@@ -115,7 +116,7 @@ const onCanvasMouseMove = throttle((event) => {
   }
   if (shapeClosed.value || points.value.length === 0) return;
 
-  const { x, y } = getSVGCoordinates(event, svgCanvas.value);
+  const { x, y } = getSVGCoordinates(event, svgCanvas.value.querySelector("svg"));
 
   if (updateMode.value && draggedCircle.value) {
     draggedCircle.value.setAttribute("cx", x || 0);
@@ -207,7 +208,7 @@ const onCircleMouseUp = (event) => {
 const onCircleMouseMoveWhileDragging = (event) => {
   if (!updateMode.value || !isDragging.value || !draggedCircle.value) return;
 
-  const { x, y } = getSVGCoordinates(event, svgCanvas.value);
+  const { x, y } = getSVGCoordinates(event, svgCanvas.value.querySelector("svg"));
 
   draggedCircle.value.setAttribute("cx", x);
   draggedCircle.value.setAttribute("cy", y);
@@ -240,16 +241,10 @@ const isCloseToFirstPoint = (x, y, firstPoint) => {
 
 const closeShape = () => {
   shapeClosed.value = true;
+
   let pathData = currentPath.value.getAttribute("d");
   pathData += " Z";
   currentPath.value.setAttribute("d", pathData);
-
-  const generatedKey = generateUniqueId();
-
-  projectStore.addPoligonData(generatedKey);
-  projectStore.setSvg(svgCanvas.value);
-
-  group.value.setAttribute("el-id", generatedKey);
 
   const circles = group.value.querySelectorAll("circle");
   if (circles.length < 2) {
@@ -261,6 +256,7 @@ const closeShape = () => {
       pathData += ` L ${circle.getAttribute("cx")} ${circle.getAttribute("cy")}`;
     }
   });
+
   pathData += " Z";
   currentPath.value.setAttribute("d", pathData);
 
@@ -268,11 +264,13 @@ const closeShape = () => {
     circle.setAttribute("fill", "#00000000");
   });
 
-  firstCircle.value.setAttribute("r", 6);
-  firstCircle.value.setAttribute("fill", "#00000000");
-
   svgCanvas.value.removeEventListener("click", onCanvasClick);
   svgCanvas.value.removeEventListener("mousemove", onCanvasMouseMove);
+
+  const generatedKey = generateUniqueId();
+  group.value.setAttribute("el-id", generatedKey);
+
+  projectStore.addPoligonData(generatedKey);
 
   resetShape();
 };
@@ -364,6 +362,7 @@ const resetZoom = () => {
 };
 
 onMounted(() => {
+  projectStore.svgRef = svgCanvas.value;
   svgCanvas.value.addEventListener("click", onCanvasClick);
   svgCanvas.value.addEventListener("mousemove", throttle(onCanvasMouseMove, 10));
   svgCanvas.value.addEventListener("contextmenu", onPathContextMenu);
@@ -379,16 +378,19 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <svg
-    ref="svgCanvas"
-    class="canvas-svg absolute left-0 top-0 cursor-crosshair [&_.first-circle]:cursor-pointer"
-    viewBox="0 0 1720 860"
-  ></svg>
-
-  <!-- <div
+  <div
+    v-if="!projectStore.svg"
     ref="svgCanvas"
     class="canvas-svg absolute left-0 top-0 h-full w-full cursor-crosshair [&_.first-circle]:cursor-pointer"
   >
-    <svg></svg>
-  </div> -->
+    <svg ref="svgCanvas" viewBox="0 0 1720 860"></svg>
+  </div>
+
+  <div
+    v-else
+    v-html="projectStore.svg"
+    ref="svgCanvas"
+    :key="projectStore.svg"
+    class="canvas-svg absolute left-0 top-0 h-full w-full cursor-crosshair [&_.first-circle]:cursor-pointer"
+  ></div>
 </template>

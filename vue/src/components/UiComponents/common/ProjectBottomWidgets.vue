@@ -5,24 +5,22 @@ import Button from "../form/Button.vue";
 import ajaxAxios from "../../../utils/axios";
 
 const projectStore = useProjectStore();
-const { id, title, slug, svg, polygonData, project_image } = storeToRefs(projectStore);
+const { id, title, slug, polygon_data, svgRef } = storeToRefs(projectStore);
 
 const updateProject = async () => {
   const params = {
     projectId: id.value,
     title: title.value,
     slug: slug.value,
-    svg: svg.value,
-    polygon_data: polygonData.value
+    svg: svgRef.value?.querySelector("svg")?.outerHTML || "",
+    polygon_data: polygon_data.value
   };
 
-  const { data } = await ajaxAxios.post("", {
+  await ajaxAxios.post("", {
     action: "update_project",
     nonce: irePlugin.nonce,
     ...params
   });
-
-  console.log(params);
 };
 </script>
 

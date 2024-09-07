@@ -3,9 +3,11 @@ import { ref } from "vue";
 import Collapse from "../icons/Collapse.vue";
 import Edit from "../icons/Edit.vue";
 import { useProjectStore } from "../../../stores/useProject";
+import { storeToRefs } from "pinia";
 const isClollapsed = ref(false);
 
-const project = useProjectStore();
+const projectStore = useProjectStore();
+const { polygon_data } = storeToRefs(projectStore);
 </script>
 
 <template>
@@ -35,18 +37,22 @@ const project = useProjectStore();
       </div>
     </div>
 
-    <div
-      v-for="item in 8"
-      class="group flex w-full min-w-60 cursor-pointer items-center justify-between px-3 py-3 transition-colors hover:bg-gray-100/80"
-    >
-      <p>shape #21</p>
+    <div class="max-h-full overflow-scroll">
+      <div
+        v-if="polygon_data"
+        v-for="item in Object.values(polygon_data)"
+        :key="item.key"
+        class="group flex w-full min-w-60 cursor-pointer items-center justify-between px-3 py-3 transition-colors hover:bg-gray-100/80"
+      >
+        <p>shape #{{ item.id }}</p>
 
-      <div class="flex">
-        <div
-          v-for="item in 3"
-          class="border-gray-10 last::bg-green-300 icon-hover-text h-fit cursor-pointer border border-r-0 p-1 transition-all first:rounded-l-sm last-of-type:rounded-r-sm last-of-type:border-r group-hover:border-gray-300"
-        >
-          <Edit class="" />
+        <div class="flex">
+          <div
+            v-for="item in 3"
+            class="border-gray-10 last::bg-green-300 icon-hover-text h-fit cursor-pointer border border-r-0 p-1 transition-all first:rounded-l-sm last-of-type:rounded-r-sm last-of-type:border-r group-hover:border-gray-300"
+          >
+            <Edit class="" />
+          </div>
         </div>
       </div>
     </div>
