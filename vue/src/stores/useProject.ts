@@ -28,6 +28,13 @@ export const useProjectStore = defineStore("project", () => {
     };
   };
 
+  const removePoligonItem = (key: string) => {
+    if (!key || !polygon_data.value) return;
+
+    const { [key]: _, ...rest } = polygon_data.value;
+    polygon_data.value = rest;
+  };
+
   const transformedTitle = computed(() => {
     return transformSvgString(svg.value);
   });
@@ -56,6 +63,7 @@ export const useProjectStore = defineStore("project", () => {
     svgRef,
     activeGroup,
     addPoligonData,
+    removePoligonItem,
     setProject
   };
 });

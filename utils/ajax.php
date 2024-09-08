@@ -51,7 +51,7 @@ function ire_update_project()
 
     $project_id = isset($_POST['projectId']) ? intval($_POST['projectId']) : null;
 
-    $keys = ['svg', 'title', 'polygon_data'];
+    $keys = ['svg', 'title', 'polygon_data', 'project_image'];
 
     $params = array_filter(
         $_POST,

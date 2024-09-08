@@ -18,6 +18,9 @@
   @apply transition-all hover:bg-primary/80 [&_path]:hover:text-white;
 }
 
+.v-toast__item--success {
+  background-color: #47d78a !important;
+}
 .color {
-  color: #ffffffaf;
+  color: #cb443529;
 }

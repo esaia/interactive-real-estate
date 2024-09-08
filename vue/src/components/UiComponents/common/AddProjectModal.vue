@@ -2,32 +2,16 @@
 import { ref } from "vue";
 import Button from "../form/Button.vue";
 import Upload from "../icons/Upload.vue";
-import { imageInterface } from "../../../../types/components";
 import ajaxAxios from "../../../utils/axios";
+import { useSelectImage } from "../../../composables/useSelectImage";
 
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
 const title = ref("");
-const selectedImage = ref<imageInterface>();
 
-const selectImage = () => {
-  const mediaFrame = wp.media({
-    title: "Select File",
-    button: {
-      text: "Use this file"
-    },
-    multiple: false
-  });
-
-  mediaFrame.on("select", function () {
-    const selection = mediaFrame.state().get("selection").first().toJSON();
-    selectedImage.value = selection;
-  });
-
-  mediaFrame.open();
-};
+const { selectedImage, selectImage } = useSelectImage();
 
 const onFormSubmits = async () => {
   if (!selectedImage.value?.id) return;

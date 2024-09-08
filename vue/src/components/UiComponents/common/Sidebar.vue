@@ -13,6 +13,12 @@ const { polygon_data, activeGroup, svgRef } = storeToRefs(projectStore);
 const setActiveG = (item: PolygonData) => {
   activeGroup.value = svgRef.value?.querySelector(`#${item.key}`) || null;
 };
+
+const deleteG = (item: PolygonData) => {
+  activeGroup.value = null;
+  projectStore.removePoligonItem(item.key);
+  svgRef.value?.querySelector(`#${item.key}`)?.remove();
+};
 </script>
 
 <template>
@@ -59,8 +65,12 @@ const setActiveG = (item: PolygonData) => {
 
         <div class="flex">
           <div
-            v-for="item in 3"
+            v-for="i in 3"
             class="border-gray-10 last::bg-green-300 icon-hover-text h-fit cursor-pointer border border-r-0 p-1 transition-all first:rounded-l-sm last-of-type:rounded-r-sm last-of-type:border-r group-hover:border-gray-300"
+            :class="{
+              'border-gray-300': item.key === activeGroup?.getAttribute('id')
+            }"
+            @click.stop="deleteG(item)"
           >
             <Edit class="" />
           </div>

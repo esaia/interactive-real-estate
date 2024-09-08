@@ -196,10 +196,12 @@ const onPathContextMenu = (event, activeGroup) => {
   });
 
   if (updateMode.value) {
+    svgCanvas.value.style.cursor = "pointer";
     svgCanvas.value.addEventListener("mousedown", onCircleMouseDown);
     svgCanvas.value.addEventListener("mouseup", onCircleMouseUp);
     svgCanvas.value.addEventListener("mousemove", onCircleMouseMoveWhileDragging);
   } else {
+    svgCanvas.value.style.cursor = "crosshair";
     svgCanvas.value.removeEventListener("mousedown", onCircleMouseDown);
     svgCanvas.value.removeEventListener("mouseup", onCircleMouseUp);
     svgCanvas.value.removeEventListener("mousemove", onCircleMouseMoveWhileDragging);
@@ -343,11 +345,14 @@ const setCursorValues = (event) => {
 };
 
 const onDocumentKeydown = (event) => {
-  if (event.key === "Escape" && points.value.length > 0 && !shapeClosed.value) {
-    if (group.value) {
-      group.value.remove();
+  if (event.key === "Escape") {
+    if (points.value.length > 0 && !shapeClosed.value) {
+      group.value && group.value.remove();
+
+      resetShape();
+    } else if (updateMode.value) {
+      onPathContextMenu(undefined, undefined);
     }
-    resetShape();
   }
 
   if (event.metaKey) {
@@ -420,9 +425,4 @@ onBeforeUnmount(() => {
   </div>
 
   <div v-else v-html="projectStore.svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
-
-  <pre class="absolute bottom-0 right-0 bg-red-600">
-
-  {{ group }}
-  </pre>
 </template>

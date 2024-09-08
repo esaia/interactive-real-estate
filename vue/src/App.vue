@@ -5,6 +5,7 @@ import Project from "./pages/Project.vue";
 import ajaxAxios from "./utils/axios";
 import { useProjectStore } from "./stores/useProject";
 import { ProjectInterface } from "../types/components";
+import "vue-toast-notification/dist/theme-sugar.css";
 
 const projectStore = useProjectStore();
 
