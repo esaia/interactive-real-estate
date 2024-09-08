@@ -4,6 +4,17 @@ import { generateUniqueId } from "../composables/helpers";
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "../stores/useProject";
 
+// defineEmits<{
+//   (e: "setSvgRef", svgContainer: HTMLDivElement);
+// }>([]); //transfrom ts to js emit
+
+const emit = defineEmits(["setSvgRef", "setActiveG", "addPolygonData"]);
+
+const props = defineProps({
+  svgRef: HTMLDivElement | null,
+  activeGroup: SVGGElement | null
+});
+
 const projectStore = useProjectStore();
 
 const {
@@ -105,7 +116,13 @@ const circleMouseMove = (event) => {
   if (event.target.nodeName === "circle" && event.target.parentNode.isSameNode(group.value)) {
     circleTarget.value = event.target;
 
-    animateRadius(circleTarget.value, HOVER_CIRCLE_RADIUS, CIRCLE_HOVER_COLOR);
+    group.value.querySelectorAll("circle").forEach((circle) => {
+      if (circle.isSameNode(event.target)) {
+        animateRadius(circle, HOVER_CIRCLE_RADIUS, CIRCLE_HOVER_COLOR);
+      } else {
+        animateRadius(circle, CIRCLE_RADIUS, CIRCLE_COLOR);
+      }
+    });
   } else {
     if (circleTarget.value) {
       animateRadius(circleTarget.value, CIRCLE_RADIUS, CIRCLE_COLOR);
@@ -152,7 +169,7 @@ const onPathContextMenu = (event, activeGroup) => {
     group.value = event.target.parentNode;
 
     if (updateMode.value) {
-      projectStore.activeGroup = group.value;
+      emit("setActiveG", group.value);
     }
   } else if (activeGroup) {
     updateMode.value = true;
@@ -206,7 +223,7 @@ const onPathContextMenu = (event, activeGroup) => {
     svgCanvas.value.removeEventListener("mouseup", onCircleMouseUp);
     svgCanvas.value.removeEventListener("mousemove", onCircleMouseMoveWhileDragging);
 
-    projectStore.activeGroup = null;
+    emit("setActiveG", null);
   }
 };
 
@@ -302,7 +319,7 @@ const closeShape = () => {
   const generatedKey = generateUniqueId();
   group.value.setAttribute("id", generatedKey);
 
-  projectStore.addPoligonData(generatedKey);
+  emit("addPolygonData", generatedKey);
 
   resetShape();
 };
@@ -398,14 +415,14 @@ const resetZoom = () => {
 };
 
 watch(
-  () => projectStore.activeGroup,
+  () => props.activeGroup,
   (ns) => {
     onPathContextMenu(undefined, ns);
   }
 );
 
 onMounted(() => {
-  projectStore.svgRef = svgCanvas.value;
+  emit("setSvgRef", svgCanvas.value);
   svgCanvas.value.addEventListener("click", onCanvasClick);
   svgCanvas.value.addEventListener("mousemove", throttle(onCanvasMouseMove, 10));
   svgCanvas.value.addEventListener("contextmenu", onPathContextMenu);

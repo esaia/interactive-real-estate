@@ -2,22 +2,30 @@
 import { ref } from "vue";
 import Collapse from "../icons/Collapse.vue";
 import Edit from "../icons/Edit.vue";
-import { useProjectStore } from "../../../stores/useProject";
-import { storeToRefs } from "pinia";
-import { PolygonData } from "../../../../types/components";
+import { PolygonData, PolygonDataCollection } from "../../../../types/components";
 const isClollapsed = ref(false);
 
-const projectStore = useProjectStore();
-const { polygon_data, activeGroup, svgRef } = storeToRefs(projectStore);
+const emit = defineEmits<{
+  (e: "setActiveG", gTag: SVGGElement): void;
+  (e: "deleteG", key: string): void;
+}>();
+
+const props = defineProps<{
+  polygon_data: PolygonDataCollection | undefined;
+  activeGroup: SVGGElement | null;
+  svgRef: HTMLElement | null;
+}>();
 
 const setActiveG = (item: PolygonData) => {
-  activeGroup.value = svgRef.value?.querySelector(`#${item.key}`) || null;
+  const gTag = (props.svgRef?.querySelector(`g#${item.key}`) as SVGGElement) || null;
+
+  if (gTag) {
+    emit("setActiveG", gTag);
+  }
 };
 
 const deleteG = (item: PolygonData) => {
-  activeGroup.value = null;
-  projectStore.removePoligonItem(item.key);
-  svgRef.value?.querySelector(`#${item.key}`)?.remove();
+  emit("deleteG", item.key);
 };
 </script>
 
@@ -61,7 +69,7 @@ const deleteG = (item: PolygonData) => {
         }"
         @click="setActiveG(item)"
       >
-        <p>shape #{{ item.id }}</p>
+        <p>shape #{{ item.key.slice(0, 6) }}</p>
 
         <div class="flex">
           <div
