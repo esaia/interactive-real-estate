@@ -367,7 +367,7 @@ const onDocumentKeydown = (event) => {
 };
 
 const applyZoom = (cursorX, cursorY) => {
-  const container = document.querySelector(".canvas-container");
+  const container = svgCanvas.value.parentElement;
   const containerOffset = container.getBoundingClientRect();
   const containerWidth = container.clientWidth;
   const containerHeight = container.clientHeight;
@@ -389,7 +389,8 @@ const applyZoom = (cursorX, cursorY) => {
 
 const resetZoom = () => {
   zoomLevel.value = 1;
-  const container = document.querySelector(".canvas-container");
+  const container = svgCanvas.value.parentElement;
+
   container.querySelector("img").style.transform = "scale(1)";
   container.querySelector("svg").style.transform = "scale(1)";
   container.querySelector("img").style.transformOrigin = "center center";

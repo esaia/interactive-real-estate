@@ -13,27 +13,38 @@ const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = st
 const { CIRCLE_RADIUS, PATH_COLOR } = constants;
 
 const updateProject = async () => {
-  const svg = svgRef.value?.querySelector("svg");
+  // const svg = svgRef.value?.querySelector("svg");
 
-  if (svg) {
-    const g = svg.querySelectorAll("g");
+  if (svgRef.value) {
+    const imgElement = svgRef.value?.parentElement?.querySelector("img");
+    const svg = svgRef.value.querySelector("svg");
 
-    g.forEach((gtag) => {
-      if (!gtag.getAttribute("id")) {
-        gtag.remove();
-      }
-    });
+    if (imgElement) {
+      imgElement.style.transform = "scale(1)";
+    }
 
-    const circles = svg.querySelectorAll("circle");
-    circles.forEach((circle) => {
-      circle.setAttribute("fill", "#00000000");
-      circle.setAttribute("r", CIRCLE_RADIUS.toString());
-    });
+    if (svg) {
+      svg.style.transform = "scale(1)";
 
-    const paths = svg.querySelectorAll("path");
-    paths.forEach((path) => {
-      path.setAttribute("fill", PATH_COLOR);
-    });
+      const g = svgRef.value.querySelectorAll("g");
+
+      g.forEach((gtag) => {
+        if (!gtag.getAttribute("id")) {
+          gtag.remove();
+        }
+      });
+
+      const circles = svg.querySelectorAll("circle");
+      circles.forEach((circle) => {
+        circle.setAttribute("fill", "#00000000");
+        circle.setAttribute("r", CIRCLE_RADIUS.toString());
+      });
+
+      const paths = svg.querySelectorAll("path");
+      paths.forEach((path) => {
+        path.setAttribute("fill", PATH_COLOR);
+      });
+    }
   }
 
   const params: any = {
