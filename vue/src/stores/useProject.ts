@@ -9,7 +9,7 @@ export const useProjectStore = defineStore("project", () => {
   const svg = ref("");
   const project_image = ref("");
   const slug = ref("");
-  const polygon_data = ref<PolygonDataCollection>();
+  const polygon_data = ref<PolygonDataCollection[]>([]);
 
   const created_at = ref("");
   const updated_at = ref("");
@@ -18,21 +18,25 @@ export const useProjectStore = defineStore("project", () => {
   const activeGroup = ref<SVGGElement | null>(null);
 
   const addPoligonData = (key: string) => {
-    polygon_data.value = {
-      ...polygon_data.value,
-      [key]: {
-        id: "",
-        key,
-        type: ""
-      }
-    };
+    polygon_data.value = [...polygon_data.value, { id: "", key, type: "" }];
+
+    // polygon_data.value = {
+    //   ...polygon_data.value,
+    //   [key]: {
+    //     id: "",
+    //     key,
+    //     type: ""
+    //   }
+    // };
   };
 
   const removePoligonItem = (key: string) => {
     if (!key || !polygon_data.value) return;
 
-    const { [key]: _, ...rest } = polygon_data.value;
-    polygon_data.value = rest;
+    polygon_data.value = polygon_data.value.filter((item) => item.key !== key);
+
+    // const { [key]: _, ...rest } = polygon_data.value;
+    // polygon_data.value = rest;
   };
 
   const transformedTitle = computed(() => {

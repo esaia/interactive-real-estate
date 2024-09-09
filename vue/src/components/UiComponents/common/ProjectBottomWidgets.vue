@@ -107,7 +107,9 @@ const updateProject = async () => {
       <div class="w-60 rounded-sm bg-white p-4">
         <p class="mb-1 font-semibold">Change project image</p>
         <img :src="selectedImage?.url || project_image" class="h-32 w-full rounded-sm object-cover" />
-        <button class="button !mt-2 w-full" @click="selectImage">Upload</button>
+        <button class="!mt-2 w-full border border-dashed py-2 transition-all hover:bg-gray-50" @click="selectImage">
+          Upload
+        </button>
       </div>
     </div>
 

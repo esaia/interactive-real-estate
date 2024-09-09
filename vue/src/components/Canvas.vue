@@ -13,7 +13,7 @@ defineEmits<{
 
 defineProps<{
   projectImage: string;
-  polygon_data: PolygonDataCollection | undefined;
+  polygon_data: PolygonDataCollection[] | undefined;
   svgRef: HTMLElement | null;
   activeGroup: SVGGElement | null;
 }>();

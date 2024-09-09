@@ -62,9 +62,7 @@ function ire_update_project()
     );
 
 
-    if (isset($params['polygon_data'])) {
-        $params['polygon_data'] = json_encode($params['polygon_data']);
-    }
+    $params['polygon_data'] = json_encode($params['polygon_data']);
 
 
     $table_name = $wpdb->prefix . 'ire_projects';

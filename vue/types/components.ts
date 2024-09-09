@@ -67,16 +67,23 @@ export interface ProjectInterface {
   svg: string;
   project_image: string;
   slug: string;
-  polygon_data: PolygonDataCollection;
+  polygon_data: PolygonDataCollection[];
   created_at: string;
   updated_at: string;
 }
-export interface PolygonDataCollection {
-  [key: string]: PolygonData;
-}
 
-export interface PolygonData {
+export interface PolygonDataCollection {
   id: string;
   key: string;
   type: string;
 }
+
+// export interface PolygonDataCollection {
+//   [key: string]: PolygonData;
+// }
+
+// export interface PolygonData {
+//   id: string;
+//   key: string;
+//   type: string;
+// }

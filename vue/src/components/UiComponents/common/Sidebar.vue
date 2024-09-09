@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import Collapse from "../icons/Collapse.vue";
 import Edit from "../icons/Edit.vue";
-import { PolygonData, PolygonDataCollection } from "../../../../types/components";
+import { PolygonDataCollection } from "../../../../types/components";
 const isClollapsed = ref(false);
 
 const emit = defineEmits<{
@@ -11,12 +11,12 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps<{
-  polygon_data: PolygonDataCollection | undefined;
+  polygon_data: PolygonDataCollection[] | undefined;
   activeGroup: SVGGElement | null;
   svgRef: HTMLElement | null;
 }>();
 
-const setActiveG = (item: PolygonData) => {
+const setActiveG = (item: PolygonDataCollection) => {
   const gTag = (props.svgRef?.querySelector(`g#${item.key}`) as SVGGElement) || null;
 
   if (gTag) {
@@ -24,7 +24,7 @@ const setActiveG = (item: PolygonData) => {
   }
 };
 
-const deleteG = (item: PolygonData) => {
+const deleteG = (item: PolygonDataCollection) => {
   emit("deleteG", item.key);
 };
 </script>
