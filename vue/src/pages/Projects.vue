@@ -3,7 +3,7 @@ import { ref } from "vue";
 import Button from "../components/UiComponents/form/Button.vue";
 import Modal from "../components/UiComponents/Modal.vue";
 import Plus from "../components/UiComponents/icons/Plus.vue";
-import AddProjectModal from "../components/UiComponents/common/AddProjectModal.vue";
+import AddProjectModal from "../components/UiComponents/projects/AddProjectModal.vue";
 
 defineProps<{
   projects: any;

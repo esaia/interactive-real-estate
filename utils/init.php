@@ -38,21 +38,21 @@ function ire_enqueue_scripts($hook)
 }
 
 
-register_activation_hook(IRE_PLUGIN_FILE, 'ire_create_table');
+register_activation_hook(IRE_PLUGIN_FILE, 'ire_create_tables');
 
 
 /**
  *  Create tables in DB
  */
-function ire_create_table()
+function ire_create_tables()
 {
     global $wpdb;
 
-
-    $table_name = $wpdb->prefix . 'ire_projects';
     $charset_collate = $wpdb->get_charset_collate();
 
-    $sql = "CREATE TABLE $table_name (
+    // Table for projects
+    $projects_table_name = $wpdb->prefix . 'ire_projects';
+    $projects_sql = "CREATE TABLE $projects_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         title VARCHAR(255) NOT NULL,
         svg LONGTEXT NOT NULL,
@@ -64,8 +64,26 @@ function ire_create_table()
         PRIMARY KEY  (id)
     ) $charset_collate;";
 
+    // Table for floors
+    $floors_table_name = $wpdb->prefix . 'ire_floors';
+    $floors_sql = "CREATE TABLE $floors_table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        floor_number INT NOT NULL,
+        title VARCHAR(255),
+        conf ENUM('reserved', 'sold'),
+        floor_image INT NOT NULL,
+        polygon_data JSON,
+        svg LONGTEXT NOT NULL,
+        project_id mediumint(9) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY  (id),
+        FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
+    ) $charset_collate;";
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($sql);
+    dbDelta($projects_sql);
+    dbDelta($floors_sql);
 }
 
 

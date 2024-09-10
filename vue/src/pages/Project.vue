@@ -2,10 +2,11 @@
 // @ts-ignore
 import SvgCanvas from "../components/SvgCanvas.vue";
 import Canvas from "../components/Canvas.vue";
-import ProjectBottomWidgets from "../components/UiComponents/common/ProjectBottomWidgets.vue";
+import ProjectBottomWidgets from "../components/UiComponents/projects/ProjectBottomWidgets.vue";
 // import Sidebar from "../components/UiComponents/common/Sidebar.vue";
 import { useProjectStore } from "../stores/useProject";
 import { storeToRefs } from "pinia";
+import FloorsList from "../components/UiComponents/floors/FloorsList.vue";
 
 const projectStore = useProjectStore();
 const { polygon_data, activeGroup, svgRef } = storeToRefs(projectStore);
@@ -37,10 +38,6 @@ const deleteG = (key: string) => {
     />
 
     <ProjectBottomWidgets />
-
-    <pre>
-    {{ polygon_data }}
-</pre
-    >
+    <FloorsList />
   </div>
 </template>

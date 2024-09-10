@@ -19,24 +19,12 @@ export const useProjectStore = defineStore("project", () => {
 
   const addPoligonData = (key: string) => {
     polygon_data.value = [...polygon_data.value, { id: "", key, type: "" }];
-
-    // polygon_data.value = {
-    //   ...polygon_data.value,
-    //   [key]: {
-    //     id: "",
-    //     key,
-    //     type: ""
-    //   }
-    // };
   };
 
   const removePoligonItem = (key: string) => {
     if (!key || !polygon_data.value) return;
 
     polygon_data.value = polygon_data.value.filter((item) => item.key !== key);
-
-    // const { [key]: _, ...rest } = polygon_data.value;
-    // polygon_data.value = rest;
   };
 
   const transformedTitle = computed(() => {
