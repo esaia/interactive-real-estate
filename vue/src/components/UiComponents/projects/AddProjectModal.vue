@@ -2,8 +2,8 @@
 import { ref } from "vue";
 import Button from "../form/Button.vue";
 import ajaxAxios from "../../../utils/axios";
-import UploadImg from "../form/UploadImg.vue";
-import { imageInterface } from "../../../../types/components";
+import { imageInterface } from "@/types/components";
+import UploadImg from "@components/UiComponents/form/UploadImg.vue";
 
 const emit = defineEmits<{
   (e: "close"): void;

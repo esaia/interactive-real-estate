@@ -1,12 +1,9 @@
 <script setup lang="ts">
-// @ts-ignore
-import SvgCanvas from "../components/SvgCanvas.vue";
-import Canvas from "../components/Canvas.vue";
-import ProjectBottomWidgets from "../components/UiComponents/projects/ProjectBottomWidgets.vue";
-// import Sidebar from "../components/UiComponents/common/Sidebar.vue";
-import { useProjectStore } from "../stores/useProject";
+import Canvas from "@components/Canvas.vue";
+import ProjectBottomWidgets from "@components/UiComponents/projects/ProjectBottomWidgets.vue";
 import { storeToRefs } from "pinia";
-import ModalBoxes from "../components/UiComponents/projects/ModalBoxes.vue";
+import { useProjectStore } from "@/src/stores/useProject";
+import ModalBoxes from "@components/UiComponents/projects/ModalBoxes.vue";
 
 const projectStore = useProjectStore();
 const { polygon_data, activeGroup, svgRef } = storeToRefs(projectStore);
@@ -20,12 +17,6 @@ const deleteG = (key: string) => {
 
 <template>
   <div class="container-fluid">
-    <!-- <div class="canvas-container relative h-full overflow-hidden bg-gray-50 pt-[50%]">
-      <img :src="projectStore.project_image" class="absolute left-0 top-0 h-full w-full object-cover" />
-      <SvgCanvas />
-      <Sidebar />
-    </div> -->
-
     <Canvas
       :projectImage="projectStore.project_image"
       :polygon_data="polygon_data"

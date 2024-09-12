@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { imageInterface } from "../../../../types/components";
-import UploadImg from "../form/UploadImg.vue";
-import { useProjectStore } from "../../../stores/useProject";
 import { storeToRefs } from "pinia";
-import ajaxAxios from "../../../utils/axios";
 import { useToast } from "vue-toast-notification";
+import { useProjectStore } from "@/src/stores/useProject";
+import ajaxAxios from "@/src/utils/axios";
+import UploadImg from "../form/UploadImg.vue";
+import { imageInterface } from "@/types/components";
 
 const projectStore = useProjectStore();
 const { id } = storeToRefs(projectStore);

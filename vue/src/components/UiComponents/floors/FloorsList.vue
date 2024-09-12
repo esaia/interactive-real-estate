@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Edit from "../icons/Edit.vue";
-import Modal from "../Modal.vue";
-import AddFloorModal from "./AddFloorModal.vue";
+import Modal from "@components/UiComponents/Modal.vue";
+import Edit from "@components/UiComponents/icons/Edit.vue";
+import AddFloorModal from "@components/UiComponents/floors/AddFloorModal.vue";
 
 const showFloorModal = ref(false);
 </script>
