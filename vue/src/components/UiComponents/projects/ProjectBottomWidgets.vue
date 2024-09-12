@@ -84,9 +84,9 @@ const updateProject = async () => {
 </script>
 
 <template>
-  <div class="mt-7 flex items-start justify-between">
+  <div class="my-7 flex items-start justify-between">
     <div class="flex gap-5">
-      <div class="flex flex-col items-start gap-5 rounded-sm bg-white p-4">
+      <div class="flex flex-col items-start gap-5 rounded-md bg-white p-4">
         <div class="flex flex-col gap-2">
           <label for="" class="font-semibold">Project Title:</label>
           <input type="text" v-model="title" />
@@ -104,9 +104,9 @@ const updateProject = async () => {
         </div>
       </div>
 
-      <div class="w-60 rounded-sm bg-white p-4">
+      <div class="w-60 rounded-md bg-white p-4">
         <p class="mb-1 font-semibold">Change project image</p>
-        <img :src="selectedImage?.url || project_image" class="h-32 w-full rounded-sm object-cover" />
+        <img :src="selectedImage?.url || project_image" class="h-32 w-full rounded-md object-cover" />
         <button class="!mt-2 w-full border border-dashed py-2 transition-all hover:bg-gray-50" @click="selectImage">
           Upload
         </button>

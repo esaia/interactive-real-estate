@@ -72,6 +72,19 @@ export interface ProjectInterface {
   updated_at: string;
 }
 
+export interface FloorInterface {
+  id: string;
+  title: string;
+  floor_number: number;
+  conf: "reserved" | "sold";
+  floor_image: string;
+  svg: string;
+  project_id: number;
+  polygon_data: PolygonDataCollection[];
+  created_at: string;
+  updated_at: string;
+}
+
 export interface PolygonDataCollection {
   id: string;
   key: string;

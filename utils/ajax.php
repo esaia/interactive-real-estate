@@ -71,10 +71,13 @@ function ire_update_project()
     $where = array('id' => $project_id);
     $updated = $wpdb->update($table_name, $params, $where);
 
-    if ($updated !== false) {
-        wp_send_json_success('project updated');
-    } else {
+
+
+
+    if ($wpdb->last_error) {
         wp_send_json_error('No projects found.');
+    } else {
+        wp_send_json_success('project updated');
     }
 }
 
@@ -85,7 +88,6 @@ add_action('wp_ajax_get_projects', 'ire_get_projects');
 function ire_get_projects()
 {
 
-    error_log('runned');
     global $wpdb;
     $table_name = $wpdb->prefix . 'ire_projects';
     $project_id = isset($_POST['projectId']) ? intval($_POST['projectId']) : null;
@@ -115,9 +117,59 @@ function ire_get_projects()
         }
     }
 
-    if ($result) {
-        wp_send_json_success($result);
-    } else {
+
+
+    if ($wpdb->last_error) {
         wp_send_json_error('No projects found.');
+    } else {
+        wp_send_json_success($result);
+    }
+}
+
+
+
+add_action('wp_ajax_create_floor', 'ire_create_floor');
+
+
+function ire_create_floor()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'ire_floors';
+
+    ire_check_nonce($_POST['nonce'], 'ire_nonce');
+
+    $title = isset($_POST['title']) ? sanitize_text_field($_POST['title']) : '';
+
+    $floor_number = intval($_POST['floor_number']) ?? null;
+    $title = sanitize_text_field($_POST['title']) ?? null;
+    $conf = $_POST['conf'] ?? null;
+    $floor_image =  sanitize_text_field($_POST['floor_image']['id']) ?? null;
+    $project_id = intval($_POST['project_id']) ?? null;
+
+
+    if (!$floor_number || !$floor_image || !$project_id) {
+        wp_send_json_error('Required fields are missing.');
+    }
+
+
+
+    $params = array(
+        'floor_number' => $floor_number,
+        'title' => $title,
+        'conf' => $conf,
+        'floor_image' => $floor_image,
+        'project_id' => $project_id
+    );
+
+    // Insert into database
+    $wpdb->insert(
+        $table_name,
+        $params
+    );
+
+    if ($wpdb->last_error) {
+        wp_send_json_error('Database error');
+    } else {
+        wp_send_json_success('Project added');
     }
 }

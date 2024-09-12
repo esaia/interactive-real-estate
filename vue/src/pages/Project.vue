@@ -6,7 +6,7 @@ import ProjectBottomWidgets from "../components/UiComponents/projects/ProjectBot
 // import Sidebar from "../components/UiComponents/common/Sidebar.vue";
 import { useProjectStore } from "../stores/useProject";
 import { storeToRefs } from "pinia";
-import FloorsList from "../components/UiComponents/floors/FloorsList.vue";
+import ModalBoxes from "../components/UiComponents/projects/ModalBoxes.vue";
 
 const projectStore = useProjectStore();
 const { polygon_data, activeGroup, svgRef } = storeToRefs(projectStore);
@@ -38,6 +38,7 @@ const deleteG = (key: string) => {
     />
 
     <ProjectBottomWidgets />
-    <FloorsList />
+
+    <ModalBoxes />
   </div>
 </template>

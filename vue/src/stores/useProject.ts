@@ -4,7 +4,7 @@ import { PolygonDataCollection, ProjectInterface } from "../../types/components"
 import { transformSvgString } from "../composables/helpers";
 
 export const useProjectStore = defineStore("project", () => {
-  const id = ref("");
+  const id = ref();
   const title = ref("");
   const svg = ref("");
   const project_image = ref("");
@@ -32,7 +32,7 @@ export const useProjectStore = defineStore("project", () => {
   });
 
   const setProject = (project: ProjectInterface) => {
-    id.value = project.id;
+    id.value = +project.id;
     title.value = project.title || "";
     svg.value = project.svg || "";
     project_image.value = project.project_image || "";
