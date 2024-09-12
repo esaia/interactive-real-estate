@@ -69,7 +69,7 @@ function ire_update_project()
 
 
     $where = array('id' => $project_id);
-    $updated = $wpdb->update($table_name, $params, $where);
+    $wpdb->update($table_name, $params, $where);
 
 
 
@@ -167,9 +167,87 @@ function ire_create_floor()
         $params
     );
 
+
     if ($wpdb->last_error) {
         wp_send_json_error('Database error');
     } else {
-        wp_send_json_success('Project added');
+        $new_floor_id = $wpdb->insert_id;
+
+        $new_floor = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $table_name WHERE id = %d",
+            $new_floor_id
+        ));
+
+        wp_send_json_success($new_floor);
+    }
+}
+
+
+add_action('wp_ajax_get_floors', 'ire_get_floors');
+
+function ire_get_floors()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'ire_floors';
+
+    ire_check_nonce($_POST['nonce'], 'ire_nonce');
+
+    $project_id = isset($_POST['project_id']) && is_numeric($_POST['project_id']) ? intval($_POST['project_id']) : 0;
+
+    if ($project_id > 0) {
+        $query = $wpdb->prepare("SELECT * FROM $table_name WHERE project_id = %d", $project_id);
+        $results = $wpdb->get_results($query, ARRAY_A);
+
+        if (is_wp_error($results)) {
+            wp_send_json_error($results->get_error_message());
+        } else {
+            wp_send_json_success($results);
+        }
+    } else {
+        wp_send_json_error('Invalid project ID');
+    }
+}
+
+
+
+
+add_action('wp_ajax_update_floor', 'ire_update_floor');
+
+function ire_update_floor()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'ire_floors';
+
+    ire_check_nonce($_POST['nonce'], 'ire_nonce');
+
+
+
+    $floor_id = isset($_POST['floor_id']) ? intval($_POST['floor_id']) : null;
+
+    if (!$floor_id) {
+        wp_send_json_error('Floor_id is required');
+
+        return;
+    }
+
+    $keys = ['floor_number', 'title', 'conf', 'floor_image',];
+
+    $params = array_filter(
+        $_POST,
+        function ($key) use ($keys) {
+            return in_array($key, $keys);
+        },
+        ARRAY_FILTER_USE_KEY
+    );
+
+
+    $where = array('id' => $floor_id);
+    $wpdb->update($table_name, $params, $where);
+
+
+    if ($wpdb->last_error) {
+        wp_send_json_error('No projects found.');
+    } else {
+        wp_send_json_success('project updated');
     }
 }

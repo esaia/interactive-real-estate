@@ -7,7 +7,7 @@ import Floor from "../icons/floor.vue";
 import Stack from "../icons/Stack.vue";
 import Modal from "../Modal.vue";
 
-const showModal = ref<"block" | "floor" | "flat" | "type" | "">("");
+const showModal = ref<"block" | "floor" | "flat" | "type" | "">("floor");
 </script>
 
 <template>

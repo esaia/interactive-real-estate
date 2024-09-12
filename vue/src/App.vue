@@ -3,9 +3,9 @@ import { onMounted, ref } from "vue";
 import Projects from "./pages/Projects.vue";
 import Project from "./pages/Project.vue";
 import ajaxAxios from "./utils/axios";
-import { useProjectStore } from "./stores/useProject";
 import { ProjectInterface } from "../types/components";
 import "vue-toast-notification/dist/theme-sugar.css";
+import { useProjectStore } from "./stores/useProject";
 
 const projectStore = useProjectStore();
 
