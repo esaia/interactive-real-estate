@@ -2,7 +2,7 @@
 import { onMounted, ref, watch } from "vue";
 import Modal from "@components/UiComponents/Modal.vue";
 import AddEditFloorModal from "@/src/components/UiComponents/floors/AddEditFloorModal.vue";
-import { FloorInterface } from "@/types/components";
+import { FloorInterface, FloorItem } from "@/types/components";
 import ajaxAxios from "@/src/utils/axios";
 import { useProjectStore } from "@/src/stores/useProject";
 import { storeToRefs } from "pinia";
@@ -21,7 +21,7 @@ const sortField = ref("");
 const sortOrder = ref<"ASC" | "DESC" | "">("ASC");
 const currentPage = ref(1);
 
-const editFloor = (floor: FloorInterface) => {
+const editFloor = (floor: FloorItem | null) => {
   showFloorModal.value = true;
   floorsStore.setActiveFloor(floor);
 };
@@ -62,6 +62,15 @@ watch(
   }
 );
 
+watch(
+  () => showFloorModal.value,
+  (ns) => {
+    if (!ns) {
+      floorsStore.setActiveFloor(null);
+    }
+  }
+);
+
 onMounted(() => {
   fetchFloors();
 });
@@ -78,7 +87,7 @@ onMounted(() => {
     </div>
 
     <div class="relative overflow-x-auto shadow-sm">
-      <Table :data="floors?.data" @edit-action="(floor: FloorInterface) => editFloor(floor)">
+      <Table :data="floors?.data" @edit-action="(floor: FloorItem | null) => editFloor(floor)">
         <template #header>
           <TableTh
             fieldTitle="id"

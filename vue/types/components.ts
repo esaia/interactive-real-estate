@@ -73,18 +73,18 @@ export interface ProjectInterface {
 }
 
 export interface FloorInterface {
-  data: Floor[];
+  data: FloorItem[];
   page: number;
   per_page: number;
   total: number;
 }
 
-interface Floor {
+export interface FloorItem {
   id: string;
   title: string;
   floor_number: number;
   conf: "reserved" | "sold";
-  floor_image: imageInterface;
+  floor_image: string;
   svg: string;
   project_id: number;
   polygon_data: PolygonDataCollection[];

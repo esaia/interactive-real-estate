@@ -7,11 +7,18 @@ import ajaxAxios from "@/src/utils/axios";
 import UploadImg from "../form/UploadImg.vue";
 import { imageInterface } from "@/types/components";
 import { useFloorsStore } from "@/src/stores/useFloors";
+import Canvas from "../../Canvas.vue";
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
 const { id } = storeToRefs(projectStore);
-const { activeFloor } = storeToRefs(floorStore);
+const { activeFloor, activeGroup, floorSvgRef } = storeToRefs(floorStore);
+
+const deleteG = (key: string) => {
+  activeGroup.value = null;
+  floorStore.removePoligonItem(key);
+  floorSvgRef.value?.querySelector(`#${key}`)?.remove();
+};
 
 const $toast = useToast();
 
@@ -75,6 +82,7 @@ const createFloor = async () => {
     });
 
     floorStore.setActiveFloor(data.data);
+    floor_image.value = undefined;
   } else {
     $toast.error(data?.data || "Something went wrong!", {
       position: "top"
@@ -87,14 +95,26 @@ onMounted(() => {
     title.value = activeFloor.value.title;
     floor_number.value = activeFloor.value.floor_number;
     conf.value = activeFloor.value.conf;
-    floor_image.value = activeFloor.value.floor_image;
   }
 });
 </script>
 
 <template>
   <div class="flex gap-5">
-    <div class="flex-1">Floor Canvas</div>
+    <div class="flex-1">
+      <Canvas
+        v-if="activeFloor"
+        :projectImage="activeFloor?.floor_image"
+        :polygon_data="activeFloor?.polygon_data"
+        :svgRef="floorSvgRef"
+        :svg="activeFloor.svg"
+        :activeGroup="activeGroup"
+        @set-svg-ref="(svgContainer) => (floorSvgRef = svgContainer)"
+        @set-active-g="(gTag) => (activeGroup = gTag)"
+        @delete-g="(key) => deleteG(key)"
+        @add-polygon-data="(key) => projectStore.addPoligonData(key)"
+      />
+    </div>
     <form class="mt-8 flex w-60 flex-col items-center gap-3" @submit.prevent="submitForm">
       <h2 class="text-lg">{{ activeFloor ? "Edit floor" : "Add floor" }}</h2>
       <input v-model="title" type="text" class="w-full" placeholder="Floor title" />

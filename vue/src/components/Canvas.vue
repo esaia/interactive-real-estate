@@ -15,6 +15,7 @@ defineProps<{
   projectImage: string;
   polygon_data: PolygonDataCollection[] | undefined;
   svgRef: HTMLElement | null;
+  svg: string;
   activeGroup: SVGGElement | null;
 }>();
 </script>
@@ -24,6 +25,7 @@ defineProps<{
     <img :src="projectImage" class="absolute left-0 top-0 h-full w-full object-cover" />
     <SvgCanvas
       :svgRef="svgRef"
+      :svg="svg"
       :active-group="activeGroup"
       @set-active-g="(gTag: SVGGElement | null) => $emit('setActiveG', gTag)"
       @set-svg-ref="(svgContainer: HTMLDivElement) => $emit('setSvgRef', svgContainer)"

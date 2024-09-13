@@ -228,6 +228,19 @@ function ire_get_floors()
         if (is_wp_error($results)) {
             wp_send_json_error($results->get_error_message());
         } else {
+
+
+            if ($results) {
+
+                $results =    array_map(function ($item) {
+                    $item['floor_image'] = json_decode($item['floor_image']);
+                    $item['floor_image'] = wp_get_attachment_image_url($item['floor_image'], 90);
+
+                    return $item;
+                }, $results);
+            }
+
+
             wp_send_json_success(array(
                 'data' => $results,
                 'total' => $total_results,

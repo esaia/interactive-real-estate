@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { watch } from "vue";
 import { useSelectImage } from "../../../composables/useSelectImage";
 import Upload from "../icons/Upload.vue";
 import { imageInterface } from "../../../../types/components";
@@ -27,6 +27,6 @@ watch(
       <Upload />
       <p>Upload Project Image</p>
     </button>
-    <img v-if="selectedImage" :src="selectedImage.url" class="h-44 w-full rounded-md object-cover" />
+    <img v-if="selectedImage && modelValue" :src="selectedImage.url" class="h-44 w-full rounded-md object-cover" />
   </div>
 </template>

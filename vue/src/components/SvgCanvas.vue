@@ -12,6 +12,7 @@ const emit = defineEmits(["setSvgRef", "setActiveG", "addPolygonData"]);
 
 const props = defineProps({
   svgRef: HTMLDivElement | null,
+  svg: String,
   activeGroup: SVGGElement | null
 });
 
@@ -438,9 +439,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div v-if="!projectStore.svg" ref="svgCanvas" class="svg-canvas-container">
+  <div v-if="!svg" ref="svgCanvas" class="svg-canvas-container">
     <svg ref="svgCanvas" viewBox="0 0 1720 860"></svg>
   </div>
 
-  <div v-else v-html="projectStore.svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
+  <div v-else v-html="svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
 </template>
