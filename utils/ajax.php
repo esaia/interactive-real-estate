@@ -193,9 +193,25 @@ function ire_get_floors()
     ire_check_nonce($_POST['nonce'], 'ire_nonce');
 
     $project_id = isset($_POST['project_id']) && is_numeric($_POST['project_id']) ? intval($_POST['project_id']) : 0;
+    $sort_field = isset($_POST['sort_field']) ? sanitize_text_field($_POST['sort_field']) : 'id';
+    $sort_order = isset($_POST['sort_order']) ? strtoupper(sanitize_text_field($_POST['sort_order'])) : 'ASC';
+
+    $valid_sort_fields = array('id', 'floor_number', 'conf');
+    $valid_sort_orders = array('ASC', 'DESC');
+
+    if (!in_array($sort_field, $valid_sort_fields)) {
+        $sort_field = 'id'; // Default
+    }
+    if (!in_array($sort_order, $valid_sort_orders)) {
+        $sort_order = 'ASC'; // Default
+    }
 
     if ($project_id > 0) {
-        $query = $wpdb->prepare("SELECT * FROM $table_name WHERE project_id = %d", $project_id);
+        $query = $wpdb->prepare(
+            "SELECT * FROM $table_name WHERE project_id = %d ORDER BY $sort_field $sort_order",
+            $project_id
+        );
+
         $results = $wpdb->get_results($query, ARRAY_A);
 
         if (is_wp_error($results)) {

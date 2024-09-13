@@ -31,13 +31,17 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
     sortField.value = field;
     sortOrder.value = "ASC";
   }
+
+  fetchFloors();
 };
 
-onMounted(async () => {
+const fetchFloors = async () => {
   const { data } = await ajaxAxios.post("", {
     action: "get_floors",
     nonce: irePlugin.nonce,
-    project_id: id.value
+    project_id: id.value,
+    sort_field: sortField.value,
+    sort_order: sortOrder.value
   });
 
   if (!data.success) {
@@ -45,6 +49,10 @@ onMounted(async () => {
   }
 
   floors.value = data.data;
+};
+
+onMounted(() => {
+  fetchFloors();
 });
 </script>
 
@@ -71,7 +79,7 @@ onMounted(async () => {
           />
           <TableTh
             fieldTitle="floor"
-            field="floor"
+            field="floor_number"
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
