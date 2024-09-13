@@ -4,10 +4,6 @@ import { generateUniqueId } from "../composables/helpers";
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "../stores/useProject";
 
-// defineEmits<{
-//   (e: "setSvgRef", svgContainer: HTMLDivElement);
-// }>([]); //transfrom ts to js emit
-
 const emit = defineEmits(["setSvgRef", "setActiveG", "addPolygonData"]);
 
 const props = defineProps({

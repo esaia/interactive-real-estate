@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
-import { FloorItem } from "../../types/components";
+import { ref, watch } from "vue";
+import { FloorItem, PolygonDataCollection } from "../../types/components";
+import { transformSvgString } from "../composables/helpers";
 
 export const useFloorsStore = defineStore("floors", () => {
   const activeFloor = ref<FloorItem | null>();
@@ -12,13 +13,49 @@ export const useFloorsStore = defineStore("floors", () => {
   };
 
   const addPoligonData = (key: string) => {
-    // activeFloor.value?.polygon_data = [...polygon_data.value, { id: "", key, type: "" }];
+    if (!activeFloor.value) return;
+
+    if (!activeFloor.value.polygon_data) {
+      activeFloor.value.polygon_data = [];
+    }
+
+    const newPolygonData: PolygonDataCollection = {
+      id: "",
+      key: key,
+      type: ""
+    };
+
+    activeFloor.value.polygon_data.push(newPolygonData);
   };
 
   const removePoligonItem = (key: string) => {
-    // if (!key || !polygon_data.value) return;
-    // polygon_data.value = polygon_data.value.filter((item) => item.key !== key);
+    if (!activeFloor.value || !activeFloor.value.polygon_data) {
+      console.error("No active floor to remove polygon data from.");
+      return;
+    }
+
+    if (activeFloor.value.polygon_data) {
+      const index = activeFloor.value.polygon_data.findIndex((item) => item.key === key);
+      if (index !== -1) {
+        activeFloor.value.polygon_data.splice(index, 1);
+      } else {
+        console.warn(`Polygon item with key "${key}" not found.`);
+      }
+    }
   };
+
+  watch(
+    () => activeFloor.value?.svg,
+    () => {
+      if (!activeFloor.value) {
+        return;
+      }
+
+      activeFloor.value.svg = transformSvgString(activeFloor.value.svg);
+      //  transformSvgString(active);
+    },
+    { immediate: true }
+  );
 
   return {
     activeFloor,

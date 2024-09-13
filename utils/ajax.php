@@ -143,11 +143,11 @@ function ire_create_floor()
     $floor_number = intval($_POST['floor_number']) ?? null;
     $title = sanitize_text_field($_POST['title']) ?? null;
     $conf = $_POST['conf'] ?? null;
-    $floor_image =  sanitize_text_field($_POST['floor_image']['id']) ?? null;
+    $floor_image =  sanitize_text_field($_POST['floor_image']) ?? null;
     $project_id = intval($_POST['project_id']) ?? null;
 
 
-    if (!$floor_number || !$floor_image || !$project_id) {
+    if (!$floor_number || !$floor_image || !$project_id || !$floor_image) {
         wp_send_json_error('Required fields are missing.');
     }
 
@@ -177,6 +177,8 @@ function ire_create_floor()
             "SELECT * FROM $table_name WHERE id = %d",
             $new_floor_id
         ));
+
+        $new_floor->floor_image = wp_get_attachment_image_url($new_floor->floor_image, 90);
 
         wp_send_json_success($new_floor);
     }
@@ -233,7 +235,7 @@ function ire_get_floors()
             if ($results) {
 
                 $results =    array_map(function ($item) {
-                    $item['floor_image'] = json_decode($item['floor_image']);
+                    $item['polygon_data'] = json_decode($item['polygon_data']);
                     $item['floor_image'] = wp_get_attachment_image_url($item['floor_image'], 90);
 
                     return $item;
@@ -273,7 +275,7 @@ function ire_update_floor()
         return;
     }
 
-    $keys = ['floor_number', 'title', 'conf', 'floor_image',];
+    $keys = ['floor_number', 'title', 'conf', 'floor_image', 'polygon_data', 'svg'];
 
     $params = array_filter(
         $_POST,
@@ -282,6 +284,9 @@ function ire_update_floor()
         },
         ARRAY_FILTER_USE_KEY
     );
+
+    $params['polygon_data'] = json_encode($params['polygon_data']);
+
 
 
     $where = array('id' => $floor_id);

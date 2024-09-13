@@ -26,3 +26,37 @@ export const transformSvgString = (svgString: string) => {
 
   return transformedSvg;
 };
+
+export const resetCanvasAfterSave = (svgRef: HTMLDivElement) => {
+  const { CIRCLE_RADIUS, PATH_COLOR } = constants;
+
+  const imgElement = svgRef?.parentElement?.querySelector("img");
+  const svg = svgRef.querySelector("svg");
+
+  if (imgElement) {
+    imgElement.style.transform = "scale(1)";
+  }
+
+  if (svg) {
+    svg.style.transform = "scale(1)";
+
+    const g = svgRef.querySelectorAll("g");
+
+    g.forEach((gtag) => {
+      if (!gtag.getAttribute("id")) {
+        gtag.remove();
+      }
+    });
+
+    const circles = svg.querySelectorAll("circle");
+    circles.forEach((circle) => {
+      circle.setAttribute("fill", "#00000000");
+      circle.setAttribute("r", CIRCLE_RADIUS.toString());
+    });
+
+    const paths = svg.querySelectorAll("path");
+    paths.forEach((path) => {
+      path.setAttribute("fill", PATH_COLOR);
+    });
+  }
+};

@@ -8,6 +8,7 @@ import UploadImg from "../form/UploadImg.vue";
 import { imageInterface } from "@/types/components";
 import { useFloorsStore } from "@/src/stores/useFloors";
 import Canvas from "../../Canvas.vue";
+import { resetCanvasAfterSave } from "@/src/composables/helpers";
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
@@ -36,12 +37,18 @@ const submitForm = () => {
 };
 
 const updateFloor = async () => {
+  if (floorSvgRef.value) {
+    resetCanvasAfterSave(floorSvgRef.value);
+  }
+
   const params = {
     title: title.value,
     floor_number: floor_number.value,
     floor_image: floor_image.value?.id,
     conf: conf.value,
-    floor_id: activeFloor.value?.id
+    floor_id: activeFloor.value?.id,
+    polygon_data: activeFloor.value?.polygon_data,
+    svg: floorSvgRef.value?.querySelector("svg")?.outerHTML || ""
   };
 
   const { data } = await ajaxAxios.post("", {
@@ -54,6 +61,13 @@ const updateFloor = async () => {
     $toast.success("Floor Updated!", {
       position: "top"
     });
+
+    activeGroup.value = null;
+
+    if (floor_image.value?.url && activeFloor.value) {
+      activeFloor.value.floor_image = floor_image.value?.url;
+      floor_image.value = undefined;
+    }
   } else {
     $toast.error(data?.data || "Something went wrong!", {
       position: "top"
@@ -65,7 +79,7 @@ const createFloor = async () => {
   const params = {
     title: title.value,
     floor_number: floor_number.value,
-    floor_image: floor_image.value,
+    floor_image: floor_image.value?.id,
     conf: conf.value,
     project_id: id.value
   };
@@ -112,7 +126,7 @@ onMounted(() => {
         @set-svg-ref="(svgContainer) => (floorSvgRef = svgContainer)"
         @set-active-g="(gTag) => (activeGroup = gTag)"
         @delete-g="(key) => deleteG(key)"
-        @add-polygon-data="(key) => projectStore.addPoligonData(key)"
+        @add-polygon-data="(key) => floorStore.addPoligonData(key)"
       />
     </div>
     <form class="mt-8 flex w-60 flex-col items-center gap-3" @submit.prevent="submitForm">
