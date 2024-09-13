@@ -73,6 +73,13 @@ export interface ProjectInterface {
 }
 
 export interface FloorInterface {
+  data: Floor[];
+  page: number;
+  per_page: number;
+  total: number;
+}
+
+interface Floor {
   id: string;
   title: string;
   floor_number: number;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import Modal from "@components/UiComponents/Modal.vue";
 import AddEditFloorModal from "@/src/components/UiComponents/floors/AddEditFloorModal.vue";
 import { FloorInterface } from "@/types/components";
@@ -9,15 +9,17 @@ import { storeToRefs } from "pinia";
 import { useFloorsStore } from "@/src/stores/useFloors";
 import Table from "../common/table/Table.vue";
 import TableTh from "../common/table/TableTh.vue";
+import Pagination from "../common/Pagination.vue";
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
 const { id } = storeToRefs(projectStore);
 
 const showFloorModal = ref(false);
-const floors = ref<FloorInterface[]>();
+const floors = ref<FloorInterface>();
 const sortField = ref("");
 const sortOrder = ref<"ASC" | "DESC" | "">("ASC");
+const currentPage = ref(1);
 
 const editFloor = (floor: FloorInterface) => {
   showFloorModal.value = true;
@@ -41,7 +43,9 @@ const fetchFloors = async () => {
     nonce: irePlugin.nonce,
     project_id: id.value,
     sort_field: sortField.value,
-    sort_order: sortOrder.value
+    sort_order: sortOrder.value,
+    page: currentPage.value,
+    per_page: 5
   });
 
   if (!data.success) {
@@ -50,6 +54,13 @@ const fetchFloors = async () => {
 
   floors.value = data.data;
 };
+
+watch(
+  () => currentPage.value,
+  () => {
+    fetchFloors();
+  }
+);
 
 onMounted(() => {
   fetchFloors();
@@ -67,7 +78,7 @@ onMounted(() => {
     </div>
 
     <div class="relative overflow-x-auto shadow-sm">
-      <Table :data="floors" @edit-action="(floor: FloorInterface) => editFloor(floor)">
+      <Table :data="floors?.data" @edit-action="(floor: FloorInterface) => editFloor(floor)">
         <template #header>
           <TableTh
             fieldTitle="id"
@@ -103,6 +114,8 @@ onMounted(() => {
           <td>{{ floor.slotProps?.conf }}</td>
         </template>
       </Table>
+
+      <Pagination :totalItems="Number(floors?.total)" v-model="currentPage" />
     </div>
   </div>
 
