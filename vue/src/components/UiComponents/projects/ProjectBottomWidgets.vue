@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "../../../stores/useProject";
-import Button from "../form/Button.vue";
-import ajaxAxios from "../../../utils/axios";
 import { useToast } from "vue-toast-notification";
-import { useSelectImage } from "../../../composables/useSelectImage";
+import ajaxAxios from "@/src/utils/axios";
+import { useSelectImage } from "@/src/composables/useSelectImage";
+import Button from "../form/Button.vue";
 
 const $toast = useToast();
 const { selectedImage, selectImage } = useSelectImage();
@@ -92,9 +92,19 @@ const updateProject = async () => {
           <input type="text" v-model="title" />
         </div>
 
-        <div>
-          <p class="font-semibold">object-fit: contain</p>
-          <p class="mb-1 text-xs italic text-gray-500">default is cover</p>
+        <div class="flex w-full items-center justify-between gap-2">
+          <div>
+            <p class="font-semibold">object-fit: contain</p>
+            <p class="mb-1 text-xs italic text-gray-500">default is cover</p>
+          </div>
+          <input type="checkbox" />
+        </div>
+
+        <div class="flex w-full items-center justify-between gap-2">
+          <div>
+            <p class="font-semibold">object-fit: contain</p>
+            <p class="mb-1 text-xs italic text-gray-500">default is cover</p>
+          </div>
           <input type="checkbox" />
         </div>
 

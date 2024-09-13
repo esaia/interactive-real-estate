@@ -74,7 +74,7 @@ const deleteG = (item: PolygonDataCollection) => {
         <div class="flex">
           <div
             v-for="i in 3"
-            class="border-gray-10 last::bg-green-300 icon-hover-text h-fit cursor-pointer border border-r-0 p-1 transition-all first:rounded-l-sm last-of-type:rounded-r-sm last-of-type:border-r group-hover:border-gray-300"
+            class="border-gray-10 last::bg-green-300 icon-hover-text h-fit cursor-pointer border border-r-0 p-1 transition-all first:rounded-l-sm last-of-type:rounded-r-sm last-of-type:border-r group-hover:border-gray-300 [&_svg]:h-3 [&_svg]:w-3"
             :class="{
               'border-gray-300': item.key === activeGroup?.getAttribute('id')
             }"
