@@ -41,12 +41,13 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="fixed left-0 top-0 z-[99999] flex h-full w-full cursor-pointer items-center bg-black/20 backdrop-blur-sm"
+    class="fixed left-0 top-0 z-[99999] flex h-full w-full cursor-pointer items-center"
     :class="[{ 'justify-center': type === '1' || type === 'default', 'justify-end': type === '2' }]"
-    @click="$emit('close')"
   >
+    <div class="absolute left-0 top-0 h-full w-full bg-black/20 backdrop-blur-sm" @click="$emit('close')"></div>
+
     <Transition :name="type !== 'default' ? 'slide-left' : ''" appear>
-      <div class="relative cursor-default rounded-l-sm bg-white p-5" :class="dynamicClasses" @click.stop="">
+      <div class="relative cursor-default rounded-l-sm bg-white p-5" :class="dynamicClasses">
         <div @click="$emit('close')">
           <Close class="absolute right-4 top-4 cursor-pointer" />
         </div>

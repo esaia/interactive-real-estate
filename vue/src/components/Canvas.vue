@@ -22,7 +22,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="canvas-container relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
+  <div class="canvas-container relative h-full select-none bg-gray-50 pt-[50%]">
     <img :src="projectImage" class="absolute left-0 top-0 h-full w-full object-cover" />
     <SvgCanvas
       :svgRef="svgRef"
