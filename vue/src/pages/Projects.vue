@@ -45,7 +45,7 @@ const isModalOpen = ref(false);
     </div>
   </div>
 
-  <teleport to="body">
+  <teleport to="#my-vue-app">
     <transition name="fade-in-out">
       <Modal v-if="isModalOpen" :bool="isModalOpen" @close="isModalOpen = false">
         <AddProjectModal @close="isModalOpen = false" />

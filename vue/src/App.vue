@@ -33,7 +33,7 @@ onMounted(async () => {
 </script>
 <template>
   <template v-if="projectID">
-    <Project v-if="project" :project="project" />
+    <Project v-if="project" />
     <div v-else>not found</div>
   </template>
   <Projects v-else-if="projects" :projects="projects" />

@@ -41,7 +41,7 @@ const isModalOpen = ref(false);
 const activeItems = ref(props.data);
 
 const inputPlaceholder = computed(() => {
-  return selectModelValue ? selectModelValue.value.title : props.placeholder || "";
+  return selectModelValue ? selectModelValue.value?.title : props.placeholder || "";
 });
 
 const selectItem = (item: selectDataItem) => {
@@ -79,48 +79,45 @@ watch(
 </script>
 
 <template>
-  <div>
-    <client-only>
-      <div
-        v-click-outside="onClickOutside"
-        class="relative flex h-full w-full min-w-20 cursor-pointer items-center justify-between rounded-sm ring-1 ring-primary transition-all focus-within:ring-2"
-        @click="isModalOpen = true"
-      >
-        <input
-          type="text"
-          class="w-full !rounded-md !border-none shadow-none focus:!shadow-none"
-          :placeholder="inputPlaceholder"
-        />
+  <div
+    v-click-outside="onClickOutside"
+    class="relative flex h-full w-full min-w-20 cursor-pointer items-center justify-between rounded-sm ring-1 ring-primary transition-all focus-within:ring-2"
+    @click="isModalOpen = true"
+  >
+    <input
+      v-model="input"
+      type="text"
+      class="w-full !rounded-md !border-none shadow-none placeholder:text-black focus:!shadow-none"
+      :placeholder="inputPlaceholder"
+    />
 
-        <div class="mx-2 [&_svg]:h-5 [&_svg]:w-5">
-          <ArrowRight class="transition-all" :class="{ '-rotate-90': isModalOpen, 'rotate-90': !isModalOpen }" />
-        </div>
+    <div class="mx-2 [&_svg]:h-5 [&_svg]:w-5">
+      <ArrowRight class="transition-all" :class="{ '-rotate-90': isModalOpen, 'rotate-90': !isModalOpen }" />
+    </div>
 
-        <div
-          class="absolute left-0 top-[calc(100%+10px)] z-20 h-fit max-h-[200px] w-full origin-top overflow-y-auto rounded-md border bg-white p-2 shadow-sm transition-all"
+    <div
+      class="absolute left-0 top-[calc(100%+10px)] z-20 h-fit max-h-[200px] w-full origin-top overflow-y-auto rounded-md border bg-white p-2 shadow-sm transition-all"
+      :class="{
+        'scale-y-100': isModalOpen,
+        'scale-y-0': !isModalOpen
+      }"
+    >
+      <div v-if="activeItems.length">
+        <button
+          v-for="item in activeItems"
+          :key="item.value"
+          type="button"
+          class="line-clamp-1 w-full min-w-32 rounded-sm px-[8px] py-[6px] text-start hover:bg-gray-100"
           :class="{
-            'scale-y-100': isModalOpen,
-            'scale-y-0': !isModalOpen
+            '!bg-primary text-white': item.value === selectModelValue.value
           }"
+          @click="selectItem(item)"
         >
-          <div v-if="activeItems.length">
-            <button
-              v-for="item in activeItems"
-              :key="item.value"
-              type="button"
-              class="line-clamp-1 w-full min-w-32 rounded-sm px-[8px] py-[6px] text-start hover:bg-gray-100"
-              :class="{
-                '!bg-primary text-white': item.value === selectModelValue.value
-              }"
-              @click="selectItem(item)"
-            >
-              {{ item.title }}
-            </button>
-          </div>
-
-          <button v-else class="line-clamp-1 w-full min-w-32 px-[8px] py-[6px] text-start">nothing found</button>
-        </div>
+          {{ item.title }}
+        </button>
       </div>
-    </client-only>
+
+      <button v-else class="line-clamp-1 w-full min-w-32 px-[8px] py-[6px] text-start">nothing found</button>
+    </div>
   </div>
 </template>

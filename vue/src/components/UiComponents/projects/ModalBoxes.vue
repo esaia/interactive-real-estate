@@ -44,7 +44,7 @@ const showModal = ref<"block" | "floor" | "flat" | "type" | "">("");
       </div>
     </div>
 
-    <teleport to="body">
+    <teleport to="#my-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'floor'" type="2" width="w-11/12" @close="showModal = ''">
           <FloorsList />
