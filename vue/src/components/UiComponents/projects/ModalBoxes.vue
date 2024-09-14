@@ -7,7 +7,7 @@ import Floor from "../icons/floor.vue";
 import Stack from "../icons/Stack.vue";
 import Modal from "../Modal.vue";
 
-const showModal = ref<"block" | "floor" | "flat" | "type" | "">("floor");
+const showModal = ref<"block" | "floor" | "flat" | "type" | "">("");
 </script>
 
 <template>
@@ -46,13 +46,7 @@ const showModal = ref<"block" | "floor" | "flat" | "type" | "">("floor");
 
     <teleport to="body">
       <Transition name="fade">
-        <Modal
-          v-if="showModal === 'floor'"
-          :bool="showModal === 'floor'"
-          type="2"
-          width="w-11/12"
-          @close="showModal = ''"
-        >
+        <Modal v-if="showModal === 'floor'" type="2" width="w-11/12" @close="showModal = ''">
           <FloorsList />
         </Modal>
       </Transition>

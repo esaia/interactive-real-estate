@@ -5,10 +5,12 @@ import { createPinia } from "pinia";
 import ToastPlugin from "vue-toast-notification";
 import VueAwesomePaginate from "vue-awesome-paginate";
 import "vue-awesome-paginate/dist/style.css";
+import vClickOutside from "click-outside-vue3";
 
 const pinia = createPinia();
 const app = createApp(App);
 
+app.use(vClickOutside);
 app.use(pinia);
 app.use(VueAwesomePaginate);
 app.use(ToastPlugin);

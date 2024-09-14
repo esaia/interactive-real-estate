@@ -66,6 +66,8 @@ watch(
   () => showFloorModal.value,
   (ns) => {
     if (!ns) {
+      fetchFloors();
+
       floorsStore.setActiveFloor(null);
     }
   }
@@ -130,7 +132,7 @@ onMounted(() => {
 
   <teleport to="body">
     <Transition name="fade">
-      <Modal v-if="showFloorModal" :bool="showFloorModal" @close="showFloorModal = false" type="2">
+      <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2">
         <AddEditFloorModal />
       </Modal>
     </Transition>

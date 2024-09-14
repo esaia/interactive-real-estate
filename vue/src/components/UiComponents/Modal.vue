@@ -46,7 +46,7 @@ onUnmounted(() => {
     @click="$emit('close')"
   >
     <Transition :name="type !== 'default' ? 'slide-left' : ''" appear>
-      <div v-if="bool" class="relative cursor-default rounded-l-sm bg-white p-5" :class="dynamicClasses" @click.stop="">
+      <div class="relative cursor-default rounded-l-sm bg-white p-5" :class="dynamicClasses" @click.stop="">
         <div @click="$emit('close')">
           <Close class="absolute right-4 top-4 cursor-pointer" />
         </div>

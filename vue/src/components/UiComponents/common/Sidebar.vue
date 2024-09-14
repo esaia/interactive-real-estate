@@ -3,6 +3,11 @@ import { ref } from "vue";
 import Collapse from "../icons/Collapse.vue";
 import Edit from "../icons/Edit.vue";
 import { PolygonDataCollection } from "../../../../types/components";
+import Info from "../icons/Info.vue";
+import Eye from "../icons/Eye.vue";
+import Delete from "../icons/Delete.vue";
+import Link from "../icons/Link.vue";
+import Unlink from "../icons/Unlink.vue";
 const isClollapsed = ref(false);
 
 const emit = defineEmits<{
@@ -31,30 +36,29 @@ const deleteG = (item: PolygonDataCollection) => {
 
 <template>
   <div
-    class="absolute left-0 top-0 rotate-180 cursor-pointer bg-white/80 transition-all duration-150 ease-out"
-    :class="{
-      '-translate-x-full': !isClollapsed,
-      'translate-x-0 delay-300': isClollapsed
-    }"
-    @click="isClollapsed = false"
-  >
-    <div class="icon-hover p-3">
-      <Collapse />
-    </div>
-  </div>
-
-  <div
     class="absolute left-0 top-0 flex h-full flex-col bg-white/70 transition-all duration-300 ease-out"
     :class="{
       '-translate-x-full': isClollapsed,
       'translate-x-0': !isClollapsed
     }"
   >
+    <div
+      class="absolute left-full top-1/2 translate-y-1/2 cursor-pointer rounded-r-md bg-white/60 p-1 transition-all hover:bg-white"
+      @click="isClollapsed = !isClollapsed"
+    >
+      <Collapse
+        :class="{
+          'rotate-180': isClollapsed,
+          'rotate-0': !isClollapsed
+        }"
+      />
+    </div>
+
     <div class="flex items-center justify-between border-b p-3">
       <h3 class="text-lg">Shapes:</h3>
 
-      <div class="cursor-pointer" @click="isClollapsed = true">
-        <Collapse />
+      <div class="cursor-pointer">
+        <Info />
       </div>
     </div>
 
@@ -72,15 +76,22 @@ const deleteG = (item: PolygonDataCollection) => {
         <p>shape #{{ item.key.slice(0, 6) }}</p>
 
         <div class="flex">
-          <div
-            v-for="i in 3"
-            class="border-gray-10 last::bg-green-300 icon-hover-text h-fit cursor-pointer border border-r-0 p-1 transition-all first:rounded-l-sm last-of-type:rounded-r-sm last-of-type:border-r group-hover:border-gray-300 [&_svg]:h-3 [&_svg]:w-3"
-            :class="{
-              'border-gray-300': item.key === activeGroup?.getAttribute('id')
-            }"
-            @click.stop="deleteG(item)"
-          >
-            <Edit class="" />
+          <template v-if="false">
+            <div class="sidebar-item-icon icon-hover-text">
+              <Unlink />
+            </div>
+
+            <div class="sidebar-item-icon icon-hover-text">
+              <Edit />
+            </div>
+          </template>
+
+          <div class="sidebar-item-icon icon-hover-text" @click.stop="deleteG(item)">
+            <Delete />
+          </div>
+
+          <div class="sidebar-item-icon icon-hover-text">
+            <Eye />
           </div>
         </div>
       </div>

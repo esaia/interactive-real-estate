@@ -3,6 +3,7 @@
 import SvgCanvas from "./SvgCanvas.vue";
 import { PolygonDataCollection } from "../../types/components";
 import Sidebar from "./UiComponents/common/Sidebar.vue";
+import LinkPolygon from "./UiComponents/common/LinkPolygon.vue";
 
 defineEmits<{
   (e: "setActiveG", gTag: SVGGElement | null): void;
@@ -38,5 +39,7 @@ defineProps<{
       @set-active-g="(gTag) => $emit('setActiveG', gTag)"
       @delete-g="(key) => $emit('deleteG', key)"
     />
+
+    <LinkPolygon />
   </div>
 </template>

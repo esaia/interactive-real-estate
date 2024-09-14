@@ -1,5 +1,5 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" width="15" height="15" viewBox="0 0 24 24">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" width="20" height="20" viewBox="0 0 24 24">
     <g data-name="Layer 2">
       <g data-name="arrowhead-left">
         <rect width="24" height="24" transform="rotate(90 12 12)" opacity="0" />
