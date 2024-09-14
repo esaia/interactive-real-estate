@@ -129,7 +129,7 @@ onMounted(() => {
         @add-polygon-data="(key) => floorStore.addPoligonData(key)"
       />
     </div>
-    <form class="mt-8 flex w-60 flex-col items-center gap-3" @submit.prevent="submitForm">
+    <form class="mt-8 flex w-56 flex-col items-center gap-3" @submit.prevent="submitForm">
       <h2 class="text-lg">{{ activeFloor ? "Edit floor" : "Add floor" }}</h2>
       <input v-model="title" type="text" class="w-full" placeholder="Floor title" />
       <input v-model="floor_number" type="number" class="w-full" placeholder="Floor number" required />

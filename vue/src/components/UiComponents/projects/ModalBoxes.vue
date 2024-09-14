@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, Transition } from "vue";
 import FloorsList from "../floors/FloorsList.vue";
 import Building from "../icons/Building.vue";
 import Flat from "../icons/Flat.vue";
@@ -45,11 +45,17 @@ const showModal = ref<"block" | "floor" | "flat" | "type" | "">("floor");
     </div>
 
     <teleport to="body">
-      <transition name="fade-in-out">
-        <Modal v-if="showModal === 'floor'" type="2" width="w-11/12" @close="showModal = ''">
+      <Transition name="fade">
+        <Modal
+          v-if="showModal === 'floor'"
+          :bool="showModal === 'floor'"
+          type="2"
+          width="w-11/12"
+          @close="showModal = ''"
+        >
           <FloorsList />
         </Modal>
-      </transition>
+      </Transition>
     </teleport>
   </div>
 </template>

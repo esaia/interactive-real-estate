@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, Transition, watch } from "vue";
 import Modal from "@components/UiComponents/Modal.vue";
 import AddEditFloorModal from "@/src/components/UiComponents/floors/AddEditFloorModal.vue";
 import { FloorInterface, FloorItem } from "@/types/components";
@@ -129,10 +129,10 @@ onMounted(() => {
   </div>
 
   <teleport to="body">
-    <transition name="fade-in-out">
-      <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2">
+    <Transition name="fade">
+      <Modal v-if="showFloorModal" :bool="showFloorModal" @close="showFloorModal = false" type="2">
         <AddEditFloorModal />
       </Modal>
-    </transition>
+    </Transition>
   </teleport>
 </template>

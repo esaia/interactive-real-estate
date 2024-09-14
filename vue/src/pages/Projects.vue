@@ -47,7 +47,7 @@ const isModalOpen = ref(false);
 
   <teleport to="body">
     <transition name="fade-in-out">
-      <Modal v-if="isModalOpen" @close="isModalOpen = false">
+      <Modal v-if="isModalOpen" :bool="isModalOpen" @close="isModalOpen = false">
         <AddProjectModal @close="isModalOpen = false" />
       </Modal>
     </transition>
