@@ -7,6 +7,9 @@ import Info from "../icons/Info.vue";
 import Eye from "../icons/Eye.vue";
 import Delete from "../icons/Delete.vue";
 import Unlink from "../icons/Unlink.vue";
+import { useFloorsStore } from "@/src/stores/useFloors";
+import AddEditFloorModal from "../floors/AddEditFloorModal.vue";
+import Modal from "../Modal.vue";
 const isClollapsed = ref(false);
 
 const emit = defineEmits<{
@@ -20,6 +23,10 @@ const props = defineProps<{
   activeGroup: SVGGElement | null;
   svgRef: HTMLElement | null;
 }>();
+
+const floorsStore = useFloorsStore();
+
+const showFloorModal = ref(false);
 
 const setActiveG = (item: PolygonDataCollection) => {
   const gTag = (props.svgRef?.querySelector(`g#${item.key}`) as SVGGElement) || null;
@@ -36,6 +43,16 @@ const deleteG = (item: PolygonDataCollection) => {
 const unlink = (key: string) => {
   emit("updatePolygonData", key, { id: "", key, type: "" });
   emit("setActiveG", null);
+};
+
+const editPolygon = (item: PolygonDataCollection) => {
+  if (item.type === "floor") {
+    const activeFloor = floorsStore.projectFloors?.find((floor) => floor.id === item.id);
+    if (activeFloor) {
+      floorsStore.setActiveFloor(activeFloor);
+      showFloorModal.value = true;
+    }
+  }
 };
 </script>
 
@@ -86,7 +103,7 @@ const unlink = (key: string) => {
               <Unlink />
             </div>
 
-            <div class="sidebar-item-icon icon-hover-text">
+            <div class="sidebar-item-icon icon-hover-text" @click.stop="editPolygon(item)">
               <Edit />
             </div>
           </template>
@@ -101,5 +118,13 @@ const unlink = (key: string) => {
         </div>
       </div>
     </div>
+
+    <teleport to="#my-vue-app">
+      <Transition name="fade">
+        <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2">
+          <AddEditFloorModal />
+        </Modal>
+      </Transition>
+    </teleport>
   </div>
 </template>
