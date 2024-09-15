@@ -10,12 +10,13 @@ import { PolygonDataCollection, selectDataItem } from "@/types/components";
 const props = defineProps<{
   activeGroup: SVGGElement | null;
   polygon_data: PolygonDataCollection[] | undefined;
+  isFloorsCanvas: boolean;
 }>();
 
 const key = props.activeGroup?.getAttribute("id");
 
-const activeTab = ref<"block" | "flat" | "floor" | "">("floor");
-const selectedItem = ref<selectDataItem>({ title: "choose", value: "" });
+const activeTab = ref<"block" | "flat" | "floor" | "">("");
+const selectedItem = ref<selectDataItem>({ title: "choose", value: "", isLinked: false });
 const showModal = ref(true);
 
 const projectsStore = useProjectStore();
@@ -44,14 +45,22 @@ watch(
 onMounted(() => {
   if (!props.polygon_data) return;
 
-  const floorId = props.polygon_data.find((item) => item.key === key)?.id;
+  const activePolygon = props.polygon_data.find((item) => item.key === key);
+  const polygonId = activePolygon?.id;
+  const polygonType = activePolygon?.type;
 
-  if (floorId) {
-    const activeFloor = floorsSelectData.value?.find((floor) => floor.value === floorId);
+  if (polygonId) {
+    const activeFloor = floorsSelectData.value?.find((floor) => floor.value === polygonId);
 
     if (activeFloor) {
       selectedItem.value = activeFloor;
     }
+  }
+
+  if (props.isFloorsCanvas) {
+    activeTab.value = "flat";
+  } else {
+    activeTab.value = polygonType || "";
   }
 });
 </script>
@@ -66,20 +75,23 @@ onMounted(() => {
       <h4 class="text-lg text-gray-900">Link Polygon To Related Data</h4>
 
       <div class="mt-2 flex [&_div]:px-3">
-        <div
-          class="sidebar-item-icon icon-hover-text bg-gray-100"
-          :class="{ '!bg-black text-white': activeTab === 'block' }"
-          @click="activeTab = 'block'"
-        >
-          Block
-        </div>
-        <div
-          class="sidebar-item-icon icon-hover-text bg-gray-100"
-          :class="{ '!bg-black text-white': activeTab === 'floor' }"
-          @click="activeTab = 'floor'"
-        >
-          Floor
-        </div>
+        <template v-if="!isFloorsCanvas">
+          <div
+            class="sidebar-item-icon icon-hover-text bg-gray-100"
+            :class="{ '!bg-black text-white': activeTab === 'block' }"
+            @click="activeTab = 'block'"
+          >
+            Block
+          </div>
+          <div
+            class="sidebar-item-icon icon-hover-text bg-gray-100"
+            :class="{ '!bg-black text-white': activeTab === 'floor' }"
+            @click="activeTab = 'floor'"
+          >
+            Floor
+          </div>
+        </template>
+
         <div
           class="sidebar-item-icon icon-hover-text bg-gray-100"
           :class="{ '!bg-black text-white': activeTab === 'flat' }"

@@ -10,6 +10,7 @@ defineEmits<{
   (e: "deleteG", key: string): void;
   (e: "setSvgRef", svgContainer: HTMLDivElement): void;
   (e: "addPolygonData", key: string): void;
+  (e: "updatePolygonData", key: string, updatedData: PolygonDataCollection): void;
 }>();
 
 defineProps<{
@@ -18,6 +19,7 @@ defineProps<{
   svgRef: HTMLElement | null;
   svg: string;
   activeGroup: SVGGElement | null;
+  isFloorsCanvas: boolean;
 }>();
 </script>
 
@@ -38,6 +40,7 @@ defineProps<{
       :svgRef="svgRef"
       @set-active-g="(gTag) => $emit('setActiveG', gTag)"
       @delete-g="(key) => $emit('deleteG', key)"
+      @update-polygon-data="(key, data) => $emit('updatePolygonData', key, data)"
     />
 
     <Transition name="fade-in-out">
@@ -46,6 +49,7 @@ defineProps<{
         :key="(activeGroup && activeGroup.getAttribute('id')) || ''"
         :activeGroup="activeGroup"
         :polygon_data="polygon_data"
+        :isFloorsCanvas="isFloorsCanvas"
       />
     </Transition>
   </div>

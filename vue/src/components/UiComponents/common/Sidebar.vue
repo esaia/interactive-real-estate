@@ -6,13 +6,13 @@ import { PolygonDataCollection } from "../../../../types/components";
 import Info from "../icons/Info.vue";
 import Eye from "../icons/Eye.vue";
 import Delete from "../icons/Delete.vue";
-import Link from "../icons/Link.vue";
 import Unlink from "../icons/Unlink.vue";
 const isClollapsed = ref(false);
 
 const emit = defineEmits<{
-  (e: "setActiveG", gTag: SVGGElement): void;
+  (e: "setActiveG", gTag: SVGGElement | null): void;
   (e: "deleteG", key: string): void;
+  (e: "updatePolygonData", key: string, updatedData: PolygonDataCollection): void;
 }>();
 
 const props = defineProps<{
@@ -31,6 +31,11 @@ const setActiveG = (item: PolygonDataCollection) => {
 
 const deleteG = (item: PolygonDataCollection) => {
   emit("deleteG", item.key);
+};
+
+const unlink = (key: string) => {
+  emit("updatePolygonData", key, { id: "", key, type: "" });
+  emit("setActiveG", null);
 };
 </script>
 
@@ -76,8 +81,8 @@ const deleteG = (item: PolygonDataCollection) => {
         <p>shape #{{ item.key.slice(0, 6) }}</p>
 
         <div class="flex">
-          <template v-if="false">
-            <div class="sidebar-item-icon icon-hover-text">
+          <template v-if="item.id">
+            <div class="sidebar-item-icon icon-hover-text" @click="unlink(item.key)">
               <Unlink />
             </div>
 

@@ -30,10 +30,12 @@ onMounted(() => {
       :svgRef="svgRef"
       :svg="svg"
       :activeGroup="activeGroup"
+      :isFloorsCanvas="false"
       @set-svg-ref="(svgContainer) => (svgRef = svgContainer)"
       @set-active-g="(gTag) => (activeGroup = gTag)"
       @delete-g="(key) => deleteG(key)"
       @add-polygon-data="(key) => projectStore.addPolygonData(key)"
+      @update-polygon-data="(key, data) => projectStore.editpoligonData(key, data)"
     />
 
     <ProjectBottomWidgets />

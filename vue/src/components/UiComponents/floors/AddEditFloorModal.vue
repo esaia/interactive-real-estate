@@ -123,6 +123,7 @@ onMounted(() => {
         :svgRef="floorSvgRef"
         :svg="activeFloor.svg"
         :activeGroup="activeGroup"
+        :isFloorsCanvas="true"
         @set-svg-ref="(svgContainer) => (floorSvgRef = svgContainer)"
         @set-active-g="(gTag) => (activeGroup = gTag)"
         @delete-g="(key) => deleteG(key)"
