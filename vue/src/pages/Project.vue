@@ -33,7 +33,7 @@ onMounted(() => {
       @set-svg-ref="(svgContainer) => (svgRef = svgContainer)"
       @set-active-g="(gTag) => (activeGroup = gTag)"
       @delete-g="(key) => deleteG(key)"
-      @add-polygon-data="(key) => projectStore.addPoligonData(key)"
+      @add-polygon-data="(key) => projectStore.addPolygonData(key)"
     />
 
     <ProjectBottomWidgets />

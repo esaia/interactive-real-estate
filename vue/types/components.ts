@@ -95,7 +95,13 @@ export interface FloorItem {
 export interface PolygonDataCollection {
   id: string;
   key: string;
-  type: string;
+  type: "flat" | "floor" | "block" | "";
+}
+
+export interface selectDataItem {
+  title: string;
+  value: string;
+  isLinked?: boolean;
 }
 
 // export interface PolygonDataCollection {

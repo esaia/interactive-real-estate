@@ -40,6 +40,13 @@ defineProps<{
       @delete-g="(key) => $emit('deleteG', key)"
     />
 
-    <LinkPolygon />
+    <Transition name="fade-in-out">
+      <LinkPolygon
+        v-if="activeGroup"
+        :key="(activeGroup && activeGroup.getAttribute('id')) || ''"
+        :activeGroup="activeGroup"
+        :polygon_data="polygon_data"
+      />
+    </Transition>
   </div>
 </template>

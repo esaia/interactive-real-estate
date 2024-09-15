@@ -17,8 +17,18 @@ export const useProjectStore = defineStore("project", () => {
   const svgRef = ref<HTMLDivElement | null>(null);
   const activeGroup = ref<SVGGElement | null>(null);
 
-  const addPoligonData = (key: string) => {
+  const addPolygonData = (key: string) => {
     polygon_data.value = [...polygon_data.value, { id: "", key, type: "" }];
+  };
+
+  const editpoligonData = (key: string, updatedData: PolygonDataCollection) => {
+    const index = polygon_data.value.findIndex((polygon) => polygon.key === key);
+
+    if (index !== -1) {
+      polygon_data.value[index] = { ...polygon_data.value[index], ...updatedData };
+    } else {
+      console.error(`Polygon with id ${id} not found.`);
+    }
   };
 
   const removePoligonItem = (key: string) => {
@@ -54,7 +64,8 @@ export const useProjectStore = defineStore("project", () => {
     updated_at,
     svgRef,
     activeGroup,
-    addPoligonData,
+    addPolygonData,
+    editpoligonData,
     removePoligonItem,
     setProject
   };

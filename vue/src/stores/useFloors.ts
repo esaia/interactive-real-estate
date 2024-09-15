@@ -14,7 +14,7 @@ export const useFloorsStore = defineStore("floors", () => {
     activeFloor.value = floor;
   };
 
-  const addPoligonData = (key: string) => {
+  const addPolygonData = (key: string) => {
     if (!activeFloor.value) return;
 
     if (!activeFloor.value.polygon_data) {
@@ -80,7 +80,7 @@ export const useFloorsStore = defineStore("floors", () => {
     setActiveFloor,
     activeGroup,
     floorSvgRef,
-    addPoligonData,
+    addPolygonData,
     removePoligonItem,
     fetchProjectFloors
   };

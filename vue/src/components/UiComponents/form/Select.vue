@@ -1,11 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 import ArrowRight from "../icons/ArrowRight.vue";
-
-interface selectDataItem {
-  title: string;
-  value: string;
-}
+import { selectDataItem } from "@/types/components";
 
 const props = withDefaults(
   defineProps<{
@@ -13,6 +9,7 @@ const props = withDefaults(
     modelValue: selectDataItem;
     defaultValue?: selectDataItem | null;
     placeholder?: string;
+    itemPrefix?: string;
     borderStyle?: "Default" | "Underlined";
   }>(),
   {
@@ -28,7 +25,7 @@ const emit = defineEmits<{
 
 const selectModelValue = computed({
   get() {
-    return props.modelValue || props.defaultValue || props.data[0];
+    return props.modelValue || props.defaultValue || { title: "choose", value: "" };
   },
   set(newValue) {
     emit("update:modelValue", newValue);
@@ -45,6 +42,8 @@ const inputPlaceholder = computed(() => {
 });
 
 const selectItem = (item: selectDataItem) => {
+  if (item.isLinked) return;
+
   selectModelValue.value = item;
 
   input.value = "";
@@ -56,6 +55,10 @@ const selectItem = (item: selectDataItem) => {
 const onClickOutside = () => {
   isModalOpen.value = false;
 };
+
+watchEffect(() => {
+  activeItems.value = props.data;
+});
 
 watch(
   () => input.value,
@@ -107,13 +110,12 @@ watch(
           v-for="item in activeItems"
           :key="item.value"
           type="button"
-          class="line-clamp-1 w-full min-w-32 rounded-sm px-[8px] py-[6px] text-start hover:bg-gray-100"
-          :class="{
-            '!bg-primary text-white': item.value === selectModelValue.value
-          }"
+          class="line-clamp-1 w-full min-w-32 rounded-sm px-[8px] py-[6px] text-start transition-all hover:bg-gray-100"
+          :class="`${item.value === selectModelValue.value ? '!bg-primary text-white' : item?.isLinked ? 'cursor-not-allowed bg-gray-400 text-white hover:bg-gray-500' : ''} `"
           @click="selectItem(item)"
         >
-          {{ item.title }}
+          {{ itemPrefix }} {{ item.title }}
+          {{ item.isLinked && item.value !== selectModelValue.value ? " - Linked" : "" }}
         </button>
       </div>
 

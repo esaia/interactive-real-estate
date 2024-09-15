@@ -6,10 +6,14 @@ import ajaxAxios from "@/src/utils/axios";
 import { useSelectImage } from "@/src/composables/useSelectImage";
 import Button from "../form/Button.vue";
 import { resetCanvasAfterSave } from "@/src/composables/helpers";
+import { useFloorsStore } from "@/src/stores/useFloors";
 
 const $toast = useToast();
 const { selectedImage, selectImage } = useSelectImage();
 const projectStore = useProjectStore();
+const floorsStore = useFloorsStore();
+
+const { projectFloors } = storeToRefs(floorsStore);
 const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = storeToRefs(projectStore);
 
 const updateProject = async () => {
@@ -128,6 +132,7 @@ const updateProject = async () => {
     </div>
 
     <div class="flex flex-col items-end gap-3">
+      <div class="flex"></div>
       <Button title="Update" @click="updateProject" />
       <!-- <Button title="Back" :href="irePlugin.plugin_url" /> -->
     </div>

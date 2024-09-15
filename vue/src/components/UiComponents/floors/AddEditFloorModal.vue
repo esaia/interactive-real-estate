@@ -126,7 +126,7 @@ onMounted(() => {
         @set-svg-ref="(svgContainer) => (floorSvgRef = svgContainer)"
         @set-active-g="(gTag) => (activeGroup = gTag)"
         @delete-g="(key) => deleteG(key)"
-        @add-polygon-data="(key) => floorStore.addPoligonData(key)"
+        @add-polygon-data="(key) => floorStore.addPolygonData(key)"
       />
     </div>
     <form class="mt-6 flex w-56 flex-col items-center gap-3 border p-2 shadow-md" @submit.prevent="submitForm">
