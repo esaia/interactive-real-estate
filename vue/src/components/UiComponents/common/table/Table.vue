@@ -5,6 +5,7 @@ import Edit from "../../icons/Edit.vue";
 
 defineEmits<{
   (e: "editAction", item: (typeof props.data)[0]): void;
+  (e: "duplicateAction", item: (typeof props.data)[0]): void;
 }>();
 
 const props = defineProps<{ data: any }>();
@@ -38,7 +39,10 @@ const props = defineProps<{ data: any }>();
                 <Edit />
               </div>
 
-              <div class="table-list-actions hover:bg-blue-400 [&_path]:hover:fill-white">
+              <div
+                class="table-list-actions hover:bg-blue-400 [&_path]:hover:fill-white"
+                @click="$emit('duplicateAction', item)"
+              >
                 <Duplicate />
               </div>
 

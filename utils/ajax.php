@@ -1,5 +1,7 @@
 <?php
 
+
+
 add_action('wp_ajax_create_project', 'ire_create_project');
 
 function ire_create_project()
@@ -138,7 +140,6 @@ function ire_create_floor()
 
     ire_check_nonce($_POST['nonce'], 'ire_nonce');
 
-    $title = isset($_POST['title']) ? sanitize_text_field($_POST['title']) : '';
 
     $floor_number = intval($_POST['floor_number']) ?? null;
     $title = sanitize_text_field($_POST['title']) ?? null;
@@ -146,6 +147,9 @@ function ire_create_floor()
     $floor_image =  sanitize_text_field($_POST['floor_image']) ?? null;
     $project_id = intval($_POST['project_id']) ?? null;
 
+    $polygon_data = $_POST['polygon_data'] ?? null;
+
+    $svg =  $_POST['svg'] ?? null;
 
     if (!$floor_number || !$floor_image || !$project_id || !$floor_image) {
         wp_send_json_error('Required fields are missing.');
@@ -158,8 +162,19 @@ function ire_create_floor()
         'title' => $title,
         'conf' => $conf,
         'floor_image' => $floor_image,
-        'project_id' => $project_id
+        'project_id' => $project_id,
+        'polygon_data' => $polygon_data
     );
+
+
+    if (is_array($polygon_data)) {
+        $params['polygon_data'] = json_encode($polygon_data);
+    }
+
+    if ($svg) {
+        $params['svg'] = $svg;
+    }
+
 
     // Insert into database
     $wpdb->insert(
@@ -168,9 +183,11 @@ function ire_create_floor()
     );
 
 
+
     if ($wpdb->last_error) {
         wp_send_json_error('Database error');
     } else {
+
         $new_floor_id = $wpdb->insert_id;
 
         $new_floor = $wpdb->get_row($wpdb->prepare(
@@ -178,6 +195,9 @@ function ire_create_floor()
             $new_floor_id
         ));
 
+        if (isset($new_floor->polygon_data) && $new_floor->polygon_data) {
+            $new_floor->polygon_data = json_decode($new_floor->polygon_data);
+        }
         $new_floor->floor_image = wp_get_attachment_image_url($new_floor->floor_image, 90);
 
         wp_send_json_success($new_floor);
@@ -235,7 +255,10 @@ function ire_get_floors()
             if ($results) {
 
                 $results =    array_map(function ($item) {
-                    $item['polygon_data'] = json_decode($item['polygon_data']);
+                    if ($item['polygon_data']) {
+                        $item['polygon_data'] = json_decode($item['polygon_data']);
+                    }
+                    $item['floor_image_id'] = $item['floor_image'];
                     $item['floor_image'] = wp_get_attachment_image_url($item['floor_image'], 90);
 
                     return $item;

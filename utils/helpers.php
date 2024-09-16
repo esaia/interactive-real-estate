@@ -8,3 +8,31 @@ function ire_check_nonce(string | null $nonce, string $action)
         exit;
     }
 }
+
+
+function send_json_response($success, $message, $data = null)
+{
+    if ($success) {
+        wp_send_json_success($data);
+    } else {
+        wp_send_json_error($message);
+    }
+}
+function handle_json_data($data)
+{
+    return is_array($data) ? json_encode($data) : json_decode($data);
+}
+
+
+function validate_and_sanitize_input($data, $required_keys)
+{
+    $sanitized_data = [];
+    foreach ($required_keys as $key) {
+        if (isset($data[$key])) {
+            $sanitized_data[$key] = sanitize_text_field($data[$key]);
+        } else {
+            return false;
+        }
+    }
+    return $sanitized_data;
+}

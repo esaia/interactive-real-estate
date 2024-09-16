@@ -96,7 +96,7 @@ const editPolygon = (item: PolygonDataCollection) => {
         }"
         @click="setActiveG(item)"
       >
-        <p>shape #{{ item.key.slice(0, 6) }}</p>
+        <p>shape #{{ item.key?.slice(0, 6) }}</p>
 
         <div class="flex">
           <template v-if="item.id">

@@ -21,10 +21,17 @@ const sortField = ref("");
 const sortOrder = ref<"ASC" | "DESC" | "">("ASC");
 const currentPage = ref(1);
 const perPage = ref(10);
+const duplicatedFloor = ref<FloorItem | null>(null);
 
 const editFloor = (floor: FloorItem | null) => {
   showFloorModal.value = true;
   floorsStore.setActiveFloor(floor);
+};
+
+const duplicateFloor = (floor: FloorItem | null) => {
+  showFloorModal.value = true;
+
+  duplicatedFloor.value = floor;
 };
 
 const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
@@ -90,7 +97,11 @@ onMounted(() => {
     </div>
 
     <div class="relative overflow-x-auto shadow-sm">
-      <Table :data="floors?.data" @edit-action="(floor: FloorItem | null) => editFloor(floor)">
+      <Table
+        :data="floors?.data"
+        @edit-action="(floor: FloorItem | null) => editFloor(floor)"
+        @duplicate-action="(floor: FloorItem | null) => duplicateFloor(floor)"
+      >
         <template #header>
           <TableTh
             fieldTitle="id"
@@ -134,7 +145,7 @@ onMounted(() => {
   <teleport to="#my-vue-app">
     <Transition name="fade">
       <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2">
-        <AddEditFloorModal />
+        <AddEditFloorModal :duplicatedFloor="duplicatedFloor" />
       </Modal>
     </Transition>
   </teleport>
