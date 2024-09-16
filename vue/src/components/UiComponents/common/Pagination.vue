@@ -10,6 +10,7 @@ const emit = defineEmits<{
 const props = defineProps<{
   modelValue: number;
   totalItems: number;
+  perPage: number;
 }>();
 
 const inputModel = computed({
@@ -23,8 +24,10 @@ const inputModel = computed({
 </script>
 
 <template>
-  <div class="flex w-full justify-end py-5">
-    <VueAwesomePaginate :total-items="totalItems" :items-per-page="5" :max-pages-shown="5" v-model="inputModel">
+  <div class="flex w-full items-center justify-between py-5">
+    <p>{{ (inputModel - 1) * perPage }} to {{ perPage * inputModel }} of {{ totalItems }} entries</p>
+
+    <VueAwesomePaginate :total-items="totalItems" :items-per-page="perPage" :max-pages-shown="5" v-model="inputModel">
       <template #prev-button>
         <div class="flex h-full rotate-180 items-center justify-center [&_svg]:h-4 [&_svg]:w-4">
           <ArrowRight />

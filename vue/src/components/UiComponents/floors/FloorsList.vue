@@ -20,6 +20,7 @@ const floors = ref<FloorInterface>();
 const sortField = ref("");
 const sortOrder = ref<"ASC" | "DESC" | "">("ASC");
 const currentPage = ref(1);
+const perPage = ref(10);
 
 const editFloor = (floor: FloorItem | null) => {
   showFloorModal.value = true;
@@ -45,7 +46,7 @@ const fetchFloors = async () => {
     sort_field: sortField.value,
     sort_order: sortOrder.value,
     page: currentPage.value,
-    per_page: 5
+    per_page: perPage.value
   });
 
   if (!data.success) {
@@ -126,7 +127,7 @@ onMounted(() => {
         </template>
       </Table>
 
-      <Pagination :totalItems="Number(floors?.total)" v-model="currentPage" />
+      <Pagination :totalItems="Number(floors?.total)" :perPage="perPage" v-model="currentPage" />
     </div>
   </div>
 
