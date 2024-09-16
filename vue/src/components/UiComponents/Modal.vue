@@ -48,11 +48,14 @@ onUnmounted(() => {
 
     <Transition :name="type !== 'default' ? 'slide-left' : ''" appear>
       <div class="relative cursor-default rounded-l-sm bg-white p-5" :class="dynamicClasses">
-        <div @click="$emit('close')">
-          <Close class="absolute right-4 top-4 cursor-pointer" />
+        <div
+          class="absolute right-4 top-2 z-[999] w-fit cursor-pointer rounded-md bg-white p-3 transition-all hover:bg-gray-100"
+          @click="$emit('close')"
+        >
+          <Close />
         </div>
 
-        <div class="mt-4">
+        <div class="max-h-full overflow-y-auto">
           <slot />
         </div>
       </div>

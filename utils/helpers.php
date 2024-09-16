@@ -10,10 +10,10 @@ function ire_check_nonce(string | null $nonce, string $action)
 }
 
 
-function send_json_response($success, $message, $data = null)
+function send_json_response($success, $message)
 {
     if ($success) {
-        wp_send_json_success($data);
+        wp_send_json_success($message);
     } else {
         wp_send_json_error($message);
     }
@@ -35,4 +35,12 @@ function validate_and_sanitize_input($data, $required_keys)
         }
     }
     return $sanitized_data;
+}
+
+
+function dd($data)
+{
+
+    error_log(print_r($data, true));
+    die();
 }

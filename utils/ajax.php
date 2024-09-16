@@ -172,7 +172,7 @@ function ire_create_floor()
         }
         $new_floor->floor_image = wp_get_attachment_image_url($new_floor->floor_image, 90);
 
-        send_json_response(true, 'Floor created successfully', $new_floor);
+        send_json_response(true, $new_floor);
     }
 }
 
@@ -234,7 +234,7 @@ function ire_get_floors()
                 }, $results);
             }
 
-            send_json_response(true, 'Floors retrieved successfully', [
+            send_json_response(true, [
                 'data' => $results,
                 'total' => $total_results,
                 'page' => $page,
@@ -282,5 +282,34 @@ function ire_update_floor()
         send_json_response(false, 'Database error');
     } else {
         send_json_response(true, 'Floor updated successfully');
+    }
+}
+
+
+
+add_action('wp_ajax_delete_floor', 'ire_delete_floor');
+
+function ire_delete_floor()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'ire_floors';
+
+    ire_check_nonce($_POST['nonce'], 'ire_nonce');
+
+    $floor_id = isset($_POST['floor_id']) ? intval($_POST['floor_id']) : null;
+
+    if (!$floor_id) {
+        send_json_response(false, 'Floor_id is required');
+        return;
+    }
+
+    $delete_result = $wpdb->delete($table_name, ['id' => $floor_id]);
+
+
+
+    if ($delete_result) {
+        send_json_response(true, 'Floor deleted successfully');
+    } else {
+        send_json_response(false, 'Database error: ' . $wpdb->last_error);
     }
 }

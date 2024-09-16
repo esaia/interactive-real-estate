@@ -111,12 +111,13 @@ watch(
           :key="item.value"
           type="button"
           class="line-clamp-1 w-full min-w-32 rounded-sm px-[8px] py-[6px] text-start transition-all hover:bg-gray-100"
-          :class="`${item.value === selectModelValue.value ? '!bg-primary text-white' : item?.isLinked ? 'cursor-not-allowed bg-gray-400 text-white hover:bg-gray-500' : ''} `"
+          :class="`${item.value === selectModelValue.value ? '!bg-primary text-white' : item?.isLinked ? 'cursor-not-allowed text-red-600 hover:bg-white' : ''} `"
           @click="selectItem(item)"
         >
-          <!-- {{ itemPrefix }} -->
           {{ item.title }}
-          <!-- {{ item.isLinked && item.value !== selectModelValue.value ? " - Linked" : "" }} -->
+          <span class="text-red-600">
+            {{ item.isLinked && item.value !== selectModelValue.value ? " - Linked" : "" }}
+          </span>
         </button>
       </div>
 

@@ -18,10 +18,30 @@ const props = defineProps<{
 const sort = () => {
   if (!props.sortable) return;
 
-  if (props.sortOrder === "ASC") {
-    emits("sort", props.field, "DESC");
-  } else if (props.sortOrder === "DESC") {
-    emits("sort", "", "");
+  // if (props.sortField === props.field) {
+  //   sortOrder.value = sortOrderString;
+
+  // } else {
+  //   props.sortField =  props.field;
+  //   sortOrder.value = "ASC";
+  // }
+
+  const generateSortOrder = (sortOrder: "ASC" | "DESC" | "") => {
+    if (sortOrder === "ASC") {
+      return "DESC";
+    } else if (sortOrder === "DESC") {
+      return "";
+    } else {
+      return "ASC";
+    }
+  };
+
+  if (props.sortField === props.field) {
+    if (props.sortOrder === "DESC") {
+      emits("sort", "", "");
+    } else {
+      emits("sort", props.field, generateSortOrder(props.sortOrder || ""));
+    }
   } else {
     emits("sort", props.field, "ASC");
   }
@@ -31,8 +51,11 @@ const sort = () => {
 <template>
   <th
     scope="col"
-    class="cursor-pointer transition-all hover:bg-gray-900 hover:text-white"
-    :class="{ 'bg-gray-900 text-white': sortField === field }"
+    class="transition-all"
+    :class="{
+      'bg-gray-900 text-white': sortField === field,
+      'cursor-pointer hover:bg-gray-900 hover:text-white': sortable
+    }"
     @click="sort"
   >
     <div class="flex w-full items-center gap-2">
