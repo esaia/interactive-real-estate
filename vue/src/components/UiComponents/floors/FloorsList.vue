@@ -10,7 +10,6 @@ import { useFloorsStore } from "@/src/stores/useFloors";
 import Table from "../common/table/Table.vue";
 import TableTh from "../common/table/TableTh.vue";
 import Pagination from "../common/Pagination.vue";
-import LinkPolygon from "../common/LinkPolygon.vue";
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();

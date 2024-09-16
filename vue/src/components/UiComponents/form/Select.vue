@@ -114,8 +114,9 @@ watch(
           :class="`${item.value === selectModelValue.value ? '!bg-primary text-white' : item?.isLinked ? 'cursor-not-allowed bg-gray-400 text-white hover:bg-gray-500' : ''} `"
           @click="selectItem(item)"
         >
-          {{ itemPrefix }} {{ item.title }}
-          {{ item.isLinked && item.value !== selectModelValue.value ? " - Linked" : "" }}
+          <!-- {{ itemPrefix }} -->
+          {{ item.title }}
+          <!-- {{ item.isLinked && item.value !== selectModelValue.value ? " - Linked" : "" }} -->
         </button>
       </div>
 

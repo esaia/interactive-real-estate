@@ -48,6 +48,7 @@ const unlink = (key: string) => {
 const editPolygon = (item: PolygonDataCollection) => {
   if (item.type === "floor") {
     const activeFloor = floorsStore.projectFloors?.find((floor) => floor.id === item.id);
+
     if (activeFloor) {
       floorsStore.setActiveFloor(activeFloor);
       showFloorModal.value = true;
@@ -121,7 +122,7 @@ const editPolygon = (item: PolygonDataCollection) => {
 
     <teleport to="#my-vue-app">
       <Transition name="fade">
-        <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2">
+        <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2" width="w-11/12">
           <AddEditFloorModal />
         </Modal>
       </Transition>

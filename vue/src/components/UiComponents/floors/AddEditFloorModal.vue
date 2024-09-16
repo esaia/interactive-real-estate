@@ -12,7 +12,7 @@ import { resetCanvasAfterSave } from "@/src/composables/helpers";
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
-const { id } = storeToRefs(projectStore);
+const { id, svgRef } = storeToRefs(projectStore);
 const { activeFloor, activeGroup, floorSvgRef } = storeToRefs(floorStore);
 
 const deleteG = (key: string) => {
@@ -28,9 +28,11 @@ const floor_number = ref();
 const floor_image = ref<imageInterface>();
 const conf = ref("");
 
-const submitForm = () => {
+const submitForm = async () => {
   if (activeFloor.value) {
-    updateFloor();
+    await updateFloor();
+
+    await floorStore.fetchProjectFloors(Number(id.value));
   } else {
     createFloor();
   }
@@ -39,6 +41,9 @@ const submitForm = () => {
 const updateFloor = async () => {
   if (floorSvgRef.value) {
     resetCanvasAfterSave(floorSvgRef.value);
+  }
+  if (svgRef.value) {
+    resetCanvasAfterSave(svgRef.value);
   }
 
   const params = {

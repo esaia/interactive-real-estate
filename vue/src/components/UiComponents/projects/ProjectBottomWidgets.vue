@@ -6,54 +6,17 @@ import ajaxAxios from "@/src/utils/axios";
 import { useSelectImage } from "@/src/composables/useSelectImage";
 import Button from "../form/Button.vue";
 import { resetCanvasAfterSave } from "@/src/composables/helpers";
-import { useFloorsStore } from "@/src/stores/useFloors";
 
 const $toast = useToast();
 const { selectedImage, selectImage } = useSelectImage();
 const projectStore = useProjectStore();
-const floorsStore = useFloorsStore();
 
-const { projectFloors } = storeToRefs(floorsStore);
 const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = storeToRefs(projectStore);
 
 const updateProject = async () => {
-  // const svg = svgRef.value?.querySelector("svg");
-
   if (svgRef.value) {
     resetCanvasAfterSave(svgRef.value);
   }
-
-  // if (svgRef.value) {
-  //   const imgElement = svgRef.value?.parentElement?.querySelector("img");
-  //   const svg = svgRef.value.querySelector("svg");
-
-  //   if (imgElement) {
-  //     imgElement.style.transform = "scale(1)";
-  //   }
-
-  //   if (svg) {
-  //     svg.style.transform = "scale(1)";
-
-  //     const g = svgRef.value.querySelectorAll("g");
-
-  //     g.forEach((gtag) => {
-  //       if (!gtag.getAttribute("id")) {
-  //         gtag.remove();
-  //       }
-  //     });
-
-  //     const circles = svg.querySelectorAll("circle");
-  //     circles.forEach((circle) => {
-  //       circle.setAttribute("fill", "#00000000");
-  //       circle.setAttribute("r", CIRCLE_RADIUS.toString());
-  //     });
-
-  //     const paths = svg.querySelectorAll("path");
-  //     paths.forEach((path) => {
-  //       path.setAttribute("fill", PATH_COLOR);
-  //     });
-  //   }
-  // }
 
   const params: any = {
     projectId: id.value,

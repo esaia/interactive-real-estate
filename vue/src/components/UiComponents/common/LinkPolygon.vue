@@ -29,7 +29,7 @@ const floorsSelectData = computed(() => {
   return projectFloors.value?.map((item) => {
     const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "floor");
 
-    return { title: item.floor_number.toString(), value: item.id.toString(), isLinked };
+    return { title: `floor #${item.floor_number.toString()} | id: ${item.id}`, value: item.id.toString(), isLinked };
   });
 });
 
@@ -49,7 +49,7 @@ onMounted(() => {
   const polygonId = activePolygon?.id;
   const polygonType = activePolygon?.type;
 
-  if (polygonId) {
+  if (polygonId && polygonType === "floor") {
     const activeFloor = floorsSelectData.value?.find((floor) => floor.value === polygonId);
 
     if (activeFloor) {
