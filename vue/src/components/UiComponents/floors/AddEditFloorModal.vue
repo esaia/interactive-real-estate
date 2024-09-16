@@ -34,6 +34,13 @@ const conf = ref("");
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
 
 const submitForm = async () => {
+  if (floorSvgRef.value) {
+    resetCanvasAfterSave(floorSvgRef.value);
+  }
+  if (svgRef.value) {
+    resetCanvasAfterSave(svgRef.value);
+  }
+
   if (activeFloor.value) {
     await updateFloor();
 
@@ -44,13 +51,6 @@ const submitForm = async () => {
 };
 
 const updateFloor = async () => {
-  if (floorSvgRef.value) {
-    resetCanvasAfterSave(floorSvgRef.value);
-  }
-  if (svgRef.value) {
-    resetCanvasAfterSave(svgRef.value);
-  }
-
   const params = {
     title: title.value,
     floor_number: floor_number.value,
@@ -169,7 +169,6 @@ onMounted(() => {
         @delete-g="(key) => deleteG(key)"
         @add-polygon-data="(key) => duplicatedFloorPolygonData?.push({ id: '', key, type: '' })"
       />
-      {{ duplicatedFloorPolygonData }}
     </div>
     <form
       class="flex h-fit w-60 flex-col items-center gap-3 rounded-md border p-3 shadow-sm"

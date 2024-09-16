@@ -29,9 +29,10 @@ const editFloor = (floor: FloorItem | null) => {
 };
 
 const duplicateFloor = (floor: FloorItem | null) => {
-  showFloorModal.value = true;
+  if (!floor) return;
 
-  duplicatedFloor.value = floor;
+  showFloorModal.value = true;
+  duplicatedFloor.value = { ...floor, title: floor?.title ? floor?.title + " - copied" : "" };
 };
 
 const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
@@ -77,6 +78,7 @@ watch(
       fetchFloors();
 
       floorsStore.setActiveFloor(null);
+      duplicatedFloor.value = null;
     }
   }
 );
