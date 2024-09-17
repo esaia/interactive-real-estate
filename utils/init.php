@@ -81,9 +81,30 @@ function ire_create_tables()
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
     ) $charset_collate;";
 
+    // Table for Flats
+    $flats_table_name = $wpdb->prefix . 'ire_flats';
+    $flats_sql = "CREATE TABLE $flats_table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        block_id mediumint(9),
+        type_id mediumint(9) NOT NULL,
+        project_id mediumint(9) NOT NULL,
+        flat_number VARCHAR(50) NOT NULL,
+        conf ENUM('reserved', 'sold') NOT NULL,
+        floor_number INT NOT NULL,
+        area_m2 DECIMAL(10, 2),
+        price DECIMAL(10, 2) NOT NULL,
+        offer_price DECIMAL(10, 2),
+        rooms_count INT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
+    ) $charset_collate;";
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($projects_sql);
     dbDelta($floors_sql);
+    dbDelta($flats_sql);
 }
 
 

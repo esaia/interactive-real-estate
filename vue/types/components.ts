@@ -105,6 +105,15 @@ export interface selectDataItem {
   isLinked?: boolean;
 }
 
+export interface FlatsInterface {
+  data: FlatItem[];
+  page: number;
+  per_page: number;
+  total: number;
+}
+
+export interface FlatItem {}
+
 // export interface PolygonDataCollection {
 //   [key: string]: PolygonData;
 // }

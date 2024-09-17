@@ -8,7 +8,7 @@ import Eye from "../icons/Eye.vue";
 import Delete from "../icons/Delete.vue";
 import Unlink from "../icons/Unlink.vue";
 import { useFloorsStore } from "@/src/stores/useFloors";
-import AddEditFloorModal from "../floors/AddEditFloorModal.vue";
+import AddEditFloorModal from "../floors/CreateEditFloorModal.vue";
 import Modal from "../Modal.vue";
 const isClollapsed = ref(false);
 

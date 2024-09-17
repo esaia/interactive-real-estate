@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useToast } from "vue-toast-notification";
 import { useProjectStore } from "@/src/stores/useProject";
