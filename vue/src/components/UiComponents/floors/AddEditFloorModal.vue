@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useToast } from "vue-toast-notification";
 import { useProjectStore } from "@/src/stores/useProject";
@@ -129,13 +129,21 @@ onMounted(() => {
     floor_number.value = props.duplicatedFloor.floor_number;
     conf.value = props.duplicatedFloor.conf;
 
-    duplicatedFloorPolygonData.value = props.duplicatedFloor?.polygon_data.map((item) => {
-      return {
-        id: "",
-        key: item.key,
-        type: ""
-      };
-    });
+    duplicatedFloorPolygonData.value = props.duplicatedFloor?.polygon_data
+      ? props.duplicatedFloor?.polygon_data.map((item) => {
+          return {
+            id: "",
+            key: item.key,
+            type: ""
+          };
+        })
+      : [];
+  }
+});
+
+onUnmounted(() => {
+  if (svgRef.value) {
+    resetCanvasAfterSave(svgRef.value);
   }
 });
 </script>

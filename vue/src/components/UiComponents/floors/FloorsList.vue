@@ -11,10 +11,11 @@ import Table from "../common/table/Table.vue";
 import TableTh from "../common/table/TableTh.vue";
 import Pagination from "../common/Pagination.vue";
 import DeleteModal from "../common/DeleteModal.vue";
+import { resetCanvasAfterSave } from "@/src/composables/helpers";
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
-const { id } = storeToRefs(projectStore);
+const { id, svgRef } = storeToRefs(projectStore);
 
 const showFloorModal = ref(false);
 const floors = ref<FloorInterface>();
@@ -56,6 +57,7 @@ const deleteFloor = async () => {
   showDeleteModal.value = false;
 
   fetchFloors();
+  floorsStore.fetchProjectFloors(id.value);
 };
 
 const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {

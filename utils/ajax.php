@@ -153,8 +153,10 @@ function ire_create_floor()
     $data['conf'] = isset($_POST['conf']) ? $_POST['conf'] : null;
 
 
-    $data['polygon_data'] = handle_json_data($_POST['polygon_data']);
-    $data['svg'] = isset($_POST['svg']) ? $_POST['svg'] : null;
+    if (isset($_POST['polygon_data']) && isset($_POST['svg'])) {
+        $data['polygon_data'] = handle_json_data($_POST['polygon_data']);
+        $data['svg'] = isset($_POST['svg']) ? $_POST['svg'] : null;
+    }
 
     $wpdb->insert($table_name, $data);
 
