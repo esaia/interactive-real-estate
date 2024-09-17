@@ -14,7 +14,7 @@ const props = defineProps<{ data: any }>();
 
 <template>
   <div class="overflow-hidden rounded-md border border-gray-200">
-    <table class="w-full overflow-hidden text-left text-sm text-gray-500 rtl:text-right">
+    <table class="w-full overflow-hidden text-left text-sm text-gray-800 rtl:text-right">
       <thead
         class="bg-gray-50 text-xs capitalize text-gray-700 [&_th]:border [&_th]:border-r-0 [&_th]:border-t-0 [&_th]:border-gray-300 [&_th]:px-2 [&_th]:py-2 first-of-type:[&_th]:border-l-0"
       >

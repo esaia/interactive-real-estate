@@ -112,7 +112,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="mt-10">
+  <div class="mt-14">
     <div class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
       <h3 class="text-lg font-semibold capitalize">Floors</h3>
 
