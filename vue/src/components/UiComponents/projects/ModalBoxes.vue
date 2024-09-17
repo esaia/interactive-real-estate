@@ -8,7 +8,7 @@ import Stack from "../icons/Stack.vue";
 import Modal from "../Modal.vue";
 import FlatsList from "../flats/FlatsList.vue";
 
-const showModal = ref<"block" | "floor" | "flat" | "type" | "">("flat");
+const showModal = ref<"block" | "floor" | "flat" | "type" | "">("floor");
 </script>
 
 <template>

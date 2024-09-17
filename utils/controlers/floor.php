@@ -1,52 +1,6 @@
 
 <?php
 
-add_action('wp_ajax_create_floor', 'ire_create_floor');
-
-function ire_create_floor()
-{
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'ire_floors';
-
-    ire_check_nonce($_POST['nonce'], 'ire_nonce');
-
-    $required_fields = ['floor_number', 'floor_image', 'project_id'];
-    $data = validate_and_sanitize_input($_POST, $required_fields);
-
-    if (!$data) {
-        send_json_response(false, 'Required fields are missing.');
-        return;
-    }
-
-
-    $data['title'] = isset($_POST['title']) ? $_POST['title'] : null;
-    $data['conf'] = isset($_POST['conf']) ? $_POST['conf'] : null;
-
-
-    if (isset($_POST['polygon_data']) && isset($_POST['svg'])) {
-        $data['polygon_data'] = handle_json_data($_POST['polygon_data']);
-        $data['svg'] = isset($_POST['svg']) ? $_POST['svg'] : null;
-    }
-
-    $wpdb->insert($table_name, $data);
-
-    if ($wpdb->last_error) {
-        send_json_response(false, 'Database error');
-    } else {
-        $new_floor_id = $wpdb->insert_id;
-        $new_floor = $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM $table_name WHERE id = %d",
-            $new_floor_id
-        ));
-
-        if (isset($new_floor->polygon_data)) {
-            $new_floor->polygon_data = handle_json_data($new_floor->polygon_data);
-        }
-        $new_floor->floor_image = wp_get_attachment_image_url($new_floor->floor_image, 90);
-
-        send_json_response(true, $new_floor);
-    }
-}
 
 
 
@@ -115,6 +69,55 @@ function ire_get_floors()
         }
     } else {
         send_json_response(false, 'Invalid project ID');
+    }
+}
+
+
+
+add_action('wp_ajax_create_floor', 'ire_create_floor');
+
+function ire_create_floor()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'ire_floors';
+
+    ire_check_nonce($_POST['nonce'], 'ire_nonce');
+
+    $required_fields = ['floor_number', 'floor_image', 'project_id'];
+    $data = validate_and_sanitize_input($_POST, $required_fields);
+
+    if (!$data) {
+        send_json_response(false, 'Required fields are missing.');
+        return;
+    }
+
+
+    $data['title'] = isset($_POST['title']) ? $_POST['title'] : null;
+    $data['conf'] = isset($_POST['conf']) ? $_POST['conf'] : null;
+
+
+    if (isset($_POST['polygon_data']) && isset($_POST['svg'])) {
+        $data['polygon_data'] = handle_json_data($_POST['polygon_data']);
+        $data['svg'] = isset($_POST['svg']) ? $_POST['svg'] : null;
+    }
+
+    $wpdb->insert($table_name, $data);
+
+    if ($wpdb->last_error) {
+        send_json_response(false, 'Database error');
+    } else {
+        $new_floor_id = $wpdb->insert_id;
+        $new_floor = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $table_name WHERE id = %d",
+            $new_floor_id
+        ));
+
+        if (isset($new_floor->polygon_data)) {
+            $new_floor->polygon_data = handle_json_data($new_floor->polygon_data);
+        }
+        $new_floor->floor_image = wp_get_attachment_image_url($new_floor->floor_image, 90);
+
+        send_json_response(true, $new_floor);
     }
 }
 

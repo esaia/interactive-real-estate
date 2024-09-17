@@ -10,10 +10,12 @@ import TableTh from "../common/table/TableTh.vue";
 import Pagination from "../common/Pagination.vue";
 import DeleteModal from "../common/DeleteModal.vue";
 import AddEditFlatModal from "./CreateEditFlatModal.vue";
+import Input from "../form/Input.vue";
 
 const projectStore = useProjectStore();
 const { id } = storeToRefs(projectStore);
 
+const searchFlat = ref("");
 const showFloorModal = ref(false);
 const flats = ref<FlatsInterface>();
 const sortField = ref("");
@@ -107,7 +109,7 @@ onMounted(() => {
     <div class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
       <h3 class="text-lg font-semibold uppercase">Flats</h3>
 
-      <input type="text" class="flex-1" placeholder="Filter flats list..." />
+      <Input v-model="searchFlat" placeholder="Filter flats list..." />
 
       <button class="button" @click="showFloorModal = true">Add Flat</button>
     </div>

@@ -9,6 +9,9 @@ import { FloorItem, imageInterface, PolygonDataCollection } from "@/types/compon
 import { useFloorsStore } from "@/src/stores/useFloors";
 import Canvas from "../../Canvas.vue";
 import { resetCanvasAfterSave, transformSvgString } from "@/src/composables/helpers";
+import Input from "../form/Input.vue";
+import Select from "../form/Select.vue";
+import Button from "../form/Button.vue";
 
 const props = defineProps<{
   duplicatedFloor?: FloorItem | null;
@@ -30,16 +33,18 @@ const $toast = useToast();
 const title = ref("");
 const floor_number = ref();
 const floor_image = ref<imageInterface>();
-const conf = ref("");
+const conf = ref();
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
 
 const submitForm = async () => {
   if (floorSvgRef.value) {
-    resetCanvasAfterSave(floorSvgRef.value);
+    await resetCanvasAfterSave(floorSvgRef.value);
   }
   if (svgRef.value) {
-    resetCanvasAfterSave(svgRef.value);
+    await resetCanvasAfterSave(svgRef.value);
   }
+
+  activeGroup.value = null;
 
   if (activeFloor.value) {
     await updateFloor();
@@ -55,7 +60,7 @@ const updateFloor = async () => {
     title: title.value,
     floor_number: floor_number.value,
     floor_image: floor_image.value?.id,
-    conf: conf.value,
+    conf: conf.value.value,
     floor_id: activeFloor.value?.id,
     polygon_data: activeFloor.value?.polygon_data,
     svg: floorSvgRef.value?.querySelector("svg")?.outerHTML || ""
@@ -90,7 +95,7 @@ const createFloor = async () => {
     title: title.value,
     floor_number: floor_number.value,
     floor_image: floor_image.value?.id || props.duplicatedFloor?.floor_image_id,
-    conf: conf.value,
+    conf: conf.value.value,
     project_id: id.value
   };
 
@@ -178,23 +183,35 @@ onUnmounted(() => {
         @add-polygon-data="(key) => duplicatedFloorPolygonData?.push({ id: '', key, type: '' })"
       />
     </div>
-    <form
-      class="flex h-fit w-60 flex-col items-center gap-3 rounded-md border p-3 shadow-sm"
-      @submit.prevent="submitForm"
-    >
-      <h2 class="text-lg">{{ activeFloor ? "Edit floor" : "Add floor" }}</h2>
-      <input v-model="title" type="text" class="w-full" placeholder="Floor title" />
-      <input v-model="floor_number" type="number" class="w-full" placeholder="Floor number" required />
+    <form class="h-fit w-60 rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
+      <div class="flex w-full items-center justify-center bg-gray-50 p-3">
+        <h2 class="text-lg">{{ activeFloor ? "Edit floor" : "Add floor" }}</h2>
+      </div>
 
-      <select v-model="conf" name="cars" id="cars" class="w-full !max-w-full">
+      <div class="flex flex-col items-center gap-3 p-3">
+        <Input v-model="title" placeholder="Floor title" label="title" />
+        <Input v-model="floor_number" placeholder="Floor number" label="floor number" type="number" />
+
+        <Select
+          v-model="conf"
+          :data="[
+            { title: 'Reserved', value: 'reserved' },
+            { title: 'Sold', value: 'sold' }
+          ]"
+          label="select conf"
+          clearable
+        />
+
+        <!-- <select v-model="conf" name="cars" id="cars" class="w-full !max-w-full">
         <option value="">conf</option>
         <option value="reserved">Reserved</option>
         <option value="sold">Sold</option>
-      </select>
+      </select> -->
 
-      <UploadImg v-model="floor_image" />
+        <UploadImg v-model="floor_image" />
 
-      <button class="button w-full">{{ activeFloor ? "Edit floor" : "Add floor" }}</button>
+        <Button type="submit" :title="activeFloor ? 'Edit floor' : 'Add floor'" />
+      </div>
     </form>
   </div>
 </template>

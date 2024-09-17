@@ -6,6 +6,7 @@ import ajaxAxios from "@/src/utils/axios";
 import { useSelectImage } from "@/src/composables/useSelectImage";
 import Button from "../form/Button.vue";
 import { resetCanvasAfterSave } from "@/src/composables/helpers";
+import Input from "../form/Input.vue";
 
 const $toast = useToast();
 const { selectedImage, selectImage } = useSelectImage();
@@ -60,7 +61,8 @@ const updateProject = async () => {
       <div class="flex flex-col items-start gap-5 rounded-md bg-white p-4">
         <div class="flex flex-col gap-2">
           <label for="" class="font-semibold">Project Title:</label>
-          <input type="text" v-model="title" />
+
+          <Input v-model="title" />
         </div>
 
         <div class="flex w-full items-center justify-between gap-2">
@@ -96,8 +98,7 @@ const updateProject = async () => {
 
     <div class="flex flex-col items-end gap-3">
       <div class="flex"></div>
-      <Button title="Update" @click="updateProject" />
-      <!-- <Button title="Back" :href="irePlugin.plugin_url" /> -->
+      <Button title="Update" outlined @click="updateProject" />
     </div>
   </div>
 </template>

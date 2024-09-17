@@ -11,12 +11,14 @@ import Table from "../common/table/Table.vue";
 import TableTh from "../common/table/TableTh.vue";
 import Pagination from "../common/Pagination.vue";
 import DeleteModal from "../common/DeleteModal.vue";
-import { resetCanvasAfterSave } from "@/src/composables/helpers";
+import Input from "../form/Input.vue";
+import Button from "../form/Button.vue";
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
-const { id, svgRef } = storeToRefs(projectStore);
+const { id } = storeToRefs(projectStore);
 
+const searchFloor = ref("");
 const showFloorModal = ref(false);
 const floors = ref<FloorInterface>();
 const sortField = ref("");
@@ -112,11 +114,13 @@ onMounted(() => {
 <template>
   <div class="mt-10">
     <div class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
-      <h3 class="text-lg font-semibold uppercase">Floors</h3>
+      <h3 class="text-lg font-semibold capitalize">Floors</h3>
 
-      <input type="text" class="flex-1" placeholder="Filter floors list..." />
-
-      <button class="button" @click="showFloorModal = true">Add Floor</button>
+      <Input v-model="searchFloor" placeholder="Filter floors list..." />
+      <!-- <button class="button" @click="showFloorModal = true">Add Floor</button> -->
+      <div class="min-w-max" @click="showFloorModal = true">
+        <Button title="Add Floor" />
+      </div>
     </div>
 
     <div class="relative overflow-x-auto shadow-sm">
