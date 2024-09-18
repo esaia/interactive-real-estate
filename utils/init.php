@@ -109,6 +109,7 @@ function ire_create_tables()
         project_id mediumint(9) NOT NULL,
         image_2d INT,
         image_3d INT,
+        gallery JSON,
         area_m2 DECIMAL(10, 2),
         rooms_count INT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -119,14 +120,14 @@ function ire_create_tables()
 
 
     // Table for types gallery
-    $types_gallery_table_name = $wpdb->prefix . 'ire_types_gallery';
-    $gallery_sql = "CREATE TABLE $types_gallery_table_name (
-        id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
-        flat_id MEDIUMINT(9) NOT NULL,
-        image INT,
-        PRIMARY KEY (id),
-        FOREIGN KEY (flat_id) REFERENCES $flats_table_name(id) ON DELETE CASCADE
-    ) {$charset_collate};";
+    // $types_gallery_table_name = $wpdb->prefix . 'ire_types_gallery';
+    // $gallery_sql = "CREATE TABLE $types_gallery_table_name (
+    //     id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+    //     flat_id MEDIUMINT(9) NOT NULL,
+    //     image INT,
+    //     PRIMARY KEY (id),
+    //     FOREIGN KEY (flat_id) REFERENCES $flats_table_name(id) ON DELETE CASCADE
+    // ) {$charset_collate};";
 
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -134,7 +135,6 @@ function ire_create_tables()
     dbDelta($floors_sql);
     dbDelta($flats_sql);
     dbDelta($types_sql);
-    dbDelta($gallery_sql);
 }
 
 

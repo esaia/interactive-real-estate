@@ -9,7 +9,7 @@ import { resetCanvasAfterSave } from "@/src/composables/helpers";
 import Input from "../form/Input.vue";
 
 const $toast = useToast();
-const { selectedImage, selectImage } = useSelectImage();
+const { selectedImages, selectImage } = useSelectImage();
 const projectStore = useProjectStore();
 
 const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = storeToRefs(projectStore);
@@ -27,8 +27,8 @@ const updateProject = async () => {
     polygon_data: polygon_data.value
   };
 
-  if (selectedImage.value && selectedImage.value.id) {
-    params.project_image = selectedImage.value.id;
+  if (selectedImages.value && selectedImages.value?.[0]?.id) {
+    params.project_image = selectedImages.value?.[0]?.id;
   }
 
   try {
@@ -44,8 +44,8 @@ const updateProject = async () => {
       position: "top"
     });
 
-    if (selectedImage.value?.url) {
-      project_image.value = selectedImage.value?.url;
+    if (selectedImages.value?.[0]?.url) {
+      project_image.value = selectedImages.value?.[0]?.url;
     }
   } catch (error) {
     $toast.error("Something went wrong!", {
@@ -89,7 +89,7 @@ const updateProject = async () => {
 
       <div class="w-60 rounded-md bg-white p-4">
         <p class="mb-1 font-semibold">Change project image</p>
-        <img :src="selectedImage?.url || project_image" class="h-32 w-full rounded-md object-cover" />
+        <img :src="selectedImages?.[0]?.url || project_image" class="h-32 w-full rounded-md object-cover" />
         <button class="!mt-2 w-full border border-dashed py-2 transition-all hover:bg-gray-50" @click="selectImage">
           Upload
         </button>

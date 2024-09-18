@@ -142,9 +142,12 @@ onMounted(() => {
       title: "choose",
       value: ""
     };
+    floor_image.value = props.duplicatedFloor.floor_image;
 
-    duplicatedFloorPolygonData.value = props.duplicatedFloor?.polygon_data
-      ? props.duplicatedFloor?.polygon_data.map((item) => {
+    const polygonData = props.duplicatedFloor?.polygon_data;
+
+    duplicatedFloorPolygonData.value = polygonData
+      ? polygonData.map((item) => {
           return {
             id: "",
             key: item.key,
@@ -164,7 +167,7 @@ onUnmounted(() => {
 
 <template>
   <div class="mt-8 flex gap-5">
-    <div class="flex-1">
+    <div class="h-fit flex-1">
       <Canvas
         v-if="activeFloor"
         :projectImage="activeFloor?.floor_image?.[0].url"

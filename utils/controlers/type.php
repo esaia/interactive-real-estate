@@ -49,6 +49,26 @@ function ire_get_types()
         } else {
             if ($results) {
                 $results = array_map(function ($item) {
+                    if ($item['image_2d']) {
+                        $item['image_2d'] = [get_image_instance($item['image_2d'])];
+                    }
+
+                    if ($item['image_3d']) {
+                        $item['image_3d'] = [get_image_instance($item['image_3d'])];
+                    }
+
+                    if ($item['gallery']) {
+                        $gallery_ids = handle_json_data($item['gallery']);
+                        $item['gallery'] = [];
+
+                        foreach ($gallery_ids as $gallery_id) {
+                            $item['gallery'][] = get_image_instance($gallery_id);
+                        }
+                    }
+
+
+
+
                     return $item;
                 }, $results);
             }
@@ -85,8 +105,15 @@ function ire_create_type()
         return;
     }
 
+
+
     $non_required_fields = ['teaser', 'image_2d', 'image_3d', 'area_m2', 'rooms_count'];
     $non_required_data = validate_and_sanitize_input($_POST, $non_required_fields, false);
+
+
+    if ($_POST['gallery']) {
+        $non_required_data['gallery'] = handle_json_data($_POST['gallery']);
+    }
 
 
     $data = array_merge($required_data, $non_required_data);
@@ -107,5 +134,72 @@ function ire_create_type()
 
 
         send_json_response(true, $new_type);
+    }
+}
+
+
+
+
+add_action('wp_ajax_update_type', 'ire_update_type');
+
+function ire_update_type()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'ire_types';
+
+    ire_check_nonce($_POST['nonce'], 'ire_nonce');
+
+    $type_id = isset($_POST['type_id']) ? intval($_POST['type_id']) : null;
+
+    if (!$type_id) {
+        send_json_response(false, 'type_id is required');
+        return;
+    }
+
+    $keys = ['title', 'teaser', 'image_2d', 'image_3d', 'area_m2', 'rooms_count'];
+
+    $params = validate_and_sanitize_input($_POST, $keys, false);
+
+
+    if ($_POST['gallery']) {
+        $params['gallery'] = handle_json_data($_POST['gallery']);
+    }
+
+    $where = array('id' => $type_id);
+    $wpdb->update($table_name, $params, $where);
+
+    if ($wpdb->last_error) {
+        send_json_response(false, 'Database error');
+    } else {
+        send_json_response(true, 'Floor updated successfully');
+    }
+}
+
+
+
+add_action('wp_ajax_delete_type', 'ire_delete_type');
+
+function ire_delete_type()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'ire_types';
+
+    ire_check_nonce($_POST['nonce'], 'ire_nonce');
+
+    $type_id = isset($_POST['type_id']) ? intval($_POST['type_id']) : null;
+
+    if (!$type_id) {
+        send_json_response(false, 'type_id is required');
+        return;
+    }
+
+    $delete_result = $wpdb->delete($table_name, ['id' => $type_id]);
+
+
+
+    if ($delete_result) {
+        send_json_response(true, 'Type deleted successfully');
+    } else {
+        send_json_response(false, 'Database error: ' . $wpdb->last_error);
     }
 }

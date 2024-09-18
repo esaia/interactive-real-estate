@@ -114,7 +114,7 @@ function ire_create_floor()
         if (isset($new_floor->polygon_data)) {
             $new_floor->polygon_data = handle_json_data($new_floor->polygon_data);
         }
-        $new_floor->floor_image = wp_get_attachment_image_url($new_floor->floor_image, 90);
+        $new_floor->floor_image = [get_image_instance($new_floor->floor_image)];
 
         send_json_response(true, $new_floor);
     }

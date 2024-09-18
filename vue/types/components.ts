@@ -113,6 +113,27 @@ export interface FlatsInterface {
 
 export interface FlatItem {}
 
+export interface TypeInterface {
+  data: TypeItem[];
+  page: number;
+  per_page: number;
+  total: number;
+}
+
+export interface TypeItem {
+  id: string;
+  title: string;
+  teaser: string;
+  project_id: string;
+  image_2d?: imageInterface[] | null;
+  image_3d?: imageInterface[] | null;
+  gallery?: imageInterface[] | null;
+  area_m2: string;
+  rooms_count: string;
+  created_at: string;
+  updated_at: string;
+}
+
 // export interface PolygonDataCollection {
 //   [key: string]: PolygonData;
 // }

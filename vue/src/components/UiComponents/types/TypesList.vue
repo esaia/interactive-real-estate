@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, Transition, watch } from "vue";
 import Modal from "@components/UiComponents/Modal.vue";
-import { FlatItem, FlatsInterface } from "@/types/components";
+import { TypeInterface, TypeItem } from "@/types/components";
 import ajaxAxios from "@/src/utils/axios";
 import { useProjectStore } from "@/src/stores/useProject";
 import { storeToRefs } from "pinia";
@@ -18,42 +18,43 @@ const { id } = storeToRefs(projectStore);
 
 const searchType = ref("");
 const showTypeModal = ref(false);
-const types = ref<FlatsInterface>();
+const types = ref<TypeInterface>();
 const sortField = ref("");
 const sortOrder = ref<"ASC" | "DESC" | "">("ASC");
 const currentPage = ref(1);
 const perPage = ref(20);
-const duplicatedFlat = ref<FlatItem | null>(null);
+
+const activeType = ref<TypeItem | null>(null);
+const duplicatedType = ref<TypeItem | null>(null);
 
 const deleteTypeId = ref<number | null>(null);
 const showDeleteModal = ref(false);
 
-const editType = (flat: FlatItem | null) => {
-  //   showTypeModal.value = true;
-  //   floorsStore.setActiveFloor(floor);
+const editType = (type: TypeItem | null) => {
+  activeType.value = type;
+  showTypeModal.value = true;
 };
 
-const duplicateType = (floor: FlatItem | null) => {
-  //   if (!floor) return;
-  //   showTypeModal.value = true;
-  //   duplicatedFlat.value = { ...floor, title: floor?.title ? floor?.title + " - copied" : "" };
+const duplicateType = (type: TypeItem | null) => {
+  if (!type) return;
+  showTypeModal.value = true;
+  duplicatedType.value = { ...type, title: type?.title ? type?.title + " - copied" : "" };
 };
 
-const showDeleteTypeModal = (floor: FlatItem | null) => {
-  //   if (!floor) return;
-  //   deleteTypeId.value = Number(floor.id);
-  //   showDeleteModal.value = true;
+const showDeleteTypeModal = (type: TypeItem | null) => {
+  if (!type) return;
+  deleteTypeId.value = Number(type.id);
+  showDeleteModal.value = true;
 };
 
 const deleteType = async () => {
-  //   await ajaxAxios.post("", {
-  //     action: "delete_floor",
-  //     nonce: irePlugin.nonce,
-  //     floor_id: deleteTypeId.value
-  //   });
-  //   showDeleteModal.value = false;
-  //   fetchFloors();
-  //   floorsStore.fetchProjectFloors(id.value);
+  await ajaxAxios.post("", {
+    action: "delete_type",
+    nonce: irePlugin.nonce,
+    type_id: deleteTypeId.value
+  });
+  showDeleteModal.value = false;
+  fetchTypes();
 };
 
 const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
@@ -94,8 +95,8 @@ watch(
     if (!ns) {
       fetchTypes();
 
-      //   floorsStore.setActiveFloor(null);
-      duplicatedFlat.value = null;
+      activeType.value = null;
+      duplicatedType.value = null;
     }
   }
 );
@@ -121,9 +122,9 @@ onMounted(() => {
       <Table
         v-if="types?.data"
         :data="types.data"
-        @edit-action="(flat: FlatItem | null) => editType(flat)"
-        @duplicate-action="(flat: FlatItem | null) => duplicateType(flat)"
-        @delete-action="(flat: FlatItem | null) => showDeleteTypeModal(flat)"
+        @edit-action="(flat: TypeItem | null) => editType(flat)"
+        @duplicate-action="(flat: TypeItem | null) => duplicateType(flat)"
+        @delete-action="(flat: TypeItem | null) => showDeleteTypeModal(flat)"
       >
         <template #header>
           <TableTh
@@ -142,12 +143,14 @@ onMounted(() => {
             :sortOrder="sortOrder"
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
-          <TableTh fieldTitle="area_m2" field="area_m2" />
+          <TableTh fieldTitle="Teaser" field="teaser" />
+          <TableTh fieldTitle="Area m2" field="area_m2" />
         </template>
 
         <template #default="type">
           <td>{{ type.slotProps?.id }}</td>
           <td>{{ type.slotProps?.title }}</td>
+          <td>{{ type.slotProps?.teaser }}</td>
           <td>{{ type.slotProps?.area_m2 }}</td>
         </template>
       </Table>
@@ -158,8 +161,12 @@ onMounted(() => {
 
   <teleport to="#my-vue-app">
     <Transition name="fade">
-      <Modal v-if="showTypeModal" @close="showTypeModal = false" type="2" width="w-[800px]">
-        <CreateEditTypeModal :duplicatedFlat="duplicatedFlat" />
+      <Modal v-if="showTypeModal" @close="showTypeModal = false" type="2" width="w-[500px]">
+        <CreateEditTypeModal
+          :duplicatedType="duplicatedType"
+          :activeType="activeType"
+          @set-active-type="(type) => (activeType = type)"
+        />
       </Modal>
     </Transition>
   </teleport>

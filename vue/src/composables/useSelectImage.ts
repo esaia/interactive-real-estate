@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { imageInterface } from "../../types/components";
 
-export function useSelectImage(multiple: boolean) {
+export function useSelectImage(multiple?: boolean) {
   const selectedImages = ref<imageInterface[] | null>(null);
 
   const selectImage = () => {
@@ -14,8 +14,6 @@ export function useSelectImage(multiple: boolean) {
     });
 
     mediaFrame.on("select", function () {
-      console.log("selectedImages", selectedImages.value);
-
       const selection: imageInterface[] = mediaFrame
         .state()
         .get("selection")
