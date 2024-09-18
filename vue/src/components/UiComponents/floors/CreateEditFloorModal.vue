@@ -17,6 +17,11 @@ const props = defineProps<{
   duplicatedFloor?: FloorItem | null;
 }>();
 
+const defaultConf = [
+  { title: "Reserved", value: "reserved" },
+  { title: "Sold", value: "sold" }
+];
+
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
 const { id, svgRef } = storeToRefs(projectStore);
@@ -33,7 +38,7 @@ const $toast = useToast();
 const title = ref("");
 const floor_number = ref();
 const floor_image = ref<imageInterface>();
-const conf = ref();
+const conf = ref({ title: "Choose", value: "" });
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
 
 const submitForm = async () => {
@@ -128,11 +133,14 @@ onMounted(() => {
   if (activeFloor.value) {
     title.value = activeFloor.value.title;
     floor_number.value = activeFloor.value.floor_number;
-    conf.value = activeFloor.value.conf;
+    conf.value = defaultConf.find((item) => item.value === activeFloor.value?.conf) || { title: "choose", value: "" };
   } else if (props.duplicatedFloor) {
     title.value = props.duplicatedFloor.title;
     floor_number.value = props.duplicatedFloor.floor_number;
-    conf.value = props.duplicatedFloor.conf;
+    conf.value = defaultConf.find((item) => item.value === props.duplicatedFloor?.conf) || {
+      title: "choose",
+      value: ""
+    };
 
     duplicatedFloorPolygonData.value = props.duplicatedFloor?.polygon_data
       ? props.duplicatedFloor?.polygon_data.map((item) => {
@@ -190,25 +198,11 @@ onUnmounted(() => {
 
       <div class="flex flex-col items-center gap-3 p-3">
         <Input v-model="title" placeholder="Floor title" label="title" />
-        <Input v-model="floor_number" placeholder="Floor number" label="floor number" type="number" />
+        <Input v-model="floor_number" placeholder="Floor number" label="floor number" type="number" required />
 
-        <Select
-          v-model="conf"
-          :data="[
-            { title: 'Reserved', value: 'reserved' },
-            { title: 'Sold', value: 'sold' }
-          ]"
-          label="select conf"
-          clearable
-        />
+        <Select v-model="conf" :data="defaultConf" label="select conf" clearable />
 
-        <!-- <select v-model="conf" name="cars" id="cars" class="w-full !max-w-full">
-        <option value="">conf</option>
-        <option value="reserved">Reserved</option>
-        <option value="sold">Sold</option>
-      </select> -->
-
-        <UploadImg v-model="floor_image" />
+        <UploadImg v-model="floor_image" title="Upload floor image" required />
 
         <Button type="submit" :title="activeFloor ? 'Edit floor' : 'Add floor'" />
       </div>

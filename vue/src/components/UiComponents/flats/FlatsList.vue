@@ -11,6 +11,7 @@ import Pagination from "../common/Pagination.vue";
 import DeleteModal from "../common/DeleteModal.vue";
 import AddEditFlatModal from "./CreateEditFlatModal.vue";
 import Input from "../form/Input.vue";
+import Button from "../form/Button.vue";
 
 const projectStore = useProjectStore();
 const { id } = storeToRefs(projectStore);
@@ -107,11 +108,13 @@ onMounted(() => {
 <template>
   <div class="mt-10">
     <div class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
-      <h3 class="text-lg font-semibold uppercase">Flats</h3>
+      <h3 class="text-lg font-semibold capitalize">Flats</h3>
 
       <Input v-model="searchFlat" placeholder="Filter flats list..." />
 
-      <button class="button" @click="showFloorModal = true">Add Flat</button>
+      <div class="min-w-max">
+        <Button title="Add Flat" outlined @click="showFloorModal = true" />
+      </div>
     </div>
 
     <div class="relative overflow-x-auto shadow-sm">

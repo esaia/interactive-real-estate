@@ -9,7 +9,7 @@ function ire_create_flat()
 
     ire_check_nonce($_POST['nonce'], 'ire_nonce');
 
-    $required_fields = ['flat_number', 'conf', 'floor_number', 'area_m2', 'price', 'offer_price', 'rooms_count'];
+    $required_fields = ['flat_number', 'conf', 'floor_number', 'area_m2', 'price', 'offer_price', 'rooms_count', 'type_id', 'project_id'];
     $data = validate_and_sanitize_input($_POST, $required_fields);
 
     if (!$data) {

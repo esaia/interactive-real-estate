@@ -12,6 +12,7 @@ const props = withDefaults(
     placeholder?: string;
     label?: string;
     clearable?: boolean;
+    required?: boolean;
   }>(),
   {
     placeholder: "",
@@ -59,6 +60,11 @@ const onClickOutside = () => {
   isModalOpen.value = false;
 };
 
+const clearData = () => {
+  selectModelValue.value = { title: "choose", value: "" };
+  isModalOpen.value = false;
+};
+
 watchEffect(() => {
   activeItems.value = props.data;
 });
@@ -86,7 +92,9 @@ watch(
 
 <template>
   <div class="w-full">
-    <p v-if="label" class="mb-1 text-xs capitalize text-gray-600">{{ label }}</p>
+    <p v-if="label" class="mb-1 text-xs capitalize text-gray-600">
+      {{ label }} <span v-if="required" class="text-red-600">*</span>
+    </p>
 
     <div
       v-click-outside="onClickOutside"
@@ -96,12 +104,13 @@ watch(
       <input
         v-model="input"
         type="text"
-        class="w-full !rounded-md !border-none shadow-none placeholder:text-black focus:!shadow-none"
+        class="w-full !rounded-md !border-none shadow-none focus:!shadow-none"
+        :class="{ 'placeholder:text-black': modelValue.value }"
         :placeholder="inputPlaceholder"
       />
 
       <div class="mx-2 flex items-center gap-1 [&_path]:fill-gray-400">
-        <div class="group" @click.stop="selectModelValue = { title: 'choose', value: '' }">
+        <div class="group" @click.stop="clearData">
           <Close
             v-if="clearable && selectModelValue.value"
             class="h-3 w-3 transition-all group-hover:[&_path]:fill-gray-500"
@@ -124,12 +133,12 @@ watch(
             :key="item.value"
             type="button"
             class="line-clamp-1 w-full min-w-32 rounded-sm px-[8px] py-[6px] text-start transition-all hover:bg-gray-100"
-            :class="`${item.value === selectModelValue.value ? '!bg-primary text-white' : item?.isLinked ? 'cursor-not-allowed text-red-600 hover:bg-white' : ''} `"
+            :class="`${item.value === selectModelValue.value ? '!bg-primary text-white' : item?.isLinked ? 'cursor-not-allowed text-gray-400 hover:bg-white' : ''} `"
             @click="selectItem(item)"
           >
             {{ item.title }}
             <span class="text-red-600">
-              {{ item.isLinked && item.value !== selectModelValue.value ? " - Linked" : "" }}
+              {{ item.isLinked && item.value !== selectModelValue.value ? " - linked" : "" }}
             </span>
           </button>
         </div>

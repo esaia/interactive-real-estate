@@ -117,9 +117,8 @@ onMounted(() => {
       <h3 class="text-lg font-semibold capitalize">Floors</h3>
 
       <Input v-model="searchFloor" placeholder="Filter floors list..." />
-      <!-- <button class="button" @click="showFloorModal = true">Add Floor</button> -->
       <div class="min-w-max" @click="showFloorModal = true">
-        <Button title="Add Floor" />
+        <Button title="Add Floor" outlined />
       </div>
     </div>
 

@@ -7,6 +7,7 @@ const props = withDefaults(
     placeholder?: string;
     type?: string;
     label?: string;
+    required?: boolean;
   }>(),
   {
     placeholder: "",
@@ -31,7 +32,9 @@ const inputModel = computed({
 
 <template>
   <div class="w-full">
-    <p v-if="label" class="mb-1 text-xs capitalize text-gray-600">{{ label }}</p>
+    <p v-if="label" class="mb-1 text-xs capitalize text-gray-600">
+      {{ label }} <span v-if="required" class="text-red-600">*</span>
+    </p>
     <input
       v-model="inputModel"
       class="h-full w-full translate-y-[2px] !border-none bg-transparent px-4 outline-none !ring-1 ring-gray-300 transition-all focus:!border-none focus:!shadow-none focus:!ring-2 focus:ring-primary"

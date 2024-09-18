@@ -1,7 +1,4 @@
-
 <?php
-
-
 
 
 add_action('wp_ajax_get_floors', 'ire_get_floors');

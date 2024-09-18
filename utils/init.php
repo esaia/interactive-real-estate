@@ -91,9 +91,26 @@ function ire_create_tables()
         flat_number VARCHAR(50) NOT NULL,
         conf ENUM('reserved', 'sold') NOT NULL,
         floor_number INT NOT NULL,
-        area_m2 DECIMAL(10, 2),
         price DECIMAL(10, 2) NOT NULL,
         offer_price DECIMAL(10, 2),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
+    ) $charset_collate;";
+
+
+    // Table for types
+    $types_table_name = $wpdb->prefix . 'ire_types';
+    $types_sql = "CREATE TABLE $types_table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        title VARCHAR(255) NOT NULL,
+        teaser TEXT,
+        project_id mediumint(9) NOT NULL,
+        conf ENUM('reserved', 'sold') NOT NULL,
+        image_2d INT,
+        image_3d INT,
+        area_m2 DECIMAL(10, 2),
         rooms_count INT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -101,10 +118,24 @@ function ire_create_tables()
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
     ) $charset_collate;";
 
+
+    // Table for types gallery
+    $types_gallery_table_name = $wpdb->prefix . 'ire_types_gallery';
+    $gallery_sql = "CREATE TABLE $types_gallery_table_name (
+        id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+        flat_id MEDIUMINT(9) NOT NULL,
+        image INT,
+        PRIMARY KEY (id),
+        FOREIGN KEY (flat_id) REFERENCES $flats_table_name(id) ON DELETE CASCADE
+    ) {$charset_collate};";
+
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($projects_sql);
     dbDelta($floors_sql);
     dbDelta($flats_sql);
+    dbDelta($types_sql);
+    dbDelta($gallery_sql);
 }
 
 
