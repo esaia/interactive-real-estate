@@ -41,6 +41,7 @@ const inputModel = computed({
       :placeholder="placeholder"
       :type="type"
       :name="placeholder"
+      :required="required"
     />
   </div>
 </template>

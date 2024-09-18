@@ -107,7 +107,6 @@ function ire_create_tables()
         title VARCHAR(255) NOT NULL,
         teaser TEXT,
         project_id mediumint(9) NOT NULL,
-        conf ENUM('reserved', 'sold') NOT NULL,
         image_2d INT,
         image_3d INT,
         area_m2 DECIMAL(10, 2),

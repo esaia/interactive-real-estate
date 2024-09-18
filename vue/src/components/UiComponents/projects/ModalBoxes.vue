@@ -7,8 +7,9 @@ import Floor from "../icons/floor.vue";
 import Stack from "../icons/Stack.vue";
 import Modal from "../Modal.vue";
 import FlatsList from "../flats/FlatsList.vue";
+import TypesList from "../types/TypesList.vue";
 
-const showModal = ref<"block" | "floor" | "flat" | "type" | "">("flat");
+const showModal = ref<"block" | "floor" | "flat" | "type" | "">("type");
 </script>
 
 <template>
@@ -57,6 +58,14 @@ const showModal = ref<"block" | "floor" | "flat" | "type" | "">("flat");
       <Transition name="fade">
         <Modal v-if="showModal === 'flat'" type="2" width="w-11/12" @close="showModal = ''">
           <FlatsList />
+        </Modal>
+      </Transition>
+    </teleport>
+
+    <teleport to="#my-vue-app">
+      <Transition name="fade">
+        <Modal v-if="showModal === 'type'" type="2" width="w-11/12" @close="showModal = ''">
+          <TypesList />
         </Modal>
       </Transition>
     </teleport>

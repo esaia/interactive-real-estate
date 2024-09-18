@@ -24,7 +24,7 @@ const inputModel = computed({
 </script>
 
 <template>
-  <div class="flex w-full items-center justify-between py-5">
+  <div v-if="totalItems > perPage" class="flex w-full items-center justify-between py-5">
     <p>{{ (inputModel - 1) * perPage }} to {{ perPage * inputModel }} of {{ totalItems }} entries</p>
 
     <VueAwesomePaginate :total-items="totalItems" :items-per-page="perPage" :max-pages-shown="5" v-model="inputModel">
@@ -56,19 +56,19 @@ const inputModel = computed({
   height: 30px;
   width: 30px;
   cursor: pointer;
-  color: black;
+  color: #1e293b;
 }
 
 .paginate-buttons:hover,
 .paginate-buttons:hover svg path {
-  background-color: black;
+  background-color: #1e293b;
   color: white;
   fill: white;
   overflow: hidden;
 }
 
 .active-page {
-  background-color: black;
+  background-color: #1e293b;
   color: white;
 }
 

@@ -51,8 +51,10 @@ function ire_get_floors()
                     if ($item['polygon_data']) {
                         $item['polygon_data'] = handle_json_data($item['polygon_data']);
                     }
-                    $item['floor_image_id'] = $item['floor_image'];
-                    $item['floor_image'] = wp_get_attachment_image_url($item['floor_image'], 90);
+                    $item['floor_image'] = [get_image_instance($item['floor_image'])];
+
+
+
                     return $item;
                 }, $results);
             }

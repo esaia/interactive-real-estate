@@ -84,8 +84,7 @@ export interface FloorItem {
   title: string;
   floor_number: number;
   conf: "reserved" | "sold";
-  floor_image: string;
-  floor_image_id: string;
+  floor_image: imageInterface[];
   svg: string;
   project_id: number;
   polygon_data: PolygonDataCollection[];

@@ -1,8 +1,8 @@
 import { ref } from "vue";
 import { imageInterface } from "../../types/components";
 
-export function useSelectImage() {
-  const selectedImage = ref<imageInterface | null>(null);
+export function useSelectImage(multiple: boolean) {
+  const selectedImages = ref<imageInterface[] | null>(null);
 
   const selectImage = () => {
     const mediaFrame = wp.media({
@@ -10,19 +10,35 @@ export function useSelectImage() {
       button: {
         text: "Use this file"
       },
-      multiple: false
+      multiple: multiple ? "add" : false
     });
 
     mediaFrame.on("select", function () {
-      const selection = mediaFrame.state().get("selection").first().toJSON();
-      selectedImage.value = selection;
+      console.log("selectedImages", selectedImages.value);
+
+      const selection: imageInterface[] = mediaFrame
+        .state()
+        .get("selection")
+        .map((attachment: any) => attachment.toJSON());
+
+      if (multiple) {
+        const arr = selection;
+
+        if (selectedImages.value) {
+          arr.push(...selectedImages.value);
+        }
+
+        selectedImages.value = arr;
+      } else {
+        selectedImages.value = [selection[0]];
+      }
     });
 
     mediaFrame.open();
   };
 
   return {
-    selectedImage,
+    selectedImages,
     selectImage
   };
 }

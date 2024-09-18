@@ -37,7 +37,7 @@ const $toast = useToast();
 
 const title = ref("");
 const floor_number = ref();
-const floor_image = ref<imageInterface>();
+const floor_image = ref<imageInterface[] | null>(null);
 const conf = ref({ title: "Choose", value: "" });
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
 
@@ -64,7 +64,7 @@ const updateFloor = async () => {
   const params = {
     title: title.value,
     floor_number: floor_number.value,
-    floor_image: floor_image.value?.id,
+    floor_image: floor_image.value?.[0]?.id,
     conf: conf.value.value,
     floor_id: activeFloor.value?.id,
     polygon_data: activeFloor.value?.polygon_data,
@@ -84,9 +84,9 @@ const updateFloor = async () => {
 
     activeGroup.value = null;
 
-    if (floor_image.value?.url && activeFloor.value) {
-      activeFloor.value.floor_image = floor_image.value?.url;
-      floor_image.value = undefined;
+    if (floor_image.value?.[0] && activeFloor.value) {
+      activeFloor.value.floor_image = floor_image.value;
+      floor_image.value = null;
     }
   } else {
     $toast.error(data?.data || "Something went wrong!", {
@@ -99,7 +99,7 @@ const createFloor = async () => {
   const params: any = {
     title: title.value,
     floor_number: floor_number.value,
-    floor_image: floor_image.value?.id || props.duplicatedFloor?.floor_image_id,
+    floor_image: floor_image.value?.[0]?.id || props.duplicatedFloor?.floor_image?.[0]?.id,
     conf: conf.value.value,
     project_id: id.value
   };
@@ -121,7 +121,7 @@ const createFloor = async () => {
     });
 
     floorStore.setActiveFloor(data.data);
-    floor_image.value = undefined;
+    floor_image.value = null;
   } else {
     $toast.error(data?.data || "Something went wrong!", {
       position: "top"
@@ -134,6 +134,7 @@ onMounted(() => {
     title.value = activeFloor.value.title;
     floor_number.value = activeFloor.value.floor_number;
     conf.value = defaultConf.find((item) => item.value === activeFloor.value?.conf) || { title: "choose", value: "" };
+    floor_image.value = activeFloor.value.floor_image;
   } else if (props.duplicatedFloor) {
     title.value = props.duplicatedFloor.title;
     floor_number.value = props.duplicatedFloor.floor_number;
@@ -166,7 +167,7 @@ onUnmounted(() => {
     <div class="flex-1">
       <Canvas
         v-if="activeFloor"
-        :projectImage="activeFloor?.floor_image"
+        :projectImage="activeFloor?.floor_image?.[0].url"
         :polygon_data="activeFloor?.polygon_data"
         :svgRef="floorSvgRef"
         :svg="activeFloor.svg"
@@ -179,7 +180,7 @@ onUnmounted(() => {
       />
       <Canvas
         v-else-if="duplicatedFloor"
-        :projectImage="duplicatedFloor?.floor_image"
+        :projectImage="duplicatedFloor?.floor_image?.[0].url"
         :polygon_data="duplicatedFloorPolygonData"
         :svgRef="floorSvgRef"
         :svg="transformSvgString(duplicatedFloor.svg)"
