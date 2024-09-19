@@ -25,7 +25,7 @@ const emits = defineEmits<{
 }>();
 
 const props = defineProps<{
-  duplicatedType: TypeItem | null;
+  duplicatedType?: TypeItem | null;
   activeType: TypeItem | null;
 }>();
 
@@ -75,7 +75,7 @@ const editType = async (params: any) => {
   });
 
   if (data.success) {
-    $toast.success("Floor updaated!", {
+    $toast.success("Type updated!", {
       position: "top"
     });
   } else {
@@ -95,7 +95,7 @@ const createType = async (params: any) => {
   emits("setActiveType", data?.data);
 
   if (data.success) {
-    $toast.success("Floor created!", {
+    $toast.success("Type created!", {
       position: "top"
     });
   } else {

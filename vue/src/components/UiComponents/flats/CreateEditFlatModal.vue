@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import Button from "../form/Button.vue";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
@@ -8,8 +8,11 @@ import { storeToRefs } from "pinia";
 import { useTypesStore } from "@/src/stores/useTypes";
 import ajaxAxios from "@/src/utils/axios";
 import { useProjectStore } from "@/src/stores/useProject";
-import { FlatItem, selectDataItem } from "@/types/components";
+import { FlatItem, selectDataItem, TypeItem } from "@/types/components";
 import { useToast } from "vue-toast-notification";
+import CreateEditTypeModal from "../types/CreateEditTypeModal.vue";
+import Modal from "../Modal.vue";
+import CreateEditFloorModal from "../floors/CreateEditFloorModal.vue";
 
 const emits = defineEmits<{
   (e: "setActiveFlat", activeType: FlatItem): void;
@@ -23,7 +26,7 @@ const props = defineProps<{
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
 const typesStore = useTypesStore();
-const { projectFloors } = storeToRefs(floorStore);
+const { projectFloors, activeFloor } = storeToRefs(floorStore);
 const { projectTypes } = storeToRefs(typesStore);
 
 const $toast = useToast();
@@ -42,6 +45,11 @@ const obj = reactive<any>({
   offer_price: "",
   block_id: null
 });
+
+const showTypeModal = ref(false);
+const activeType = ref<TypeItem | null>(null);
+
+const showFloorModal = ref(false);
 
 const floorsNumberData = computed(() => {
   if (!projectFloors.value) return [];
@@ -87,8 +95,6 @@ const editFlat = async (params: any) => {
     $toast.success("Flat Updated!", {
       position: "top"
     });
-
-    emits("setActiveFlat", data.data);
   } else {
     $toast.error(data?.data || "Something went wrong!", {
       position: "top"
@@ -116,6 +122,32 @@ const createFlat = async (params: any) => {
   }
 };
 
+const showEditFloorModal = () => {
+  activeFloor.value = projectFloors.value?.find((floor) => floor.id === obj.floor_id?.value) || null;
+
+  if (activeFloor.value) {
+    showFloorModal.value = true;
+  }
+};
+
+const closeFloorModal = () => {
+  showFloorModal.value = false;
+  floorStore.fetchProjectFloors(projectStore.id);
+};
+
+const showEditTypeModal = () => {
+  activeType.value = projectTypes.value?.find((type) => type.id === obj.type_id?.value) || null;
+
+  if (activeType.value) {
+    showTypeModal.value = true;
+  }
+};
+
+const closeTypeModal = () => {
+  showTypeModal.value = false;
+  typesStore.fetchProjectTypes(projectStore.id);
+};
+
 onMounted(() => {
   let typeInstance = null;
   if (props.activeFlat) {
@@ -136,7 +168,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <form class="h-fu' w-full rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
+  <form class="h-full w-full rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
     <div class="flex w-full items-center justify-center bg-gray-50 p-3">
       <h2 class="text-lg">{{ activeFlat ? "Edit flat" : "Add flat" }}</h2>
     </div>
@@ -145,17 +177,32 @@ onMounted(() => {
       <Input v-model="obj.flat_number" placeholder="23 - flat" label="Flat number/name" required />
 
       <Select v-if="floorsNumberData" v-model="obj.floor_id" :data="floorsNumberData" label="Floor number" required />
+      <Button v-if="obj.floor_id" class="!p-1" title="edit floor" outlined @click="showEditFloorModal" />
 
-      <Select v-model="obj.type_id" :data="typesData" label="Type" clearable required />
-
-      <Select v-model="obj.conf" :data="confData" label="select conf" clearable />
+      <Select v-model="obj.type_id" :data="typesData" label="Type" required />
+      <Button v-if="obj.type_id" class="!p-1" title="edit type" outlined @click="showEditTypeModal" />
 
       <Input v-model="obj.price" placeholder="60000" label="Price" type="number" required />
       <Input v-model="obj.offer_price" placeholder="58000" label="Offer price" type="number" />
+      <Select v-model="obj.conf" :data="confData" label="select conf" />
 
-      <Select v-model="obj.block_id" :data="[]" label="Block" clearable />
+      <!-- <Select v-model="obj.block_id" :data="[]" label="Block" clearable /> -->
 
       <Button type="submit" :title="activeFlat ? 'Edit flat' : 'Add flat'" />
     </div>
   </form>
+
+  <teleport to="#my-vue-app">
+    <Transition name="fade">
+      <Modal v-if="showFloorModal" @close="closeFloorModal" type="2" width="w-11/12">
+        <CreateEditFloorModal />
+      </Modal>
+    </Transition>
+
+    <Transition name="fade">
+      <Modal v-if="showTypeModal" @close="closeTypeModal" type="2" width="w-[500px]">
+        <CreateEditTypeModal :activeType="activeType" />
+      </Modal>
+    </Transition>
+  </teleport>
 </template>
