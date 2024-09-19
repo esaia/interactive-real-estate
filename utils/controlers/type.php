@@ -26,6 +26,11 @@ function ire_get_types()
     if (!in_array($data['sort_order'], $valid_sort_orders)) {
         $data['sort_order'] = 'ASC'; // Default
     }
+    if (!in_array($data['page'], $valid_sort_orders)) {
+        $data['page'] = 1; // Default
+    }
+
+
 
     if ($data['project_id'] > 0) {
         $offset = ($data['page'] - 1) * $data['per_page'];
@@ -36,7 +41,10 @@ function ire_get_types()
             $offset
         );
 
+
         $results = $wpdb->get_results($query, ARRAY_A);
+
+
 
         $total_query = $wpdb->prepare(
             "SELECT COUNT(*) FROM $table_name WHERE project_id = %d",

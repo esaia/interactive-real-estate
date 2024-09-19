@@ -4,22 +4,15 @@ import ProjectBottomWidgets from "@components/UiComponents/projects/ProjectBotto
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "@/src/stores/useProject";
 import ModalBoxes from "@components/UiComponents/projects/ModalBoxes.vue";
-import { onMounted } from "vue";
-import { useFloorsStore } from "../stores/useFloors";
 
 const projectStore = useProjectStore();
-const floorStore = useFloorsStore();
-const { polygon_data, activeGroup, svgRef, svg, id } = storeToRefs(projectStore);
+const { polygon_data, activeGroup, svgRef, svg } = storeToRefs(projectStore);
 
 const deleteG = (key: string) => {
   activeGroup.value = null;
   projectStore.removePoligonItem(key);
   svgRef.value?.querySelector(`#${key}`)?.remove();
 };
-
-onMounted(() => {
-  floorStore.fetchProjectFloors(Number(id.value));
-});
 </script>
 
 <template>

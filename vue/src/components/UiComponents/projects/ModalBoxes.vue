@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Transition } from "vue";
+import { ref, Transition, watch } from "vue";
 import FloorsList from "../floors/FloorsList.vue";
 import Building from "../icons/Building.vue";
 import Flat from "../icons/Flat.vue";
@@ -8,8 +8,26 @@ import Stack from "../icons/Stack.vue";
 import Modal from "../Modal.vue";
 import FlatsList from "../flats/FlatsList.vue";
 import TypesList from "../types/TypesList.vue";
+import { useTypesStore } from "@/src/stores/useTypes";
+import { useProjectStore } from "@/src/stores/useProject";
+import { useFloorsStore } from "@/src/stores/useFloors";
 
-const showModal = ref<"block" | "floor" | "flat" | "type" | "">("type");
+const showModal = ref<"block" | "floor" | "flat" | "type" | "">("flat");
+
+const projectStore = useProjectStore();
+const floorStore = useFloorsStore();
+const typesStore = useTypesStore();
+
+watch(
+  () => showModal.value,
+  (_, os) => {
+    if (os === "type") {
+      typesStore.fetchProjectTypes(Number(projectStore?.id));
+    } else if (os === "floor") {
+      floorStore.fetchProjectFloors(Number(projectStore?.id));
+    }
+  }
+);
 </script>
 
 <template>

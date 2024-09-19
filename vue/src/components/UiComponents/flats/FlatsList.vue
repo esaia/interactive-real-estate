@@ -9,51 +9,52 @@ import Table from "../common/table/Table.vue";
 import TableTh from "../common/table/TableTh.vue";
 import Pagination from "../common/Pagination.vue";
 import DeleteModal from "../common/DeleteModal.vue";
-import AddEditFlatModal from "./CreateEditFlatModal.vue";
 import Input from "../form/Input.vue";
 import Button from "../form/Button.vue";
+import CreateEditFlatModal from "./CreateEditFlatModal.vue";
 
 const projectStore = useProjectStore();
 const { id } = storeToRefs(projectStore);
 
 const searchFlat = ref("");
-const showFloorModal = ref(false);
+const showEditFlatModal = ref(false);
 const flats = ref<FlatsInterface>();
 const sortField = ref("");
 const sortOrder = ref<"ASC" | "DESC" | "">("ASC");
 const currentPage = ref(1);
 const perPage = ref(20);
+
+const activeFlat = ref<FlatItem | null>(null);
 const duplicatedFlat = ref<FlatItem | null>(null);
 
 const deleteFlatId = ref<number | null>(null);
 const showDeleteModal = ref(false);
 
 const editFlat = (flat: FlatItem | null) => {
-  //   showFloorModal.value = true;
-  //   floorsStore.setActiveFloor(floor);
+  showEditFlatModal.value = true;
+  activeFlat.value = flat;
 };
 
-const duplicateFlat = (floor: FlatItem | null) => {
-  //   if (!floor) return;
-  //   showFloorModal.value = true;
-  //   duplicatedFlat.value = { ...floor, title: floor?.title ? floor?.title + " - copied" : "" };
+const duplicateFlat = (flat: FlatItem | null) => {
+  if (!flat) return;
+  showEditFlatModal.value = true;
+  duplicatedFlat.value = { ...flat, flat_number: flat?.flat_number ? flat?.flat_number + " - copied" : "" };
 };
 
-const showDeleteFlatModal = (floor: FlatItem | null) => {
-  //   if (!floor) return;
-  //   deleteFlatId.value = Number(floor.id);
-  //   showDeleteModal.value = true;
+const showDeleteFlatModal = (flat: FlatItem | null) => {
+  if (!flat) return;
+  deleteFlatId.value = Number(flat.id);
+  showDeleteModal.value = true;
 };
 
 const deleteFlat = async () => {
-  //   await ajaxAxios.post("", {
-  //     action: "delete_floor",
-  //     nonce: irePlugin.nonce,
-  //     floor_id: deleteFlatId.value
-  //   });
-  //   showDeleteModal.value = false;
-  //   fetchFloors();
-  //   floorsStore.fetchProjectFloors(id.value);
+  await ajaxAxios.post("", {
+    action: "delete_flat",
+    nonce: irePlugin.nonce,
+    flat_id: deleteFlatId.value
+  });
+  showDeleteModal.value = false;
+  fetchFlats();
 };
 
 const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
@@ -65,7 +66,7 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
 
 const fetchFlats = async () => {
   const { data } = await ajaxAxios.post("", {
-    action: "get_floors",
+    action: "get_flats",
     nonce: irePlugin.nonce,
     project_id: id.value,
     sort_field: sortField.value,
@@ -89,13 +90,13 @@ watch(
 );
 
 watch(
-  () => showFloorModal.value,
+  () => showEditFlatModal.value,
   (ns) => {
     if (!ns) {
       fetchFlats();
 
-      //   floorsStore.setActiveFloor(null);
       duplicatedFlat.value = null;
+      activeFlat.value = null;
     }
   }
 );
@@ -113,13 +114,14 @@ onMounted(() => {
       <Input v-model="searchFlat" placeholder="Filter flats list..." />
 
       <div class="min-w-max">
-        <Button title="Add Flat" outlined @click="showFloorModal = true" />
+        <Button title="Add Flat" outlined @click="showEditFlatModal = true" />
       </div>
     </div>
 
     <div class="relative overflow-x-auto shadow-sm">
       <Table
-        :data="[]"
+        v-if="flats?.data"
+        :data="flats?.data"
         @edit-action="(flat: FlatItem | null) => editFlat(flat)"
         @duplicate-action="(flat: FlatItem | null) => duplicateFlat(flat)"
         @delete-action="(flat: FlatItem | null) => showDeleteFlatModal(flat)"
@@ -133,15 +135,25 @@ onMounted(() => {
             :sortOrder="sortOrder"
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
+
+          <TableTh fieldTitle="title" field="flat_number" />
+
           <TableTh
-            fieldTitle="floor"
-            field="floor_number"
+            fieldTitle="price"
+            field="price"
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
-          <TableTh fieldTitle="title" field="title" />
+          <TableTh
+            fieldTitle="offer price"
+            field="offer_price"
+            :sortable="true"
+            :sortField="sortField"
+            :sortOrder="sortOrder"
+            @sort="(field, sortOrder) => sort(field, sortOrder)"
+          />
           <TableTh
             fieldTitle="conf"
             field="conf"
@@ -154,8 +166,9 @@ onMounted(() => {
 
         <template #default="floor">
           <td>{{ floor.slotProps?.id }}</td>
-          <td>{{ floor.slotProps?.floor_number }}</td>
-          <td>{{ floor.slotProps?.title }}</td>
+          <td>{{ floor.slotProps?.flat_number }}</td>
+          <td>{{ floor.slotProps?.price }}</td>
+          <td>{{ floor.slotProps?.offer_price }}</td>
           <td>{{ floor.slotProps?.conf }}</td>
         </template>
       </Table>
@@ -166,8 +179,12 @@ onMounted(() => {
 
   <teleport to="#my-vue-app">
     <Transition name="fade">
-      <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2" width="w-[400px]">
-        <AddEditFlatModal :duplicatedFlat="duplicatedFlat" />
+      <Modal v-if="showEditFlatModal" @close="showEditFlatModal = false" type="2" width="w-[400px]">
+        <CreateEditFlatModal
+          :activeFlat="activeFlat"
+          :duplicatedFlat="duplicatedFlat"
+          @set-active-flat="(flat) => (activeFlat = flat)"
+        />
       </Modal>
     </Transition>
   </teleport>
@@ -176,7 +193,7 @@ onMounted(() => {
     <Transition name="fade">
       <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal
-          :text="`Are you sure you want to delete floor with id ${deleteFlatId || ''}?`"
+          :text="`Are you sure you want to delete flat with id ${deleteFlatId || ''}?`"
           @delete-action="deleteFlat()"
           @cancel-action="showDeleteModal = false"
         />

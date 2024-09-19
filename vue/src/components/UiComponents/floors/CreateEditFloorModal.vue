@@ -53,8 +53,6 @@ const submitForm = async () => {
 
   if (activeFloor.value) {
     await updateFloor();
-
-    await floorStore.fetchProjectFloors(Number(id.value));
   } else {
     createFloor();
   }

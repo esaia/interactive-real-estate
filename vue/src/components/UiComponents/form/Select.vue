@@ -7,7 +7,7 @@ import Close from "../icons/Close.vue";
 const props = withDefaults(
   defineProps<{
     data: selectDataItem[];
-    modelValue: selectDataItem;
+    modelValue: selectDataItem | null;
     defaultValue?: selectDataItem | null;
     placeholder?: string;
     label?: string;
@@ -15,7 +15,7 @@ const props = withDefaults(
     required?: boolean;
   }>(),
   {
-    placeholder: "",
+    placeholder: "Choose",
     defaultValue: null,
     borderStyle: "Default",
     label: "",
@@ -29,7 +29,7 @@ const emit = defineEmits<{
 
 const selectModelValue = computed({
   get() {
-    return props.modelValue || props.defaultValue || { title: "choose", value: "" };
+    return props.modelValue || props.defaultValue;
   },
   set(newValue) {
     emit("update:modelValue", newValue);
@@ -42,7 +42,7 @@ const isModalOpen = ref(false);
 const activeItems = ref(props.data);
 
 const inputPlaceholder = computed(() => {
-  return selectModelValue ? selectModelValue.value?.title : props.placeholder || "";
+  return selectModelValue.value ? selectModelValue.value?.title : props.placeholder || "";
 });
 
 const selectItem = (item: selectDataItem) => {
@@ -105,14 +105,14 @@ watch(
         v-model="input"
         type="text"
         class="w-full !rounded-md !border-none shadow-none focus:!shadow-none"
-        :class="{ 'placeholder:text-black': modelValue.value }"
+        :class="{ 'placeholder:text-black': modelValue?.value }"
         :placeholder="inputPlaceholder"
       />
 
       <div class="mx-2 flex items-center gap-1 [&_path]:fill-gray-400">
         <div class="group" @click.stop="clearData">
           <Close
-            v-if="clearable && selectModelValue.value"
+            v-if="clearable && selectModelValue?.value"
             class="h-3 w-3 transition-all group-hover:[&_path]:fill-gray-500"
           />
         </div>
@@ -133,12 +133,12 @@ watch(
             :key="item.value"
             type="button"
             class="line-clamp-1 w-full min-w-32 rounded-sm px-[8px] py-[6px] text-start transition-all hover:bg-gray-100"
-            :class="`${item.value === selectModelValue.value ? '!bg-primary text-white' : item?.isLinked ? 'cursor-not-allowed text-gray-400 hover:bg-white' : ''} `"
+            :class="`${item.value === selectModelValue?.value ? '!bg-primary text-white' : item?.isLinked ? 'cursor-not-allowed text-gray-400 hover:bg-white' : ''} `"
             @click="selectItem(item)"
           >
             {{ item.title }}
             <span class="text-red-600">
-              {{ item.isLinked && item.value !== selectModelValue.value ? " - linked" : "" }}
+              {{ item.isLinked && item.value !== selectModelValue?.value ? " - linked" : "" }}
             </span>
           </button>
         </div>

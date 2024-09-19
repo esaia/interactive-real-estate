@@ -1,10 +1,13 @@
 import { defineStore } from "pinia";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { FloorItem, PolygonDataCollection } from "../../types/components";
 import { transformSvgString } from "../composables/helpers";
 import ajaxAxios from "../utils/axios";
+import { useProjectStore } from "./useProject";
 
 export const useFloorsStore = defineStore("floors", () => {
+  const projectStore = useProjectStore();
+
   const activeFloor = ref<FloorItem | null>();
   const projectFloors = ref<FloorItem[]>();
   const activeGroup = ref<SVGGElement | null>(null);
@@ -73,6 +76,10 @@ export const useFloorsStore = defineStore("floors", () => {
     },
     { immediate: true }
   );
+
+  onMounted(() => {
+    fetchProjectFloors(Number(projectStore?.id));
+  });
 
   return {
     projectFloors,

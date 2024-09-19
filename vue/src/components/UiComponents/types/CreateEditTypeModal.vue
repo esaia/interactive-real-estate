@@ -45,14 +45,6 @@ const obj = reactive<TypeFormInterface>({
 });
 
 const submitForm = async () => {
-  if (props.activeType) {
-    editType();
-  } else {
-    createType();
-  }
-};
-
-const editType = async () => {
   const params: any = { ...obj };
 
   if (obj.image_2d) {
@@ -67,6 +59,14 @@ const editType = async () => {
     params.gallery = obj.gallery.map((i) => i.id);
   }
 
+  if (props.activeType) {
+    editType(params);
+  } else {
+    createType(params);
+  }
+};
+
+const editType = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
     action: "update_type",
     nonce: irePlugin.nonce,
@@ -85,21 +85,7 @@ const editType = async () => {
   }
 };
 
-const createType = async () => {
-  const params: any = { ...obj };
-
-  if (obj.image_2d) {
-    params.image_2d = obj.image_2d?.[0]?.id;
-  }
-
-  if (obj.image_3d) {
-    params.image_3d = obj.image_3d?.[0]?.id;
-  }
-
-  if (obj.gallery) {
-    params.gallery = obj.gallery.map((i) => i.id);
-  }
-
+const createType = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
     action: "create_type",
     nonce: irePlugin.nonce,
@@ -142,7 +128,7 @@ onMounted(() => {
 <template>
   <form class="h-fu' w-full rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
     <div class="flex w-full items-center justify-center bg-gray-50 p-3">
-      <h2 class="text-lg">{{ activeType ? "Edit type" : "Add type" }}</h2>
+      <h2 class="text-lg text-primary">{{ activeType ? "Edit type" : "Add type" }}</h2>
     </div>
 
     <div class="flex flex-col items-center gap-3 p-3">

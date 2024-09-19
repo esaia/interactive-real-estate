@@ -111,7 +111,20 @@ export interface FlatsInterface {
   total: number;
 }
 
-export interface FlatItem {}
+export interface FlatItem {
+  id: string;
+  type_id: string | null;
+  flat_number: string;
+  project_id: string;
+  floor_id: string | null;
+  conf: string | null;
+  floor_number: string;
+  price: string;
+  offer_price: string;
+  block_id?: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
 export interface TypeInterface {
   data: TypeItem[];

@@ -81,23 +81,6 @@ function ire_create_tables()
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
     ) $charset_collate;";
 
-    // Table for Flats
-    $flats_table_name = $wpdb->prefix . 'ire_flats';
-    $flats_sql = "CREATE TABLE $flats_table_name (
-        id mediumint(9) NOT NULL AUTO_INCREMENT,
-        block_id mediumint(9),
-        type_id mediumint(9) NOT NULL,
-        project_id mediumint(9) NOT NULL,
-        flat_number VARCHAR(50) NOT NULL,
-        conf ENUM('reserved', 'sold') NOT NULL,
-        floor_number INT NOT NULL,
-        price DECIMAL(10, 2) NOT NULL,
-        offer_price DECIMAL(10, 2),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        PRIMARY KEY (id),
-        FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
-    ) $charset_collate;";
 
 
     // Table for types
@@ -117,6 +100,28 @@ function ire_create_tables()
         PRIMARY KEY (id),
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
     ) $charset_collate;";
+
+
+    // Table for Flats
+    $flats_table_name = $wpdb->prefix . 'ire_flats';
+    $flats_sql = "CREATE TABLE $flats_table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        block_id mediumint(9),
+        type_id mediumint(9) NOT NULL,
+        project_id mediumint(9) NOT NULL,
+        floor_id mediumint(9) NOT NULL,
+        conf ENUM('reserved', 'sold') NOT NULL,
+        flat_number VARCHAR(255) NOT NULL,
+        price DECIMAL(10, 2) NOT NULL,
+        offer_price DECIMAL(10, 2),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE,
+        FOREIGN KEY (floor_id) REFERENCES $floors_table_name(id) ON DELETE CASCADE,
+        FOREIGN KEY (type_id) REFERENCES $types_table_name(id) ON DELETE CASCADE
+    ) $charset_collate;";
+
 
 
     // Table for types gallery
