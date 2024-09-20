@@ -24,8 +24,6 @@ export const useTypesStore = defineStore("types", () => {
     projectTypes.value = data.data?.data;
   };
 
-  fetchProjectTypes(projectStore?.id);
-
   return {
     projectTypes,
     fetchProjectTypes

@@ -12,7 +12,6 @@ import { FlatItem, selectDataItem, TypeItem } from "@/types/components";
 import { useToast } from "vue-toast-notification";
 import CreateEditTypeModal from "../types/CreateEditTypeModal.vue";
 import Modal from "../Modal.vue";
-import CreateEditFloorModal from "../floors/CreateEditFloorModal.vue";
 
 const emits = defineEmits<{
   (e: "setActiveFlat", activeType: FlatItem): void;
@@ -26,7 +25,7 @@ const props = defineProps<{
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
 const typesStore = useTypesStore();
-const { projectFloors, activeFloor } = storeToRefs(floorStore);
+const { projectFloors } = storeToRefs(floorStore);
 const { projectTypes } = storeToRefs(typesStore);
 
 const $toast = useToast();
@@ -40,7 +39,7 @@ const obj = reactive<any>({
   flat_number: "",
   conf: null,
   type_id: null,
-  floor_id: null,
+  floor_number: null,
   price: "",
   offer_price: "",
   block_id: null
@@ -49,13 +48,11 @@ const obj = reactive<any>({
 const showTypeModal = ref(false);
 const activeType = ref<TypeItem | null>(null);
 
-const showFloorModal = ref(false);
-
 const floorsNumberData = computed(() => {
   if (!projectFloors.value) return [];
 
-  return projectFloors.value?.map((floor) => {
-    return { title: floor.title || `floor - ${floor.floor_number}`, value: floor.id.toString() };
+  return Array.from(new Set(projectFloors.value.map((item) => item.floor_number)))?.map((floor) => {
+    return { title: `floor - ${floor}`, value: floor.toString() };
   });
 });
 
@@ -70,11 +67,13 @@ const typesData = computed(() => {
 const submitForm = async () => {
   const params = {
     ...obj,
-    conf: (obj.conf as selectDataItem | null)?.value,
+    conf: (obj.conf as selectDataItem | null)?.value || null,
     type_id: (obj.type_id as selectDataItem | null)?.value,
-    floor_id: (obj.floor_id as selectDataItem | null)?.value,
+    floor_number: (obj.floor_number as selectDataItem | null)?.value,
     project_id: projectStore?.id
   };
+
+  console.log(params);
 
   if (props.activeFlat) {
     editFlat(params);
@@ -122,19 +121,6 @@ const createFlat = async (params: any) => {
   }
 };
 
-const showEditFloorModal = () => {
-  activeFloor.value = projectFloors.value?.find((floor) => floor.id === obj.floor_id?.value) || null;
-
-  if (activeFloor.value) {
-    showFloorModal.value = true;
-  }
-};
-
-const closeFloorModal = () => {
-  showFloorModal.value = false;
-  floorStore.fetchProjectFloors(projectStore.id);
-};
-
 const showEditTypeModal = () => {
   activeType.value = projectTypes.value?.find((type) => type.id === obj.type_id?.value) || null;
 
@@ -162,7 +148,7 @@ onMounted(() => {
     obj.price = typeInstance.price ?? "";
     obj.offer_price = typeInstance.offer_price ?? "";
     obj.type_id = typesData.value.find((type) => type.value === typeInstance.type_id) ?? null;
-    obj.floor_id = floorsNumberData.value.find((floor) => floor.value === typeInstance.floor_id) ?? null;
+    obj.floor_number = floorsNumberData.value.find((floor) => floor.value === typeInstance.floor_number) ?? null;
   }
 });
 </script>
@@ -176,15 +162,20 @@ onMounted(() => {
     <div class="flex flex-col items-center gap-3 p-3">
       <Input v-model="obj.flat_number" placeholder="23 - flat" label="Flat number/name" required />
 
-      <Select v-if="floorsNumberData" v-model="obj.floor_id" :data="floorsNumberData" label="Floor number" required />
-      <Button v-if="obj.floor_id" class="!p-1" title="edit floor" outlined @click="showEditFloorModal" />
+      <Select
+        v-if="floorsNumberData"
+        v-model="obj.floor_number"
+        :data="floorsNumberData"
+        label="Floor number"
+        required
+      />
 
       <Select v-model="obj.type_id" :data="typesData" label="Type" required />
       <Button v-if="obj.type_id" class="!p-1" title="edit type" outlined @click="showEditTypeModal" />
 
-      <Input v-model="obj.price" placeholder="60000" label="Price" type="number" required />
-      <Input v-model="obj.offer_price" placeholder="58000" label="Offer price" type="number" />
-      <Select v-model="obj.conf" :data="confData" label="select conf" />
+      <Input v-model="obj.price" placeholder="60000" label="Price" required />
+      <Input v-model="obj.offer_price" placeholder="58000" label="Offer price" />
+      <Select v-model="obj.conf" :data="confData" label="select conf" clearable />
 
       <!-- <Select v-model="obj.block_id" :data="[]" label="Block" clearable /> -->
 
@@ -193,12 +184,6 @@ onMounted(() => {
   </form>
 
   <teleport to="#my-vue-app">
-    <Transition name="fade">
-      <Modal v-if="showFloorModal" @close="closeFloorModal" type="2" width="w-11/12">
-        <CreateEditFloorModal />
-      </Modal>
-    </Transition>
-
     <Transition name="fade">
       <Modal v-if="showTypeModal" @close="closeTypeModal" type="2" width="w-[500px]">
         <CreateEditTypeModal :activeType="activeType" />

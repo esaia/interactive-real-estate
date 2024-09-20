@@ -8,6 +8,7 @@ const props = withDefaults(
     type?: string;
     label?: string;
     required?: boolean;
+    isFloat?: boolean;
   }>(),
   {
     placeholder: "",
@@ -42,7 +43,7 @@ const inputModel = computed({
       :type="type"
       :name="placeholder"
       :required="required"
-      step="0.01"
+      :step="isFloat ? 0.01 : 1"
     />
   </div>
 </template>

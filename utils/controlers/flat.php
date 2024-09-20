@@ -79,7 +79,7 @@ function ire_create_flat()
 
     ire_check_nonce($_POST['nonce'], 'ire_nonce');
 
-    $required_fields = ['flat_number', 'price', 'type_id',  'floor_id', 'project_id'];
+    $required_fields = ['flat_number', 'price', 'type_id',  'floor_number', 'project_id'];
     $required_data = validate_and_sanitize_input($_POST, $required_fields);
 
     if (!$required_data) {
@@ -93,8 +93,8 @@ function ire_create_flat()
 
     $data = array_merge($required_data, $non_required_data);
 
-
     $wpdb->insert($table_name, $data);
+
 
     if ($wpdb->last_error) {
         send_json_response(false, 'Database error');
@@ -138,7 +138,7 @@ function ire_update_flat()
     }
 
 
-    $keys = ['flat_number', 'price', 'type_id',  'floor_id', 'project_id', 'offer_price', 'conf'];
+    $keys = ['flat_number', 'price', 'type_id',  'floor_number', 'project_id', 'offer_price', 'conf'];
     $params = validate_and_sanitize_input($_POST, $keys, false);
 
 

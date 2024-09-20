@@ -55,7 +55,7 @@ onUnmounted(() => {
           <Close />
         </div>
 
-        <div class="max-h-full overflow-y-auto p-5">
+        <div class="max-h-full min-h-full overflow-y-auto p-5">
           <slot />
         </div>
       </div>

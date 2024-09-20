@@ -102,6 +102,7 @@ export interface selectDataItem {
   title: string;
   value: string;
   isLinked?: boolean;
+  type?: "" | "flat" | "floor" | "block";
 }
 
 export interface FlatsInterface {
@@ -116,7 +117,6 @@ export interface FlatItem {
   type_id: string | null;
   flat_number: string;
   project_id: string;
-  floor_id: string | null;
   conf: string | null;
   floor_number: string;
   price: string;

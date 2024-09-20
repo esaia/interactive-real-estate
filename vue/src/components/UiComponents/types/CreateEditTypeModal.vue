@@ -135,7 +135,7 @@ onMounted(() => {
       <Input v-model="obj.title" placeholder="" label="Type title" required />
       <Input v-model="obj.teaser" placeholder="" label="Type teaser" />
 
-      <Input v-model="obj.area_m2" placeholder="60" label="area m²" type="number" />
+      <Input v-model="obj.area_m2" placeholder="62.5" label="area m²" is-float />
       <Input v-model="obj.rooms_count" placeholder="3" label="Rooms count" type="number" />
 
       <UploadImg v-model="obj.image_2d" title="upload image 2d" />
