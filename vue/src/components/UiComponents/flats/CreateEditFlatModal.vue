@@ -18,7 +18,7 @@ const emits = defineEmits<{
 }>();
 
 const props = defineProps<{
-  duplicatedFlat: FlatItem | null;
+  duplicatedFlat?: FlatItem | null;
   activeFlat: FlatItem | null;
 }>();
 
@@ -72,8 +72,6 @@ const submitForm = async () => {
     floor_number: (obj.floor_number as selectDataItem | null)?.value,
     project_id: projectStore?.id
   };
-
-  console.log(params);
 
   if (props.activeFlat) {
     editFlat(params);
@@ -156,7 +154,11 @@ onMounted(() => {
 <template>
   <form class="h-full w-full rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
     <div class="flex w-full items-center justify-center bg-gray-50 p-3">
-      <h2 class="text-lg">{{ activeFlat ? "Edit flat" : "Add flat" }}</h2>
+      <h2 class="text-lg">
+        {{ activeFlat ? "Editing flat with ID - " : "Add flat" }}
+
+        <span v-if="activeFlat?.id" class="text-red-600"> {{ activeFlat?.id }} </span>
+      </h2>
     </div>
 
     <div class="flex flex-col items-center gap-3 p-3">

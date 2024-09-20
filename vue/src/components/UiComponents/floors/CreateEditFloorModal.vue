@@ -164,7 +164,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="mt-8 flex gap-5">
+  <div class="mt-14 flex gap-5">
     <div class="h-fit flex-1">
       <Canvas
         v-if="activeFloor"
@@ -195,7 +195,11 @@ onUnmounted(() => {
     </div>
     <form class="h-fit w-60 rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
       <div class="flex w-full items-center justify-center bg-gray-50 p-3">
-        <h2 class="text-lg">{{ activeFloor ? "Edit floor" : "Add floor" }}</h2>
+        <h2 class="text-lg">
+          {{ activeFloor ? "Editing floor with ID - " : "Add floor" }}
+
+          <span v-if="activeFloor" class="text-red-500"> {{ activeFloor?.id }} </span>
+        </h2>
       </div>
 
       <div class="flex flex-col items-center gap-3 p-3">

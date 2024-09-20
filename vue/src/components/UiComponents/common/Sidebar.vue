@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import Collapse from "../icons/Collapse.vue";
 import Edit from "../icons/Edit.vue";
-import { PolygonDataCollection } from "../../../../types/components";
+import { FlatItem, PolygonDataCollection } from "../../../../types/components";
 import Info from "../icons/Info.vue";
 import Eye from "../icons/Eye.vue";
 import Delete from "../icons/Delete.vue";
 import Unlink from "../icons/Unlink.vue";
 import { useFloorsStore } from "@/src/stores/useFloors";
-import AddEditFloorModal from "../floors/CreateEditFloorModal.vue";
 import Modal from "../Modal.vue";
+import { useFlatsStore } from "@/src/stores/useFlats";
+import CreateEditFlatModal from "../flats/CreateEditFlatModal.vue";
+import CreateEditFloorModal from "../floors/CreateEditFloorModal.vue";
+import { useProjectStore } from "@/src/stores/useProject";
 const isClollapsed = ref(false);
 
 const emit = defineEmits<{
@@ -24,9 +27,12 @@ const props = defineProps<{
   svgRef: HTMLElement | null;
 }>();
 
+const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
+const flatStore = useFlatsStore();
 
-const showFloorModal = ref(false);
+const showEditModal = ref<"flat" | "floor" | "">("");
+const activeFlat = ref<FlatItem>();
 
 const setActiveG = (item: PolygonDataCollection) => {
   const gTag = (props.svgRef?.querySelector(`g#${item.key}`) as SVGGElement) || null;
@@ -51,10 +57,30 @@ const editPolygon = (item: PolygonDataCollection) => {
 
     if (activeFloor) {
       floorsStore.setActiveFloor(activeFloor);
-      showFloorModal.value = true;
+      showEditModal.value = "floor";
+    }
+  } else if (item.type === "flat") {
+    const findActiveFlat = flatStore.projectFlats?.find((flat) => flat.id === item.id);
+
+    if (findActiveFlat) {
+      activeFlat.value = findActiveFlat;
+      showEditModal.value = "flat";
     }
   }
 };
+
+watch(
+  () => showEditModal.value,
+  (_, os) => {
+    const id = Number(projectStore?.id);
+
+    if (os === "floor") {
+      floorsStore.fetchProjectFloors(id);
+    } else if (os === "flat") {
+      flatStore.fetchProjectFlats(id);
+    }
+  }
+);
 </script>
 
 <template>
@@ -122,8 +148,14 @@ const editPolygon = (item: PolygonDataCollection) => {
 
     <teleport to="#my-vue-app">
       <Transition name="fade">
-        <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2" width="w-11/12">
-          <AddEditFloorModal />
+        <Modal v-if="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
+          <CreateEditFloorModal />
+        </Modal>
+      </Transition>
+
+      <Transition name="fade">
+        <Modal v-if="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[400px]">
+          <CreateEditFlatModal :activeFlat="activeFlat" />
         </Modal>
       </Transition>
     </teleport>

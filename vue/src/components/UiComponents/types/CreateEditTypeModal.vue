@@ -128,7 +128,11 @@ onMounted(() => {
 <template>
   <form class="h-fu' w-full rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
     <div class="flex w-full items-center justify-center bg-gray-50 p-3">
-      <h2 class="text-lg text-primary">{{ activeType ? "Edit type" : "Add type" }}</h2>
+      <h2 class="text-lg text-primary">
+        {{ activeType ? "Editing type with id - " : "Add type" }}
+
+        <span v-if="activeType?.id" class="text-red-600"> {{ activeType?.id }} </span>
+      </h2>
     </div>
 
     <div class="flex flex-col items-center gap-3 p-3">
