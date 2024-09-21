@@ -157,7 +157,9 @@ class IreHelper
 
         $data = IreHelper::validate_and_sanitize_input($data, ['project_id']);
 
-        if (!$data) {
+
+
+        if (!$data || $data['project_id'] < 0) {
             IreHelper::send_json_response(false, 'project_id is Required!');
             return;
         }

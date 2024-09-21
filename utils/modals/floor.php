@@ -22,35 +22,34 @@ class IreFloor
         $data = IreHelper::sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf']);
 
 
-        if ($data['project_id'] > 0) {
 
-            $offset = ($data['page'] - 1) * $data['per_page'];
-            $query = $this->wpdb->prepare(
-                "SELECT * FROM {$this->table_name} WHERE project_id = %d ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d",
-                $data['project_id'],
-                $data['per_page'],
-                $offset
-            );
+        $offset = ($data['page'] - 1) * $data['per_page'];
+        $query = $this->wpdb->prepare(
+            "SELECT * FROM {$this->table_name} WHERE project_id = %d ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d",
+            $data['project_id'],
+            $data['per_page'],
+            $offset
+        );
 
-            $results = $this->wpdb->get_results($query, ARRAY_A);
-            $total_query = $this->wpdb->prepare("SELECT COUNT(*) FROM {$this->table_name} WHERE project_id = %d", $data['project_id']);
-            $total_results = $this->wpdb->get_var($total_query);
+        $results = $this->wpdb->get_results($query, ARRAY_A);
+        $total_query = $this->wpdb->prepare("SELECT COUNT(*) FROM {$this->table_name} WHERE project_id = %d", $data['project_id']);
+        $total_results = $this->wpdb->get_var($total_query);
 
-            if (is_wp_error($results)) {
-                IreHelper::send_json_response(false, $results->get_error_message());
-            } else {
-                if ($results) {
-                    $results = array_map([$this, 'map_floor_data'], $results);
-                }
-                IreHelper::send_json_response(true, [
-                    'data' => $results,
-                    'total' => $total_results,
-                    'page' => $data['page'],
-                    'per_page' => $data['per_page']
-                ]);
-            }
+        if (is_wp_error($results)) {
+            // IreHelper::send_json_response(false, $results->get_error_message());
+
+            return [false,  $results->get_error_message()];
         } else {
-            IreHelper::send_json_response(false, 'Invalid project ID');
+            if ($results) {
+                $results = array_map([$this, 'map_floor_data'], $results);
+            }
+
+            return [true,  [
+                'data' => $results,
+                'total' => $total_results,
+                'page' => $data['page'],
+                'per_page' => $data['per_page']
+            ]];
         }
     }
 
@@ -153,12 +152,6 @@ class IreFloor
     }
 }
 
-// Hooking AJAX actions to class methods
-// add_action('wp_ajax_get_floors', [new IreFloor(), 'get_floors']);
-// add_action('wp_ajax_create_floor', [new IreFloor(), 'create_floor']);
-// add_action('wp_ajax_update_floor', [new IreFloor(), 'update_floor']);
-// add_action('wp_ajax_delete_floor', [new IreFloor(), 'delete_floor']);
-
 
 // Initialize the class
 $floor = new IreFloor();
@@ -167,7 +160,14 @@ $floor = new IreFloor();
 function ire_get_floors()
 {
     global $floor;
-    $floor->get_floors($_POST);
+    $results = $floor->get_floors($_POST);
+
+
+    if (!$results[0]) {
+        IreHelper::send_json_response(false, $results[1]);
+    } else {
+        IreHelper::send_json_response(true, $results[1]);
+    }
 }
 
 function ire_create_floor()

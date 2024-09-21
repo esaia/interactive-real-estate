@@ -21,35 +21,33 @@ class IreFlat
         IreHelper::has_project_id($data);
         $data = IreHelper::sanitize_sorting_parameters($data, ['id', 'title', 'price', 'offer_price', 'conf']);
 
-        if ($data['project_id'] > 0) {
-            $offset = ($data['page'] - 1) * $data['per_page'];
-            $query = $this->wpdb->prepare(
-                "SELECT * FROM $this->table_name WHERE project_id = %d ORDER BY " . esc_sql($data['sort_field']) . " " . esc_sql($data['sort_order']) . " LIMIT %d OFFSET %d",
-                $data['project_id'],
-                $data['per_page'],
-                $offset
-            );
+        $offset = ($data['page'] - 1) * $data['per_page'];
+        $query = $this->wpdb->prepare(
+            "SELECT * FROM $this->table_name WHERE project_id = %d ORDER BY " . esc_sql($data['sort_field']) . " " . esc_sql($data['sort_order']) . " LIMIT %d OFFSET %d",
+            $data['project_id'],
+            $data['per_page'],
+            $offset
+        );
 
-            $results = $this->wpdb->get_results($query, ARRAY_A);
+        $results = $this->wpdb->get_results($query, ARRAY_A);
 
-            $total_query = $this->wpdb->prepare(
-                "SELECT COUNT(*) FROM $this->table_name WHERE project_id = %d",
-                $data['project_id']
-            );
-            $total_results = $this->wpdb->get_var($total_query);
+        $total_query = $this->wpdb->prepare(
+            "SELECT COUNT(*) FROM $this->table_name WHERE project_id = %d",
+            $data['project_id']
+        );
+        $total_results = $this->wpdb->get_var($total_query);
 
-            if (is_wp_error($results)) {
-                IreHelper::send_json_response(false, $results->get_error_message());
-            } else {
-                IreHelper::send_json_response(true, [
-                    'data' => $results,
-                    'total' => $total_results,
-                    'page' => $data['page'],
-                    'per_page' => $data['per_page']
-                ]);
-            }
+        if (is_wp_error($results)) {
+
+            return [false, $results->get_error_message()];
         } else {
-            IreHelper::send_json_response(false, 'Invalid project ID');
+
+            return [true, [
+                'data' => $results,
+                'total' => $total_results,
+                'page' => $data['page'],
+                'per_page' => $data['per_page']
+            ]];
         }
     }
 
@@ -138,7 +136,13 @@ $flats_manager = new IreFlat();
 function ire_get_flats()
 {
     global $flats_manager;
-    $flats_manager->get_flats($_POST);
+    $results = $flats_manager->get_flats($_POST);
+
+    if (!$results[0]) {
+        IreHelper::send_json_response(false, $results[1]);
+    } else {
+        IreHelper::send_json_response(true, $results[1]);
+    }
 }
 
 function ire_create_flat()

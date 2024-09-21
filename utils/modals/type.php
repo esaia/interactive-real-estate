@@ -17,43 +17,41 @@ class IreType
     {
         IreHelper::check_nonce($data['nonce'], 'ire_nonce');
         IreHelper::has_project_id($data);
-        $data = IreHelper::sanitize_sorting_parameters($data, ['id', 'title']);
+        $data = IreHelper::sanitize_sorting_parameters($data, ['id', 'title', 'area_m2']);
 
-        if ($data['project_id'] > 0) {
-            $offset = ($data['page'] - 1) * $data['per_page'];
-            $query = $this->wpdb->prepare(
-                "SELECT * FROM {$this->table_name} WHERE project_id = %d ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d",
-                $data['project_id'],
-                $data['per_page'],
-                $offset
-            );
+        $offset = ($data['page'] - 1) * $data['per_page'];
+        $query = $this->wpdb->prepare(
+            "SELECT * FROM {$this->table_name} WHERE project_id = %d ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d",
+            $data['project_id'],
+            $data['per_page'],
+            $offset
+        );
 
-            $results = $this->wpdb->get_results($query, ARRAY_A);
-            $total_results = $this->wpdb->get_var($this->wpdb->prepare("SELECT COUNT(*) FROM {$this->table_name} WHERE project_id = %d", $data['project_id']));
+        $results = $this->wpdb->get_results($query, ARRAY_A);
+        $total_results = $this->wpdb->get_var($this->wpdb->prepare("SELECT COUNT(*) FROM {$this->table_name} WHERE project_id = %d", $data['project_id']));
 
-            if (is_wp_error($results)) {
-                IreHelper::send_json_response(false, $results->get_error_message());
-            } else {
-                if ($results) {
-                    $results = array_map([$this, 'map_images'], $results);
-                }
-                IreHelper::send_json_response(true, [
-                    'data' => $results,
-                    'total' => $total_results,
-                    'page' => $data['page'],
-                    'per_page' => $data['per_page']
-                ]);
-            }
+        if (is_wp_error($results)) {
+            return [false,  $results->get_error_message()];
         } else {
-            IreHelper::send_json_response(false, 'Invalid project ID');
+            if ($results) {
+                $results = array_map([$this, 'map_images'], $results);
+            }
+
+            return [true, [
+                'data' => $results,
+                'total' => $total_results,
+                'page' => $data['page'],
+                'per_page' => $data['per_page']
+            ]];
         }
     }
 
     public function create_type($data)
     {
         IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+        IreHelper::has_project_id($data);
 
-        $required_data = IreHelper::validate_and_sanitize_input($data, ['title', 'project_id']);
+        $required_data = IreHelper::validate_and_sanitize_input($data, ['title']);
 
 
         if (!$required_data) {
@@ -155,7 +153,13 @@ function ire_get_types()
 {
     global $type;
 
-    $type->get_types($_POST);
+    $results =  $type->get_types($_POST);
+
+    if (!$results[0]) {
+        IreHelper::send_json_response(false, $results[1]);
+    } else {
+        IreHelper::send_json_response(true, $results[1]);
+    }
 }
 
 function ire_create_type()

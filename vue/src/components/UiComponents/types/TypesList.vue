@@ -109,7 +109,7 @@ onMounted(() => {
 <template>
   <div class="mt-14">
     <div class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
-      <h3 class="text-lg font-semibold capitalize">Flats</h3>
+      <h3 class="text-lg font-semibold capitalize">Types</h3>
 
       <Input v-model="searchType" placeholder="Filter flats list..." />
 
@@ -130,7 +130,7 @@ onMounted(() => {
           <TableTh
             fieldTitle="id"
             field="id"
-            :sortable="true"
+            sortable
             :sortField="sortField"
             :sortOrder="sortOrder"
             @sort="(field, sortOrder) => sort(field, sortOrder)"
@@ -138,13 +138,20 @@ onMounted(() => {
           <TableTh
             fieldTitle="title"
             field="title"
-            :sortable="true"
+            sortable
             :sortField="sortField"
             :sortOrder="sortOrder"
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
           <TableTh fieldTitle="Teaser" field="teaser" />
-          <TableTh fieldTitle="Area m2" field="area_m2" />
+          <TableTh
+            fieldTitle="Area m2"
+            field="area_m2"
+            sortable
+            :sortField="sortField"
+            :sortOrder="sortOrder"
+            @sort="(field, sortOrder) => sort(field, sortOrder)"
+          />
         </template>
 
         <template #default="type">

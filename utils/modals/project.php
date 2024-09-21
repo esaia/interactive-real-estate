@@ -17,7 +17,6 @@ class IreProject
     public function get_projects(array $data)
     {
 
-
         IreHelper::check_nonce($data['nonce'], 'ire_nonce');
         $project_id = isset($data['project_id']) ? intval($data['project_id']) : null;
 
@@ -45,9 +44,10 @@ class IreProject
 
 
         if ($this->wpdb->last_error) {
-            IreHelper::send_json_response(false, 'No projects found.');
+
+            return [false,  'No projects found.'];
         } else {
-            IreHelper::send_json_response(true, $result);
+            return [true,  $result];
         }
     }
 
@@ -109,7 +109,13 @@ $project = new IreProject();
 function ire_get_projects()
 {
     global $project;
-    $project->get_projects($_POST);
+    $results = $project->get_projects($_POST);
+
+    if (!$results[0]) {
+        IreHelper::send_json_response(false, $results[1]);
+    } else {
+        IreHelper::send_json_response(true, $results[1]);
+    }
 }
 
 function ire_create_project()
