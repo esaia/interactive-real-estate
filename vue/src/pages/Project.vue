@@ -8,6 +8,7 @@ import { onMounted } from "vue";
 import { useFloorsStore } from "../stores/useFloors";
 import { useTypesStore } from "../stores/useTypes";
 import { useFlatsStore } from "../stores/useFlats";
+import Preview from "../components/UiComponents/projects/Preview.vue";
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
@@ -30,6 +31,8 @@ onMounted(() => {
 
 <template>
   <div class="container-fluid">
+    <Preview />
+
     <Canvas
       :projectImage="projectStore.project_image"
       :polygon_data="polygon_data"

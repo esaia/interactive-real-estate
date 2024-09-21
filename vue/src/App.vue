@@ -18,7 +18,7 @@ onMounted(async () => {
   const { data } = await ajaxAxios.post("", {
     action: "get_projects",
     nonce: irePlugin.nonce,
-    projectId: projectID.value
+    project_id: projectID.value
   });
 
   if (projectID && data.success && !data.data.length) {

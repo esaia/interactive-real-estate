@@ -1,0 +1,195 @@
+<?php
+
+class IreFloor
+{
+
+    protected $wpdb;
+    protected $table_name;
+
+    public function __construct()
+    {
+        global $wpdb;
+        $this->wpdb = $wpdb;
+        $this->table_name = $wpdb->prefix . 'ire_floors';
+    }
+
+    public function get_floors($data)
+    {
+        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+        IreHelper::has_project_id($data);
+
+
+        $data = IreHelper::sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf']);
+
+
+        if ($data['project_id'] > 0) {
+
+            $offset = ($data['page'] - 1) * $data['per_page'];
+            $query = $this->wpdb->prepare(
+                "SELECT * FROM {$this->table_name} WHERE project_id = %d ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d",
+                $data['project_id'],
+                $data['per_page'],
+                $offset
+            );
+
+            $results = $this->wpdb->get_results($query, ARRAY_A);
+            $total_query = $this->wpdb->prepare("SELECT COUNT(*) FROM {$this->table_name} WHERE project_id = %d", $data['project_id']);
+            $total_results = $this->wpdb->get_var($total_query);
+
+            if (is_wp_error($results)) {
+                IreHelper::send_json_response(false, $results->get_error_message());
+            } else {
+                if ($results) {
+                    $results = array_map([$this, 'map_floor_data'], $results);
+                }
+                IreHelper::send_json_response(true, [
+                    'data' => $results,
+                    'total' => $total_results,
+                    'page' => $data['page'],
+                    'per_page' => $data['per_page']
+                ]);
+            }
+        } else {
+            IreHelper::send_json_response(false, 'Invalid project ID');
+        }
+    }
+
+    public function create_floor($data)
+    {
+        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+
+        $required_fields = ['floor_number', 'floor_image', 'project_id'];
+        $data = IreHelper::validate_and_sanitize_input($data, $required_fields);
+
+        if (!$data) {
+            IreHelper::send_json_response(false, 'Required fields are missing.');
+            return;
+        }
+
+        $data['title'] = $data['title'] ?? null;
+        $data['conf'] = $data['conf'] ?? null;
+
+        if (isset($data['polygon_data']) && isset($data['svg'])) {
+            $data['polygon_data'] = IreHelper::handle_json_data($data['polygon_data']);
+            $data['svg'] = $data['svg'] ?? null;
+        }
+
+        $this->wpdb->insert($this->table_name, $data);
+
+        if ($this->wpdb->last_error) {
+            IreHelper::send_json_response(false, 'Database error');
+        } else {
+            $new_floor_id = $this->wpdb->insert_id;
+
+            $new_floor =  IreHelper::get($this->table_name, $new_floor_id);
+            $this->prepare_floor_data($new_floor);
+            IreHelper::send_json_response(true, $new_floor);
+        }
+    }
+
+    public function update_floor($data)
+    {
+        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+
+        $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
+
+        if (!$floor_id) {
+            IreHelper::send_json_response(false, 'floor_id is required');
+            return;
+        }
+
+        $keys = ['floor_number', 'title', 'conf', 'floor_image', 'polygon_data', 'svg'];
+        $params = array_filter($data, function ($key) use ($keys) {
+            return in_array($key, $keys);
+        }, ARRAY_FILTER_USE_KEY);
+
+        $params['polygon_data'] = IreHelper::handle_json_data($params['polygon_data'] ?? '');
+
+        $where = ['id' => $floor_id];
+        $this->wpdb->update($this->table_name, $params, $where);
+
+        if ($this->wpdb->last_error) {
+            IreHelper::send_json_response(false, 'Database error');
+        } else {
+            IreHelper::send_json_response(true, 'Floor updated successfully');
+        }
+    }
+
+    public function delete_floor($data)
+    {
+        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+
+        $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
+
+        if (!$floor_id) {
+            IreHelper::send_json_response(false, 'floor_id is required');
+            return;
+        }
+
+        $delete_result = $this->wpdb->delete($this->table_name, ['id' => $floor_id]);
+
+        if ($delete_result) {
+            IreHelper::send_json_response(true, 'Floor deleted successfully');
+        } else {
+            IreHelper::send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+        }
+    }
+
+    private function map_floor_data($item)
+    {
+        if ($item['polygon_data']) {
+            $item['polygon_data'] = IreHelper::handle_json_data($item['polygon_data']);
+        }
+        $item['floor_image'] = [IreHelper::get_image_instance($item['floor_image'])];
+        return $item;
+    }
+
+    private function prepare_floor_data(&$floor)
+    {
+        if (isset($floor->polygon_data)) {
+            $floor->polygon_data = IreHelper::handle_json_data($floor->polygon_data);
+        }
+        $floor->floor_image = [IreHelper::get_image_instance($floor->floor_image)];
+    }
+}
+
+// Hooking AJAX actions to class methods
+// add_action('wp_ajax_get_floors', [new IreFloor(), 'get_floors']);
+// add_action('wp_ajax_create_floor', [new IreFloor(), 'create_floor']);
+// add_action('wp_ajax_update_floor', [new IreFloor(), 'update_floor']);
+// add_action('wp_ajax_delete_floor', [new IreFloor(), 'delete_floor']);
+
+
+// Initialize the class
+$floor = new IreFloor();
+
+// Action functions
+function ire_get_floors()
+{
+    global $floor;
+    $floor->get_floors($_POST);
+}
+
+function ire_create_floor()
+{
+    global $floor;
+    $floor->create_floor($_POST);
+}
+
+function ire_update_floor()
+{
+    global $floor;
+    $floor->update_floor($_POST);
+}
+
+function ire_delete_floor()
+{
+    global $floor;
+    $floor->delete_floor($_POST);
+}
+
+// Add action hooks
+add_action('wp_ajax_get_floors', 'ire_get_floors');
+add_action('wp_ajax_create_floor', 'ire_create_floor');
+add_action('wp_ajax_update_floor', 'ire_update_floor');
+add_action('wp_ajax_delete_floor', 'ire_delete_floor');
