@@ -15,11 +15,11 @@ class IreFloor
 
     public function get_floors($data)
     {
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
-        IreHelper::has_project_id($data);
+        check_nonce($data['nonce'], 'ire_nonce');
+        has_project_id($data);
 
 
-        $data = IreHelper::sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf']);
+        $data = sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf']);
 
 
 
@@ -36,7 +36,7 @@ class IreFloor
         $total_results = $this->wpdb->get_var($total_query);
 
         if (is_wp_error($results)) {
-            // IreHelper::send_json_response(false, $results->get_error_message());
+            // send_json_response(false, $results->get_error_message());
 
             return [false,  $results->get_error_message()];
         } else {
@@ -55,45 +55,57 @@ class IreFloor
 
     public function create_floor($data)
     {
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+        check_nonce($data['nonce'], 'ire_nonce');
 
         $required_fields = ['floor_number', 'floor_image', 'project_id'];
-        $data = IreHelper::validate_and_sanitize_input($data, $required_fields);
+        $rqeuired_data = validate_and_sanitize_input($data, $required_fields);
 
-        if (!$data) {
-            IreHelper::send_json_response(false, 'Required fields are missing.');
+
+
+        if (!$rqeuired_data) {
+            send_json_response(false, 'Required fields are missing.');
             return;
         }
 
-        $data['title'] = $data['title'] ?? null;
-        $data['conf'] = $data['conf'] ?? null;
+
+        $non_required_fields = ['title', 'conf'];
+        $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
+
+
+        $data  = array_merge($non_required_data, $rqeuired_data);
+
 
         if (isset($data['polygon_data']) && isset($data['svg'])) {
-            $data['polygon_data'] = IreHelper::handle_json_data($data['polygon_data']);
+            $data['polygon_data'] = handle_json_data($data['polygon_data']);
             $data['svg'] = $data['svg'] ?? null;
         }
 
         $this->wpdb->insert($this->table_name, $data);
 
         if ($this->wpdb->last_error) {
-            IreHelper::send_json_response(false, 'Database error');
+
+            if ($this->wpdb->last_error && strpos($this->wpdb->last_error, 'Duplicate entry') !== false) {
+                send_json_response(false, 'Floor number already exists for this project.');
+            } else {
+                send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            }
         } else {
             $new_floor_id = $this->wpdb->insert_id;
 
-            $new_floor =  IreHelper::get($this->table_name, $new_floor_id);
+            $new_floor =  get($this->table_name, $new_floor_id);
             $this->prepare_floor_data($new_floor);
-            IreHelper::send_json_response(true, $new_floor);
+            send_json_response(true, $new_floor);
         }
     }
 
     public function update_floor($data)
     {
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+        check_nonce($data['nonce'], 'ire_nonce');
 
         $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
 
         if (!$floor_id) {
-            IreHelper::send_json_response(false, 'floor_id is required');
+            send_json_response(false, 'floor_id is required');
             return;
         }
 
@@ -102,53 +114,53 @@ class IreFloor
             return in_array($key, $keys);
         }, ARRAY_FILTER_USE_KEY);
 
-        $params['polygon_data'] = IreHelper::handle_json_data($params['polygon_data'] ?? '');
+        $params['polygon_data'] = handle_json_data($params['polygon_data'] ?? '');
 
         $where = ['id' => $floor_id];
         $this->wpdb->update($this->table_name, $params, $where);
 
         if ($this->wpdb->last_error) {
-            IreHelper::send_json_response(false, 'Database error');
+            send_json_response(false, 'Database error');
         } else {
-            IreHelper::send_json_response(true, 'Floor updated successfully');
+            send_json_response(true, 'Floor updated successfully');
         }
     }
 
     public function delete_floor($data)
     {
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+        check_nonce($data['nonce'], 'ire_nonce');
 
         $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
 
         if (!$floor_id) {
-            IreHelper::send_json_response(false, 'floor_id is required');
+            send_json_response(false, 'floor_id is required');
             return;
         }
 
         $delete_result = $this->wpdb->delete($this->table_name, ['id' => $floor_id]);
 
         if ($delete_result) {
-            IreHelper::send_json_response(true, 'Floor deleted successfully');
+            send_json_response(true, 'Floor deleted successfully');
         } else {
-            IreHelper::send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 
     private function map_floor_data($item)
     {
         if ($item['polygon_data']) {
-            $item['polygon_data'] = IreHelper::handle_json_data($item['polygon_data']);
+            $item['polygon_data'] = handle_json_data($item['polygon_data']);
         }
-        $item['floor_image'] = [IreHelper::get_image_instance($item['floor_image'])];
+        $item['floor_image'] = [get_image_instance($item['floor_image'])];
         return $item;
     }
 
     private function prepare_floor_data(&$floor)
     {
         if (isset($floor->polygon_data)) {
-            $floor->polygon_data = IreHelper::handle_json_data($floor->polygon_data);
+            $floor->polygon_data = handle_json_data($floor->polygon_data);
         }
-        $floor->floor_image = [IreHelper::get_image_instance($floor->floor_image)];
+        $floor->floor_image = [get_image_instance($floor->floor_image)];
     }
 }
 
@@ -164,9 +176,10 @@ function ire_get_floors()
 
 
     if (!$results[0]) {
-        IreHelper::send_json_response(false, $results[1]);
+
+        send_json_response(false, $results[1]);
     } else {
-        IreHelper::send_json_response(true, $results[1]);
+        send_json_response(true, $results[1]);
     }
 }
 

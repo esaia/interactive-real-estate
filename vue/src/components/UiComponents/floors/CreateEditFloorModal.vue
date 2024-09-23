@@ -107,21 +107,27 @@ const createFloor = async () => {
     params.svg = floorSvgRef.value?.querySelector("svg")?.outerHTML || "";
   }
 
-  const { data } = await ajaxAxios.post("", {
-    action: "create_floor",
-    nonce: irePlugin.nonce,
-    ...params
-  });
-
-  if (data.success) {
-    $toast.success("Floor created!", {
-      position: "top"
+  try {
+    const { data } = await ajaxAxios.post("", {
+      action: "create_floor",
+      nonce: irePlugin.nonce,
+      ...params
     });
 
-    floorStore.setActiveFloor(data.data);
-    floor_image.value = null;
-  } else {
-    $toast.error(data?.data || "Something went wrong!", {
+    if (data.success) {
+      $toast.success("Floor created!", {
+        position: "top"
+      });
+
+      floorStore.setActiveFloor(data.data);
+      floor_image.value = null;
+    } else {
+      $toast.error(data?.data || "Something went wrong!", {
+        position: "top"
+      });
+    }
+  } catch (error) {
+    $toast.error("Something went wrong!", {
       position: "top"
     });
   }
@@ -178,6 +184,7 @@ onUnmounted(() => {
         @set-active-g="(gTag) => (activeGroup = gTag)"
         @delete-g="(key) => deleteG(key)"
         @add-polygon-data="(key) => floorStore.addPolygonData(key)"
+        @update-polygon-data="(key, data) => floorStore.editpoligonData(key, data)"
       />
       <Canvas
         v-else-if="duplicatedFloor"

@@ -88,6 +88,11 @@ export interface FloorItem {
   svg: string;
   project_id: number;
   polygon_data: PolygonDataCollection[];
+  counts?: {
+    available?: number;
+    reserved?: number;
+    sold?: number;
+  };
   created_at: string;
   updated_at: string;
 }
@@ -145,6 +150,13 @@ export interface TypeItem {
   rooms_count: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface ShortcodeData {
+  flats: FlatItem[];
+  floors: FloorItem[];
+  project: ProjectInterface;
+  types: TypeItem[];
 }
 
 // export interface PolygonDataCollection {

@@ -67,7 +67,7 @@ const typesData = computed(() => {
 const submitForm = async () => {
   const params = {
     ...obj,
-    conf: (obj.conf as selectDataItem | null)?.value || null,
+    conf: (obj.conf as selectDataItem | null)?.value || "",
     type_id: (obj.type_id as selectDataItem | null)?.value,
     floor_number: (obj.floor_number as selectDataItem | null)?.value,
     project_id: projectStore?.id

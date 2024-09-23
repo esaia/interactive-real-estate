@@ -77,6 +77,7 @@ function ire_create_tables()
         project_id mediumint(9) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY unique_floor (project_id, floor_number),
         PRIMARY KEY  (id),
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
     ) $charset_collate;";

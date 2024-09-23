@@ -3,6 +3,7 @@
 class IreProject
 {
 
+
     protected $wpdb;
     protected $table_name;
 
@@ -17,7 +18,7 @@ class IreProject
     public function get_projects(array $data)
     {
 
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+        check_nonce($data['nonce'], 'ire_nonce');
         $project_id = isset($data['project_id']) ? intval($data['project_id']) : null;
 
 
@@ -53,7 +54,7 @@ class IreProject
 
     public function create_project($data)
     {
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+        check_nonce($data['nonce'], 'ire_nonce');
 
         $title = isset($data['title']) ? sanitize_text_field($data['title']) : '';
         $project_image = isset($data['project_image']['id']) ? sanitize_text_field($data['project_image']['id']) : '';
@@ -70,15 +71,15 @@ class IreProject
         );
 
         if ($this->wpdb->last_error) {
-            IreHelper::send_json_response(false, 'Database error');
+            send_json_response(false, 'Database error');
         } else {
-            IreHelper::send_json_response(true, 'Project added');
+            send_json_response(true, 'Project added');
         }
     }
 
     public function update_project($data)
     {
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+        check_nonce($data['nonce'], 'ire_nonce');
 
         $project_id = isset($data['projectId']) ? intval($data['projectId']) : null;
         $keys = ['svg', 'title', 'polygon_data', 'project_image'];
@@ -93,9 +94,9 @@ class IreProject
         $this->wpdb->update($this->table_name, $params, $where);
 
         if ($this->wpdb->last_error) {
-            IreHelper::send_json_response(false, 'No projects found.');
+            send_json_response(false, 'No projects found.');
         } else {
-            IreHelper::send_json_response(true, 'Project updated');
+            send_json_response(true, 'Project updated');
         }
     }
 }
@@ -112,9 +113,9 @@ function ire_get_projects()
     $results = $project->get_projects($_POST);
 
     if (!$results[0]) {
-        IreHelper::send_json_response(false, $results[1]);
+        send_json_response(false, $results[1]);
     } else {
-        IreHelper::send_json_response(true, $results[1]);
+        send_json_response(true, $results[1]);
     }
 }
 

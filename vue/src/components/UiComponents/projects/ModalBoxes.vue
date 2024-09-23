@@ -11,20 +11,26 @@ import TypesList from "../types/TypesList.vue";
 import { useTypesStore } from "@/src/stores/useTypes";
 import { useProjectStore } from "@/src/stores/useProject";
 import { useFloorsStore } from "@/src/stores/useFloors";
+import { useFlatsStore } from "@/src/stores/useFlats";
 
 const showModal = ref<"block" | "floor" | "flat" | "type" | "">("");
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
 const typesStore = useTypesStore();
+const flatStore = useFlatsStore();
 
 watch(
   () => showModal.value,
   (_, os) => {
+    const id = Number(projectStore?.id);
+
     if (os === "type") {
-      typesStore.fetchProjectTypes(Number(projectStore?.id));
+      typesStore.fetchProjectTypes(id);
     } else if (os === "floor") {
-      floorStore.fetchProjectFloors(Number(projectStore?.id));
+      floorStore.fetchProjectFloors(id);
+    } else if (os === "flat") {
+      flatStore.fetchProjectFlats(id);
     }
   }
 );

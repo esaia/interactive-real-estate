@@ -139,6 +139,15 @@ onMounted(() => {
           <TableTh fieldTitle="title" field="flat_number" />
 
           <TableTh
+            fieldTitle="floor number"
+            field="floor_number"
+            :sortable="true"
+            :sortField="sortField"
+            :sortOrder="sortOrder"
+            @sort="(field, sortOrder) => sort(field, sortOrder)"
+          />
+
+          <TableTh
             fieldTitle="price"
             field="price"
             :sortable="true"
@@ -167,6 +176,7 @@ onMounted(() => {
         <template #default="floor">
           <td>{{ floor.slotProps?.id }}</td>
           <td>{{ floor.slotProps?.flat_number }}</td>
+          <td>{{ floor.slotProps?.floor_number }}</td>
           <td>{{ floor.slotProps?.price }}</td>
           <td>{{ floor.slotProps?.offer_price }}</td>
           <td>{{ floor.slotProps?.conf }}</td>

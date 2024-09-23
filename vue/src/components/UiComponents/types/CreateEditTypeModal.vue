@@ -92,12 +92,11 @@ const createType = async (params: any) => {
     ...params
   });
 
-  emits("setActiveType", data?.data);
-
   if (data.success) {
     $toast.success("Type created!", {
       position: "top"
     });
+    emits("setActiveType", data?.data);
   } else {
     $toast.error(data?.data || "Something went wrong!", {
       position: "top"

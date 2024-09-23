@@ -5,6 +5,8 @@
 
 class IreFlat
 {
+
+
     private $wpdb;
     private $table_name;
 
@@ -17,9 +19,9 @@ class IreFlat
 
     public function get_flats($data)
     {
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
-        IreHelper::has_project_id($data);
-        $data = IreHelper::sanitize_sorting_parameters($data, ['id', 'title', 'price', 'offer_price', 'conf']);
+        check_nonce($data['nonce'], 'ire_nonce');
+        has_project_id($data);
+        $data = sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf']);
 
         $offset = ($data['page'] - 1) * $data['per_page'];
         $query = $this->wpdb->prepare(
@@ -53,26 +55,26 @@ class IreFlat
 
     public function create_flat($data)
     {
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+        check_nonce($data['nonce'], 'ire_nonce');
 
         $required_fields = ['flat_number', 'price', 'type_id',  'floor_number', 'project_id'];
-        $required_data = IreHelper::validate_and_sanitize_input($data, $required_fields);
+        $required_data = validate_and_sanitize_input($data, $required_fields);
 
         if (!$required_data) {
-            IreHelper::send_json_response(false, 'Required fields are missing.');
+            send_json_response(false, 'Required fields are missing.');
             return;
         }
 
-        $non_required_data = IreHelper::validate_and_sanitize_input($data, ['offer_price', 'conf'], false);
+        $non_required_data = validate_and_sanitize_input($data, ['offer_price', 'conf'], false);
         $data = array_merge($required_data, $non_required_data);
 
         $this->wpdb->insert($this->table_name, $data);
 
         if ($this->wpdb->last_error) {
-            IreHelper::send_json_response(false, 'Database error');
+            send_json_response(false, 'Database error');
         } else {
             $new_flat_id = $this->wpdb->insert_id;
-            $new_floor =  IreHelper::get($this->table_name, $new_flat_id);
+            $new_floor =  get($this->table_name, $new_flat_id);
 
             if (isset($new_floor->polygon_data)) {
                 $new_floor->polygon_data = handle_json_data($new_floor->polygon_data);
@@ -80,51 +82,57 @@ class IreFlat
 
             $new_floor->floor_image = wp_get_attachment_image_url($new_floor->floor_image, 90);
 
-            IreHelper::send_json_response(true, $new_floor);
+            send_json_response(true, $new_floor);
         }
     }
 
     public function update_flat($data)
     {
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+
+
+        check_nonce($data['nonce'], 'ire_nonce');
 
         $flat_id = isset($data['flat_id']) ? intval($data['flat_id']) : null;
 
         if (!$flat_id) {
-            IreHelper::send_json_response(false, 'flat_id is required');
+            send_json_response(false, 'flat_id is required');
             return;
         }
 
+
+
         $keys = ['flat_number', 'price', 'type_id', 'floor_number', 'project_id', 'offer_price', 'conf'];
-        $params = IreHelper::validate_and_sanitize_input($data, $keys, false);
+        $params = validate_and_sanitize_input($data, $keys, false);
+
+
 
         $where = ['id' => $flat_id];
         $this->wpdb->update($this->table_name, $params, $where);
 
         if ($this->wpdb->last_error) {
-            IreHelper::send_json_response(false, 'Database error');
+            send_json_response(false, 'Database error');
         } else {
-            IreHelper::send_json_response(true, 'Flat updated successfully');
+            send_json_response(true, 'Flat updated successfully');
         }
     }
 
     public function delete_flat($data)
     {
-        IreHelper::check_nonce($data['nonce'], 'ire_nonce');
+        check_nonce($data['nonce'], 'ire_nonce');
 
         $flat_id = isset($data['flat_id']) ? intval($data['flat_id']) : null;
 
         if (!$flat_id) {
-            IreHelper::send_json_response(false, 'flat_id is required');
+            send_json_response(false, 'flat_id is required');
             return;
         }
 
         $delete_result = $this->wpdb->delete($this->table_name, ['id' => $flat_id]);
 
         if ($delete_result) {
-            IreHelper::send_json_response(true, 'Flat deleted successfully');
+            send_json_response(true, 'Flat deleted successfully');
         } else {
-            IreHelper::send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 }
@@ -139,9 +147,9 @@ function ire_get_flats()
     $results = $flats_manager->get_flats($_POST);
 
     if (!$results[0]) {
-        IreHelper::send_json_response(false, $results[1]);
+        send_json_response(false, $results[1]);
     } else {
-        IreHelper::send_json_response(true, $results[1]);
+        send_json_response(true, $results[1]);
     }
 }
 

@@ -23,7 +23,7 @@ const showModal = ref(true);
 const projectsStore = useProjectStore();
 const floorsStore = useFloorsStore();
 const flatsStore = useFlatsStore();
-const { projectFloors } = storeToRefs(floorsStore);
+const { projectFloors, activeFloor } = storeToRefs(floorsStore);
 const { projectFlats } = storeToRefs(flatsStore);
 
 const floorsSelectData = computed<selectDataItem[]>(() => {
@@ -44,16 +44,24 @@ const floorsSelectData = computed<selectDataItem[]>(() => {
 const flatsSelectData = computed<selectDataItem[]>(() => {
   if (!projectFlats.value) return [];
 
-  return projectFlats.value?.map((item) => {
-    const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "flat");
+  return projectFlats.value
+    .filter((flat) => {
+      if (activeFloor.value) {
+        return activeFloor.value.floor_number.toString() === flat.floor_number.toString();
+      } else {
+        return flat;
+      }
+    })
+    ?.map((item) => {
+      const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "flat");
 
-    return {
-      title: `flat - ${item.flat_number.toString()} | id: ${item.id}`,
-      value: item.id.toString(),
-      isLinked,
-      type: "flat"
-    };
-  });
+      return {
+        title: `${item.flat_number.toString()} | id: ${item.id}`,
+        value: item.id.toString(),
+        isLinked,
+        type: "flat"
+      };
+    });
 });
 
 watch(
