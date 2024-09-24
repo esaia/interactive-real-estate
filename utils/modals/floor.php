@@ -63,24 +63,24 @@ class IreFloor
         $rqeuired_data = validate_and_sanitize_input($data, $required_fields);
 
 
-
         if (!$rqeuired_data) {
             send_json_response(false, 'Required fields are missing.');
             return;
         }
 
 
-        $non_required_fields = ['title', 'conf', 'img_contain'];
+        $non_required_fields = ['title', 'conf', 'img_contain', 'svg'];
         $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
 
+        $non_required_data['polygon_data'] = $data['polygon_data'] ?? null;
+        $non_required_data['svg'] = !empty($data['svg']) ? $data['svg'] : '';
 
         $data  = array_merge($non_required_data, $rqeuired_data);
         $data['img_contain'] = $data['img_contain'] === 'true' ? 1 : 0;
 
 
-        if (isset($data['polygon_data']) && isset($data['svg'])) {
+        if (isset($data['polygon_data'])) {
             $data['polygon_data'] = handle_json_data($data['polygon_data']);
-            $data['svg'] = $data['svg'] ?? null;
         }
 
 

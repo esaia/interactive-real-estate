@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useProjectStore } from "@/src/stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
-import { PolygonDataCollection, ShortcodeData } from "@/types/components";
+import { ShortcodeData } from "@/types/components";
 import { computed, onMounted, ref } from "vue";
 import ProjectPreview from "./ProjectPreview.vue";
 import FloorPreview from "./FloorPreview.vue";
@@ -61,10 +61,19 @@ const fetchData = async () => {
   }
 };
 
-const changeRoute = (polygonData: PolygonDataCollection | null, polygonItem: any) => {
-  if (polygonData?.type === "floor") {
-    flow.value = "floorFlow";
-    hoveredData.value = polygonItem;
+const changeRoute = (flowType: string, polygonItem: any) => {
+  switch (flowType) {
+    case "project":
+      flow.value = "projectFlow";
+      break;
+
+    case "floor":
+      flow.value = "floorFlow";
+      hoveredData.value = polygonItem;
+      break;
+
+    default:
+      break;
   }
 };
 
@@ -84,6 +93,12 @@ onMounted(() => {
       @changeComponent="(x, y) => changeRoute(x, y)"
     />
 
-    <FloorPreview v-else-if="flow === 'floorFlow'" :flats="flats" :floor="hoveredData" :cssVariables="cssVariables" />
+    <FloorPreview
+      v-else-if="flow === 'floorFlow'"
+      :flats="flats"
+      :floor="hoveredData"
+      :cssVariables="cssVariables"
+      @changeComponent="(x, y) => changeRoute(x, y)"
+    />
   </div>
 </template>

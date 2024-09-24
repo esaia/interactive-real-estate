@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useToast } from "vue-toast-notification";
 import { useProjectStore } from "@/src/stores/useProject";
@@ -12,6 +12,9 @@ import { resetCanvasAfterSave, transformSvgString } from "@/src/composables/help
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
+import Modal from "../Modal.vue";
+import CreateEditFlatModal from "../flats/CreateEditFlatModal.vue";
+import { useFlatsStore } from "@/src/stores/useFlats";
 
 const props = defineProps<{
   duplicatedFloor?: FloorItem | null;
@@ -24,8 +27,10 @@ const defaultConf = [
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
+const flatStore = useFlatsStore();
 const { id, svgRef } = storeToRefs(projectStore);
 const { activeFloor, activeGroup, floorSvgRef } = storeToRefs(floorStore);
+const addFlatModal = ref(false);
 
 const deleteG = (key: string) => {
   activeGroup.value = null;
@@ -136,6 +141,15 @@ const createFloor = async () => {
   }
 };
 
+watch(
+  () => addFlatModal.value,
+  (ns) => {
+    if (!ns) {
+      flatStore.fetchProjectFlats(id.value);
+    }
+  }
+);
+
 onMounted(() => {
   if (activeFloor.value) {
     title.value = activeFloor.value.title;
@@ -163,6 +177,8 @@ onMounted(() => {
           };
         })
       : [];
+
+    console.log(props.duplicatedFloor);
   }
 });
 
@@ -206,33 +222,45 @@ onUnmounted(() => {
         @add-polygon-data="(key) => duplicatedFloorPolygonData?.push({ id: '', key, type: '' })"
       />
     </div>
-    <form class="h-fit w-60 rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
-      <div class="flex w-full items-center justify-center bg-gray-50 p-3">
-        <h2 class="text-lg">
-          {{ activeFloor ? "Editing floor with ID - " : "Add floor" }}
 
-          <span v-if="activeFloor" class="text-red-500"> {{ activeFloor?.id }} </span>
-        </h2>
-      </div>
+    <div class="flex flex-col gap-10">
+      <form class="h-fit w-60 rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
+        <div class="flex w-full items-center justify-center bg-gray-50 p-3">
+          <h2 class="text-lg">
+            {{ activeFloor ? "Editing floor with ID - " : "Add floor" }}
 
-      <div class="flex flex-col items-center gap-3 p-3">
-        <Input v-model="title" placeholder="Floor title" label="title" />
-        <Input v-model="floor_number" placeholder="Floor number" label="floor number" type="number" required />
-
-        <Select v-model="conf" :data="defaultConf" label="select conf" clearable />
-
-        <div class="flex w-full items-center justify-between gap-2">
-          <div>
-            <p class="font-semibold">object-fit: contain</p>
-            <p class="mb-1 text-xs italic text-gray-500">default is cover</p>
-          </div>
-          <input type="checkbox" v-model="img_contain" />
+            <span v-if="activeFloor" class="text-red-500"> {{ activeFloor?.id }} </span>
+          </h2>
         </div>
 
-        <UploadImg v-model="floor_image" title="Upload floor image" required />
+        <div class="flex flex-col items-center gap-3 p-3">
+          <Input v-model="title" placeholder="Floor title" label="title" />
+          <Input v-model="floor_number" placeholder="Floor number" label="floor number" type="number" required />
 
-        <Button type="submit" :title="activeFloor ? 'Edit floor' : 'Add floor'" />
-      </div>
-    </form>
+          <Select v-model="conf" :data="defaultConf" label="select conf" clearable />
+
+          <div class="flex w-full items-center justify-between gap-2">
+            <div>
+              <p class="font-semibold">object-fit: contain</p>
+              <p class="mb-1 text-xs italic text-gray-500">default is cover</p>
+            </div>
+            <input type="checkbox" v-model="img_contain" />
+          </div>
+
+          <UploadImg v-model="floor_image" title="Upload floor image" required />
+
+          <Button type="submit" :title="activeFloor ? 'Edit floor' : 'Add floor'" />
+        </div>
+      </form>
+      <Button title="Add flat" @click="addFlatModal = true" :outlined="true" />
+    </div>
   </div>
+
+  <teleport to="#my-vue-app">
+    <Transition name="fade">
+      <Modal v-if="addFlatModal" @close="addFlatModal = false" type="2" width="w-[400px]">
+        <CreateEditFlatModal :activeFlat="null" />
+      </Modal>
+    </Transition>
+  </teleport>
 </template>

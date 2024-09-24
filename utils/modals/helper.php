@@ -27,7 +27,9 @@ function validate_and_sanitize_input(array $data, array $keys, bool $required = 
     $sanitized_data = [];
     foreach ($keys as $key) {
         if (isset($data[$key])) {
-            $sanitized_data[$key] = sanitize_text_field($data[$key]);
+            $sanitized_data[$key] = isset($data[$key]) && is_string($data[$key])
+                ? sanitize_text_field($data[$key])
+                : $data[$key] ?? null;
         } elseif ($required) {
             return null;
         }

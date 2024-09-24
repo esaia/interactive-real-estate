@@ -4,6 +4,10 @@ import { FlatItem, FloorItem } from "@/types/components";
 import { computed, ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
 
+const emits = defineEmits<{
+  (e: "changeComponent", flow: "" | "flat" | "floor" | "block" | "project", hoveredData: any): void;
+}>();
+
 const props = defineProps<{
   flats: FlatItem[] | undefined;
   floor: FloorItem;
@@ -57,6 +61,7 @@ watch(
   <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
     <div
       class="absolute left-4 top-4 z-20 cursor-pointer bg-white px-5 py-2 transition-all hover:bg-black hover:text-white"
+      @click="$emit('changeComponent', 'project', null)"
     >
       Back
     </div>

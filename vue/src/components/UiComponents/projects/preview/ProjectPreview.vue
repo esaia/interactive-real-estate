@@ -6,7 +6,7 @@ import { ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
 
 const emits = defineEmits<{
-  (e: "changeComponent", polygonData: PolygonDataCollection | null, hoveredData: any): void;
+  (e: "changeComponent", flowComponent: "" | "flat" | "floor" | "block", hoveredData: any): void;
 }>();
 
 const props = defineProps<{
@@ -45,7 +45,7 @@ const onPathClick = (e: any) => {
 
   if (hoveredData.value.conf !== "") return;
 
-  emits("changeComponent", activePolygon.value, hoveredData.value);
+  emits("changeComponent", activePolygon.value?.type || "", hoveredData.value);
 };
 
 watch(
