@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useProjectStore } from "@/src/stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
 import { ShortcodeData } from "@/types/components";
 import { computed, onMounted, ref } from "vue";
@@ -20,7 +19,6 @@ const cssVariables = {
   "--path-color": colors.path
 };
 
-const projectStore = useProjectStore();
 const shortcodeData = ref<ShortcodeData>();
 
 const flow = ref<"projectFlow" | "floorFlow" | "flatFlow">("projectFlow");
@@ -53,7 +51,7 @@ const fetchData = async () => {
   const { data } = await ajaxAxios.post("", {
     action: "get_shortcode_data",
     nonce: irePlugin.nonce,
-    project_id: projectStore.id
+    project_id: 83
   });
 
   if (data.success) {
@@ -83,8 +81,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="preview-app">
-    <Transition name="fade" mode="out-in">
+  <div>
+    <Transition name="fade-in-out" mode="out-in">
       <div v-if="shortcodeData" :key="flow">
         <ProjectPreview
           v-if="flow === 'projectFlow'"

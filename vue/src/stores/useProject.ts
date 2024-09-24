@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { PolygonDataCollection, ProjectInterface, ProjectMeta } from "../../types/components";
 import { transformSvgString } from "../composables/helpers";
-import ajaxAxios from "../utils/axios";
+import ajaxAxios from "@/src/utils/axios";
 
 export const useProjectStore = defineStore("project", () => {
   const id = ref();
@@ -54,7 +54,7 @@ export const useProjectStore = defineStore("project", () => {
     created_at.value = project.created_at || "";
     updated_at.value = project.updated_at || "";
 
-    // getProjectMeta();
+    getProjectMeta();
   };
 
   const isContainImage = computed(() => {
@@ -62,17 +62,16 @@ export const useProjectStore = defineStore("project", () => {
     return JSON.parse(findMeta || "false");
   });
 
-  // const getProjectMeta = async () => {
-  //   const { data } = await ajaxAxios.post("", {
-  //     action: "ire_get_meta",
-  //     nonce: irePlugin.nonce,
-  //     project_id: id.value
-  //   });
-
-  //   if (data?.success) {
-  //     projectMeta.value = data.data;
-  //   }
-  // };
+  const getProjectMeta = async () => {
+    const { data } = await ajaxAxios.post("", {
+      action: "ire_get_meta",
+      nonce: irePlugin.nonce,
+      project_id: id.value
+    });
+    if (data?.success) {
+      projectMeta.value = data.data;
+    }
+  };
 
   return {
     id,
@@ -90,7 +89,7 @@ export const useProjectStore = defineStore("project", () => {
     removePoligonItem,
     setProject,
     projectMeta,
-    isContainImage
-    // getProjectMeta
+    isContainImage,
+    getProjectMeta
   };
 });

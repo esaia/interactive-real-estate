@@ -1,14 +1,17 @@
 import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
+import Shortcode from "./Shortcode.vue";
 import { createPinia } from "pinia";
 import ToastPlugin from "vue-toast-notification";
 import VueAwesomePaginate from "vue-awesome-paginate";
 import "vue-awesome-paginate/dist/style.css";
+// @ts-ignore
 import vClickOutside from "click-outside-vue3";
 
 const pinia = createPinia();
 const app = createApp(App);
+const shortcode = createApp(Shortcode);
 
 app.use(vClickOutside);
 app.use(pinia);
@@ -28,3 +31,4 @@ window.constants = {
 };
 
 app.mount("#my-vue-app");
+shortcode.mount("#ire-shortcode");

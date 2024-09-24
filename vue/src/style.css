@@ -46,7 +46,7 @@
 
 .fade-in-out-enter-active,
 .fade-in-out-leave-active {
-  transition: opacity 0.4s ease;
+  transition: opacity 0.2s ease;
 }
 
 .fade-in-out-enter-from,

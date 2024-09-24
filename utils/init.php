@@ -16,11 +16,10 @@ function ire_enqueue_scripts($hook)
     }
 
 
-    wp_enqueue_media();
+    // wp_enqueue_media();
 
     wp_enqueue_script('vue-js',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
     wp_enqueue_style('vue-styles',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.css');
-
 
 
     // wp_enqueue_style('dashicons');
@@ -155,14 +154,11 @@ add_filter('script_loader_tag', 'add_module_type_attribute', 10, 2);
 
 function add_module_type_attribute($tag, $handle)
 {
-    if ($handle !== 'ire-script') {
+    if ($handle !== 'vue-js') {
         return $tag;
     }
 
-
-
-
-    return str_replace('src', 'type="module" src', $tag);
+    return str_replace('src', 'type="module" defer="defer" src', $tag);
 }
 
 function render_vue_preview_shortcode()
@@ -172,8 +168,7 @@ function render_vue_preview_shortcode()
     // Start output buffering to capture HTML output
     ob_start();
 ?>
-    <div id="my-vue-app">
-        <Preview></Preview>
+    <div id="ire-shortcode">
     </div>
 <?php
     return ob_get_clean(); // Return the buffered content
