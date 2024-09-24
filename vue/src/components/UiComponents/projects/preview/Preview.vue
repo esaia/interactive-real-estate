@@ -83,22 +83,26 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="shortcodeData">
-    <ProjectPreview
-      v-if="flow === 'projectFlow'"
-      :project="project"
-      :floors="floors"
-      :projectMeta="projectMeta"
-      :cssVariables="cssVariables"
-      @changeComponent="(x, y) => changeRoute(x, y)"
-    />
+  <div id="preview-app">
+    <Transition name="fade" mode="out-in">
+      <div v-if="shortcodeData" :key="flow">
+        <ProjectPreview
+          v-if="flow === 'projectFlow'"
+          :project="project"
+          :floors="floors"
+          :projectMeta="projectMeta"
+          :cssVariables="cssVariables"
+          @changeComponent="(x, y) => changeRoute(x, y)"
+        />
 
-    <FloorPreview
-      v-else-if="flow === 'floorFlow'"
-      :flats="flats"
-      :floor="hoveredData"
-      :cssVariables="cssVariables"
-      @changeComponent="(x, y) => changeRoute(x, y)"
-    />
+        <FloorPreview
+          v-else-if="flow === 'floorFlow'"
+          :flats="flats"
+          :floor="hoveredData"
+          :cssVariables="cssVariables"
+          @changeComponent="(x, y) => changeRoute(x, y)"
+        />
+      </div>
+    </Transition>
   </div>
 </template>

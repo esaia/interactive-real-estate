@@ -30,93 +30,96 @@ class ShortcodeApi
             $types_lookup[$type['id']] = $type['area_m2'];
         }
 
-        foreach ($floors as &$floor) {
-            $floor_number = $floor['floor_number'];
-            $polygon_data = $floor['polygon_data'];
+        if ($floors[0]) {
+
+            foreach ($floors as &$floor) {
+                $floor_number = $floor['floor_number'];
+                $polygon_data = $floor['polygon_data'];
 
 
-            $matching_flats = array_values(array_filter($flats, function ($flat) use ($floor_number, $polygon_data) {
+                $matching_flats = array_values(array_filter($flats, function ($flat) use ($floor_number, $polygon_data) {
 
-                if ($flat['floor_number'] !== $floor_number) {
-                    return false;
-                }
+                    if ($flat['floor_number'] !== $floor_number) {
+                        return false;
+                    }
 
 
-                if ($polygon_data && isset($polygon_data)) {
-                    foreach ($polygon_data as $polygon) {
-                        if (!is_null($polygon)) {
-                            if (isset($polygon->type) && $polygon->type === 'flat' && isset($polygon->id) && $polygon->id === $flat['id']) {
-                                return true;
+                    if ($polygon_data && isset($polygon_data)) {
+                        foreach ($polygon_data as $polygon) {
+                            if (!is_null($polygon)) {
+                                if (isset($polygon->type) && $polygon->type === 'flat' && isset($polygon->id) && $polygon->id === $flat['id']) {
+                                    return true;
+                                }
                             }
                         }
                     }
+
+
+                    return false;
+                }));
+
+
+                $minimum_price = null;
+                $minimum_area = null;
+                $available = 0;
+                $reserved = 0;
+                $sold = 0;
+
+                foreach ($matching_flats as $flat) {
+
+                    if ($minimum_price === null || $flat['price'] < $minimum_price) {
+                        $minimum_price = $flat['price'];
+                    }
+
+                    if ($minimum_area === null || $types_lookup[$flat['type_id']] < $minimum_area) {
+                        $minimum_area = $types_lookup[$flat['type_id']];
+                    }
+
+                    switch ($flat['conf']) {
+                        case '':
+                            $available++;
+                            break;
+                        case 'reserved':
+                            $reserved++;
+                            break;
+                        case 'sold':
+                            $sold++;
+                            break;
+                    }
+                }
+
+                $counts = [];
+
+                if ($minimum_price > 0) {
+                    $counts['minimum_price'] = $minimum_price;
+                }
+
+                if ($minimum_area > 0) {
+                    $counts['minimum_area'] = $minimum_area;
                 }
 
 
-                return false;
-            }));
-
-
-            $minimum_price = null;
-            $minimum_area = null;
-            $available = 0;
-            $reserved = 0;
-            $sold = 0;
-
-            foreach ($matching_flats as $flat) {
-
-                if ($minimum_price === null || $flat['price'] < $minimum_price) {
-                    $minimum_price = $flat['price'];
+                if ($available > 0) {
+                    $counts['available'] = $available;
+                }
+                if ($reserved > 0) {
+                    $counts['reserved'] = $reserved;
+                }
+                if ($sold > 0) {
+                    $counts['sold'] = $sold;
                 }
 
-                if ($minimum_area === null || $types_lookup[$flat['type_id']] < $minimum_area) {
-                    $minimum_area = $types_lookup[$flat['type_id']];
+
+                if (!empty($counts)) {
+                    $floor['counts'] = $counts;
+                } else {
+                    $floor['counts'] = null;
                 }
 
-                switch ($flat['conf']) {
-                    case '':
-                        $available++;
-                        break;
-                    case 'reserved':
-                        $reserved++;
-                        break;
-                    case 'sold':
-                        $sold++;
-                        break;
-                }
+
+
+                $floor['flats'] = $matching_flats;
             }
-
-            $counts = [];
-
-            if ($minimum_price > 0) {
-                $counts['minimum_price'] = $minimum_price;
-            }
-
-            if ($minimum_area > 0) {
-                $counts['minimum_area'] = $minimum_area;
-            }
-
-
-            if ($available > 0) {
-                $counts['available'] = $available;
-            }
-            if ($reserved > 0) {
-                $counts['reserved'] = $reserved;
-            }
-            if ($sold > 0) {
-                $counts['sold'] = $sold;
-            }
-
-
-            if (!empty($counts)) {
-                $floor['counts'] = $counts;
-            } else {
-                $floor['counts'] = null;
-            }
-
-
-
-            $floor['flats'] = $matching_flats;
         }
 
 

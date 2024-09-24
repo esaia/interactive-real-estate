@@ -164,3 +164,34 @@ function add_module_type_attribute($tag, $handle)
 
     return str_replace('src', 'type="module" src', $tag);
 }
+
+function render_vue_preview_shortcode()
+{
+
+
+    // Start output buffering to capture HTML output
+    ob_start();
+?>
+    <div id="my-vue-app">
+        <Preview></Preview>
+    </div>
+<?php
+    return ob_get_clean(); // Return the buffered content
+}
+
+add_shortcode('vue_preview', 'render_vue_preview_shortcode');
+
+function enqueue_vue_scripts()
+{
+    wp_enqueue_media();
+    wp_enqueue_script('vue-js',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
+    wp_enqueue_style('vue-styles',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.css');
+
+    wp_localize_script('vue-js', 'irePlugin', array(
+        'nonce' => wp_create_nonce('ire_nonce'),
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'plugin_url' => PLUGIN_URL
+    ));
+}
+
+add_action('wp_enqueue_scripts', 'enqueue_vue_scripts');

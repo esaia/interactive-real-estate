@@ -31,6 +31,7 @@ onMounted(async () => {
   }
 });
 </script>
+
 <template>
   <template v-if="projectID">
     <Project v-if="project" />
