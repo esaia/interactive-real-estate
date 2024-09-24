@@ -44,6 +44,8 @@ class IreFloor
                 $results = array_map([$this, 'map_floor_data'], $results);
             }
 
+
+
             return [true,  [
                 'data' => $results,
                 'total' => $total_results,
@@ -68,17 +70,19 @@ class IreFloor
         }
 
 
-        $non_required_fields = ['title', 'conf'];
+        $non_required_fields = ['title', 'conf', 'img_contain'];
         $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
 
 
         $data  = array_merge($non_required_data, $rqeuired_data);
+        $data['img_contain'] = $data['img_contain'] === 'true' ? 1 : 0;
 
 
         if (isset($data['polygon_data']) && isset($data['svg'])) {
             $data['polygon_data'] = handle_json_data($data['polygon_data']);
             $data['svg'] = $data['svg'] ?? null;
         }
+
 
         $this->wpdb->insert($this->table_name, $data);
 
@@ -109,12 +113,14 @@ class IreFloor
             return;
         }
 
-        $keys = ['floor_number', 'title', 'conf', 'floor_image', 'polygon_data', 'svg'];
+        $keys = ['floor_number', 'title', 'conf', 'floor_image', 'polygon_data', 'svg', 'img_contain'];
         $params = array_filter($data, function ($key) use ($keys) {
             return in_array($key, $keys);
         }, ARRAY_FILTER_USE_KEY);
 
+
         $params['polygon_data'] = handle_json_data($params['polygon_data'] ?? '');
+        $params['img_contain'] = $params['img_contain'] === 'true' ? 1 : 0;
 
         $where = ['id' => $floor_id];
         $this->wpdb->update($this->table_name, $params, $where);
@@ -151,6 +157,7 @@ class IreFloor
         if ($item['polygon_data']) {
             $item['polygon_data'] = handle_json_data($item['polygon_data']);
         }
+        $item['img_contain'] =  $item['img_contain'] == 1;
         $item['floor_image'] = [get_image_instance($item['floor_image'])];
         return $item;
     }
@@ -160,6 +167,7 @@ class IreFloor
         if (isset($floor->polygon_data)) {
             $floor->polygon_data = handle_json_data($floor->polygon_data);
         }
+        $floor->img_contain = $floor->img_contain == 1;
         $floor->floor_image = [get_image_instance($floor->floor_image)];
     }
 }

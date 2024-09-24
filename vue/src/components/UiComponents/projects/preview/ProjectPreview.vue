@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { transformSvgString } from "@/src/composables/helpers";
-import { FlatItem, FloorItem, PolygonDataCollection, ShortcodeData } from "@/types/components";
+import { FlatItem, FloorItem, PolygonDataCollection, ProjectInterface, ProjectMeta } from "@/types/components";
 import { computed } from "@vue/reactivity";
 import { ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
@@ -10,8 +10,9 @@ const emits = defineEmits<{
 }>();
 
 const props = defineProps<{
-  shortcodeData: ShortcodeData;
+  project: ProjectInterface | undefined;
   floors: FloorItem[] | undefined;
+  projectMeta: ProjectMeta[] | undefined;
   cssVariables: any;
 }>();
 
@@ -19,16 +20,15 @@ const hoveredSvg = ref<HTMLElement>();
 const hoveredData = ref();
 const activePolygon = ref<PolygonDataCollection | null>(null);
 
-const project = computed(() => {
-  if (!props.shortcodeData) return;
+const projectSvg = computed(() => {
+  if (!props.project) return;
 
-  return props.shortcodeData.project;
+  return transformSvgString(props.project.svg);
 });
 
-const projectSvg = computed(() => {
-  if (!project.value) return;
-
-  return transformSvgString(project.value.svg);
+const isContainImage = computed(() => {
+  const findMeta = props.projectMeta?.find((item) => item.meta_key === "project_img_contain")?.meta_value;
+  return JSON.parse(findMeta || "false");
 });
 
 const onSvgMouseOver = (e: any) => {
@@ -58,7 +58,7 @@ watch(
     if (activeG && activeG.nodeName === "g") {
       const id = activeG.getAttribute("id");
       if (!id) return;
-      activePolygon.value = project.value?.polygon_data.find((item) => item.key === id) || null;
+      activePolygon.value = props.project?.polygon_data.find((item) => item.key === id) || null;
       if (!activePolygon.value) return;
 
       switch (activePolygon.value?.type) {
@@ -98,7 +98,12 @@ watch(
 
 <template>
   <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
-    <img :src="shortcodeData?.project.project_image" alt="" class="absolute left-0 top-0 h-full w-full object-cover" />
+    <img
+      :src="project?.project_image"
+      alt=""
+      class="absolute left-0 top-0 h-full w-full"
+      :class="{ 'object-contain': isContainImage, 'object-cover': !isContainImage }"
+    />
     <div
       class="absolute left-0 top-0 h-full w-full [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all"
       :class="[

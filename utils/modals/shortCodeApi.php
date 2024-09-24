@@ -11,6 +11,7 @@ class ShortcodeApi
         $floor = new IreFloor();
         $flat = new IreFlat();
         $type = new IreType();
+        $meta = new IreMetaProject();
 
         has_project_id($data);
 
@@ -21,7 +22,7 @@ class ShortcodeApi
         $floors = $floor->get_floors($data)[1]['data'];
         $flats = $flat->get_flats($data)[1]['data'];
         $types = $type->get_types($data)[1]['data'];
-
+        $meta = $meta->get_meta($data)[1];
 
         $types_lookup = [];
 
@@ -29,21 +30,12 @@ class ShortcodeApi
             $types_lookup[$type['id']] = $type['area_m2'];
         }
 
-
-
-        foreach ($floors as $key => &$floor) {
-
-
-
+        foreach ($floors as &$floor) {
             $floor_number = $floor['floor_number'];
             $polygon_data = $floor['polygon_data'];
 
 
-            if ($key === 2) {
-                error_log(print_r($flats, true));
-            }
-
-            $matching_flats = array_values(array_filter($flats, function ($flat) use ($floor_number, $polygon_data, $key) {
+            $matching_flats = array_values(array_filter($flats, function ($flat) use ($floor_number, $polygon_data) {
 
                 if ($flat['floor_number'] !== $floor_number) {
                     return false;
@@ -135,6 +127,7 @@ class ShortcodeApi
             'floors' => $floors,
             'flats' => $flats,
             'types' => $types,
+            'meta' => $meta
         ];
 
         send_json_response(true, $data);

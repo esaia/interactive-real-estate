@@ -40,6 +40,7 @@ const floor_number = ref();
 const floor_image = ref<imageInterface[] | null>(null);
 const conf = ref({ title: "Choose", value: "" });
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
+const img_contain = ref(false);
 
 const submitForm = async () => {
   if (floorSvgRef.value) {
@@ -66,7 +67,8 @@ const updateFloor = async () => {
     conf: conf.value.value,
     floor_id: activeFloor.value?.id,
     polygon_data: activeFloor.value?.polygon_data,
-    svg: floorSvgRef.value?.querySelector("svg")?.outerHTML || ""
+    svg: floorSvgRef.value?.querySelector("svg")?.outerHTML || "",
+    img_contain: img_contain.value
   };
 
   const { data } = await ajaxAxios.post("", {
@@ -99,7 +101,8 @@ const createFloor = async () => {
     floor_number: floor_number.value,
     floor_image: floor_image.value?.[0]?.id || props.duplicatedFloor?.floor_image?.[0]?.id,
     conf: conf.value.value,
-    project_id: id.value
+    project_id: id.value,
+    img_contain: img_contain.value
   };
 
   if (duplicatedFloorPolygonData.value) {
@@ -139,6 +142,7 @@ onMounted(() => {
     floor_number.value = activeFloor.value.floor_number;
     conf.value = defaultConf.find((item) => item.value === activeFloor.value?.conf) || { title: "choose", value: "" };
     floor_image.value = activeFloor.value.floor_image;
+    img_contain.value = activeFloor.value.img_contain;
   } else if (props.duplicatedFloor) {
     title.value = props.duplicatedFloor.title;
     floor_number.value = props.duplicatedFloor.floor_number;
@@ -147,7 +151,7 @@ onMounted(() => {
       value: ""
     };
     floor_image.value = props.duplicatedFloor.floor_image;
-
+    img_contain.value = props.duplicatedFloor.img_contain;
     const polygonData = props.duplicatedFloor?.polygon_data;
 
     duplicatedFloorPolygonData.value = polygonData
@@ -180,6 +184,7 @@ onUnmounted(() => {
         :svg="activeFloor.svg"
         :activeGroup="activeGroup"
         :isFloorsCanvas="true"
+        :isImageContain="img_contain"
         @set-svg-ref="(svgContainer) => (floorSvgRef = svgContainer)"
         @set-active-g="(gTag) => (activeGroup = gTag)"
         @delete-g="(key) => deleteG(key)"
@@ -194,6 +199,7 @@ onUnmounted(() => {
         :svg="transformSvgString(duplicatedFloor.svg)"
         :activeGroup="activeGroup"
         :isFloorsCanvas="true"
+        :isImageContain="img_contain"
         @set-svg-ref="(svgContainer) => (floorSvgRef = svgContainer)"
         @set-active-g="(gTag) => (activeGroup = gTag)"
         @delete-g="(key) => deleteG(key)"
@@ -214,6 +220,14 @@ onUnmounted(() => {
         <Input v-model="floor_number" placeholder="Floor number" label="floor number" type="number" required />
 
         <Select v-model="conf" :data="defaultConf" label="select conf" clearable />
+
+        <div class="flex w-full items-center justify-between gap-2">
+          <div>
+            <p class="font-semibold">object-fit: contain</p>
+            <p class="mb-1 text-xs italic text-gray-500">default is cover</p>
+          </div>
+          <input type="checkbox" v-model="img_contain" />
+        </div>
 
         <UploadImg v-model="floor_image" title="Upload floor image" required />
 

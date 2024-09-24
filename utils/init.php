@@ -75,6 +75,7 @@ function ire_create_tables()
         polygon_data JSON,
         svg LONGTEXT NOT NULL,
         project_id mediumint(9) NOT NULL,
+        img_contain BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         UNIQUE KEY unique_floor (project_id, floor_number),
@@ -123,16 +124,18 @@ function ire_create_tables()
     ) $charset_collate;";
 
 
-
-    // Table for types gallery
-    // $types_gallery_table_name = $wpdb->prefix . 'ire_types_gallery';
-    // $gallery_sql = "CREATE TABLE $types_gallery_table_name (
-    //     id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
-    //     flat_id MEDIUMINT(9) NOT NULL,
-    //     image INT,
-    //     PRIMARY KEY (id),
-    //     FOREIGN KEY (flat_id) REFERENCES $flats_table_name(id) ON DELETE CASCADE
-    // ) {$charset_collate};";
+    // Table for Project Metadata
+    $meta_table_name = $wpdb->prefix . 'ire_project_meta';
+    $meta_sql = "CREATE TABLE $meta_table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        project_id mediumint(9) NOT NULL,
+        meta_key VARCHAR(255) NOT NULL,
+        meta_value TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
+    ) $charset_collate;";
 
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -140,6 +143,7 @@ function ire_create_tables()
     dbDelta($floors_sql);
     dbDelta($flats_sql);
     dbDelta($types_sql);
+    dbDelta($meta_sql);
 }
 
 

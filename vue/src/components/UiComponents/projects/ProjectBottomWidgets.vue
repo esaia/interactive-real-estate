@@ -12,7 +12,19 @@ const $toast = useToast();
 const { selectedImages, selectImage } = useSelectImage();
 const projectStore = useProjectStore();
 
-const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = storeToRefs(projectStore);
+const { id, title, slug, polygon_data, svgRef, activeGroup, project_image, isContainImage } = storeToRefs(projectStore);
+
+const toogleCoverMeta = async () => {
+  await ajaxAxios.post("", {
+    action: "ire_create_or_update_meta",
+    nonce: irePlugin.nonce,
+    project_id: id.value,
+    meta_key: "project_img_contain",
+    meta_value: !JSON.parse(isContainImage.value || "false")
+  });
+
+  projectStore.getProjectMeta();
+};
 
 const updateProject = async () => {
   if (svgRef.value) {
@@ -70,15 +82,7 @@ const updateProject = async () => {
             <p class="font-semibold">object-fit: contain</p>
             <p class="mb-1 text-xs italic text-gray-500">default is cover</p>
           </div>
-          <input type="checkbox" />
-        </div>
-
-        <div class="flex w-full items-center justify-between gap-2">
-          <div>
-            <p class="font-semibold">object-fit: contain</p>
-            <p class="mb-1 text-xs italic text-gray-500">default is cover</p>
-          </div>
-          <input type="checkbox" />
+          <input type="checkbox" v-model="isContainImage" @change="toogleCoverMeta" />
         </div>
 
         <div>
@@ -89,7 +93,7 @@ const updateProject = async () => {
 
       <div class="w-60 rounded-md bg-white p-4">
         <p class="mb-1 font-semibold">Change project image</p>
-        <img :src="selectedImages?.[0]?.url || project_image" class="h-32 w-full rounded-md object-cover" />
+        <img :src="selectedImages?.[0]?.url || project_image" class="h-32 w-full rounded-md" />
         <button class="!mt-2 w-full border border-dashed py-2 transition-all hover:bg-gray-50" @click="selectImage">
           Upload
         </button>

@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { transformSvgString } from "@/src/composables/helpers";
-import { FlatItem, FloorItem, ShortcodeData } from "@/types/components";
+import { FlatItem, FloorItem } from "@/types/components";
 import { computed, ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
 
 const props = defineProps<{
-  shortcodeData: ShortcodeData;
   flats: FlatItem[] | undefined;
   floor: FloorItem;
   cssVariables: any;
@@ -56,7 +55,21 @@ watch(
 
 <template>
   <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
-    <img :src="floor.floor_image?.[0]?.url || ''" alt="" class="absolute left-0 top-0 h-full w-full object-cover" />
+    <div
+      class="absolute left-4 top-4 z-20 cursor-pointer bg-white px-5 py-2 transition-all hover:bg-black hover:text-white"
+    >
+      Back
+    </div>
+
+    <img
+      :src="floor.floor_image?.[0]?.url || ''"
+      alt=""
+      class="absolute left-0 top-0 h-full w-full"
+      :class="{
+        'object-contain': floor.img_contain,
+        'object-cover': !floor.img_contain
+      }"
+    />
 
     <div
       class="absolute left-0 top-0 h-full w-full [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all"

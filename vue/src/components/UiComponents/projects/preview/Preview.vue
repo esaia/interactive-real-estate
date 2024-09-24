@@ -26,6 +26,12 @@ const shortcodeData = ref<ShortcodeData>();
 const flow = ref<"projectFlow" | "floorFlow" | "flatFlow">("projectFlow");
 const hoveredData = ref();
 
+const project = computed(() => {
+  if (!shortcodeData.value) return;
+
+  return shortcodeData.value.project;
+});
+
 const floors = computed(() => {
   if (!shortcodeData.value) return;
 
@@ -36,6 +42,11 @@ const flats = computed(() => {
   if (!shortcodeData.value) return;
 
   return shortcodeData.value.flats;
+});
+
+const projectMeta = computed(() => {
+  if (!shortcodeData.value) return;
+  return shortcodeData.value.meta;
 });
 
 const fetchData = async () => {
@@ -66,18 +77,13 @@ onMounted(() => {
   <div v-if="shortcodeData">
     <ProjectPreview
       v-if="flow === 'projectFlow'"
-      :shortcodeData="shortcodeData"
+      :project="project"
       :floors="floors"
+      :projectMeta="projectMeta"
       :cssVariables="cssVariables"
       @changeComponent="(x, y) => changeRoute(x, y)"
     />
 
-    <FloorPreview
-      v-else-if="flow === 'floorFlow'"
-      :shortcodeData="shortcodeData"
-      :flats="flats"
-      :floor="hoveredData"
-      :cssVariables="cssVariables"
-    />
+    <FloorPreview v-else-if="flow === 'floorFlow'" :flats="flats" :floor="hoveredData" :cssVariables="cssVariables" />
   </div>
 </template>

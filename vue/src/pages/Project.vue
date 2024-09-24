@@ -14,7 +14,8 @@ const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
 const typesStore = useTypesStore();
 const flatsStore = useFlatsStore();
-const { polygon_data, activeGroup, svgRef, svg, id } = storeToRefs(projectStore);
+
+const { polygon_data, activeGroup, svgRef, svg, id, isContainImage } = storeToRefs(projectStore);
 
 const deleteG = (key: string) => {
   activeGroup.value = null;
@@ -40,6 +41,7 @@ onMounted(() => {
       :svg="svg"
       :activeGroup="activeGroup"
       :isFloorsCanvas="false"
+      :isImageContain="isContainImage"
       @set-svg-ref="(svgContainer) => (svgRef = svgContainer)"
       @set-active-g="(gTag) => (activeGroup = gTag)"
       @delete-g="(key) => deleteG(key)"

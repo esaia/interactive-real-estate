@@ -88,6 +88,7 @@ export interface FloorItem {
   svg: string;
   project_id: number;
   polygon_data: PolygonDataCollection[];
+  img_contain: boolean;
   counts?: {
     available?: number;
     reserved?: number;
@@ -152,11 +153,18 @@ export interface TypeItem {
   updated_at: string;
 }
 
+export interface ProjectMeta {
+  id: number;
+  project_id: number;
+  meta_key: string;
+  meta_value: string;
+}
 export interface ShortcodeData {
   flats: FlatItem[];
   floors: FloorItem[];
   project: ProjectInterface;
   types: TypeItem[];
+  meta: ProjectMeta[];
 }
 
 // export interface PolygonDataCollection {

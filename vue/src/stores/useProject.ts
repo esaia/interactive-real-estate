@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
-import { PolygonDataCollection, ProjectInterface } from "../../types/components";
+import { computed, onMounted, ref } from "vue";
+import { PolygonDataCollection, ProjectInterface, ProjectMeta } from "../../types/components";
 import { transformSvgString } from "../composables/helpers";
+import ajaxAxios from "../utils/axios";
 
 export const useProjectStore = defineStore("project", () => {
   const id = ref();
@@ -16,6 +17,8 @@ export const useProjectStore = defineStore("project", () => {
 
   const svgRef = ref<HTMLDivElement | null>(null);
   const activeGroup = ref<SVGGElement | null>(null);
+
+  const projectMeta = ref<ProjectMeta[]>();
 
   const addPolygonData = (key: string) => {
     polygon_data.value = [...polygon_data.value, { id: "", key, type: "" }];
@@ -48,9 +51,27 @@ export const useProjectStore = defineStore("project", () => {
     project_image.value = project.project_image || "";
     slug.value = project.slug || "";
     polygon_data.value = project.polygon_data || "";
-
     created_at.value = project.created_at || "";
     updated_at.value = project.updated_at || "";
+
+    getProjectMeta();
+  };
+
+  const isContainImage = computed(() => {
+    const findMeta = projectMeta.value?.find((item) => item.meta_key === "project_img_contain")?.meta_value;
+    return JSON.parse(findMeta || "false");
+  });
+
+  const getProjectMeta = async () => {
+    const { data } = await ajaxAxios.post("", {
+      action: "ire_get_meta",
+      nonce: irePlugin.nonce,
+      project_id: id.value
+    });
+
+    if (data?.success) {
+      projectMeta.value = data.data;
+    }
   };
 
   return {
@@ -67,6 +88,9 @@ export const useProjectStore = defineStore("project", () => {
     addPolygonData,
     editpoligonData,
     removePoligonItem,
-    setProject
+    setProject,
+    projectMeta,
+    isContainImage,
+    getProjectMeta
   };
 });
