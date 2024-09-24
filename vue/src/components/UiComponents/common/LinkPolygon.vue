@@ -56,7 +56,7 @@ const flatsSelectData = computed<selectDataItem[]>(() => {
       const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "flat");
 
       return {
-        title: `${item.flat_number.toString()} | id: ${item.id}`,
+        title: `${item.flat_number.toString()} | id: ${item.id} ${item.conf ? " | " + item.conf : ""}`,
         value: item.id.toString(),
         isLinked,
         type: "flat"

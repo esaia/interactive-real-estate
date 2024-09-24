@@ -1,24 +1,9 @@
 <script setup lang="ts">
 import { transformSvgString } from "@/src/composables/helpers";
-import { FlatItem, PolygonDataCollection, ShortcodeData } from "@/types/components";
+import { FlatItem, FloorItem, PolygonDataCollection, ShortcodeData } from "@/types/components";
 import { computed } from "@vue/reactivity";
 import { ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
-import { useProjectStore } from "@/src/stores/useProject";
-
-const colors = {
-  reserved: "#ffff0062",
-  sold: "#ff000038",
-  path_hover: "#ffffff8b",
-  path: "#ffffff2b"
-};
-
-const cssVariables = {
-  "--reserved-color": colors.reserved,
-  "--sold-color": colors.sold,
-  "--path-hover-color": colors.path_hover,
-  "--path-color": colors.path
-};
 
 const emits = defineEmits<{
   (e: "changeComponent", polygonData: PolygonDataCollection | null, hoveredData: any): void;
@@ -26,9 +11,9 @@ const emits = defineEmits<{
 
 const props = defineProps<{
   shortcodeData: ShortcodeData;
+  floors: FloorItem[] | undefined;
+  cssVariables: any;
 }>();
-
-const projectStore = useProjectStore();
 
 const hoveredSvg = ref<HTMLElement>();
 const hoveredData = ref();
@@ -38,12 +23,6 @@ const project = computed(() => {
   if (!props.shortcodeData) return;
 
   return props.shortcodeData.project;
-});
-
-const floors = computed(() => {
-  if (!props.shortcodeData) return;
-
-  return props.shortcodeData.floors;
 });
 
 const projectSvg = computed(() => {
@@ -64,8 +43,7 @@ const onPathClick = (e: any) => {
   const target: SVGPathElement = e.target;
   if (target.nodeName !== "path") return;
 
-  console.log(activePolygon.value);
-  console.log(hoveredData.value);
+  if (hoveredData.value.conf !== "") return;
 
   emits("changeComponent", activePolygon.value, hoveredData.value);
 };
@@ -85,7 +63,7 @@ watch(
 
       switch (activePolygon.value?.type) {
         case "floor":
-          const activeFloor = floors.value?.find((floor) => floor.id === activePolygon.value?.id);
+          const activeFloor = props.floors?.find((floor) => floor.id === activePolygon.value?.id);
           hoveredData.value = activeFloor;
           break;
 

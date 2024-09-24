@@ -1,12 +1,42 @@
 <script setup lang="ts">
 import { useProjectStore } from "@/src/stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
-import { ShortcodeData } from "@/types/components";
-import { onMounted, ref } from "vue";
+import { PolygonDataCollection, ShortcodeData } from "@/types/components";
+import { computed, onMounted, ref } from "vue";
 import ProjectPreview from "./ProjectPreview.vue";
+import FloorPreview from "./FloorPreview.vue";
+
+const colors = {
+  reserved: "#ffff0062",
+  sold: "#ff000038",
+  path_hover: "#ffffff8b",
+  path: "#ffffff4b"
+};
+
+const cssVariables = {
+  "--reserved-color": colors.reserved,
+  "--sold-color": colors.sold,
+  "--path-hover-color": colors.path_hover,
+  "--path-color": colors.path
+};
 
 const projectStore = useProjectStore();
 const shortcodeData = ref<ShortcodeData>();
+
+const flow = ref<"projectFlow" | "floorFlow" | "flatFlow">("projectFlow");
+const hoveredData = ref();
+
+const floors = computed(() => {
+  if (!shortcodeData.value) return;
+
+  return shortcodeData.value.floors;
+});
+
+const flats = computed(() => {
+  if (!shortcodeData.value) return;
+
+  return shortcodeData.value.flats;
+});
 
 const fetchData = async () => {
   const { data } = await ajaxAxios.post("", {
@@ -20,11 +50,34 @@ const fetchData = async () => {
   }
 };
 
+const changeRoute = (polygonData: PolygonDataCollection | null, polygonItem: any) => {
+  if (polygonData?.type === "floor") {
+    flow.value = "floorFlow";
+    hoveredData.value = polygonItem;
+  }
+};
+
 onMounted(() => {
   fetchData();
 });
 </script>
 
 <template>
-  <ProjectPreview v-if="shortcodeData" :shortcodeData="shortcodeData" />
+  <div v-if="shortcodeData">
+    <ProjectPreview
+      v-if="flow === 'projectFlow'"
+      :shortcodeData="shortcodeData"
+      :floors="floors"
+      :cssVariables="cssVariables"
+      @changeComponent="(x, y) => changeRoute(x, y)"
+    />
+
+    <FloorPreview
+      v-else-if="flow === 'floorFlow'"
+      :shortcodeData="shortcodeData"
+      :flats="flats"
+      :floor="hoveredData"
+      :cssVariables="cssVariables"
+    />
+  </div>
 </template>
