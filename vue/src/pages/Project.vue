@@ -8,7 +8,7 @@ import { onMounted } from "vue";
 import { useFloorsStore } from "../stores/useFloors";
 import { useTypesStore } from "../stores/useTypes";
 import { useFlatsStore } from "../stores/useFlats";
-import Preview from "../components/UiComponents/projects/Preview.vue";
+import Preview from "../components/UiComponents/projects/preview/Preview.vue";
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
