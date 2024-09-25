@@ -33,6 +33,14 @@ const onSvgMouseOver = (e: any) => {
   }
 };
 
+const onPathClick = (e: any) => {
+  const target: SVGPathElement = e.target;
+  if (target.nodeName !== "path") return;
+  if (activeFlat.value?.conf === "sold" || activeFlat.value?.conf === "reserved") return;
+
+  emits("changeComponent", activePolygon.value?.type || "", activeFlat.value);
+};
+
 watch(
   () => hoveredSvg.value,
   (ns) => {
@@ -104,6 +112,7 @@ onMounted(() => {
       v-html="floorSvg"
       :key="floorSvg"
       @mouseover="onSvgMouseOver"
+      @click="onPathClick"
     ></div>
 
     <Tooltip_1 :hovered-data="activeFlat" :type="activePolygon?.type || ''" />

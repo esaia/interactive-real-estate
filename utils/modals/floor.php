@@ -126,7 +126,11 @@ class IreFloor
         $this->wpdb->update($this->table_name, $params, $where);
 
         if ($this->wpdb->last_error) {
-            send_json_response(false, 'Database error');
+            if ($this->wpdb->last_error && strpos($this->wpdb->last_error, 'Duplicate entry') !== false) {
+                send_json_response(false, 'Floor number already exists for this project.');
+            } else {
+                send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            }
         } else {
             send_json_response(true, 'Floor updated successfully');
         }

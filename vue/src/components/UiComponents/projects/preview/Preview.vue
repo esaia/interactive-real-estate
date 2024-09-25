@@ -4,6 +4,7 @@ import { ShortcodeData } from "@/types/components";
 import { computed, onMounted, ref } from "vue";
 import ProjectPreview from "./ProjectPreview.vue";
 import FloorPreview from "./FloorPreview.vue";
+import FlatPreview from "./FlatPreview.vue";
 
 const colors = {
   reserved: "#ffff0062",
@@ -82,6 +83,11 @@ const changeRoute = (flowType: string, polygonItem: any) => {
       flow.value = "floorFlow";
       hoveredData.value = polygonItem;
       break;
+    case "flat":
+      flow.value = "flatFlow";
+      hoveredData.value = polygonItem;
+
+      break;
 
     default:
       break;
@@ -96,6 +102,8 @@ onMounted(() => {
 <template>
   <div>
     <Transition name="fade-in-out" mode="out-in">
+      <!-- <FlatPreview v-if="flats" :flat="flats[0]" :floors="floors" @changeComponent="(x, y) => changeRoute(x, y)" /> -->
+
       <div v-if="shortcodeData" :key="flow">
         <ProjectPreview
           v-if="flow === 'projectFlow'"
@@ -112,6 +120,13 @@ onMounted(() => {
           :flats="flats"
           :floor="hoveredData"
           :cssVariables="cssVariables"
+          @changeComponent="(x, y) => changeRoute(x, y)"
+        />
+
+        <FlatPreview
+          v-else-if="flow === 'flatFlow'"
+          :flat="hoveredData"
+          :floors="floors"
           @changeComponent="(x, y) => changeRoute(x, y)"
         />
       </div>

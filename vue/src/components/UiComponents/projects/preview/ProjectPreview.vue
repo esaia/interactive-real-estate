@@ -42,7 +42,8 @@ const onSvgMouseOver = (e: any) => {
 const onPathClick = (e: any) => {
   const target: SVGPathElement = e.target;
   if (target.nodeName !== "path") return;
-  if (hoveredData.value?.conf !== "") return;
+  if (hoveredData.value?.conf === "sold" || hoveredData.value?.conf === "reserved") return;
+
   emits("changeComponent", activePolygon.value?.type || "", hoveredData.value);
 };
 
