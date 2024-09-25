@@ -119,30 +119,28 @@ onMounted(() => {
 
 <template>
   <Transition name="fade-in-out">
-    <div v-if="showModal" class="absolute right-0 top-0 rounded-l-md bg-white p-3 shadow-lg">
+    <div v-if="showModal" class="absolute right-0 top-0 min-w-[300px] rounded-l-md bg-white p-3 shadow-lg">
       <div class="absolute right-0 top-0 cursor-pointer p-2" @click="showModal = false">
         <Close />
       </div>
 
       <h4 class="text-lg text-gray-900">Link Polygon To Related Data</h4>
 
-      <div class="mt-2 flex [&_div]:px-3">
-        <template v-if="!isFloorsCanvas">
-          <div
-            class="sidebar-item-icon icon-hover-text bg-gray-100"
-            :class="{ '!bg-black text-white': activeTab === 'block' }"
-            @click="activeTab = 'block'"
-          >
-            Block
-          </div>
-          <div
-            class="sidebar-item-icon icon-hover-text bg-gray-100"
-            :class="{ '!bg-black text-white': activeTab === 'floor' }"
-            @click="activeTab = 'floor'"
-          >
-            Floor
-          </div>
-        </template>
+      <div v-if="!isFloorsCanvas" class="mt-2 flex [&_div]:px-3">
+        <div
+          class="sidebar-item-icon icon-hover-text bg-gray-100"
+          :class="{ '!bg-black text-white': activeTab === 'block' }"
+          @click="activeTab = 'block'"
+        >
+          Block
+        </div>
+        <div
+          class="sidebar-item-icon icon-hover-text bg-gray-100"
+          :class="{ '!bg-black text-white': activeTab === 'floor' }"
+          @click="activeTab = 'floor'"
+        >
+          Floor
+        </div>
 
         <div
           class="sidebar-item-icon icon-hover-text bg-gray-100"
@@ -153,11 +151,12 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="activeTab === 'floor'" class="mt-5 flex items-center gap-3">
+      <div v-if="activeTab === 'floor'" class="mt-3 flex items-center gap-3">
         <Select v-model="selectedItem" :data="floorsSelectData" itemPrefix="floor #" />
       </div>
 
-      <div v-if="activeTab === 'flat'" class="mt-5 flex items-center gap-3">
+      <div v-if="activeTab === 'flat'" class="mt-3 flex flex-col items-start gap-1">
+        <p v-if="isFloorsCanvas" class="text-gray-500">Choose floor flats</p>
         <Select v-model="selectedItem" :data="flatsSelectData" itemPrefix="floor #" />
       </div>
     </div>

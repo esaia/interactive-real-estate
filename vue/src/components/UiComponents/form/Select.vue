@@ -137,7 +137,7 @@ watch(
             @click="selectItem(item)"
           >
             {{ item.title }}
-            <span class="text-red-600">
+            <span class="text-xs text-red-600">
               {{ item.isLinked && item.value !== selectModelValue?.value ? " - linked" : "" }}
             </span>
           </button>

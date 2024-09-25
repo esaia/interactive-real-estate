@@ -36,10 +36,23 @@ const floors = computed(() => {
   return shortcodeData.value.floors;
 });
 
+const types = computed(() => {
+  if (!shortcodeData.value) return;
+
+  return shortcodeData.value.types;
+});
+
 const flats = computed(() => {
   if (!shortcodeData.value) return;
 
-  return shortcodeData.value.flats;
+  return shortcodeData.value.flats.map((flat) => {
+    const flatType = types.value?.find((type) => type.id === flat.type_id);
+    if (flatType) {
+      flat.type = flatType;
+    }
+
+    return flat;
+  });
 });
 
 const projectMeta = computed(() => {
@@ -88,6 +101,7 @@ onMounted(() => {
           v-if="flow === 'projectFlow'"
           :project="project"
           :floors="floors"
+          :flats="flats"
           :projectMeta="projectMeta"
           :cssVariables="cssVariables"
           @changeComponent="(x, y) => changeRoute(x, y)"

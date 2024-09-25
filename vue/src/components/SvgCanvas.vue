@@ -160,6 +160,8 @@ const onCanvasMouseMove = throttle((event) => {
 const onPathContextMenu = (event, activeGroup) => {
   circleTarget.value = null;
 
+  if (points.value.length) return;
+
   if (event) {
     event.preventDefault();
     updateMode.value = event.target.nodeName === "path";

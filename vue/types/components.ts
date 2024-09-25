@@ -128,6 +128,7 @@ export interface FlatItem {
   price: string;
   offer_price: string;
   block_id?: string | null;
+  type?: TypeItem;
   created_at: string;
   updated_at: string;
 }

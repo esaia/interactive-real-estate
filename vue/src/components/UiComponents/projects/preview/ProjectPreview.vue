@@ -12,6 +12,7 @@ const emits = defineEmits<{
 const props = defineProps<{
   project: ProjectInterface | undefined;
   floors: FloorItem[] | undefined;
+  flats: FlatItem[] | undefined;
   projectMeta: ProjectMeta[] | undefined;
   cssVariables: any;
 }>();
@@ -33,7 +34,6 @@ const isContainImage = computed(() => {
 
 const onSvgMouseOver = (e: any) => {
   const target: HTMLElement | null = e.target;
-
   if (target) {
     hoveredSvg.value = target;
   }
@@ -42,9 +42,7 @@ const onSvgMouseOver = (e: any) => {
 const onPathClick = (e: any) => {
   const target: SVGPathElement = e.target;
   if (target.nodeName !== "path") return;
-
-  if (hoveredData.value.conf !== "") return;
-
+  if (hoveredData.value?.conf !== "") return;
   emits("changeComponent", activePolygon.value?.type || "", hoveredData.value);
 };
 
@@ -52,26 +50,31 @@ watch(
   () => hoveredSvg.value,
   (ns) => {
     if (!ns) return;
-
     const activeG = ns.parentElement;
 
     if (activeG && activeG.nodeName === "g") {
       const id = activeG.getAttribute("id");
       if (!id) return;
+
       activePolygon.value = props.project?.polygon_data.find((item) => item.key === id) || null;
       if (!activePolygon.value) return;
-
+      const polygonId = activePolygon.value?.id;
       switch (activePolygon.value?.type) {
         case "floor":
-          const activeFloor = props.floors?.find((floor) => floor.id === activePolygon.value?.id);
+          const activeFloor = props.floors?.find((floor) => floor.id === polygonId);
           hoveredData.value = activeFloor;
           break;
+        case "flat":
+          const activeFlat = props.flats?.find((flat) => flat.id === polygonId);
+          hoveredData.value = activeFlat;
 
+          break;
         default:
           break;
       }
     } else {
       activePolygon.value = null;
+      hoveredData.value = null;
     }
   }
 );

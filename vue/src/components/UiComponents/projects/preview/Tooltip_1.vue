@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FloorItem } from "@/types/components";
+import { FloorItem, TypeItem } from "@/types/components";
 
 defineProps<{
   hoveredData: any;
@@ -9,7 +9,7 @@ defineProps<{
 
 <template>
   <Transition name="fade-in-out">
-    <div v-if="type" class="absolute bottom-5 right-5 border bg-white p-4">
+    <div v-if="type && hoveredData" class="absolute bottom-5 right-5 border bg-white p-4">
       <div v-if="type === 'floor'" class="flex items-center gap-3">
         <div class="flex flex-col items-center">
           <p class="text-lg">
@@ -56,16 +56,16 @@ defineProps<{
         </div>
 
         <div class="flex min-w-36 flex-col items-center bg-gray-100 px-7 py-3">
-          <p v-if="hoveredData.conf" class="text-lg uppercase">{{ hoveredData.conf }}</p>
+          <p v-if="hoveredData?.conf" class="text-lg uppercase">{{ hoveredData.conf }}</p>
 
           <template v-else>
             <p class="text-xs uppercase text-gray-500">Price</p>
-            <p class="text-lg">{{ Number(hoveredData.price).toLocaleString() }}$</p>
+            <p class="text-lg">{{ Number(hoveredData?.price).toLocaleString() }}$</p>
           </template>
         </div>
 
         <div class="border border-gray-800 p-2">
-          <p class="translate-x-3 bg-white">145 M<sup>2</sup></p>
+          <p class="translate-x-3 bg-white">{{ (hoveredData?.type as TypeItem)?.area_m2 }} M<sup>2</sup></p>
         </div>
       </div>
     </div>

@@ -48,7 +48,6 @@ watch(
 
       if (activePolygon.value?.type === "flat") {
         const activeFindedflat = props.flats?.find((flat) => flat.id === activePolygon.value?.id);
-
         activeFlat.value = activeFindedflat;
       }
     } else {

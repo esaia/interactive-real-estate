@@ -111,14 +111,14 @@ watch(
       </div>
     </div>
 
-    <div class="max-h-full overflow-scroll">
+    <div class="flex max-h-full flex-col gap-[1px] overflow-y-auto py-2">
       <div
         v-if="polygon_data"
         v-for="item in Object.values(polygon_data)"
         :key="item.key"
-        class="group flex w-full min-w-60 cursor-pointer items-center justify-between px-3 py-3 transition-colors hover:bg-gray-200/80"
+        class="group flex w-full min-w-60 cursor-pointer items-center justify-between px-3 py-3 transition-colors hover:bg-white/90 hover:ring-1 hover:ring-primary"
         :class="{
-          'bg-gray-200/80': item.key === activeGroup?.getAttribute('id')
+          'bg-white/90 ring-1 ring-primary': item.key === activeGroup?.getAttribute('id')
         }"
         @click="setActiveG(item)"
       >
