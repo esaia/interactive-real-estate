@@ -56,8 +56,12 @@ defineProps<{
         </div>
 
         <div class="flex min-w-36 flex-col items-center bg-gray-100 px-7 py-3">
-          <p class="text-xs uppercase text-gray-500">Price</p>
-          <p class="text-lg">{{ Number(hoveredData.price).toLocaleString() }}$</p>
+          <p v-if="hoveredData.conf" class="text-lg uppercase">{{ hoveredData.conf }}</p>
+
+          <template v-else>
+            <p class="text-xs uppercase text-gray-500">Price</p>
+            <p class="text-lg">{{ Number(hoveredData.price).toLocaleString() }}$</p>
+          </template>
         </div>
 
         <div class="border border-gray-800 p-2">

@@ -16,7 +16,7 @@ function ire_enqueue_scripts($hook)
     }
 
 
-    // wp_enqueue_media();
+    wp_enqueue_media();
 
     wp_enqueue_script('vue-js',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
     wp_enqueue_style('vue-styles',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.css');

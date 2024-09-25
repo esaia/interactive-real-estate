@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { transformSvgString } from "@/src/composables/helpers";
 import { FlatItem, FloorItem } from "@/types/components";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
 
 const emits = defineEmits<{
@@ -14,6 +14,7 @@ const props = defineProps<{
   cssVariables: any;
 }>();
 
+const svgRef = ref();
 const hoveredSvg = ref();
 const activePolygon = ref();
 const activeFlat = ref<FlatItem>();
@@ -55,6 +56,28 @@ watch(
     }
   }
 );
+
+onMounted(() => {
+  if (svgRef.value) {
+    const gTags = svgRef.value.querySelectorAll("g");
+
+    gTags.forEach((g: SVGGElement) => {
+      const gId = g.getAttribute("id");
+
+      const findedPolygon = props.floor.polygon_data.find((polygon) => polygon.key === gId);
+
+      if (!props.flats) return;
+
+      if (props.floor.conf) {
+        g.setAttribute("conf", props.floor?.conf || "");
+      } else {
+        const activeFlat = props.flats?.find((flat) => flat.id === findedPolygon?.id);
+
+        g.setAttribute("conf", activeFlat?.conf?.toString() || "");
+      }
+    });
+  }
+});
 </script>
 
 <template>
@@ -77,14 +100,8 @@ watch(
     />
 
     <div
-      class="absolute left-0 top-0 h-full w-full [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all"
-      :class="[
-        {
-          'hover:[&_path]:fill-[var(--reserved-color)]': activeFlat?.conf === 'reserved',
-          'hover:[&_path]:fill-[var(--sold-color)]': activeFlat?.conf === 'sold',
-          'hover:[&_path]:fill-[var(--path-hover-color)]': !activeFlat?.conf
-        }
-      ]"
+      ref="svgRef"
+      class="absolute left-0 top-0 h-full w-full [&_g[conf=reserved]_path]:fill-[var(--reserved-color)] [&_g[conf=sold]_path]:fill-[var(--sold-color)] [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all hover:[&_path]:fill-[var(--path-hover-color)]"
       v-html="floorSvg"
       :key="floorSvg"
       @mouseover="onSvgMouseOver"
