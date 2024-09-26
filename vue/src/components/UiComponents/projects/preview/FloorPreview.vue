@@ -3,6 +3,8 @@ import { transformSvgString } from "@/src/composables/helpers";
 import { FlatItem, FloorItem } from "@/types/components";
 import { computed, onMounted, ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
+import BackButton from "@/src/components/ShortcodeComponents/BackButton.vue";
+import Select from "../../form/Select.vue";
 
 const emits = defineEmits<{
   (e: "changeComponent", flow: "" | "flat" | "floor" | "block" | "project", hoveredData: any): void;
@@ -11,6 +13,7 @@ const emits = defineEmits<{
 const props = defineProps<{
   flats: FlatItem[] | undefined;
   floor: FloorItem;
+  floors: FloorItem[];
   cssVariables: any;
 }>();
 
@@ -18,11 +21,21 @@ const svgRef = ref();
 const hoveredSvg = ref();
 const activePolygon = ref();
 const activeFlat = ref<FlatItem>();
+const selectedFloor = ref();
 
 const floorSvg = computed(() => {
   if (!props.floor?.svg) return;
 
   return transformSvgString(props.floor.svg);
+});
+
+const floorsSelect = computed(() => {
+  return props.floors.map((floor) => {
+    return {
+      title: floor.title,
+      value: floor.id
+    };
+  });
 });
 
 const onSvgMouseOver = (e: any) => {
@@ -39,6 +52,28 @@ const onPathClick = (e: any) => {
   if (activeFlat.value?.conf === "sold" || activeFlat.value?.conf === "reserved") return;
 
   emits("changeComponent", activePolygon.value?.type || "", activeFlat.value);
+};
+
+const setPathAttributes = () => {
+  if (svgRef.value) {
+    const gTags = svgRef.value.querySelectorAll("g");
+
+    gTags.forEach((g: SVGGElement) => {
+      const gId = g.getAttribute("id");
+
+      const findedPolygon = props.floor.polygon_data.find((polygon) => polygon.key === gId);
+
+      if (!props.flats) return;
+
+      if (props.floor.conf) {
+        g.setAttribute("conf", props.floor?.conf || "");
+      } else {
+        const activeFlat = props.flats?.find((flat) => flat.id === findedPolygon?.id);
+
+        g.setAttribute("conf", activeFlat?.conf?.toString() || "");
+      }
+    });
+  }
 };
 
 watch(
@@ -64,40 +99,37 @@ watch(
   }
 );
 
-onMounted(() => {
-  if (svgRef.value) {
-    const gTags = svgRef.value.querySelectorAll("g");
+watch(
+  () => selectedFloor.value,
+  () => {
+    const chosenFloor = props.floors.find((floor) => floor.id === selectedFloor.value?.value);
 
-    gTags.forEach((g: SVGGElement) => {
-      const gId = g.getAttribute("id");
+    emits("changeComponent", "floor", chosenFloor);
 
-      const findedPolygon = props.floor.polygon_data.find((polygon) => polygon.key === gId);
-
-      if (!props.flats) return;
-
-      if (props.floor.conf) {
-        g.setAttribute("conf", props.floor?.conf || "");
-      } else {
-        const activeFlat = props.flats?.find((flat) => flat.id === findedPolygon?.id);
-
-        g.setAttribute("conf", activeFlat?.conf?.toString() || "");
-      }
-    });
+    setTimeout(() => {
+      setPathAttributes();
+    }, 0);
   }
+);
+
+onMounted(() => {
+  selectedFloor.value = floorsSelect.value.find((floorSelect) => floorSelect.value === props.floor.id);
+
+  setPathAttributes();
 });
 </script>
 
 <template>
-  <div>
-    <h3>dasnjsdhndhns</h3>
-    <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
-      <div
-        class="absolute left-4 top-4 z-20 cursor-pointer bg-white px-5 py-2 transition-all hover:bg-black hover:text-white"
-        @click="$emit('changeComponent', 'project', null)"
-      >
-        Back
-      </div>
+  <div class="bg-gray-200 p-5">
+    <div class="mb-3 flex items-center justify-between">
+      <BackButton @click="$emit('changeComponent', 'project', null)" />
 
+      <div class="w-fit bg-white">
+        <Select v-model="selectedFloor" :data="floorsSelect" />
+      </div>
+    </div>
+
+    <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
       <img
         :src="floor.floor_image?.[0]?.url || ''"
         alt=""

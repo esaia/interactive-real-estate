@@ -32,7 +32,7 @@ onMounted(() => {
 
 <template>
   <div class="container-fluid">
-    <Preview />
+    <!-- <Preview /> -->
 
     <Canvas
       :projectImage="project_image?.url || ''"

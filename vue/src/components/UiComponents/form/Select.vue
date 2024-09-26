@@ -104,7 +104,7 @@ watch(
       <input
         v-model="input"
         type="text"
-        class="w-full !rounded-md !border-none shadow-none focus:!shadow-none"
+        class="w-full !rounded-md !border-none p-2 shadow-none outline-none focus:!shadow-none"
         :class="{ 'placeholder:text-black': modelValue?.value }"
         :placeholder="inputPlaceholder"
       />

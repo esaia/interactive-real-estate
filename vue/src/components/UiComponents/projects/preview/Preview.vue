@@ -46,7 +46,7 @@ const types = computed(() => {
 const flats = computed(() => {
   if (!shortcodeData.value) return;
 
-  return shortcodeData.value.flats.map((flat) => {
+  return shortcodeData.value?.flats.map((flat) => {
     const flatType = types.value?.find((type) => type.id === flat.type_id);
     if (flatType) {
       flat.type = flatType;
@@ -104,7 +104,14 @@ onMounted(() => {
 <template>
   <div>
     <Transition name="fade-in-out" mode="out-in">
-      <!-- <FlatPreview v-if="flats" :flat="flats[0]" :floors="floors" @changeComponent="(x, y) => changeRoute(x, y)" /> -->
+      <!-- <FloorPreview
+        v-if="floors"
+        :flats="flats"
+        :floor="floors[0]"
+        :floors="floors"
+        :cssVariables="cssVariables"
+        @changeComponent="(x, y) => changeRoute(x, y)"
+      />  -->
 
       <div v-if="shortcodeData" :key="flow">
         <ProjectPreview
@@ -118,9 +125,10 @@ onMounted(() => {
         />
 
         <FloorPreview
-          v-else-if="flow === 'floorFlow'"
+          v-else-if="flow === 'floorFlow' && floors"
           :flats="flats"
           :floor="hoveredData"
+          :floors="floors"
           :cssVariables="cssVariables"
           @changeComponent="(x, y) => changeRoute(x, y)"
         />
