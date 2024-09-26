@@ -10,6 +10,8 @@ include_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/modals/project.php';
 
 include_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/modals/floor.php';
 
+include_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/modals/block.php';
+
 include_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/modals/flat.php';
 
 include_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/modals/flat.php';

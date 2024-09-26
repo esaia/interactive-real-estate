@@ -12,8 +12,9 @@ import { useTypesStore } from "@/src/stores/useTypes";
 import { useProjectStore } from "@/src/stores/useProject";
 import { useFloorsStore } from "@/src/stores/useFloors";
 import { useFlatsStore } from "@/src/stores/useFlats";
+import BlocksList from "../blocks/BlocksList.vue";
 
-const showModal = ref<"block" | "floor" | "flat" | "type" | "">("");
+const showModal = ref<"block" | "floor" | "flat" | "type" | "">("block");
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
@@ -74,6 +75,14 @@ watch(
       <Transition name="fade">
         <Modal v-if="showModal === 'floor'" type="2" width="w-11/12" @close="showModal = ''">
           <FloorsList />
+        </Modal>
+      </Transition>
+    </teleport>
+
+    <teleport to="#my-vue-app">
+      <Transition name="fade">
+        <Modal v-if="showModal === 'block'" type="2" width="w-11/12" @close="showModal = ''">
+          <BlocksList />
         </Modal>
       </Transition>
     </teleport>

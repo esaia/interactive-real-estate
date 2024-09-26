@@ -142,3 +142,13 @@ function has_project_id(array $data)
         return;
     }
 }
+
+
+function database_duplicate_error($wpdb, $duplicateMessage, $defaultErrorMessage = 'Database error')
+{
+    if ($wpdb->last_error && strpos($wpdb->last_error, 'Duplicate entry') !== false) {
+        send_json_response(false, $duplicateMessage);
+    } else {
+        send_json_response(false, $defaultErrorMessage . ': ' . $wpdb->last_error);
+    }
+}
