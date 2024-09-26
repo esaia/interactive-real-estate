@@ -72,7 +72,8 @@ const fetchTypes = async () => {
     sort_field: sortField.value,
     sort_order: sortOrder.value,
     page: currentPage.value,
-    per_page: perPage.value
+    per_page: perPage.value,
+    search: searchType.value
   });
 
   if (!data.success) {
@@ -80,6 +81,10 @@ const fetchTypes = async () => {
   }
 
   types.value = data.data;
+};
+
+const submitForm = () => {
+  fetchTypes();
 };
 
 watch(
@@ -108,7 +113,7 @@ onMounted(() => {
 
 <template>
   <div class="mt-14">
-    <div class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
+    <form @submit.prevent="submitForm" class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
       <h3 class="text-lg font-semibold capitalize">Types</h3>
 
       <Input v-model="searchType" placeholder="Filter flats list..." />
@@ -116,7 +121,7 @@ onMounted(() => {
       <div class="min-w-max">
         <Button title="Add Type" outlined @click="showTypeModal = true" />
       </div>
-    </div>
+    </form>
 
     <div class="relative overflow-x-auto shadow-sm">
       <Table

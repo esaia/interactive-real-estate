@@ -13,7 +13,7 @@ import { useProjectStore } from "@/src/stores/useProject";
 import { useFloorsStore } from "@/src/stores/useFloors";
 import { useFlatsStore } from "@/src/stores/useFlats";
 
-const showModal = ref<"block" | "floor" | "flat" | "type" | "">("");
+const showModal = ref<"block" | "floor" | "flat" | "type" | "">("floor");
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();

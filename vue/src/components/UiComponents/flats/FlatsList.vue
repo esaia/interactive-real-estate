@@ -64,6 +64,10 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
   fetchFlats();
 };
 
+const submitForm = () => {
+  fetchFlats();
+};
+
 const fetchFlats = async () => {
   const { data } = await ajaxAxios.post("", {
     action: "get_flats",
@@ -72,7 +76,8 @@ const fetchFlats = async () => {
     sort_field: sortField.value,
     sort_order: sortOrder.value,
     page: currentPage.value,
-    per_page: perPage.value
+    per_page: perPage.value,
+    search: searchFlat.value
   });
 
   if (!data.success) {
@@ -108,15 +113,15 @@ onMounted(() => {
 
 <template>
   <div class="mt-14">
-    <div class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
+    <form @submit.prevent="submitForm" class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
       <h3 class="text-lg font-semibold capitalize">Flats</h3>
 
       <Input v-model="searchFlat" placeholder="Filter flats list..." />
 
       <div class="min-w-max">
-        <Button title="Add Flat" outlined @click="showEditFlatModal = true" />
+        <Button type="button" title="Add Flat" outlined @click="showEditFlatModal = true" />
       </div>
-    </div>
+    </form>
 
     <div class="relative overflow-x-auto shadow-sm">
       <Table

@@ -77,7 +77,8 @@ const fetchFloors = async () => {
     sort_field: sortField.value,
     sort_order: sortOrder.value,
     page: currentPage.value,
-    per_page: perPage.value
+    per_page: perPage.value,
+    search: searchFloor.value
   });
 
   if (!data.success) {
@@ -85,6 +86,10 @@ const fetchFloors = async () => {
   }
 
   floors.value = data.data;
+};
+
+const submitForm = () => {
+  fetchFloors();
 };
 
 watch(
@@ -113,14 +118,14 @@ onMounted(() => {
 
 <template>
   <div class="mt-14">
-    <div class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
+    <form @submit.prevent="submitForm" class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
       <h3 class="text-lg font-semibold capitalize">Floors</h3>
 
       <Input v-model="searchFloor" placeholder="Filter floors list..." />
       <div class="min-w-max" @click="showFloorModal = true">
         <Button title="Add Floor" outlined />
       </div>
-    </div>
+    </form>
 
     <div class="relative overflow-x-auto shadow-sm">
       <Table

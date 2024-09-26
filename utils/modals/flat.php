@@ -24,11 +24,26 @@ class IreFlat
         $data = sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf']);
 
         $offset = ($data['page'] - 1) * $data['per_page'];
+
+        $query = "SELECT * FROM $this->table_name WHERE project_id = %d";
+        $params = [$data['project_id']];
+
+        if (!empty($data['search'])) {
+            $query .= " AND (flat_number LIKE %s OR id LIKE %s OR price LIKE %s OR offer_price LIKE %s)";
+            $searchTerm = '%' . $data['search'] . '%';
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+        }
+
+        $query .= " ORDER BY " . esc_sql($data['sort_field']) . " " . esc_sql($data['sort_order']) . " LIMIT %d OFFSET %d";
+        $params[] =  $data['per_page'];
+        $params[] =   $offset;
+
         $query = $this->wpdb->prepare(
-            "SELECT * FROM $this->table_name WHERE project_id = %d ORDER BY " . esc_sql($data['sort_field']) . " " . esc_sql($data['sort_order']) . " LIMIT %d OFFSET %d",
-            $data['project_id'],
-            $data['per_page'],
-            $offset
+            $query,
+            ...$params
         );
 
         $results = $this->wpdb->get_results($query, ARRAY_A);

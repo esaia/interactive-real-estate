@@ -22,11 +22,31 @@ class IreType
         $data = sanitize_sorting_parameters($data, ['id', 'title', 'area_m2']);
 
         $offset = ($data['page'] - 1) * $data['per_page'];
+
+
+        $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d ";
+        $params = [$data['project_id']];
+
+
+        if (!empty($data['search'])) {
+            $query .= " AND (title LIKE %s OR id LIKE %s OR teaser LIKE %s OR area_m2 LIKE %s OR rooms_count LIKE %s)";
+            $searchTerm = '%' . $data['search'] . '%';
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+        }
+
+        $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
+        $params[] =  $data['per_page'];
+        $params[] =   $offset;
+
+
+
         $query = $this->wpdb->prepare(
-            "SELECT * FROM {$this->table_name} WHERE project_id = %d ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d",
-            $data['project_id'],
-            $data['per_page'],
-            $offset
+            $query,
+            ...$params
         );
 
         $results = $this->wpdb->get_results($query, ARRAY_A);
