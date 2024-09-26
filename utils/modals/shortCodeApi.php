@@ -148,4 +148,5 @@ function ire_get_shortcode_data()
     $shortcode->fetch_project_data($_POST);
 }
 
-add_action('wp_ajax_get_shortcode_data', 'ire_get_shortcode_data');
+add_action('wp_ajax_nopriv_get_shortcode_data', 'ire_get_shortcode_data');
+add_action('wp_ajax_get_shortcode_data', 'ire_get_shortcode_data'); // remove after production

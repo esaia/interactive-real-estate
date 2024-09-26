@@ -62,10 +62,12 @@ const projectMeta = computed(() => {
 });
 
 const fetchData = async () => {
+  const projectId = document.getElementById("ire-shortcode")?.getAttribute("data-project-id");
+
   const { data } = await ajaxAxios.post("", {
     action: "get_shortcode_data",
     nonce: irePlugin.nonce,
-    project_id: 83
+    project_id: projectId || 83 //temporarily
   });
 
   if (data.success) {

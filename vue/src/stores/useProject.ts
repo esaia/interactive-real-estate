@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { PolygonDataCollection, ProjectInterface, ProjectMeta } from "../../types/components";
+import { imageInterface, PolygonDataCollection, ProjectInterface, ProjectMeta } from "../../types/components";
 import { transformSvgString } from "../composables/helpers";
 import ajaxAxios from "@/src/utils/axios";
 
@@ -8,7 +8,7 @@ export const useProjectStore = defineStore("project", () => {
   const id = ref();
   const title = ref("");
   const svg = ref("");
-  const project_image = ref("");
+  const project_image = ref<imageInterface | null>(null);
   const slug = ref("");
   const polygon_data = ref<PolygonDataCollection[]>([]);
 
@@ -48,7 +48,7 @@ export const useProjectStore = defineStore("project", () => {
     id.value = +project.id;
     title.value = project.title || "";
     svg.value = project.svg || "";
-    project_image.value = project.project_image || "";
+    project_image.value = project.project_image[0] || null;
     slug.value = project.slug || "";
     polygon_data.value = project.polygon_data || "";
     created_at.value = project.created_at || "";

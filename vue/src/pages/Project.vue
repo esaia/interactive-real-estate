@@ -15,7 +15,7 @@ const floorsStore = useFloorsStore();
 const typesStore = useTypesStore();
 const flatsStore = useFlatsStore();
 
-const { polygon_data, activeGroup, svgRef, svg, id, isContainImage } = storeToRefs(projectStore);
+const { polygon_data, activeGroup, svgRef, svg, id, isContainImage, project_image } = storeToRefs(projectStore);
 
 const deleteG = (key: string) => {
   activeGroup.value = null;
@@ -35,7 +35,7 @@ onMounted(() => {
     <Preview />
 
     <Canvas
-      :projectImage="projectStore.project_image"
+      :projectImage="project_image?.url || ''"
       :polygon_data="polygon_data"
       :svgRef="svgRef"
       :svg="svg"

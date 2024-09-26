@@ -65,7 +65,7 @@ export interface ProjectInterface {
   id: string;
   title: string;
   svg: string;
-  project_image: string;
+  project_image: imageInterface[];
   slug: string;
   polygon_data: PolygonDataCollection[];
   created_at: string;

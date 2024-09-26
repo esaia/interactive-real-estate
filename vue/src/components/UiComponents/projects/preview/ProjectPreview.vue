@@ -105,7 +105,7 @@ watch(
 <template>
   <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
     <img
-      :src="project?.project_image"
+      :src="project?.project_image[0].url"
       alt=""
       class="absolute left-0 top-0 h-full w-full"
       :class="{ 'object-contain': isContainImage, 'object-cover': !isContainImage }"

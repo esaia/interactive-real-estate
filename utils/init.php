@@ -110,7 +110,7 @@ function ire_create_tables()
         block_id mediumint(9),
         type_id mediumint(9) NOT NULL,
         project_id mediumint(9) NOT NULL,
-        floor_number mediumint(9) NOT NULL,
+        floor_number mediumint(9),
         conf ENUM('reserved', 'sold'),
         flat_number VARCHAR(255) NOT NULL,
         price DECIMAL(10, 2) NOT NULL,
@@ -161,26 +161,29 @@ function add_module_type_attribute($tag, $handle)
     return str_replace('src', 'type="module" defer="defer" src', $tag);
 }
 
-function render_vue_preview_shortcode()
+function render_vue_preview_shortcode($atts)
 {
+    $atts = shortcode_atts(array(
+        'id' => 0,
+    ), $atts, 'vue_preview');
 
+    $project_id = intval($atts['id']);
 
-    // Start output buffering to capture HTML output
     ob_start();
 ?>
-    <div id="ire-shortcode">
+    <div id="ire-shortcode" data-project-id="<?php echo esc_attr($project_id); ?>">
     </div>
 <?php
     return ob_get_clean(); // Return the buffered content
 }
 
-add_shortcode('vue_preview', 'render_vue_preview_shortcode');
+add_shortcode('ire_project', 'render_vue_preview_shortcode');
 
 function enqueue_vue_scripts()
 {
     wp_enqueue_media();
-    wp_enqueue_script('vue-js',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
-    wp_enqueue_style('vue-styles',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.css');
+    wp_enqueue_script('vue-js', plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
+    wp_enqueue_style('vue-styles', plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.css');
 
     wp_localize_script('vue-js', 'irePlugin', array(
         'nonce' => wp_create_nonce('ire_nonce'),

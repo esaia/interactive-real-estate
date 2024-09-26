@@ -164,13 +164,7 @@ onMounted(() => {
     <div class="flex flex-col items-center gap-3 p-3">
       <Input v-model="obj.flat_number" placeholder="23 - flat" label="Flat number/name" required />
 
-      <Select
-        v-if="floorsNumberData"
-        v-model="obj.floor_number"
-        :data="floorsNumberData"
-        label="Floor number"
-        required
-      />
+      <Select v-if="floorsNumberData" v-model="obj.floor_number" :data="floorsNumberData" label="Floor number" />
 
       <Select v-model="obj.type_id" :data="typesData" label="Type" required />
       <Button v-if="obj.type_id" class="!p-1" title="edit type" outlined @click="showEditTypeModal" />

@@ -36,6 +36,7 @@ const props = defineProps<{ data: any }>();
               <div
                 class="table-list-actions hover:bg-gray-400 [&_path]:hover:fill-white"
                 @click="$emit('editAction', item)"
+                title="edit"
               >
                 <Edit />
               </div>
@@ -43,6 +44,7 @@ const props = defineProps<{ data: any }>();
               <div
                 class="table-list-actions hover:bg-blue-400 [&_path]:hover:fill-white"
                 @click="$emit('duplicateAction', item)"
+                title="duplicate"
               >
                 <Duplicate />
               </div>
@@ -50,6 +52,7 @@ const props = defineProps<{ data: any }>();
               <div
                 class="table-list-actions hover:bg-red-500 [&_path]:hover:fill-white"
                 @click="$emit('deleteAction', item)"
+                title="delete"
               >
                 <Delete />
               </div>
@@ -65,6 +68,6 @@ const props = defineProps<{ data: any }>();
 
 <style>
 .table-list-actions {
-  @apply h-fit cursor-pointer border border-r-0 border-gray-500 p-1 transition-all first:rounded-l-sm last-of-type:rounded-r-sm last-of-type:border-r group-hover:border-gray-300 [&_svg]:h-4 [&_svg]:w-4;
+  @apply h-fit cursor-pointer border border-r-0 border-gray-300 p-1 transition-all first:rounded-l-sm last-of-type:rounded-r-sm last-of-type:border-r group-hover:border-gray-300 [&_svg]:h-4 [&_svg]:w-4;
 }
 </style>

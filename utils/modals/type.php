@@ -100,6 +100,10 @@ class IreType
             $params['gallery'] = handle_json_data($data['gallery']);
         }
 
+        $params['image_2d'] ??= null;
+        $params['image_3d'] ??= null;
+        $params['gallery'] ??= null;
+
         $where = ['id' => $type_id];
         $this->wpdb->update($this->table_name, $params, $where);
 

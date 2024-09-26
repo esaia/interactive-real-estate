@@ -88,33 +88,36 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
-    <div
-      class="absolute left-4 top-4 z-20 cursor-pointer bg-white px-5 py-2 transition-all hover:bg-black hover:text-white"
-      @click="$emit('changeComponent', 'project', null)"
-    >
-      Back
+  <div>
+    <h3>dasnjsdhndhns</h3>
+    <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
+      <div
+        class="absolute left-4 top-4 z-20 cursor-pointer bg-white px-5 py-2 transition-all hover:bg-black hover:text-white"
+        @click="$emit('changeComponent', 'project', null)"
+      >
+        Back
+      </div>
+
+      <img
+        :src="floor.floor_image?.[0]?.url || ''"
+        alt=""
+        class="absolute left-0 top-0 h-full w-full"
+        :class="{
+          'object-contain': floor.img_contain,
+          'object-cover': !floor.img_contain
+        }"
+      />
+
+      <div
+        ref="svgRef"
+        class="absolute left-0 top-0 h-full w-full [&_g[conf=reserved]_path]:fill-[var(--reserved-color)] [&_g[conf=sold]_path]:fill-[var(--sold-color)] [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all hover:[&_path]:fill-[var(--path-hover-color)]"
+        v-html="floorSvg"
+        :key="floorSvg"
+        @mouseover="onSvgMouseOver"
+        @click="onPathClick"
+      ></div>
+
+      <Tooltip_1 :hovered-data="activeFlat" :type="activePolygon?.type || ''" />
     </div>
-
-    <img
-      :src="floor.floor_image?.[0]?.url || ''"
-      alt=""
-      class="absolute left-0 top-0 h-full w-full"
-      :class="{
-        'object-contain': floor.img_contain,
-        'object-cover': !floor.img_contain
-      }"
-    />
-
-    <div
-      ref="svgRef"
-      class="absolute left-0 top-0 h-full w-full [&_g[conf=reserved]_path]:fill-[var(--reserved-color)] [&_g[conf=sold]_path]:fill-[var(--sold-color)] [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all hover:[&_path]:fill-[var(--path-hover-color)]"
-      v-html="floorSvg"
-      :key="floorSvg"
-      @mouseover="onSvgMouseOver"
-      @click="onPathClick"
-    ></div>
-
-    <Tooltip_1 :hovered-data="activeFlat" :type="activePolygon?.type || ''" />
   </div>
 </template>

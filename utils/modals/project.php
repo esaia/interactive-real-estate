@@ -27,7 +27,7 @@ class IreProject
 
 
             if ($result) {
-                $result->project_image = wp_get_attachment_image_url($result->project_image, 90);
+                $result->project_image = [get_image_instance($result->project_image)];
                 $result->polygon_data = json_decode($result->polygon_data);
             }
         } else {
@@ -36,7 +36,7 @@ class IreProject
             if ($result) {
                 $result = array_map(function ($item) {
                     $item->polygon_data = json_decode($item->polygon_data);
-                    $item->project_image = wp_get_attachment_image_url($item->project_image, 90);
+                    $item->project_image = [get_image_instance($item->project_image)];
                     return $item;
                 }, $result);
             }
