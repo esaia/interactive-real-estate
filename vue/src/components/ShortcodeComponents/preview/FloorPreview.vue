@@ -32,10 +32,10 @@ const floorSvg = computed(() => {
 const floorsSelect = computed(() => {
   return (
     props.floors
-      .filter((floor) => !floor.block_id)
+      .filter((floor) => !floor.block_id && floor.conf !== "reserved" && floor.conf !== "sold")
       .map((floor) => {
         return {
-          title: `Floor - ${floor.floor_number}`,
+          title: floor?.floor_number?.toString(),
           value: floor.id
         };
       }) || []
@@ -124,12 +124,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-gray-200 p-5">
+  <div class="p-5">
     <div class="mb-3 flex items-center justify-between">
       <BackButton @click="$emit('changeComponent', 'project', null)" />
 
       <div class="w-fit bg-white">
-        <Select v-model="selectedFloor" :data="floorsSelect" />
+        <Select v-model="selectedFloor" :data="floorsSelect" placeholderPrefix="Floor " />
       </div>
     </div>
 

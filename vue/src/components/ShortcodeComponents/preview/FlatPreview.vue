@@ -19,7 +19,9 @@ const show2dImage = ref(true);
 
 const goBack = () => {
   const flatFloor = props.floors?.find(
-    (floor) => floor.floor_number.toString() === props.flat?.floor_number.toString()
+    (floor) =>
+      floor.floor_number.toString() === props.flat?.floor_number.toString() &&
+      (props.flat.block_id ? floor.block_id : !floor.block_id)
   );
 
   if (flatFloor) {
@@ -36,7 +38,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="bg-gray-100 p-5">
+  <div class="p-5">
     <BackButton @click="goBack" />
 
     <div class="flex items-start justify-center gap-20">

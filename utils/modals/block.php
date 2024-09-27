@@ -117,15 +117,14 @@ class IreBlock
         }
 
 
-
         $required_fields = ['title', 'block_image'];
         $rqeuired_data = validate_and_sanitize_input($data, $required_fields);
-
 
         if (!$rqeuired_data) {
             send_json_response(false, 'Required fields are missing.');
             return;
         }
+
 
 
         $non_required_fields = ['conf', 'polygon_data', 'svg', 'img_contain'];
@@ -138,9 +137,8 @@ class IreBlock
             $params['svg'] = $data['svg'];
         }
 
-        $params['polygon_data'] = handle_json_data($params['polygon_data'] ?? '');
-        $params['img_contain'] = $params['img_contain'] === 'true' ? 1 : 0;
-
+        $params['polygon_data'] = handle_json_data($data['polygon_data'] ?? '');
+        $params['img_contain'] = $data['img_contain'] === 'true' ? 1 : 0;
 
 
         $where = ['id' => $block_id];

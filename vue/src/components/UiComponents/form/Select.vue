@@ -11,13 +11,14 @@ const props = withDefaults(
     defaultValue?: selectDataItem | null;
     placeholder?: string;
     label?: string;
+    placeholderPrefix?: string;
     clearable?: boolean;
     required?: boolean;
   }>(),
   {
     placeholder: "Choose",
+    placeholderPrefix: "",
     defaultValue: null,
-    borderStyle: "Default",
     label: "",
     clearable: false
   }
@@ -42,7 +43,7 @@ const isModalOpen = ref(false);
 const activeItems = ref(props.data);
 
 const inputPlaceholder = computed(() => {
-  return selectModelValue.value ? selectModelValue.value?.title : props.placeholder || "";
+  return props.placeholderPrefix + (selectModelValue.value ? selectModelValue.value?.title : props.placeholder || "");
 });
 
 const selectItem = (item: selectDataItem) => {
@@ -128,11 +129,11 @@ watch(
         }"
       >
         <div v-if="activeItems.length">
-          <button
+          <div
             v-for="item in activeItems"
             :key="item.value"
             type="button"
-            class="line-clamp-1 w-full min-w-32 rounded-sm px-[8px] py-[6px] text-start transition-all hover:bg-gray-100"
+            class="line-clamp-2 w-full min-w-32 cursor-pointer rounded-sm px-[8px] py-[6px] text-start transition-all hover:bg-gray-100"
             :class="`${item.value === selectModelValue?.value && item.type === selectModelValue.type ? '!bg-primary text-white' : item?.isLinked ? 'cursor-not-allowed text-gray-400 hover:bg-white' : ''} `"
             @click="selectItem(item)"
           >
@@ -140,7 +141,7 @@ watch(
             <span class="text-xs text-red-600">
               {{ item.isLinked && item.value !== selectModelValue?.value ? " - linked" : "" }}
             </span>
-          </button>
+          </div>
         </div>
 
         <button v-else class="line-clamp-1 w-full min-w-32 px-[8px] py-[6px] text-start">nothing found</button>

@@ -8,6 +8,7 @@ import { useProjectStore } from "@/src/stores/useProject";
 import { PolygonDataCollection, selectDataItem } from "@/types/components";
 import { useFlatsStore } from "@/src/stores/useFlats";
 import { useBlocksStore } from "@/src/stores/useBlock";
+import { getBlockTitleById } from "@/src/composables/helpers";
 
 const props = defineProps<{
   activeGroup: SVGGElement | null;
@@ -45,7 +46,7 @@ const floorsSelectData = computed<selectDataItem[]>(() => {
       const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "floor");
 
       return {
-        title: `floor #${item.floor_number.toString()} | id: ${item.id} ${item.conf ? " | " + item.conf : ""}`,
+        title: `id: ${item.id} | floor #${item.floor_number.toString()} ${item.block_id ? " | block: " + getBlockTitleById(item.block_id) : ""} ${item.conf ? " | " + item.conf : ""}`,
         value: item.id.toString(),
         isLinked,
         type: "floor"
