@@ -63,24 +63,7 @@ function ire_create_tables()
         PRIMARY KEY  (id)
     ) $charset_collate;";
 
-    // Table for floors
-    $floors_table_name = $wpdb->prefix . 'ire_floors';
-    $floors_sql = "CREATE TABLE $floors_table_name (
-        id mediumint(9) NOT NULL AUTO_INCREMENT,
-        floor_number INT NOT NULL,
-        title VARCHAR(255),
-        conf ENUM('reserved', 'sold'),
-        floor_image INT NOT NULL,
-        polygon_data JSON,
-        svg LONGTEXT NOT NULL,
-        project_id mediumint(9) NOT NULL,
-        img_contain BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        UNIQUE KEY unique_floor (project_id, floor_number),
-        PRIMARY KEY  (id),
-        FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
-    ) $charset_collate;";
+
 
     // Table for blocks
     $blocks_table_name = $wpdb->prefix . 'ire_blocks';
@@ -98,6 +81,29 @@ function ire_create_tables()
         PRIMARY KEY  (id),
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
     ) $charset_collate;";
+
+
+    // Table for floors
+    $floors_table_name = $wpdb->prefix . 'ire_floors';
+    $floors_sql = "CREATE TABLE $floors_table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        floor_number INT NOT NULL,
+        title VARCHAR(255),
+        conf ENUM('reserved', 'sold'),
+        floor_image INT NOT NULL,
+        polygon_data JSON,
+        svg LONGTEXT NOT NULL,
+        project_id mediumint(9) NOT NULL,
+        block_id mediumint(9),
+        img_contain BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY unique_floor (project_id, floor_number, block_id),
+        PRIMARY KEY (id),
+        FOREIGN KEY (block_id) REFERENCES $blocks_table_name(id) ON DELETE CASCADE,
+        FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
+    ) $charset_collate;";
+
 
 
 
@@ -136,6 +142,7 @@ function ire_create_tables()
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE,
+        FOREIGN KEY (block_id) REFERENCES $blocks_table_name(id) ON DELETE CASCADE,
         FOREIGN KEY (type_id) REFERENCES $types_table_name(id) ON DELETE CASCADE
     ) $charset_collate;";
 

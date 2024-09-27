@@ -20,7 +20,7 @@ class IreFloor
         has_project_id($data);
 
 
-        $data = sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf']);
+        $data = sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf', 'block_id']);
         $offset = ($data['page'] - 1) * $data['per_page'];
 
 
@@ -85,7 +85,7 @@ class IreFloor
         }
 
 
-        $non_required_fields = ['title', 'conf', 'img_contain', 'svg'];
+        $non_required_fields = ['title', 'conf', 'img_contain', 'svg', 'block_id'];
         $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
 
         $non_required_data['polygon_data'] = $data['polygon_data'] ?? null;
@@ -93,7 +93,6 @@ class IreFloor
 
         $data  = array_merge($non_required_data, $rqeuired_data);
         $data['img_contain'] = $data['img_contain'] === 'true' ? 1 : 0;
-
 
         if (isset($data['polygon_data'])) {
             $data['polygon_data'] = handle_json_data($data['polygon_data']);
@@ -125,7 +124,8 @@ class IreFloor
             return;
         }
 
-        $keys = ['floor_number', 'title', 'conf', 'floor_image', 'polygon_data', 'svg', 'img_contain'];
+        $keys = ['floor_number', 'title', 'conf', 'floor_image', 'polygon_data', 'svg', 'img_contain', 'block_id'];
+
         $params = array_filter($data, function ($key) use ($keys) {
             return in_array($key, $keys);
         }, ARRAY_FILTER_USE_KEY);

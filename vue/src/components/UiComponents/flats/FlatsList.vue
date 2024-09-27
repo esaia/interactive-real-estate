@@ -12,6 +12,7 @@ import DeleteModal from "../common/DeleteModal.vue";
 import Input from "../form/Input.vue";
 import Button from "../form/Button.vue";
 import CreateEditFlatModal from "./CreateEditFlatModal.vue";
+import { getBlockTitleById } from "@/src/composables/helpers";
 
 const projectStore = useProjectStore();
 const { id } = storeToRefs(projectStore);
@@ -141,10 +142,17 @@ onMounted(() => {
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
 
-          <TableTh fieldTitle="title" field="flat_number" />
+          <TableTh
+            fieldTitle="title"
+            field="flat_number"
+            :sortable="true"
+            :sortField="sortField"
+            :sortOrder="sortOrder"
+            @sort="(field, sortOrder) => sort(field, sortOrder)"
+          />
 
           <TableTh
-            fieldTitle="floor number"
+            fieldTitle="Floor number"
             field="floor_number"
             :sortable="true"
             :sortField="sortField"
@@ -153,7 +161,16 @@ onMounted(() => {
           />
 
           <TableTh
-            fieldTitle="price"
+            fieldTitle="Block"
+            field="block_id"
+            :sortable="true"
+            :sortField="sortField"
+            :sortOrder="sortOrder"
+            @sort="(field, sortOrder) => sort(field, sortOrder)"
+          />
+
+          <TableTh
+            fieldTitle="Price"
             field="price"
             :sortable="true"
             :sortField="sortField"
@@ -161,7 +178,7 @@ onMounted(() => {
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
           <TableTh
-            fieldTitle="offer price"
+            fieldTitle="Offer price"
             field="offer_price"
             :sortable="true"
             :sortField="sortField"
@@ -169,7 +186,7 @@ onMounted(() => {
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
           <TableTh
-            fieldTitle="conf"
+            fieldTitle="Conf"
             field="conf"
             :sortable="true"
             :sortField="sortField"
@@ -182,6 +199,7 @@ onMounted(() => {
           <td>{{ floor.slotProps?.id }}</td>
           <td>{{ floor.slotProps?.flat_number }}</td>
           <td>{{ floor.slotProps?.floor_number }}</td>
+          <td>{{ getBlockTitleById(floor.slotProps?.block_id) }}</td>
           <td>{{ floor.slotProps?.price }}</td>
           <td>{{ floor.slotProps?.offer_price }}</td>
           <td>{{ floor.slotProps?.conf }}</td>

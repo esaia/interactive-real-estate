@@ -33,16 +33,24 @@ const { projectFlats } = storeToRefs(flatsStore);
 const floorsSelectData = computed<selectDataItem[]>(() => {
   if (!projectFloors.value) return [];
 
-  return projectFloors.value?.map((item) => {
-    const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "floor");
+  return projectFloors.value
+    .filter((floor) => {
+      if (activeBlock.value) {
+        return activeBlock.value.id?.toString() === floor.block_id?.toString();
+      } else {
+        return floor;
+      }
+    })
+    ?.map((item) => {
+      const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "floor");
 
-    return {
-      title: `floor #${item.floor_number.toString()} | id: ${item.id}`,
-      value: item.id.toString(),
-      isLinked,
-      type: "floor"
-    };
-  });
+      return {
+        title: `floor #${item.floor_number.toString()} | id: ${item.id}`,
+        value: item.id.toString(),
+        isLinked,
+        type: "floor"
+      };
+    });
 });
 
 const blocksSelectData = computed<selectDataItem[]>(() => {
@@ -66,7 +74,7 @@ const flatsSelectData = computed<selectDataItem[]>(() => {
   return projectFlats.value
     .filter((flat) => {
       if (activeFloor.value) {
-        return activeFloor.value.floor_number.toString() === flat.floor_number.toString();
+        return activeFloor.value.floor_number?.toString() === flat.floor_number?.toString();
       } else {
         return flat;
       }
@@ -76,7 +84,7 @@ const flatsSelectData = computed<selectDataItem[]>(() => {
 
       return {
         title: `${item.flat_number.toString()} | id: ${item.id} ${item.conf ? " | " + item.conf : ""}`,
-        value: item.id.toString(),
+        value: item.id?.toString(),
         isLinked,
         type: "flat"
       };

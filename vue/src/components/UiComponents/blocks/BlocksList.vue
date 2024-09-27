@@ -121,9 +121,9 @@ onMounted(() => {
     <form @submit.prevent="submitForm" class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
       <h3 class="text-lg font-semibold capitalize">Blocks</h3>
 
-      <Input v-model="searchBlock" placeholder="Filter floors list..." />
+      <Input v-model="searchBlock" placeholder="Filter blocks list..." />
       <div class="min-w-max" @click="showBlockModal = true">
-        <Button title="Add Floor" outlined />
+        <Button title="Add Block" outlined />
       </div>
     </form>
 
@@ -136,24 +136,25 @@ onMounted(() => {
       >
         <template #header>
           <TableTh
-            fieldTitle="id"
+            fieldTitle="Id"
             field="id"
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
+
           <TableTh
-            fieldTitle="floor"
-            field="floor_number"
+            fieldTitle="Title"
+            field="title"
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
-          <TableTh fieldTitle="title" field="title" />
+
           <TableTh
-            fieldTitle="conf"
+            fieldTitle="Conf"
             field="conf"
             :sortable="true"
             :sortField="sortField"
@@ -164,7 +165,6 @@ onMounted(() => {
 
         <template #default="floor">
           <td>{{ floor.slotProps?.id }}</td>
-          <td>{{ floor.slotProps?.floor_number }}</td>
           <td>{{ floor.slotProps?.title }}</td>
           <td>{{ floor.slotProps?.conf }}</td>
         </template>

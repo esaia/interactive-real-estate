@@ -13,8 +13,11 @@ import Pagination from "../common/Pagination.vue";
 import DeleteModal from "../common/DeleteModal.vue";
 import Input from "../form/Input.vue";
 import Button from "../form/Button.vue";
+import { useBlocksStore } from "@/src/stores/useBlock";
+import { getBlockTitleById } from "@/src/composables/helpers";
 
 const projectStore = useProjectStore();
+const blocksStore = useBlocksStore();
 const floorsStore = useFloorsStore();
 const { id } = storeToRefs(projectStore);
 
@@ -136,7 +139,7 @@ onMounted(() => {
       >
         <template #header>
           <TableTh
-            fieldTitle="id"
+            fieldTitle="Id"
             field="id"
             :sortable="true"
             :sortField="sortField"
@@ -144,7 +147,7 @@ onMounted(() => {
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
           <TableTh
-            fieldTitle="floor"
+            fieldTitle="Floor"
             field="floor_number"
             :sortable="true"
             :sortField="sortField"
@@ -152,8 +155,17 @@ onMounted(() => {
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
           <TableTh fieldTitle="title" field="title" />
+
           <TableTh
-            fieldTitle="conf"
+            fieldTitle="Block"
+            field="block_id"
+            :sortable="true"
+            :sortField="sortField"
+            :sortOrder="sortOrder"
+            @sort="(field, sortOrder) => sort(field, sortOrder)"
+          />
+          <TableTh
+            fieldTitle="Conf"
             field="conf"
             :sortable="true"
             :sortField="sortField"
@@ -166,6 +178,7 @@ onMounted(() => {
           <td>{{ floor.slotProps?.id }}</td>
           <td>{{ floor.slotProps?.floor_number }}</td>
           <td>{{ floor.slotProps?.title }}</td>
+          <td>{{ getBlockTitleById(floor.slotProps?.block_id) }}</td>
           <td>{{ floor.slotProps?.conf }}</td>
         </template>
       </Table>

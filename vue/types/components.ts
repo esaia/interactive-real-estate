@@ -87,6 +87,7 @@ export interface FloorItem {
   floor_image: imageInterface[];
   svg: string;
   project_id: number;
+  block_id: number;
   polygon_data: PolygonDataCollection[];
   img_contain: boolean;
   counts?: {

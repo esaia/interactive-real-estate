@@ -12,6 +12,7 @@ import { FlatItem, selectDataItem, TypeItem } from "@/types/components";
 import { useToast } from "vue-toast-notification";
 import CreateEditTypeModal from "../types/CreateEditTypeModal.vue";
 import Modal from "../Modal.vue";
+import { useBlocksStore } from "@/src/stores/useBlock";
 
 const emits = defineEmits<{
   (e: "setActiveFlat", activeType: FlatItem): void;
@@ -24,6 +25,7 @@ const props = defineProps<{
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
+const blockStore = useBlocksStore();
 const typesStore = useTypesStore();
 const { projectFloors } = storeToRefs(floorStore);
 const { projectTypes } = storeToRefs(typesStore);
@@ -42,7 +44,7 @@ const obj = reactive<any>({
   floor_number: null,
   price: "",
   offer_price: "",
-  block_id: null
+  block: null
 });
 
 const showTypeModal = ref(false);
@@ -64,13 +66,25 @@ const typesData = computed(() => {
   });
 });
 
+const blockSelectData = computed(() => {
+  return (
+    blockStore.projectBlocks?.map((block) => {
+      return {
+        title: block?.title,
+        value: block.id
+      };
+    }) || []
+  );
+});
+
 const submitForm = async () => {
   const params = {
     ...obj,
     conf: (obj.conf as selectDataItem | null)?.value || "",
     type_id: (obj.type_id as selectDataItem | null)?.value,
     floor_number: (obj.floor_number as selectDataItem | null)?.value,
-    project_id: projectStore?.id
+    project_id: projectStore?.id,
+    block_id: obj.block?.value
   };
 
   if (props.activeFlat) {
@@ -147,6 +161,7 @@ onMounted(() => {
     obj.offer_price = typeInstance.offer_price ?? "";
     obj.type_id = typesData.value.find((type) => type.value === typeInstance.type_id) ?? null;
     obj.floor_number = floorsNumberData.value.find((floor) => floor.value === typeInstance.floor_number) ?? null;
+    obj.block = blockSelectData.value.find((block) => block.value === typeInstance.block_id) ?? null;
   }
 });
 </script>
@@ -164,7 +179,15 @@ onMounted(() => {
     <div class="flex flex-col items-center gap-3 p-3">
       <Input v-model="obj.flat_number" placeholder="23 - flat" label="Flat number/name" required />
 
-      <Select v-if="floorsNumberData" v-model="obj.floor_number" :data="floorsNumberData" label="Floor number" />
+      <Select
+        v-if="floorsNumberData"
+        v-model="obj.floor_number"
+        :data="floorsNumberData"
+        label="Floor number"
+        clearable
+      />
+
+      <Select v-model="obj.block" :data="blockSelectData" label="select block" clearable />
 
       <Select v-model="obj.type_id" :data="typesData" label="Type" required />
       <Button v-if="obj.type_id" class="!p-1" title="edit type" outlined @click="showEditTypeModal" />

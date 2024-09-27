@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useToast } from "vue-toast-notification";
 import { useProjectStore } from "@/src/stores/useProject";
@@ -15,6 +15,7 @@ import Button from "../form/Button.vue";
 import Modal from "../Modal.vue";
 import CreateEditFlatModal from "../flats/CreateEditFlatModal.vue";
 import { useFlatsStore } from "@/src/stores/useFlats";
+import { useBlocksStore } from "@/src/stores/useBlock";
 
 const props = defineProps<{
   duplicatedFloor?: FloorItem | null;
@@ -28,6 +29,7 @@ const defaultConf = [
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
 const flatStore = useFlatsStore();
+const blockStore = useBlocksStore();
 const { id, svgRef } = storeToRefs(projectStore);
 const { activeFloor, activeGroup, floorSvgRef } = storeToRefs(floorStore);
 const addFlatModal = ref(false);
@@ -44,8 +46,20 @@ const title = ref("");
 const floor_number = ref();
 const floor_image = ref<imageInterface[] | null>(null);
 const conf = ref({ title: "Choose", value: "" });
+const block = ref();
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
 const img_contain = ref(false);
+
+const blockSelectData = computed(() => {
+  return (
+    blockStore.projectBlocks?.map((block) => {
+      return {
+        title: block?.title,
+        value: block.id
+      };
+    }) || []
+  );
+});
 
 const submitForm = async () => {
   if (floorSvgRef.value) {
@@ -58,14 +72,14 @@ const submitForm = async () => {
   activeGroup.value = null;
 
   if (activeFloor.value) {
-    await updateFloor();
+    updateFloor();
   } else {
     createFloor();
   }
 };
 
 const updateFloor = async () => {
-  const params = {
+  const params: any = {
     title: title.value,
     floor_number: floor_number.value,
     floor_image: floor_image.value?.[0]?.id,
@@ -75,6 +89,10 @@ const updateFloor = async () => {
     svg: floorSvgRef.value?.querySelector("svg")?.outerHTML || "",
     img_contain: img_contain.value
   };
+
+  if (block.value?.value) {
+    params.block_id = block.value?.value;
+  }
 
   const { data } = await ajaxAxios.post("", {
     action: "update_floor",
@@ -105,10 +123,14 @@ const createFloor = async () => {
     title: title.value,
     floor_number: floor_number.value,
     floor_image: floor_image.value?.[0]?.id || props.duplicatedFloor?.floor_image?.[0]?.id,
-    conf: conf.value.value,
+    conf: conf.value?.value,
     project_id: id.value,
     img_contain: img_contain.value
   };
+
+  if (block.value?.value) {
+    params.block_id = block.value?.value;
+  }
 
   if (duplicatedFloorPolygonData.value) {
     params.polygon_data = duplicatedFloorPolygonData.value;
@@ -150,22 +172,24 @@ watch(
   }
 );
 
+const sedDefaultValues = (source: FloorItem) => {
+  title.value = source.title;
+  floor_number.value = source.floor_number;
+  conf.value = defaultConf.find((item) => item.value === source.conf) || { title: "choose", value: "" };
+  block.value = blockSelectData.value.find((item) => item.value === source.block_id?.toString()) || {
+    title: "choose",
+    value: ""
+  };
+  floor_image.value = source.floor_image;
+  img_contain.value = source.img_contain;
+};
+
 onMounted(() => {
   if (activeFloor.value) {
-    title.value = activeFloor.value.title;
-    floor_number.value = activeFloor.value.floor_number;
-    conf.value = defaultConf.find((item) => item.value === activeFloor.value?.conf) || { title: "choose", value: "" };
-    floor_image.value = activeFloor.value.floor_image;
-    img_contain.value = activeFloor.value.img_contain;
+    sedDefaultValues(activeFloor.value);
   } else if (props.duplicatedFloor) {
-    title.value = props.duplicatedFloor.title;
-    floor_number.value = props.duplicatedFloor.floor_number;
-    conf.value = defaultConf.find((item) => item.value === props.duplicatedFloor?.conf) || {
-      title: "choose",
-      value: ""
-    };
-    floor_image.value = props.duplicatedFloor.floor_image;
-    img_contain.value = props.duplicatedFloor.img_contain;
+    sedDefaultValues(props.duplicatedFloor);
+
     const polygonData = props.duplicatedFloor?.polygon_data;
 
     duplicatedFloorPolygonData.value = polygonData
@@ -177,8 +201,6 @@ onMounted(() => {
           };
         })
       : [];
-
-    console.log(props.duplicatedFloor);
   }
 });
 
@@ -236,6 +258,8 @@ onUnmounted(() => {
         <div class="flex flex-col items-center gap-3 p-3">
           <Input v-model="title" placeholder="Floor title" label="title" />
           <Input v-model="floor_number" placeholder="Floor number" label="floor number" type="number" required />
+
+          <Select v-model="block" :data="blockSelectData" label="select block" clearable />
 
           <Select v-model="conf" :data="defaultConf" label="select conf" clearable />
 

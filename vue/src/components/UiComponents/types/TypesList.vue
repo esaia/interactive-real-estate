@@ -133,7 +133,7 @@ onMounted(() => {
       >
         <template #header>
           <TableTh
-            fieldTitle="id"
+            fieldTitle="Id"
             field="id"
             sortable
             :sortField="sortField"
@@ -141,7 +141,7 @@ onMounted(() => {
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
           <TableTh
-            fieldTitle="title"
+            fieldTitle="Title"
             field="title"
             sortable
             :sortField="sortField"

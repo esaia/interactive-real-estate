@@ -21,7 +21,7 @@ class IreFlat
     {
         check_nonce($data['nonce'], 'ire_nonce');
         has_project_id($data);
-        $data = sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf']);
+        $data = sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf', 'block_id']);
 
         $offset = ($data['page'] - 1) * $data['per_page'];
 
@@ -80,7 +80,7 @@ class IreFlat
             return;
         }
 
-        $non_required_data = validate_and_sanitize_input($data, ['floor_number', 'offer_price', 'conf'], false);
+        $non_required_data = validate_and_sanitize_input($data, ['floor_number', 'offer_price', 'conf', 'block_id'], false);
         $data = array_merge($required_data, $non_required_data);
 
         $this->wpdb->insert($this->table_name, $data);
@@ -89,15 +89,15 @@ class IreFlat
             send_json_response(false, 'Database error');
         } else {
             $new_flat_id = $this->wpdb->insert_id;
-            $new_floor =  get($this->table_name, $new_flat_id);
+            $new_flat =  get($this->table_name, $new_flat_id);
 
-            if (isset($new_floor->polygon_data)) {
-                $new_floor->polygon_data = handle_json_data($new_floor->polygon_data);
+            if (isset($new_flat->polygon_data)) {
+                $new_flat->polygon_data = handle_json_data($new_flat->polygon_data);
             }
 
-            $new_floor->floor_image = wp_get_attachment_image_url($new_floor->floor_image, 90);
+            // $new_flat->floor_image = wp_get_attachment_image_url($new_flat->floor_image, 90);
 
-            send_json_response(true, $new_floor);
+            send_json_response(true, $new_flat);
         }
     }
 
@@ -116,7 +116,7 @@ class IreFlat
 
 
 
-        $keys = ['flat_number', 'price', 'type_id', 'floor_number', 'project_id', 'offer_price', 'conf'];
+        $keys = ['flat_number', 'price', 'type_id', 'floor_number', 'project_id', 'block_id', 'offer_price', 'conf'];
         $params = validate_and_sanitize_input($data, $keys, false);
 
 

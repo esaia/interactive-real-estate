@@ -1,3 +1,5 @@
+import { useBlocksStore } from "../stores/useBlock";
+
 export const generateUniqueId = (length = 14) => {
   const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let uniqueId = "";
@@ -59,4 +61,11 @@ export const resetCanvasAfterSave = (svgRef: HTMLDivElement) => {
       path.setAttribute("fill", PATH_COLOR);
     });
   }
+};
+
+export const getBlockTitleById = (id: number) => {
+  const blocksStore = useBlocksStore();
+
+  if (!id) return;
+  return blocksStore.projectBlocks?.find((block) => block.id === id?.toString())?.title;
 };
