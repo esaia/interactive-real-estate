@@ -189,6 +189,7 @@ export interface ProjectMeta {
 export interface ShortcodeData {
   flats: FlatItem[];
   floors: FloorItem[];
+  blocks: BlockItem[];
   project: ProjectInterface;
   types: TypeItem[];
   meta: ProjectMeta[];

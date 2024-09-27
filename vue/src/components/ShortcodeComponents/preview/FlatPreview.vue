@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { FlatItem, FloorItem } from "@/types/components";
 import { onMounted, ref } from "vue";
-import FlatIcon from "../../icons/FlatIcon.vue";
-import Cube from "../../icons/Cube.vue";
+
 import BackButton from "@/src/components/ShortcodeComponents/BackButton.vue";
+import FlatIcon from "../../UiComponents/icons/FlatIcon.vue";
+import Cube from "../../UiComponents/icons/Cube.vue";
 
 const emit = defineEmits<{
   (e: "changeComponent", flow: "" | "flat" | "floor" | "block" | "project", hoveredData: any): void;

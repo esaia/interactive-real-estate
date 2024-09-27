@@ -26,10 +26,15 @@ function validate_and_sanitize_input(array $data, array $keys, bool $required = 
 {
     $sanitized_data = [];
     foreach ($keys as $key) {
-        if (isset($data[$key])) {
-            $sanitized_data[$key] = isset($data[$key]) && is_string($data[$key])
+        if (array_key_exists($key, $data)) {
+
+            $sanitized_data[$key] = isset($data[$key]) && is_string($data[$key]) && !empty(($data[$key]))
                 ? sanitize_text_field($data[$key])
-                : $data[$key] ?? null;
+                : null;
+
+            if (!$sanitized_data[$key] && $required) {
+                return null;
+            }
         } elseif ($required) {
             return null;
         }

@@ -232,7 +232,7 @@ onUnmounted(() => {
         </div>
 
         <div class="flex flex-col items-center gap-3 p-3">
-          <Input v-model="title" placeholder="Floor title" label="title" />
+          <Input v-model="title" placeholder="Floor title" label="title" required />
 
           <Select v-model="conf" :data="defaultConf" label="select conf" clearable />
 

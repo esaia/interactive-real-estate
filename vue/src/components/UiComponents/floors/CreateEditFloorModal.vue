@@ -87,12 +87,9 @@ const updateFloor = async () => {
     floor_id: activeFloor.value?.id,
     polygon_data: activeFloor.value?.polygon_data,
     svg: floorSvgRef.value?.querySelector("svg")?.outerHTML || "",
-    img_contain: img_contain.value
+    img_contain: img_contain.value,
+    block_id: block.value?.value
   };
-
-  if (block.value?.value) {
-    params.block_id = block.value?.value;
-  }
 
   const { data } = await ajaxAxios.post("", {
     action: "update_floor",

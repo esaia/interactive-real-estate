@@ -5,6 +5,7 @@ import { computed, onMounted, ref } from "vue";
 import ProjectPreview from "./ProjectPreview.vue";
 import FloorPreview from "./FloorPreview.vue";
 import FlatPreview from "./FlatPreview.vue";
+import BlockPreview from "./BlockPreview.vue";
 
 const colors = {
   reserved: "#ffff0062",
@@ -22,7 +23,7 @@ const cssVariables = {
 
 const shortcodeData = ref<ShortcodeData>();
 
-const flow = ref<"projectFlow" | "floorFlow" | "flatFlow">("projectFlow");
+const flow = ref<"projectFlow" | "floorFlow" | "blockFlow" | "flatFlow">("projectFlow");
 const hoveredData = ref();
 
 const project = computed(() => {
@@ -35,6 +36,12 @@ const floors = computed(() => {
   if (!shortcodeData.value) return;
 
   return shortcodeData.value.floors;
+});
+
+const blocks = computed(() => {
+  if (!shortcodeData.value) return;
+
+  return shortcodeData.value.blocks;
 });
 
 const types = computed(() => {
@@ -85,6 +92,12 @@ const changeRoute = (flowType: string, polygonItem: any) => {
       flow.value = "floorFlow";
       hoveredData.value = polygonItem;
       break;
+
+    case "block":
+      flow.value = "blockFlow";
+      hoveredData.value = polygonItem;
+      break;
+
     case "flat":
       flow.value = "flatFlow";
       hoveredData.value = polygonItem;
@@ -120,6 +133,7 @@ onMounted(() => {
           :floors="floors"
           :flats="flats"
           :projectMeta="projectMeta"
+          :blocks="blocks"
           :cssVariables="cssVariables"
           @changeComponent="(x, y) => changeRoute(x, y)"
         />
@@ -132,6 +146,8 @@ onMounted(() => {
           :cssVariables="cssVariables"
           @changeComponent="(x, y) => changeRoute(x, y)"
         />
+
+        <BlockPreview v-else-if="flow === 'blockFlow' && floors" @changeComponent="(x, y) => changeRoute(x, y)" />
 
         <FlatPreview
           v-else-if="flow === 'flatFlow'"

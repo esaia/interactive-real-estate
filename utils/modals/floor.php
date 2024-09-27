@@ -92,7 +92,7 @@ class IreFloor
         $non_required_data['svg'] = !empty($data['svg']) ? $data['svg'] : '';
 
         $data  = array_merge($non_required_data, $rqeuired_data);
-        $data['img_contain'] = $data['img_contain'] === 'true' ? 1 : 0;
+        $data['img_contain'] = isset($params['img_contain']) &&  $data['img_contain'] === 'true' ? 1 : 0;
 
         if (isset($data['polygon_data'])) {
             $data['polygon_data'] = handle_json_data($data['polygon_data']);
@@ -131,8 +131,14 @@ class IreFloor
         }, ARRAY_FILTER_USE_KEY);
 
 
+        if (empty($params['block_id'])) {
+            $params['block_id'] = null;
+        }
+
+
         $params['polygon_data'] = handle_json_data($params['polygon_data'] ?? '');
-        $params['img_contain'] = $params['img_contain'] === 'true' ? 1 : 0;
+        $params['img_contain'] = isset($params['img_contain']) &&  $params['img_contain'] === 'true' ? 1 : 0;
+
 
         $where = ['id' => $floor_id];
         $this->wpdb->update($this->table_name, $params, $where);

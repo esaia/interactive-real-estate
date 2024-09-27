@@ -44,7 +44,7 @@ const obj = reactive<any>({
   floor_number: null,
   price: "",
   offer_price: "",
-  block: null
+  block_id: null
 });
 
 const showTypeModal = ref(false);
@@ -84,7 +84,7 @@ const submitForm = async () => {
     type_id: (obj.type_id as selectDataItem | null)?.value,
     floor_number: (obj.floor_number as selectDataItem | null)?.value,
     project_id: projectStore?.id,
-    block_id: obj.block?.value
+    block_id: obj.block_id?.value
   };
 
   if (props.activeFlat) {
@@ -161,7 +161,7 @@ onMounted(() => {
     obj.offer_price = typeInstance.offer_price ?? "";
     obj.type_id = typesData.value.find((type) => type.value === typeInstance.type_id) ?? null;
     obj.floor_number = floorsNumberData.value.find((floor) => floor.value === typeInstance.floor_number) ?? null;
-    obj.block = blockSelectData.value.find((block) => block.value === typeInstance.block_id) ?? null;
+    obj.block_id = blockSelectData.value.find((block) => block.value === typeInstance.block_id) ?? null;
   }
 });
 </script>
@@ -187,7 +187,7 @@ onMounted(() => {
         clearable
       />
 
-      <Select v-model="obj.block" :data="blockSelectData" label="select block" clearable />
+      <Select v-model="obj.block_id" :data="blockSelectData" label="select block" clearable />
 
       <Select v-model="obj.type_id" :data="typesData" label="Type" required />
       <Button v-if="obj.type_id" class="!p-1" title="edit type" outlined @click="showEditTypeModal" />

@@ -9,6 +9,7 @@ class ShortcodeApi
 
         $project = new IreProject();
         $floor = new IreFloor();
+        $block = new IreBlock();
         $flat = new IreFlat();
         $type = new IreType();
         $meta = new IreMetaProject();
@@ -20,6 +21,7 @@ class ShortcodeApi
         // Fetch project data
         $projects = $project->get_projects($data)[1];
         $floors = $floor->get_floors($data)[1]['data'];
+        $blocks = $block->get_block($data)[1]['data'];
         $flats = $flat->get_flats($data)[1]['data'];
         $types = $type->get_types($data)[1]['data'];
         $meta = $meta->get_meta($data)[1];
@@ -128,6 +130,7 @@ class ShortcodeApi
         $data = [
             'project' => $projects,
             'floors' => $floors,
+            'blocks' => $blocks,
             'flats' => $flats,
             'types' => $types,
             'meta' => $meta

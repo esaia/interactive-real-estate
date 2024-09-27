@@ -45,7 +45,7 @@ const floorsSelectData = computed<selectDataItem[]>(() => {
       const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "floor");
 
       return {
-        title: `floor #${item.floor_number.toString()} | id: ${item.id}`,
+        title: `floor #${item.floor_number.toString()} | id: ${item.id} ${item.conf ? " | " + item.conf : ""}`,
         value: item.id.toString(),
         isLinked,
         type: "floor"
@@ -60,7 +60,7 @@ const blocksSelectData = computed<selectDataItem[]>(() => {
     const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "block");
 
     return {
-      title: `block: #${item.title} | id: ${item.id}`,
+      title: `id: ${item.id} | block: #${item.title} ${item.conf ? " | " + item.conf : ""}`,
       value: item.id.toString(),
       isLinked,
       type: "block"
@@ -83,7 +83,7 @@ const flatsSelectData = computed<selectDataItem[]>(() => {
       const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "flat");
 
       return {
-        title: `${item.flat_number.toString()} | id: ${item.id} ${item.conf ? " | " + item.conf : ""}`,
+        title: `id: ${item.id} | ${item.flat_number.toString()} ${item.conf ? " | " + item.conf : ""}`,
         value: item.id?.toString(),
         isLinked,
         type: "flat"

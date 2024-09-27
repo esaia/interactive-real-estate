@@ -4,7 +4,7 @@ import { FlatItem, FloorItem } from "@/types/components";
 import { computed, onMounted, ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
 import BackButton from "@/src/components/ShortcodeComponents/BackButton.vue";
-import Select from "../../form/Select.vue";
+import Select from "../../UiComponents/form/Select.vue";
 
 const emits = defineEmits<{
   (e: "changeComponent", flow: "" | "flat" | "floor" | "block" | "project", hoveredData: any): void;
@@ -30,12 +30,16 @@ const floorSvg = computed(() => {
 });
 
 const floorsSelect = computed(() => {
-  return props.floors.map((floor) => {
-    return {
-      title: floor.title,
-      value: floor.id
-    };
-  });
+  return (
+    props.floors
+      .filter((floor) => !floor.block_id)
+      .map((floor) => {
+        return {
+          title: `Floor - ${floor.floor_number}`,
+          value: floor.id
+        };
+      }) || []
+  );
 });
 
 const onSvgMouseOver = (e: any) => {
@@ -90,7 +94,7 @@ watch(
       if (!activePolygon.value) return;
 
       if (activePolygon.value?.type === "flat") {
-        const activeFindedflat = props.flats?.find((flat) => flat.id === activePolygon.value?.id);
+        const activeFindedflat = props.flats?.find((flat) => flat?.id === activePolygon.value?.id);
         activeFlat.value = activeFindedflat;
       }
     } else {
@@ -113,7 +117,7 @@ watch(
 );
 
 onMounted(() => {
-  selectedFloor.value = floorsSelect.value.find((floorSelect) => floorSelect.value === props.floor.id);
+  selectedFloor.value = floorsSelect.value.find((floorSelect) => floorSelect?.value == props.floor?.id);
 
   setPathAttributes();
 });

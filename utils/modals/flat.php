@@ -120,7 +120,6 @@ class IreFlat
         $params = validate_and_sanitize_input($data, $keys, false);
 
 
-
         $where = ['id' => $flat_id];
         $this->wpdb->update($this->table_name, $params, $where);
 

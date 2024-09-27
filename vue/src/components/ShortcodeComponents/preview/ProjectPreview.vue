@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { transformSvgString } from "@/src/composables/helpers";
-import { FlatItem, FloorItem, PolygonDataCollection, ProjectInterface, ProjectMeta } from "@/types/components";
+import {
+  BlockItem,
+  FlatItem,
+  FloorItem,
+  PolygonDataCollection,
+  ProjectInterface,
+  ProjectMeta
+} from "@/types/components";
 import { computed } from "@vue/reactivity";
 import { ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
@@ -12,6 +19,7 @@ const emits = defineEmits<{
 const props = defineProps<{
   project: ProjectInterface | undefined;
   floors: FloorItem[] | undefined;
+  blocks: BlockItem[] | undefined;
   flats: FlatItem[] | undefined;
   projectMeta: ProjectMeta[] | undefined;
   cssVariables: any;
@@ -65,6 +73,12 @@ watch(
           const activeFloor = props.floors?.find((floor) => floor.id === polygonId);
           hoveredData.value = activeFloor;
           break;
+        case "block":
+          const activeBlock = props.blocks?.find((block) => block.id === polygonId);
+          hoveredData.value = activeBlock;
+
+          break;
+
         case "flat":
           const activeFlat = props.flats?.find((flat) => flat.id === polygonId);
           hoveredData.value = activeFlat;

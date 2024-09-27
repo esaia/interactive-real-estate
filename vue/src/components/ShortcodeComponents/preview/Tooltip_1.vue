@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FloorItem, TypeItem } from "@/types/components";
+import { BlockItem, FloorItem, TypeItem } from "@/types/components";
 
 defineProps<{
   hoveredData: any;
@@ -45,6 +45,14 @@ defineProps<{
               <p>Sold</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div v-else-if="type === 'block'" class="flex items-center gap-3">
+        <div class="flex flex-col items-center">
+          <p class="text-lg">
+            {{ (hoveredData as BlockItem).title }}
+          </p>
         </div>
       </div>
 
