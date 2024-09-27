@@ -86,7 +86,7 @@ class IreBlock
         $non_required_data['svg'] = !empty($data['svg']) ? $data['svg'] : '';
 
         $data  = array_merge($non_required_data, $rqeuired_data);
-        $data['img_contain'] = $data['img_contain'] === 'true' ? 1 : 0;
+        $data['img_contain'] = isset($data['img_contain']) && $data['img_contain'] === 'true' ? 1 : 0;
 
 
         if (isset($data['polygon_data'])) {
@@ -118,11 +118,19 @@ class IreBlock
         }
 
 
+
+
         $non_required_fields = ['title', 'conf', 'block_image', 'polygon_data', 'svg', 'img_contain'];
         $params = validate_and_sanitize_input($data, $non_required_fields, false);
 
+        if (isset($data['svg'])) {
+            $params['svg'] = $data['svg'];
+        }
+
         $params['polygon_data'] = handle_json_data($params['polygon_data'] ?? '');
         $params['img_contain'] = $params['img_contain'] === 'true' ? 1 : 0;
+
+
 
         $where = ['id' => $block_id];
         $this->wpdb->update($this->table_name, $params, $where);
@@ -138,14 +146,14 @@ class IreBlock
     {
         check_nonce($data['nonce'], 'ire_nonce');
 
-        $block_ic = isset($data['block_ic']) ? intval($data['block_ic']) : null;
+        $block_id = isset($data['block_id']) ? intval($data['block_id']) : null;
 
-        if (!$block_ic) {
+        if (!$block_id) {
             send_json_response(false, 'block_ic is required');
             return;
         }
 
-        $delete_result = $this->wpdb->delete($this->table_name, ['id' => $block_ic]);
+        $delete_result = $this->wpdb->delete($this->table_name, ['id' => $block_id]);
 
         if ($delete_result) {
             send_json_response(true, 'Floor deleted successfully');
@@ -160,7 +168,7 @@ class IreBlock
             $item['polygon_data'] = handle_json_data($item['polygon_data']);
         }
         $item['img_contain'] =  $item['img_contain'] == 1;
-        $item['floor_image'] = [get_image_instance($item['floor_image'])];
+        $item['block_image'] = [get_image_instance($item['block_image'])];
         return $item;
     }
 
@@ -170,7 +178,7 @@ class IreBlock
             $floor->polygon_data = handle_json_data($floor->polygon_data);
         }
         $floor->img_contain = $floor->img_contain == 1;
-        $floor->floor_image = [get_image_instance($floor->floor_image)];
+        $floor->block_image = [get_image_instance($floor->block_image)];
     }
 }
 
@@ -212,7 +220,7 @@ function ire_delete_block()
 }
 
 // Add action hooks
-add_action('wp_ajax_get_block', 'ire_get_blocks');
+add_action('wp_ajax_get_blocks', 'ire_get_blocks');
 add_action('wp_ajax_create_block', 'ire_create_block');
 add_action('wp_ajax_update_block', 'ire_update_block');
 add_action('wp_ajax_delete_block', 'ire_delete_block');

@@ -20,6 +20,7 @@ defineProps<{
   svg: string;
   activeGroup: SVGGElement | null;
   isFloorsCanvas: boolean;
+  isBlockCanvas?: boolean;
   isImageContain: boolean;
 }>();
 </script>
@@ -58,6 +59,7 @@ defineProps<{
         :activeGroup="activeGroup"
         :polygon_data="polygon_data"
         :isFloorsCanvas="isFloorsCanvas"
+        :isBlockCanvas="isBlockCanvas"
       />
     </Transition>
   </div>

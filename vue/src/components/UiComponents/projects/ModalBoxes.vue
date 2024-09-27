@@ -14,7 +14,7 @@ import { useFloorsStore } from "@/src/stores/useFloors";
 import { useFlatsStore } from "@/src/stores/useFlats";
 import BlocksList from "../blocks/BlocksList.vue";
 
-const showModal = ref<"block" | "floor" | "flat" | "type" | "">("block");
+const showModal = ref<"block" | "floor" | "flat" | "type" | "">("");
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();

@@ -98,6 +98,31 @@ export interface FloorItem {
   updated_at: string;
 }
 
+export interface BlockInterface {
+  data: FloorItem[];
+  page: number;
+  per_page: number;
+  total: number;
+}
+
+export interface BlockItem {
+  id: string;
+  title: string;
+  conf: "reserved" | "sold";
+  block_image: imageInterface[];
+  svg: string;
+  project_id: number;
+  polygon_data: PolygonDataCollection[];
+  img_contain: boolean;
+  counts?: {
+    available?: number;
+    reserved?: number;
+    sold?: number;
+  };
+  created_at: string;
+  updated_at: string;
+}
+
 export interface PolygonDataCollection {
   id: string;
   key: string;

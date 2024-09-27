@@ -9,9 +9,11 @@ import { useFloorsStore } from "../stores/useFloors";
 import { useTypesStore } from "../stores/useTypes";
 import { useFlatsStore } from "../stores/useFlats";
 import Preview from "../components/UiComponents/projects/preview/Preview.vue";
+import { useBlocksStore } from "../stores/useBlock";
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
+const blockStore = useBlocksStore();
 const typesStore = useTypesStore();
 const flatsStore = useFlatsStore();
 
@@ -24,9 +26,12 @@ const deleteG = (key: string) => {
 };
 
 onMounted(() => {
-  floorsStore.fetchProjectFloors(Number(id.value));
-  typesStore.fetchProjectTypes(Number(id.value));
-  flatsStore.fetchProjectFlats(Number(id.value));
+  const projectId = Number(id.value);
+
+  floorsStore.fetchProjectFloors(projectId);
+  blockStore.fetchProjectBLocks(projectId);
+  typesStore.fetchProjectTypes(projectId);
+  flatsStore.fetchProjectFlats(projectId);
 });
 </script>
 

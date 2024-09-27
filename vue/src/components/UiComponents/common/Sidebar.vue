@@ -13,6 +13,8 @@ import { useFlatsStore } from "@/src/stores/useFlats";
 import CreateEditFlatModal from "../flats/CreateEditFlatModal.vue";
 import CreateEditFloorModal from "../floors/CreateEditFloorModal.vue";
 import { useProjectStore } from "@/src/stores/useProject";
+import { useBlocksStore } from "@/src/stores/useBlock";
+import CreateEditBlockModal from "../blocks/CreateEditBlockModal.vue";
 const isClollapsed = ref(false);
 
 const emit = defineEmits<{
@@ -29,9 +31,10 @@ const props = defineProps<{
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
+const blocksStore = useBlocksStore();
 const flatStore = useFlatsStore();
 
-const showEditModal = ref<"flat" | "floor" | "">("");
+const showEditModal = ref<"flat" | "floor" | "block" | "">("");
 const activeFlat = ref<FlatItem>();
 
 const setActiveG = (item: PolygonDataCollection) => {
@@ -58,6 +61,13 @@ const editPolygon = (item: PolygonDataCollection) => {
     if (activeFloor) {
       floorsStore.setActiveFloor(activeFloor);
       showEditModal.value = "floor";
+    }
+  } else if (item.type === "block") {
+    const activeBlock = blocksStore.projectBlocks?.find((block) => block.id === item.id);
+
+    if (activeBlock) {
+      blocksStore.setActiveBlock(activeBlock);
+      showEditModal.value = "block";
     }
   } else if (item.type === "flat") {
     const findActiveFlat = flatStore.projectFlats?.find((flat) => flat.id === item.id);
@@ -150,6 +160,12 @@ watch(
       <Transition name="fade">
         <Modal v-if="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
           <CreateEditFloorModal />
+        </Modal>
+      </Transition>
+
+      <Transition name="fade">
+        <Modal v-if="showEditModal === 'block'" @close="showEditModal = ''" type="2" width="w-11/12">
+          <CreateEditBlockModal />
         </Modal>
       </Transition>
 

@@ -7,11 +7,13 @@ import Close from "../icons/Close.vue";
 import { useProjectStore } from "@/src/stores/useProject";
 import { PolygonDataCollection, selectDataItem } from "@/types/components";
 import { useFlatsStore } from "@/src/stores/useFlats";
+import { useBlocksStore } from "@/src/stores/useBlock";
 
 const props = defineProps<{
   activeGroup: SVGGElement | null;
   polygon_data: PolygonDataCollection[] | undefined;
   isFloorsCanvas: boolean;
+  isBlockCanvas?: boolean;
 }>();
 
 const key = props.activeGroup?.getAttribute("id");
@@ -22,8 +24,10 @@ const showModal = ref(true);
 
 const projectsStore = useProjectStore();
 const floorsStore = useFloorsStore();
+const blockStore = useBlocksStore();
 const flatsStore = useFlatsStore();
 const { projectFloors, activeFloor } = storeToRefs(floorsStore);
+const { projectBlocks, activeBlock } = storeToRefs(blockStore);
 const { projectFlats } = storeToRefs(flatsStore);
 
 const floorsSelectData = computed<selectDataItem[]>(() => {
@@ -37,6 +41,21 @@ const floorsSelectData = computed<selectDataItem[]>(() => {
       value: item.id.toString(),
       isLinked,
       type: "floor"
+    };
+  });
+});
+
+const blocksSelectData = computed<selectDataItem[]>(() => {
+  if (!projectBlocks.value) return [];
+
+  return projectBlocks.value?.map((item) => {
+    const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "block");
+
+    return {
+      title: `block: #${item.title} | id: ${item.id}`,
+      value: item.id.toString(),
+      isLinked,
+      type: "block"
     };
   });
 });
@@ -71,6 +90,8 @@ watch(
 
     if (props.isFloorsCanvas) {
       floorsStore.editpoligonData(key, { id: ns?.value || "", key, type: ns.type || "" });
+    } else if (props.isBlockCanvas) {
+      blockStore.editpoligonData(key, { id: ns?.value || "", key, type: ns.type || "" });
     } else {
       projectsStore.editpoligonData(key, { id: ns?.value || "", key, type: ns.type || "" });
     }
@@ -91,6 +112,15 @@ onMounted(() => {
 
         if (activeFloor) {
           selectedItem.value = activeFloor;
+        }
+
+        break;
+
+      case "block":
+        const activeBlock = blocksSelectData.value?.find((block) => block.value === polygonId);
+
+        if (activeBlock) {
+          selectedItem.value = activeBlock;
         }
 
         break;
@@ -128,6 +158,7 @@ onMounted(() => {
 
       <div v-if="!isFloorsCanvas" class="mt-2 flex [&_div]:px-3">
         <div
+          v-if="!isBlockCanvas"
           class="sidebar-item-icon icon-hover-text bg-gray-100"
           :class="{ '!bg-black text-white': activeTab === 'block' }"
           @click="activeTab = 'block'"
@@ -152,12 +183,16 @@ onMounted(() => {
       </div>
 
       <div v-if="activeTab === 'floor'" class="mt-3 flex items-center gap-3">
-        <Select v-model="selectedItem" :data="floorsSelectData" itemPrefix="floor #" />
+        <Select v-model="selectedItem" :data="floorsSelectData" />
       </div>
 
-      <div v-if="activeTab === 'flat'" class="mt-3 flex flex-col items-start gap-1">
+      <div v-else-if="activeTab === 'block'" class="mt-3 flex items-center gap-3">
+        <Select v-model="selectedItem" :data="blocksSelectData" />
+      </div>
+
+      <div v-else-if="activeTab === 'flat'" class="mt-3 flex flex-col items-start gap-1">
         <p v-if="isFloorsCanvas" class="text-gray-500">Choose floor flats</p>
-        <Select v-model="selectedItem" :data="flatsSelectData" itemPrefix="floor #" />
+        <Select v-model="selectedItem" :data="flatsSelectData" />
       </div>
     </div>
   </Transition>
