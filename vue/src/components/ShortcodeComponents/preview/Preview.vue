@@ -147,7 +147,14 @@ onMounted(() => {
           @changeComponent="(x, y) => changeRoute(x, y)"
         />
 
-        <BlockPreview v-else-if="flow === 'blockFlow' && floors" @changeComponent="(x, y) => changeRoute(x, y)" />
+        <BlockPreview
+          v-else-if="flow === 'blockFlow' && flats && floors && blocks"
+          :block="blocks[0]"
+          :flats="flats"
+          :floors="floors"
+          :cssVariables="cssVariables"
+          @changeComponent="(x, y) => changeRoute(x, y)"
+        />
 
         <FlatPreview
           v-else-if="flow === 'flatFlow'"

@@ -32,7 +32,12 @@ const floorSvg = computed(() => {
 const floorsSelect = computed(() => {
   return (
     props.floors
-      .filter((floor) => !floor.block_id && floor.conf !== "reserved" && floor.conf !== "sold")
+      .filter(
+        (floorItem) =>
+          floorItem.conf !== "reserved" &&
+          floorItem.conf !== "sold" &&
+          (props.floor.block_id ? floorItem.block_id === props.floor.block_id : !floorItem.block_id)
+      )
       .map((floor) => {
         return {
           title: floor?.floor_number?.toString(),

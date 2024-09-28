@@ -95,6 +95,7 @@ export interface FloorItem {
     reserved?: number;
     sold?: number;
   };
+  flats?: FlatItem[];
   created_at: string;
   updated_at: string;
 }
