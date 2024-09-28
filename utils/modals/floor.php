@@ -99,6 +99,8 @@ class IreFloor
         }
 
 
+        $this->check_floor_exists_or_not($data['project_id'], $data['floor_number'], $data['block_id']);
+
         $this->wpdb->insert($this->table_name, $data);
 
         if ($this->wpdb->last_error) {
@@ -188,6 +190,28 @@ class IreFloor
         }
         $floor->img_contain = $floor->img_contain == 1;
         $floor->floor_image = [get_image_instance($floor->floor_image)];
+    }
+
+    public function check_floor_exists_or_not($project_id, $floor_number, $block_id)
+    {
+
+        $params = [];
+        $query =  "SELECT * FROM {$this->table_name} WHERE project_id = %d AND floor_number = %d";
+        $params[] = $project_id;
+        $params[] = $floor_number;
+
+        if ($block_id) {
+            $query .= "AND block_id %d";
+            $params[] = $block_id;
+        }
+
+        $query = $this->wpdb->prepare($query, ...$params);
+        $result = $this->wpdb->get_row($query, ARRAY_A);
+
+
+        if (isset($result)) {
+            send_json_response(false, 'Floor number already exists for this project.');
+        }
     }
 }
 

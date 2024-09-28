@@ -39,7 +39,7 @@ const floorsSelectData = computed<selectDataItem[]>(() => {
       if (activeBlock.value) {
         return activeBlock.value.id?.toString() === floor.block_id?.toString();
       } else {
-        return floor;
+        return !floor.block_id;
       }
     })
     ?.map((item) => {
