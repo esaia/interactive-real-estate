@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { transformSvgString } from "@/src/composables/helpers";
-import { FlatItem, FloorItem } from "@/types/components";
+import { BlockItem, FlatItem, FloorItem } from "@/types/components";
 import { computed, onMounted, ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
 import BackButton from "@/src/components/ShortcodeComponents/BackButton.vue";
@@ -14,6 +14,7 @@ const props = defineProps<{
   flats: FlatItem[] | undefined;
   floor: FloorItem;
   floors: FloorItem[];
+  blocks?: BlockItem[];
   cssVariables: any;
 }>();
 
@@ -22,6 +23,7 @@ const hoveredSvg = ref();
 const activePolygon = ref();
 const activeFlat = ref<FlatItem>();
 const selectedFloor = ref();
+const floorBlock = ref<BlockItem>();
 
 const floorSvg = computed(() => {
   if (!props.floor?.svg) return;
@@ -85,6 +87,14 @@ const setPathAttributes = () => {
   }
 };
 
+const goBack = () => {
+  if (props.floor.block_id) {
+    emits("changeComponent", "block", floorBlock.value);
+  } else {
+    emits("changeComponent", "project", null);
+  }
+};
+
 watch(
   () => hoveredSvg.value,
   (ns) => {
@@ -122,6 +132,8 @@ watch(
 );
 
 onMounted(() => {
+  floorBlock.value = props.blocks?.find((block) => block.id === props.floor.block_id?.toString());
+
   selectedFloor.value = floorsSelect.value.find((floorSelect) => floorSelect?.value == props.floor?.id);
 
   setPathAttributes();
@@ -131,8 +143,11 @@ onMounted(() => {
 <template>
   <div class="p-5">
     <div class="mb-3 flex items-center justify-between">
-      <BackButton @click="$emit('changeComponent', 'project', null)" />
+      <BackButton @click="goBack" />
 
+      <span v-if="floorBlock">
+        {{ floorBlock?.title }}
+      </span>
       <div class="w-fit bg-white">
         <Select v-model="selectedFloor" :data="floorsSelect" placeholderPrefix="Floor " />
       </div>

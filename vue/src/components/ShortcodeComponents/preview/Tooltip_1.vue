@@ -19,7 +19,7 @@ defineProps<{
           <p>Floor</p>
         </div>
 
-        <div v-if="hoveredData?.conf || hoveredData.flats.length" class="bg-gray-100 p-3">
+        <div v-if="hoveredData?.conf || hoveredData?.flats?.length" class="bg-gray-100 p-3">
           <div v-if="hoveredData?.conf" class="text-lg">
             {{ hoveredData.conf }}
           </div>

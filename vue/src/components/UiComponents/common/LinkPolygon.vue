@@ -75,7 +75,14 @@ const flatsSelectData = computed<selectDataItem[]>(() => {
   return projectFlats.value
     .filter((flat) => {
       if (activeFloor.value) {
-        return activeFloor.value.floor_number?.toString() === flat.floor_number?.toString();
+        const isSameFloor = flat.floor_number?.toString() === activeFloor.value.floor_number?.toString();
+        const isSameBlock = activeFloor.value.block_id
+          ? flat.block_id === activeFloor.value.block_id.toString()
+          : !flat.block_id;
+
+        return isSameFloor && isSameBlock;
+      } else if (activeBlock.value) {
+        return activeBlock.value.id === flat.block_id?.toString();
       } else {
         return flat;
       }

@@ -143,6 +143,7 @@ onMounted(() => {
           :flats="flats"
           :floor="hoveredData"
           :floors="floors"
+          :blocks="blocks"
           :cssVariables="cssVariables"
           @changeComponent="(x, y) => changeRoute(x, y)"
         />

@@ -32,30 +32,36 @@ class ShortcodeApi
             $types_lookup[$type['id']] = $type['area_m2'];
         }
 
+
+
+
         if ($floors[0]) {
 
             foreach ($floors as &$floor) {
                 $floor_number = $floor['floor_number'];
                 $polygon_data = $floor['polygon_data'];
+                $floor_block_id = $floor['block_id'];
 
 
-                $matching_flats = array_values(array_filter($flats, function ($flat) use ($floor_number, $polygon_data) {
 
+
+
+                $matching_flats = array_values(array_filter($flats, function ($flat) use ($floor_number, $polygon_data, $floor_block_id) {
                     if ($flat['floor_number'] !== $floor_number) {
                         return false;
                     }
 
-
-                    if ($polygon_data && isset($polygon_data)) {
+                    if ($polygon_data) {
                         foreach ($polygon_data as $polygon) {
-                            if (!is_null($polygon)) {
-                                if (isset($polygon->type) && $polygon->type === 'flat' && isset($polygon->id) && $polygon->id === $flat['id']) {
-                                    return true;
+                            if (!is_null($polygon) && isset($polygon->type) && $polygon->type === 'flat' && isset($polygon->id) && $polygon->id === $flat['id']) {
+                                if ($floor_block_id) {
+                                    return $flat['block_id'] === $floor_block_id;
+                                } else {
+                                    return !$flat['block_id'];
                                 }
                             }
                         }
                     }
-
 
                     return false;
                 }));
