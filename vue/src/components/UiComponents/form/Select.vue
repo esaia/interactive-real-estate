@@ -106,7 +106,7 @@ watch(
         v-model="input"
         type="text"
         class="w-full !rounded-md !border-none p-2 shadow-none outline-none focus:!shadow-none"
-        :class="{ 'placeholder:text-black': modelValue?.value }"
+        :class="{ 'placeholder:text-gray-600': modelValue?.value }"
         :placeholder="inputPlaceholder"
       />
 
@@ -134,7 +134,7 @@ watch(
             :key="item.value"
             type="button"
             class="line-clamp-2 w-full min-w-32 cursor-pointer rounded-sm px-[8px] py-[6px] text-start transition-all hover:bg-gray-100"
-            :class="`${item.value === selectModelValue?.value && item.type === selectModelValue.type ? '!bg-primary text-white' : item?.isLinked ? 'cursor-not-allowed text-gray-400 hover:bg-white' : ''} `"
+            :class="`${item.value === selectModelValue?.value && item.type === selectModelValue.type ? '!bg-primary text-white' : item?.isLinked ? '!cursor-not-allowed text-gray-400 hover:bg-white' : ''} `"
             @click="selectItem(item)"
           >
             {{ item.title }}

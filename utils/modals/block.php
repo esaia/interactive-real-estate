@@ -78,7 +78,7 @@ class IreBlock
             return;
         }
 
-        $non_required_fields = ['conf', 'polygon_data', 'svg'];
+        $non_required_fields = ['conf', 'polygon_data', 'svg', 'img_contain'];
         $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
 
         $non_required_data['polygon_data'] = $data['polygon_data'] ?? null;

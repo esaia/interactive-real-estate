@@ -21,7 +21,7 @@ const goBack = () => {
   const flatFloor = props.floors?.find(
     (floor) =>
       floor.floor_number?.toString() === props.flat?.floor_number?.toString() &&
-      (props.flat.block_id ? floor.block_id : !floor.block_id)
+      (props.flat.block_id ? floor?.block_id?.toString() === props.flat.block_id : !floor.block_id)
   );
 
   if (flatFloor) {

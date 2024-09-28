@@ -162,6 +162,7 @@ onMounted(() => {
       title: "choose",
       value: ""
     };
+
     block_image.value = props.duplicatedBlock.block_image;
     img_contain.value = props.duplicatedBlock.img_contain;
     const polygonData = props.duplicatedBlock?.polygon_data;

@@ -45,7 +45,8 @@ const floorsSelect = computed(() => {
           title: floor?.floor_number?.toString(),
           value: floor.id
         };
-      }) || []
+      })
+      .sort((a, b) => +a.title - +b.title) || []
   );
 });
 
