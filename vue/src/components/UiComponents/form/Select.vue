@@ -62,7 +62,7 @@ const onClickOutside = () => {
 };
 
 const clearData = () => {
-  selectModelValue.value = { title: "choose", value: "" };
+  selectModelValue.value = null;
   isModalOpen.value = false;
 };
 
@@ -99,7 +99,7 @@ watch(
 
     <div
       v-click-outside="onClickOutside"
-      class="relative flex h-full w-full min-w-20 cursor-pointer items-center justify-between rounded-sm ring-1 ring-gray-300 transition-all focus-within:!ring-2 focus-within:!ring-primary"
+      class="relative flex h-full w-full min-w-20 cursor-pointer items-center justify-between rounded-sm ring-1 ring-gray-200 transition-all focus-within:!ring-2 focus-within:!ring-primary"
       @click="isModalOpen = true"
     >
       <input

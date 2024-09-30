@@ -38,7 +38,7 @@ const editType = (type: TypeItem | null) => {
 const duplicateType = (type: TypeItem | null) => {
   if (!type) return;
   showTypeModal.value = true;
-  duplicatedType.value = { ...type, title: type?.title ? type?.title + " - copied" : "" };
+  duplicatedType.value = { ...type };
 };
 
 const showDeleteTypeModal = (type: TypeItem | null) => {

@@ -39,7 +39,7 @@ const duplicateBlock = (block: BlockItem | null) => {
   if (!block) return;
 
   showBlockModal.value = true;
-  duplicatedBlock.value = { ...block, title: block?.title ? block?.title + " - copied" : "" };
+  duplicatedBlock.value = { ...block };
 };
 
 const showDeleteBlockModal = (floor: BlockItem | null) => {

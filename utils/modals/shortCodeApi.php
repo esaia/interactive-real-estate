@@ -7,6 +7,8 @@ class ShortcodeApi
     public function fetch_project_data($data)
     {
 
+        check_nonce($data['nonce'], 'ire_nonce');
+
         $project = new IreProject();
         $floor = new IreFloor();
         $block = new IreBlock();
@@ -33,16 +35,12 @@ class ShortcodeApi
         }
 
 
-
-
         if ($floors[0]) {
 
             foreach ($floors as &$floor) {
                 $floor_number = $floor['floor_number'];
                 $polygon_data = $floor['polygon_data'];
                 $floor_block_id = $floor['block_id'];
-
-
 
 
 

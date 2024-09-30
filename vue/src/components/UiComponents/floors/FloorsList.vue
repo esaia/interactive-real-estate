@@ -14,12 +14,14 @@ import DeleteModal from "../common/DeleteModal.vue";
 import Input from "../form/Input.vue";
 import Button from "../form/Button.vue";
 import { getBlockTitleById } from "@/src/composables/helpers";
+import FilterBlocks from "../blocks/FilterBlocks.vue";
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
 const { id } = storeToRefs(projectStore);
 
 const searchFloor = ref("");
+const filterBlockId = ref();
 const showFloorModal = ref(false);
 const floors = ref<FloorInterface>();
 const sortField = ref("");
@@ -40,7 +42,7 @@ const duplicateFloor = (floor: FloorItem | null) => {
   if (!floor) return;
 
   showFloorModal.value = true;
-  duplicatedFloor.value = { ...floor, title: floor?.title ? floor?.title + " - copied" : "" };
+  duplicatedFloor.value = { ...floor };
 };
 
 const showDeleteFloorModal = (floor: FloorItem | null) => {
@@ -79,7 +81,8 @@ const fetchFloors = async () => {
     sort_order: sortOrder.value,
     page: currentPage.value,
     per_page: perPage.value,
-    search: searchFloor.value
+    search: searchFloor.value,
+    block: filterBlockId.value
   });
 
   if (!data.success) {
@@ -112,6 +115,14 @@ watch(
   }
 );
 
+watch(
+  () => filterBlockId.value,
+  () => {
+    currentPage.value = 1;
+    fetchFloors();
+  }
+);
+
 onMounted(() => {
   fetchFloors();
 });
@@ -122,7 +133,10 @@ onMounted(() => {
     <form @submit.prevent="submitForm" class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
       <h3 class="text-lg font-semibold capitalize">Floors</h3>
 
-      <Input v-model="searchFloor" placeholder="Filter floors list..." />
+      <Input v-model="searchFloor" placeholder="Filter floors list..." @keyup.enter="submitForm" />
+
+      <FilterBlocks @filter-by-block="(selectedBlock) => (filterBlockId = selectedBlock?.value || null)" />
+
       <div class="min-w-max" @click="showFloorModal = true">
         <Button title="Add Floor" outlined />
       </div>

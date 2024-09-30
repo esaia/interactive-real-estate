@@ -15,18 +15,17 @@ class IreFloor
 
     public function get_floors($data)
     {
-
         check_nonce($data['nonce'], 'ire_nonce');
         has_project_id($data);
-
 
         $data = sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf', 'block_id']);
         $offset = ($data['page'] - 1) * $data['per_page'];
 
-
-        $query =  "SELECT * FROM {$this->table_name} WHERE project_id = %d";
+        // Base query for fetching records
+        $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d";
         $params = [$data['project_id']];
 
+        // Search filter
         if (!empty($data['search'])) {
             $query .= " AND (title LIKE %s OR id LIKE %s OR floor_number LIKE %s)";
             $searchTerm = '%' . $data['search'] . '%';
@@ -35,21 +34,41 @@ class IreFloor
             $params[] = $searchTerm;
         }
 
+        // Filter by block if provided
+        if (!empty($data['block'])) {
+            $query .= " AND block_id = %d";
+            $params[] = $data['block'];
+        }
+
+        // Add ordering and pagination
         $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
-        $params[] =  $data['per_page'];
-        $params[] =   $offset;
+        $params[] = $data['per_page'];
+        $params[] = $offset;
 
-        $query = $this->wpdb->prepare(
-            $query,
-            ...$params
-        );
-
+        // Prepare and execute the main query
+        $query = $this->wpdb->prepare($query, ...$params);
         $results = $this->wpdb->get_results($query, ARRAY_A);
 
+        // Create a total count query
+        $total_query = "SELECT COUNT(*) FROM {$this->table_name} WHERE project_id = %d";
+        $total_params = [$data['project_id']];
 
-        $total_query = $this->wpdb->prepare("SELECT COUNT(*) FROM {$this->table_name} WHERE project_id = %d", $data['project_id']);
+        // Apply the same filters for total count
+        if (!empty($data['search'])) {
+            $total_query .= " AND (title LIKE %s OR id LIKE %s OR floor_number LIKE %s)";
+            $total_params[] = $searchTerm;
+            $total_params[] = $searchTerm;
+            $total_params[] = $searchTerm;
+        }
+
+        if (!empty($data['block'])) {
+            $total_query .= " AND block_id = %d";
+            $total_params[] = $data['block'];
+        }
+
+        // Prepare and execute the total count query
+        $total_query = $this->wpdb->prepare($total_query, ...$total_params);
         $total_results = $this->wpdb->get_var($total_query);
-
 
         if (is_wp_error($results)) {
             // send_json_response(false, $results->get_error_message());

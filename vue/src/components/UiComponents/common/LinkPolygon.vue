@@ -76,8 +76,8 @@ const flatsSelectData = computed<selectDataItem[]>(() => {
     .filter((flat) => {
       if (activeFloor.value) {
         const isSameFloor = flat.floor_number?.toString() === activeFloor.value.floor_number?.toString();
-        const isSameBlock = activeFloor.value.block_id
-          ? flat.block_id === activeFloor.value.block_id.toString()
+        const isSameBlock = activeBlock.value?.id
+          ? flat.block_id === activeBlock.value?.id?.toString()
           : !flat.block_id;
 
         return isSameFloor && isSameBlock;
@@ -198,17 +198,20 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="activeTab === 'floor'" class="mt-3 flex items-center gap-3">
-        <Select v-model="selectedItem" :data="floorsSelectData" />
+      <div v-if="activeTab === 'block'" class="mt-3 flex items-center gap-3">
+        <Select v-model="selectedItem" :data="blocksSelectData" />
       </div>
 
-      <div v-else-if="activeTab === 'block'" class="mt-3 flex items-center gap-3">
-        <Select v-model="selectedItem" :data="blocksSelectData" />
+      <div v-else-if="activeTab === 'floor'" class="mt-3 flex flex-col items-start gap-3">
+        <Select v-model="selectedItem" :data="floorsSelectData" />
+
+        <span v-if="!floorsSelectData.length" class="text-lg text-red-500">Please add Floor!!!</span>
       </div>
 
       <div v-else-if="activeTab === 'flat'" class="mt-3 flex flex-col items-start gap-1">
         <p v-if="isFloorsCanvas" class="text-gray-500">Choose floor flats</p>
         <Select v-model="selectedItem" :data="flatsSelectData" />
+        <span v-if="!flatsSelectData.length" class="text-lg text-red-500">Please add flat for this floor!!!</span>
       </div>
     </div>
   </Transition>

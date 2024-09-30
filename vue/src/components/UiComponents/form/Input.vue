@@ -38,7 +38,7 @@ const inputModel = computed({
     </p>
     <input
       v-model="inputModel"
-      class="h-full w-full translate-y-[2px] !border-none bg-transparent px-4 outline-none !ring-1 ring-gray-300 transition-all focus:!border-none focus:!shadow-none focus:!ring-2 focus:ring-primary"
+      class="h-full !min-h-fit w-full !border-none bg-transparent !py-2 px-4 outline-none !ring-1 ring-gray-200 transition-all focus:!border-none focus:!shadow-none focus:!ring-2 focus:ring-primary"
       :placeholder="placeholder"
       :type="type"
       :name="placeholder"

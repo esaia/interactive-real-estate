@@ -13,11 +13,15 @@ import Input from "../form/Input.vue";
 import Button from "../form/Button.vue";
 import CreateEditFlatModal from "./CreateEditFlatModal.vue";
 import { getBlockTitleById } from "@/src/composables/helpers";
+import Filteres from "./Filteres.vue";
 
 const projectStore = useProjectStore();
 const { id } = storeToRefs(projectStore);
 
 const searchFlat = ref("");
+const filterBlockId = ref();
+const filterFloorId = ref();
+
 const showEditFlatModal = ref(false);
 const flats = ref<FlatsInterface>();
 const sortField = ref("");
@@ -39,7 +43,7 @@ const editFlat = (flat: FlatItem | null) => {
 const duplicateFlat = (flat: FlatItem | null) => {
   if (!flat) return;
   showEditFlatModal.value = true;
-  duplicatedFlat.value = { ...flat, flat_number: flat?.flat_number ? flat?.flat_number + " - copied" : "" };
+  duplicatedFlat.value = { ...flat };
 };
 
 const showDeleteFlatModal = (flat: FlatItem | null) => {
@@ -78,7 +82,9 @@ const fetchFlats = async () => {
     sort_order: sortOrder.value,
     page: currentPage.value,
     per_page: perPage.value,
-    search: searchFlat.value
+    search: searchFlat.value,
+    block: filterBlockId.value,
+    floor: filterFloorId.value
   });
 
   if (!data.success) {
@@ -107,6 +113,15 @@ watch(
   }
 );
 
+watch(
+  () => [filterBlockId.value, filterFloorId.value],
+  () => {
+    currentPage.value = 1;
+    fetchFlats();
+  },
+  { deep: true }
+);
+
 onMounted(() => {
   fetchFlats();
 });
@@ -117,7 +132,12 @@ onMounted(() => {
     <form @submit.prevent="submitForm" class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
       <h3 class="text-lg font-semibold capitalize">Flats</h3>
 
-      <Input v-model="searchFlat" placeholder="Filter flats list..." />
+      <Input v-model="searchFlat" placeholder="Filter flats list..." @keyup.enter="submitForm" />
+
+      <Filteres
+        @filter-by-block="(selectedBlock) => (filterBlockId = selectedBlock?.value || null)"
+        @filter-by-floor="(selectedFloor) => (filterFloorId = selectedFloor?.value || null)"
+      />
 
       <div class="min-w-max">
         <Button type="button" title="Add Flat" outlined @click="showEditFlatModal = true" />
@@ -211,7 +231,7 @@ onMounted(() => {
   </div>
 
   <teleport to="#my-vue-app">
-    <Transition name="fade">
+    <Transition name="slide-left">
       <Modal v-if="showEditFlatModal" @close="showEditFlatModal = false" type="2" width="w-[400px]">
         <CreateEditFlatModal
           :activeFlat="activeFlat"

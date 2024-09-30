@@ -98,7 +98,7 @@ watch(
     <div class="mb-3 flex items-center justify-between">
       <BackButton @click="$emit('changeComponent', 'project', null)" />
 
-      <h3>{{ block?.title }}</h3>
+      <p>{{ block?.title }}</p>
     </div>
 
     <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
