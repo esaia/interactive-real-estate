@@ -202,6 +202,9 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  activeGroup.value = null;
+  activeFloor.value = null;
+
   if (svgRef.value) {
     resetCanvasAfterSave(svgRef.value);
   }

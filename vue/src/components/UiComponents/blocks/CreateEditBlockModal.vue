@@ -180,6 +180,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  activeBlockGroup.value = null;
+  activeBlock.value = null;
   if (svgRef.value) {
     resetCanvasAfterSave(svgRef.value);
   }

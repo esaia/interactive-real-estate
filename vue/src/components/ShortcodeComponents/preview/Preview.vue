@@ -150,7 +150,7 @@ onMounted(() => {
 
         <BlockPreview
           v-else-if="flow === 'blockFlow' && flats && floors && blocks"
-          :block="blocks[0]"
+          :block="hoveredData"
           :flats="flats"
           :floors="floors"
           :cssVariables="cssVariables"

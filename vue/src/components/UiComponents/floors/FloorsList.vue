@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, Transition, watch } from "vue";
 import Modal from "@components/UiComponents/Modal.vue";
-import AddEditFloorModal from "@/src/components/UiComponents/floors/CreateEditFloorModal.vue";
+import CreateEditFloorModal from "@/src/components/UiComponents/floors/CreateEditFloorModal.vue";
 import { FloorInterface, FloorItem } from "@/types/components";
 import ajaxAxios from "@/src/utils/axios";
 import { useProjectStore } from "@/src/stores/useProject";
@@ -188,7 +188,7 @@ onMounted(() => {
   <teleport to="#my-vue-app">
     <Transition name="fade">
       <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2">
-        <AddEditFloorModal :duplicatedFloor="duplicatedFloor" />
+        <CreateEditFloorModal :duplicatedFloor="duplicatedFloor" />
       </Modal>
     </Transition>
   </teleport>
