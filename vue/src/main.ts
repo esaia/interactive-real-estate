@@ -8,6 +8,8 @@ import VueAwesomePaginate from "vue-awesome-paginate";
 import "vue-awesome-paginate/dist/style.css";
 // @ts-ignore
 import vClickOutside from "click-outside-vue3";
+import Vue3ColorPicker from "vue3-colorpicker";
+import "vue3-colorpicker/style.css";
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -18,6 +20,7 @@ app.use(vClickOutside);
 app.use(pinia);
 app.use(VueAwesomePaginate);
 app.use(ToastPlugin);
+app.use(Vue3ColorPicker);
 
 app.config.globalProperties.irePlugin = irePlugin;
 // @ts-ignore

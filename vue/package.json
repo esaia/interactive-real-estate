@@ -15,7 +15,8 @@
     "pinia": "^2.2.2",
     "vue": "^3.4.37",
     "vue-awesome-paginate": "^1.2.0",
-    "vue-toast-notification": "^3.1.2"
+    "vue-toast-notification": "^3.1.2",
+    "vue3-colorpicker": "^2.3.0"
   },
   "devDependencies": {
     "@types/node": "^22.5.3",

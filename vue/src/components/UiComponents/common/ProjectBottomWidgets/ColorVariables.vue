@@ -12,10 +12,6 @@ const colors = ref({
 
 <template>
   <div class="flex flex-col gap-4">
-    <pre>
-    {{ colors }}
-  </pre
-    >
     <ColorPicker label="select path color" v-model="colors.path" />
     <ColorPicker label="select path hover color" v-model="colors.path_hover" />
     <ColorPicker label="select reserved path color" v-model="colors.reserved" />

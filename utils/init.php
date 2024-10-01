@@ -3,6 +3,7 @@
 
 
 
+
 add_action('admin_enqueue_scripts', 'ire_enqueue_scripts');
 
 /**
@@ -18,15 +19,9 @@ function ire_enqueue_scripts($hook)
 
     wp_enqueue_media();
 
+
     wp_enqueue_script('vue-js',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
     wp_enqueue_style('vue-styles',   plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.css');
-
-
-    // wp_enqueue_style('dashicons');
-    // wp_enqueue_script('jquery');
-    // wp_enqueue_script('tailwind-css', 'https://cdn.tailwindcss.com/3.4.5', array(), null);
-    // wp_enqueue_style('ire-styles', plugin_dir_url(IRE_PLUGIN_FILE) . 'css/main.css');
-    // wp_enqueue_script('ire-script', plugin_dir_url(IRE_PLUGIN_FILE) . 'js/index.js', array('jquery'), null, true);
 
 
     wp_localize_script('vue-js', 'irePlugin', array(
