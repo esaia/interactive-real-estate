@@ -9,6 +9,7 @@ import { imageInterface } from "@/types/components";
 import UploadImg from "../../form/UploadImg.vue";
 import Input from "../../form/Input.vue";
 import Button from "../../form/Button.vue";
+import ColorVariables from "./ColorVariables.vue";
 
 const $toast = useToast();
 const projectStore = useProjectStore();
@@ -105,6 +106,10 @@ onMounted(() => {
 
       <div class="w-60 rounded-md bg-white p-4">
         <UploadImg v-model="projectImage" title="Upload project image" required />
+      </div>
+
+      <div class="w-60 rounded-md bg-white p-4">
+        <ColorVariables />
       </div>
     </div>
 
