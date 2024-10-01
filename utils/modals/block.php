@@ -160,6 +160,10 @@ class IreBlock
             $params['svg'] = $data['svg'];
         }
 
+        if (empty($params['conf'])) {
+            $params['conf'] = null;
+        }
+
         $params['polygon_data'] = handle_json_data($data['polygon_data'] ?? '');
         $params['img_contain'] = $data['img_contain'] === 'true' ? 1 : 0;
 

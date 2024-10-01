@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Canvas from "@components/Canvas.vue";
-import ProjectBottomWidgets from "@components/UiComponents/projects/ProjectBottomWidgets.vue";
+import ProjectBottomWidgets from "@/src/components/UiComponents/common/ProjectBottomWidgets/ProjectBottomWidgets.vue";
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "@/src/stores/useProject";
 import ModalBoxes from "@components/UiComponents/projects/ModalBoxes.vue";

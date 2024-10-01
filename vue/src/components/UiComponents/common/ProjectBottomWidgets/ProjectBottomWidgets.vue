@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useProjectStore } from "../../../stores/useProject";
+import { useProjectStore } from "../../../../stores/useProject";
 import { useToast } from "vue-toast-notification";
 import ajaxAxios from "@/src/utils/axios";
-import Button from "../form/Button.vue";
 import { resetCanvasAfterSave } from "@/src/composables/helpers";
-import Input from "../form/Input.vue";
-import UploadImg from "../form/UploadImg.vue";
 import { onMounted, ref, watch } from "vue";
 import { imageInterface } from "@/types/components";
+import UploadImg from "../../form/UploadImg.vue";
+import Input from "../../form/Input.vue";
+import Button from "../../form/Button.vue";
 
 const $toast = useToast();
 const projectStore = useProjectStore();
@@ -105,12 +105,6 @@ onMounted(() => {
 
       <div class="w-60 rounded-md bg-white p-4">
         <UploadImg v-model="projectImage" title="Upload project image" required />
-
-        <!-- <p class="mb-1 font-semibold">Change project image</p>
-        <img :src="selectedImages?.[0]?.url || project_image" class="h-32 w-full rounded-md" />
-        <button class="!mt-2 w-full border border-dashed py-2 transition-all hover:bg-gray-50" @click="selectImage">
-          Upload
-        </button> -->
       </div>
     </div>
 

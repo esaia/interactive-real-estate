@@ -157,6 +157,11 @@ class IreFloor
         }
 
 
+        if (empty($params['conf'])) {
+            $params['conf'] = null;
+        }
+
+
         $params['polygon_data'] = handle_json_data($params['polygon_data'] ?? '');
         $params['img_contain'] = isset($params['img_contain']) &&  $params['img_contain'] === 'true' ? 1 : 0;
 

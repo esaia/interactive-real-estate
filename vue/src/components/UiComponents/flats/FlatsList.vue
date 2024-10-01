@@ -91,6 +91,8 @@ const fetchFlats = async () => {
     return;
   }
 
+  console.log(data.data);
+
   flats.value = data.data;
 };
 
@@ -231,7 +233,7 @@ onMounted(() => {
   </div>
 
   <teleport to="#my-vue-app">
-    <Transition name="slide-left">
+    <Transition name="fade">
       <Modal v-if="showEditFlatModal" @close="showEditFlatModal = false" type="2" width="w-[400px]">
         <CreateEditFlatModal
           :activeFlat="activeFlat"

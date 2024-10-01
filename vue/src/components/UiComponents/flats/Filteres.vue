@@ -27,12 +27,14 @@ const blocks = computed(() => {
 const floors = computed(() => {
   const floors = new Set(floorStore.projectFloors?.map((floor) => floor?.floor_number));
 
-  return Array.from(floors).map((item) => {
-    return {
-      title: item.toString(),
-      value: item.toString()
-    };
-  });
+  return Array.from(floors)
+    .sort((a, b) => a - b)
+    .map((item) => {
+      return {
+        title: item.toString(),
+        value: item.toString()
+      };
+    });
 });
 
 watch(

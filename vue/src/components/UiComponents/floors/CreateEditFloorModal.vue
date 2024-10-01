@@ -83,7 +83,7 @@ const updateFloor = async () => {
     title: title.value,
     floor_number: floor_number.value,
     floor_image: floor_image.value?.[0]?.id,
-    conf: conf.value.value,
+    conf: conf.value?.value,
     floor_id: activeFloor.value?.id,
     polygon_data: activeFloor.value?.polygon_data,
     svg: floorSvgRef.value?.querySelector("svg")?.outerHTML || "",

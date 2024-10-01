@@ -68,7 +68,7 @@ const updateBlcok = async () => {
     block_id: activeBlock.value?.id,
     title: title.value,
     block_image: block_image.value?.[0]?.id || activeBlock.value?.block_image[0]?.id,
-    conf: conf.value.value,
+    conf: conf.value?.value,
     polygon_data: activeBlock.value?.polygon_data,
     svg: blockSvgRef.value?.querySelector("svg")?.outerHTML || "",
     img_contain: img_contain.value

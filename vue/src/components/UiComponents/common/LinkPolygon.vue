@@ -46,7 +46,7 @@ const floorsSelectData = computed<selectDataItem[]>(() => {
       const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "floor");
 
       return {
-        title: `id: ${item.id} | floor #${item.floor_number.toString()} ${item.block_id ? " | block: " + getBlockTitleById(item.block_id) : ""} ${item.conf ? " | " + item.conf : ""}`,
+        title: `id: ${item.id} | floor #${item.floor_number.toString()} ${item.conf ? " | " + item.conf : ""}`,
         value: item.id.toString(),
         isLinked,
         type: "floor"
