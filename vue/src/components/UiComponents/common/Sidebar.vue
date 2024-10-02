@@ -140,16 +140,16 @@ watch(
 
         <div class="flex">
           <template v-if="item.id">
-            <div class="sidebar-item-icon icon-hover-text" @click="unlink(item.key)">
+            <div class="sidebar-item-icon icon-hover-text" @click="unlink(item.key)" title="unlink">
               <Unlink />
             </div>
 
-            <div class="sidebar-item-icon icon-hover-text" @click.stop="editPolygon(item)">
+            <div class="sidebar-item-icon icon-hover-text" @click.stop="editPolygon(item)" title="edit">
               <Edit />
             </div>
           </template>
 
-          <div class="sidebar-item-icon icon-hover-text" @click.stop="deleteG(item)">
+          <div class="sidebar-item-icon icon-hover-text" @click.stop="deleteG(item)" title="delete">
             <Delete />
           </div>
 

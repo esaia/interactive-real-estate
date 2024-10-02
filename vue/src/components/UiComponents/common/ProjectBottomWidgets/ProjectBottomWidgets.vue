@@ -24,13 +24,23 @@ const toogleCoverMeta = async () => {
     nonce: irePlugin.nonce,
     project_id: id.value,
     meta_key: "project_img_contain",
-    meta_value: !JSON.parse(isContainImage.value || "false")
+    meta_value: JSON.parse(isContainImage.value || "false")
   });
 
   projectStore.getProjectMeta();
 };
 
+const containImageCheckbox = () => {
+  const imgContainMeta = projectStore.projectMeta?.find((item) => item.meta_key === "project_img_contain");
+
+  if (imgContainMeta) {
+    imgContainMeta.meta_value = projectStore.isContainImage ? "false" : "true";
+  }
+};
+
 const updateProject = async () => {
+  toogleCoverMeta();
+
   if (svgRef.value) {
     resetCanvasAfterSave(svgRef.value);
   }
@@ -95,7 +105,7 @@ onMounted(() => {
             <p class="font-semibold">object-fit: contain</p>
             <p class="mb-1 text-xs italic text-gray-500">default is cover</p>
           </div>
-          <input type="checkbox" v-model="isContainImage" @change="toogleCoverMeta" />
+          <input type="checkbox" v-model="isContainImage" @change="containImageCheckbox" />
         </div>
 
         <div>

@@ -53,9 +53,11 @@ const activeType = ref<TypeItem | null>(null);
 const floorsNumberData = computed(() => {
   if (!projectFloors.value) return [];
 
-  return Array.from(new Set(projectFloors.value.map((item) => item.floor_number)))?.map((floor) => {
-    return { title: `floor - ${floor}`, value: floor.toString() };
-  });
+  return Array.from(new Set(projectFloors.value.map((item) => item.floor_number)))
+    .sort((a, b) => a - b)
+    ?.map((floor) => {
+      return { title: `floor - ${floor}`, value: floor.toString() };
+    });
 });
 
 const typesData = computed(() => {
@@ -147,6 +149,8 @@ const closeTypeModal = () => {
 };
 
 onMounted(() => {
+  floorStore.fetchProjectFloors(Number(projectStore.id));
+
   let typeInstance = null;
   if (props.activeFlat) {
     typeInstance = props.activeFlat;

@@ -78,13 +78,15 @@ const flatsSelectData = computed<selectDataItem[]>(() => {
         const isSameFloor = flat.floor_number?.toString() === activeFloor.value.floor_number?.toString();
         const isSameBlock = activeBlock.value?.id
           ? flat.block_id === activeBlock.value?.id?.toString()
-          : !flat.block_id;
+          : flat.block_id
+            ? flat.block_id === activeFloor.value.block_id?.toString()
+            : !flat.block_id;
 
         return isSameFloor && isSameBlock;
       } else if (activeBlock.value) {
         return activeBlock.value.id === flat.block_id?.toString();
       } else {
-        return flat;
+        return !flat.block_id;
       }
     })
     ?.map((item) => {
