@@ -1,3 +1,4 @@
+import { ToastProps, useToast } from "vue-toast-notification";
 import { useBlocksStore } from "../stores/useBlock";
 
 export const generateUniqueId = (length = 14) => {
@@ -69,3 +70,17 @@ export const getBlockTitleById = (id: number) => {
   if (!id) return;
   return blocksStore.projectBlocks?.find((block) => block.id === id?.toString())?.title;
 };
+
+export function showToast(type: "success" | "error", message: string) {
+  const $toast = useToast();
+
+  const options: ToastProps = {
+    position: "top"
+  };
+
+  if (type === "success") {
+    $toast.success(message, options);
+  } else if (type === "error") {
+    $toast.error(message, options);
+  }
+}

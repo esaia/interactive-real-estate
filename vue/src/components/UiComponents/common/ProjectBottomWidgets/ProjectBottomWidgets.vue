@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "../../../../stores/useProject";
-import { useToast } from "vue-toast-notification";
 import ajaxAxios from "@/src/utils/axios";
-import { resetCanvasAfterSave } from "@/src/composables/helpers";
+import { resetCanvasAfterSave, showToast } from "@/src/composables/helpers";
 import { onMounted, ref, watch } from "vue";
 import { imageInterface } from "@/types/components";
 import UploadImg from "../../form/UploadImg.vue";
@@ -11,7 +10,6 @@ import Input from "../../form/Input.vue";
 import Button from "../../form/Button.vue";
 import ColorVariables from "./ColorVariables.vue";
 
-const $toast = useToast();
 const projectStore = useProjectStore();
 
 const { id, title, slug, polygon_data, svgRef, activeGroup, project_image, isContainImage } = storeToRefs(projectStore);
@@ -66,13 +64,9 @@ const updateProject = async () => {
 
     activeGroup.value = null;
 
-    $toast.success("Project Updated!", {
-      position: "top"
-    });
+    showToast("success", "Project Updated!");
   } catch (error) {
-    $toast.error("Something went wrong!", {
-      position: "top"
-    });
+    showToast("error", "Something went wrong!");
   }
 };
 

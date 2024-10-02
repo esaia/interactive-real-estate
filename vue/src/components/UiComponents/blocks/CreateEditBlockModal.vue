@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
-import { useToast } from "vue-toast-notification";
 import { useProjectStore } from "@/src/stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
 import UploadImg from "../form/UploadImg.vue";
 import { BlockItem, imageInterface, PolygonDataCollection } from "@/types/components";
 import Canvas from "../../Canvas.vue";
-import { resetCanvasAfterSave, transformSvgString } from "@/src/composables/helpers";
+import { resetCanvasAfterSave, showToast, transformSvgString } from "@/src/composables/helpers";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
@@ -37,8 +36,6 @@ const deleteG = (key: string) => {
   blockStore.removePoligonItem(key);
   blockSvgRef.value?.querySelector(`#${key}`)?.remove();
 };
-
-const $toast = useToast();
 
 const title = ref("");
 const block_image = ref<imageInterface[] | null>(null);
@@ -81,9 +78,7 @@ const updateBlcok = async () => {
   });
 
   if (data.success) {
-    $toast.success("Block Updated!", {
-      position: "top"
-    });
+    showToast("success", "Block Updated!");
 
     activeBlockGroup.value = null;
 
@@ -92,9 +87,7 @@ const updateBlcok = async () => {
       block_image.value = null;
     }
   } else {
-    $toast.error(data?.data || "Something went wrong!", {
-      position: "top"
-    });
+    showToast("error", data?.data || "Something went wrong!");
   }
 };
 
@@ -120,21 +113,15 @@ const createBlock = async () => {
     });
 
     if (data.success) {
-      $toast.success("Block created!", {
-        position: "top"
-      });
+      showToast("success", "Block created!");
 
       blockStore.setActiveBlock(data.data);
       block_image.value = null;
     } else {
-      $toast.error(data?.data || "Something went wrong!", {
-        position: "top"
-      });
+      showToast("error", data?.data || "Something went wrong!");
     }
   } catch (error) {
-    $toast.error("Something went wrong!", {
-      position: "top"
-    });
+    showToast("error", "Something went wrong!");
   }
 };
 

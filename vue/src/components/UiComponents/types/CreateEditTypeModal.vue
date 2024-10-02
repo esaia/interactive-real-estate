@@ -4,10 +4,10 @@ import Button from "../form/Button.vue";
 import Input from "../form/Input.vue";
 import UploadImg from "../form/UploadImg.vue";
 import ajaxAxios from "@/src/utils/axios";
-import { useToast } from "vue-toast-notification";
 import { useProjectStore } from "@/src/stores/useProject";
 import { storeToRefs } from "pinia";
 import { imageInterface, TypeItem } from "@/types/components";
+import { showToast } from "@/src/composables/helpers";
 
 interface TypeFormInterface {
   title: string;
@@ -29,7 +29,6 @@ const props = defineProps<{
   activeType: TypeItem | null;
 }>();
 
-const $toast = useToast();
 const projectStore = useProjectStore();
 const { id } = storeToRefs(projectStore);
 
@@ -75,13 +74,9 @@ const editType = async (params: any) => {
   });
 
   if (data.success) {
-    $toast.success("Type updated!", {
-      position: "top"
-    });
+    showToast("success", "Type updated!");
   } else {
-    $toast.error(data?.data || "Something went wrong!", {
-      position: "top"
-    });
+    showToast("error", data?.data || "Something went wrong!");
   }
 };
 
@@ -93,14 +88,11 @@ const createType = async (params: any) => {
   });
 
   if (data.success) {
-    $toast.success("Type created!", {
-      position: "top"
-    });
+    showToast("success", "Type created!");
+
     emits("setActiveType", data?.data);
   } else {
-    $toast.error(data?.data || "Something went wrong!", {
-      position: "top"
-    });
+    showToast("error", data?.data || "Something went wrong!");
   }
 };
 

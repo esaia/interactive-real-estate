@@ -9,10 +9,10 @@ import { useTypesStore } from "@/src/stores/useTypes";
 import ajaxAxios from "@/src/utils/axios";
 import { useProjectStore } from "@/src/stores/useProject";
 import { FlatItem, selectDataItem, TypeItem } from "@/types/components";
-import { useToast } from "vue-toast-notification";
 import CreateEditTypeModal from "../types/CreateEditTypeModal.vue";
 import Modal from "../Modal.vue";
 import { useBlocksStore } from "@/src/stores/useBlock";
+import { showToast } from "@/src/composables/helpers";
 
 const emits = defineEmits<{
   (e: "setActiveFlat", activeType: FlatItem): void;
@@ -29,8 +29,6 @@ const blockStore = useBlocksStore();
 const typesStore = useTypesStore();
 const { projectFloors } = storeToRefs(floorStore);
 const { projectTypes } = storeToRefs(typesStore);
-
-const $toast = useToast();
 
 const confData = [
   { title: "Reserved", value: "reserved" },
@@ -105,13 +103,9 @@ const editFlat = async (params: any) => {
   });
 
   if (data.success) {
-    $toast.success("Flat Updated!", {
-      position: "top"
-    });
+    showToast("success", "Flat Updated!");
   } else {
-    $toast.error(data?.data || "Something went wrong!", {
-      position: "top"
-    });
+    showToast("error", data?.data || "Something went wrong!");
   }
 };
 
@@ -123,15 +117,11 @@ const createFlat = async (params: any) => {
   });
 
   if (data.success) {
-    $toast.success("Flat Created!", {
-      position: "top"
-    });
+    showToast("success", "Flat Created!");
 
     emits("setActiveFlat", data.data);
   } else {
-    $toast.error(data?.data || "Something went wrong!", {
-      position: "top"
-    });
+    showToast("error", data?.data || "Something went wrong!");
   }
 };
 
