@@ -182,7 +182,7 @@ export interface TypeItem {
 }
 
 export interface ProjectMeta {
-  id: number;
+  id?: number;
   project_id: number;
   meta_key: string;
   meta_value: string;

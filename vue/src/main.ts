@@ -31,7 +31,12 @@ window.constants = {
   SELECTED_PATH_COLOR: "#cb4435af	",
   NON_SELECTED_PATH_COLOR: "#cb443529",
   CIRCLE_COLOR: "#ffff",
-  CIRCLE_HOVER_COLOR: "rgba(255, 255, 255, 0.70)"
+  CIRCLE_HOVER_COLOR: "rgba(255, 255, 255, 0.70)",
+
+  PREVIEW_PATH_COLOR: "rgba(160, 160, 173, 0.49)",
+  PREVIEW_PATH_HOVER_COLOR: "rgba(160, 160, 173, 0.80)",
+  PREVIEW_RESERVEDD_COLOR: "rgba(255, 247, 89, 0.45)",
+  PREVIEW_SOLD_COLOR: "rgba(219, 64, 64, 0.45)"
 };
 
 app.mount("#my-vue-app");

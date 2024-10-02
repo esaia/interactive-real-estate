@@ -15,14 +15,14 @@ const projectStore = useProjectStore();
 const { id, title, slug, polygon_data, svgRef, activeGroup, project_image, isContainImage } = storeToRefs(projectStore);
 
 const projectImage = ref<imageInterface[] | null>(null);
+const colorsRef = ref();
 
-const toogleCoverMeta = async () => {
+const setProjectMeta = async (metaArr: { key: string; value: any }[]) => {
   await ajaxAxios.post("", {
     action: "ire_create_or_update_meta",
     nonce: irePlugin.nonce,
     project_id: id.value,
-    meta_key: "project_img_contain",
-    meta_value: JSON.parse(isContainImage.value || "false")
+    meta_data: metaArr
   });
 
   projectStore.getProjectMeta();
@@ -37,7 +37,10 @@ const containImageCheckbox = () => {
 };
 
 const updateProject = async () => {
-  toogleCoverMeta();
+  setProjectMeta([
+    { key: "project_img_contain", value: JSON.parse(isContainImage.value || "false") },
+    ...colorsRef.value?.metaColors
+  ]);
 
   if (svgRef.value) {
     resetCanvasAfterSave(svgRef.value);
@@ -113,7 +116,7 @@ onMounted(() => {
       </div>
 
       <div class="w-60 rounded-md bg-white p-4">
-        <ColorVariables />
+        <ColorVariables ref="colorsRef" />
       </div>
     </div>
 

@@ -21,12 +21,14 @@ class IreMetaProject
         has_project_id($data);
 
 
+
         $query = $this->wpdb->prepare(
             "SELECT * FROM $this->table_name WHERE project_id = %d",
             $data['project_id']
         );
 
         $results = $this->wpdb->get_results($query, ARRAY_A);
+
 
         if ($this->wpdb->last_error) {
             return [false,  'No meta found.'];
@@ -35,52 +37,65 @@ class IreMetaProject
         }
     }
 
+
     public function create_or_update_meta($data)
     {
         check_nonce($data['nonce'], 'ire_nonce');
         has_project_id($data);
 
-        $required_fields = ['project_id', 'meta_key', 'meta_value'];
-        $data = validate_and_sanitize_input($data, $required_fields);
-
-        if (!$data) {
+        // Ensure 'meta_data' is present in the request
+        if (!isset($data['meta_data']) || !is_array($data['meta_data'])) {
             send_json_response(false, 'Required fields are missing.');
             return;
         }
 
-        // Check if the meta already exists
-        $existing_meta = $this->wpdb->get_row($this->wpdb->prepare(
-            "SELECT id FROM $this->table_name WHERE project_id = %d AND meta_key = %s",
-            $data['project_id'],
-            $data['meta_key']
-        ));
-
-        if ($existing_meta) {
-            // Update the existing meta
-            $update_result = $this->wpdb->update(
-                $this->table_name,
-                ['meta_value' => $data['meta_value']],
-                ['id' => $existing_meta->id]
-            );
-
-            if ($update_result === false) {
-                send_json_response(false, 'Database error');
+        foreach ($data['meta_data'] as $meta) {
+            // Validate each key-value pair
+            if (empty($meta['key']) || !isset($meta['value'])) {
+                send_json_response(false, 'Meta key or value is missing.');
                 return;
             }
-        } else {
-            // Insert new meta
-            $insert_result = $this->wpdb->insert(
-                $this->table_name,
-                [
-                    'project_id' => $data['project_id'],
-                    'meta_key' => $data['meta_key'],
-                    'meta_value' => $data['meta_value'],
-                ]
-            );
 
-            if ($insert_result === false) {
-                send_json_response(false, 'Database error');
-                return;
+            $project_id = $data['project_id'];
+            $meta_key = sanitize_text_field($meta['key']);
+            $meta_value = sanitize_textarea_field($meta['value']);
+
+            // Check if the meta already exists
+            $existing_meta = $this->wpdb->get_row($this->wpdb->prepare(
+                "SELECT id FROM $this->table_name WHERE project_id = %d AND meta_key = %s",
+                $project_id,
+                $meta_key
+            ));
+
+            if ($existing_meta) {
+
+                // Update the existing meta
+                $update_result = $this->wpdb->update(
+                    $this->table_name,
+                    ['meta_value' => $meta_value],
+                    ['id' => $existing_meta->id]
+                );
+
+
+                if ($update_result === false) {
+                    send_json_response(false, 'Database error during update');
+                    return;
+                }
+            } else {
+                // Insert new meta
+                $insert_result = $this->wpdb->insert(
+                    $this->table_name,
+                    [
+                        'project_id' => $project_id,
+                        'meta_key' => $meta_key,
+                        'meta_value' => $meta_value,
+                    ]
+                );
+
+                if ($insert_result === false) {
+                    send_json_response(false, 'Database error during insert');
+                    return;
+                }
             }
         }
 

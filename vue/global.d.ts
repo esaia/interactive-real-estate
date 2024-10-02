@@ -13,6 +13,11 @@ declare const constants: {
   NON_SELECTED_PATH_COLOR: string;
   CIRCLE_COLOR: string;
   CIRCLE_HOVER_COLOR: string;
+
+  PREVIEW_PATH_COLOR: string;
+  PREVIEW_PATH_HOVER_COLOR: string;
+  PREVIEW_RESERVEDD_COLOR: string;
+  PREVIEW_SOLD_COLOR: string;
 };
 
 declare const wp: any;

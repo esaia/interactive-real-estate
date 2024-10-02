@@ -1,25 +1,29 @@
 <script setup lang="ts">
 import ajaxAxios from "@/src/utils/axios";
 import { ShortcodeData } from "@/types/components";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import ProjectPreview from "./ProjectPreview.vue";
 import FloorPreview from "./FloorPreview.vue";
 import FlatPreview from "./FlatPreview.vue";
 import BlockPreview from "./BlockPreview.vue";
 
-const colors = {
-  reserved: "#ffff0062",
-  sold: "#ff000038",
-  path_hover: "#ffffff8b",
-  path: "#ffffff4b"
-};
+const { PREVIEW_PATH_COLOR, PREVIEW_PATH_HOVER_COLOR, PREVIEW_RESERVEDD_COLOR, PREVIEW_SOLD_COLOR } = constants;
 
-const cssVariables = {
-  "--reserved-color": colors.reserved,
-  "--sold-color": colors.sold,
-  "--path-hover-color": colors.path_hover,
-  "--path-color": colors.path
-};
+const colors = reactive({
+  path: PREVIEW_PATH_COLOR,
+  path_hover: PREVIEW_PATH_HOVER_COLOR,
+  reserved: PREVIEW_RESERVEDD_COLOR,
+  sold: PREVIEW_SOLD_COLOR
+});
+
+const cssVariables = computed(() => {
+  return {
+    "--reserved-color": colors.reserved,
+    "--sold-color": colors.sold,
+    "--path-hover-color": colors.path_hover,
+    "--path-color": colors.path
+  };
+});
 
 const shortcodeData = ref<ShortcodeData>();
 
@@ -68,6 +72,10 @@ const projectMeta = computed(() => {
   return shortcodeData.value.meta;
 });
 
+const getColorMeta = (metaKey: string) => {
+  return projectMeta.value?.find((meta) => meta.meta_key === metaKey)?.meta_value;
+};
+
 const fetchData = async () => {
   const projectId = document.getElementById("ire-shortcode")?.getAttribute("data-project-id");
 
@@ -108,6 +116,32 @@ const changeRoute = (flowType: string, polygonItem: any) => {
       break;
   }
 };
+
+watch(
+  () => projectMeta.value,
+  () => {
+    const path_color = getColorMeta("path_color");
+    const path_hover_color = getColorMeta("path_hover_color");
+    const reserved_color = getColorMeta("reserved_color");
+    const sold_color = getColorMeta("sold_color");
+
+    if (path_color) {
+      colors.path = path_color;
+    }
+
+    if (path_hover_color) {
+      colors.path_hover = path_hover_color;
+    }
+
+    if (reserved_color) {
+      colors.reserved = reserved_color;
+    }
+
+    if (sold_color) {
+      colors.sold = sold_color;
+    }
+  }
+);
 
 onMounted(() => {
   fetchData();

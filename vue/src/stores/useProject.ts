@@ -18,7 +18,30 @@ export const useProjectStore = defineStore("project", () => {
   const svgRef = ref<HTMLDivElement | null>(null);
   const activeGroup = ref<SVGGElement | null>(null);
 
-  const projectMeta = ref<ProjectMeta[]>();
+  const { PREVIEW_PATH_COLOR, PREVIEW_PATH_HOVER_COLOR, PREVIEW_RESERVEDD_COLOR, PREVIEW_SOLD_COLOR } = constants;
+
+  const projectMeta = ref<ProjectMeta[]>([
+    {
+      project_id: id.value,
+      meta_key: "path_color",
+      meta_value: PREVIEW_PATH_COLOR
+    },
+    {
+      project_id: id.value,
+      meta_key: "path_hover_color",
+      meta_value: PREVIEW_PATH_HOVER_COLOR
+    },
+    {
+      project_id: id.value,
+      meta_key: "reserved_color",
+      meta_value: PREVIEW_RESERVEDD_COLOR
+    },
+    {
+      project_id: id.value,
+      meta_key: "sold_color",
+      meta_value: PREVIEW_SOLD_COLOR
+    }
+  ]);
 
   const addPolygonData = (key: string) => {
     polygon_data.value = [...polygon_data.value, { id: "", key, type: "" }];
