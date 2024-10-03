@@ -7,13 +7,22 @@ import FloorPreview from "./FloorPreview.vue";
 import FlatPreview from "./FlatPreview.vue";
 import BlockPreview from "./BlockPreview.vue";
 
-const { PREVIEW_PATH_COLOR, PREVIEW_PATH_HOVER_COLOR, PREVIEW_RESERVED_COLOR, PREVIEW_SOLD_COLOR } = constants;
+const {
+  PREVIEW_PATH_COLOR,
+  PREVIEW_PATH_HOVER_COLOR,
+  PREVIEW_RESERVED_COLOR,
+  PREVIEW_SOLD_COLOR,
+  PREVIEW_STROKE_COLOR,
+  PREVIEW_STROKE_WIDTH
+} = constants;
 
 const colors = reactive({
   path: PREVIEW_PATH_COLOR,
   path_hover: PREVIEW_PATH_HOVER_COLOR,
   reserved: PREVIEW_RESERVED_COLOR,
-  sold: PREVIEW_SOLD_COLOR
+  sold: PREVIEW_SOLD_COLOR,
+  stroke_color: PREVIEW_STROKE_COLOR,
+  stroke_width: PREVIEW_STROKE_WIDTH
 });
 
 const cssVariables = computed(() => {
@@ -21,7 +30,9 @@ const cssVariables = computed(() => {
     "--reserved-color": colors.reserved,
     "--sold-color": colors.sold,
     "--path-hover-color": colors.path_hover,
-    "--path-color": colors.path
+    "--path-color": colors.path,
+    "--stroke-color": colors.stroke_color,
+    "--stroke-width": colors.stroke_width + "px"
   };
 });
 
@@ -124,6 +135,8 @@ watch(
     const path_hover_color = getColorMeta("path_hover_color");
     const reserved_color = getColorMeta("reserved_color");
     const sold_color = getColorMeta("sold_color");
+    const stroke_color = getColorMeta("stroke_color");
+    const stroke_width = getColorMeta("stroke_width");
 
     if (path_color) {
       colors.path = path_color.toString();
@@ -140,6 +153,14 @@ watch(
     if (sold_color) {
       colors.sold = sold_color.toString();
     }
+
+    if (stroke_color) {
+      colors.stroke_color = stroke_color.toString();
+    }
+
+    if (stroke_width) {
+      colors.stroke_width = Number(stroke_width);
+    }
   }
 );
 
@@ -150,16 +171,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <Transition name="fade-in-out" mode="out-in">
-      <!-- <FloorPreview
-        v-if="floors"
-        :flats="flats"
-        :floor="floors[0]"
-        :floors="floors"
-        :cssVariables="cssVariables"
-        @changeComponent="(x, y) => changeRoute(x, y)"
-      />  -->
-
+    <Transition name="fade-in-out" mode="out-in" :style="cssVariables" class="stroke">
       <div v-if="shortcodeData" :key="flow">
         <ProjectPreview
           v-if="flow === 'projectFlow'"
@@ -168,7 +180,6 @@ onMounted(() => {
           :flats="flats"
           :projectMeta="projectMeta"
           :blocks="blocks"
-          :cssVariables="cssVariables"
           @changeComponent="(x, y) => changeRoute(x, y)"
         />
 
@@ -178,7 +189,6 @@ onMounted(() => {
           :floor="hoveredData"
           :floors="floors"
           :blocks="blocks"
-          :cssVariables="cssVariables"
           @changeComponent="(x, y) => changeRoute(x, y)"
         />
 
@@ -187,7 +197,6 @@ onMounted(() => {
           :block="hoveredData"
           :flats="flats"
           :floors="floors"
-          :cssVariables="cssVariables"
           @changeComponent="(x, y) => changeRoute(x, y)"
         />
 
@@ -201,3 +210,10 @@ onMounted(() => {
     </Transition>
   </div>
 </template>
+
+<style scoped>
+.stroke :deep(.canvas path) {
+  stroke: var(--stroke-color);
+  stroke-width: var(--stroke-width);
+}
+</style>

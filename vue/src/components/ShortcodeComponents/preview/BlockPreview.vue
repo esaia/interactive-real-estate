@@ -13,7 +13,6 @@ const props = defineProps<{
   block: BlockItem;
   flats: FlatItem[];
   floors: FloorItem[];
-  cssVariables: any;
 }>();
 
 const svgRef = ref();
@@ -94,14 +93,14 @@ watch(
 </script>
 
 <template>
-  <div :style="cssVariables">
+  <div>
     <div class="mb-3 flex items-center justify-between">
       <BackButton @click="$emit('changeComponent', 'project', null)" />
 
       <p>{{ block?.title }}</p>
     </div>
 
-    <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
+    <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
       <img
         :src="block?.block_image?.[0]?.url || ''"
         alt=""
@@ -114,7 +113,7 @@ watch(
 
       <div
         ref="svgRef"
-        class="absolute left-0 top-0 h-full w-full [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all"
+        class="canvas absolute left-0 top-0 h-full w-full [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all"
         :class="[
           {
             'hover:[&_path]:fill-[var(--reserved-color)]': activeFlatOrFloor?.conf === 'reserved',

@@ -57,7 +57,7 @@ defineExpose({
         <p class="label">Stroke width</p>
 
         <div class="flex flex-col">
-          <input type="range" v-model="colors.stroke_width" min="0" max="10" />
+          <input type="range" v-model="colors.stroke_width" min="0" max="20" />
         </div>
       </label>
       <p>

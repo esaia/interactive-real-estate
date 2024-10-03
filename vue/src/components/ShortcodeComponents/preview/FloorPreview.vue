@@ -15,7 +15,6 @@ const props = defineProps<{
   floor: FloorItem;
   floors: FloorItem[];
   blocks?: BlockItem[];
-  cssVariables: any;
 }>();
 
 const svgRef = ref();
@@ -154,7 +153,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
+    <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
       <img
         :src="floor.floor_image?.[0]?.url || ''"
         alt=""
@@ -167,7 +166,7 @@ onMounted(() => {
 
       <div
         ref="svgRef"
-        class="absolute left-0 top-0 h-full w-full [&_g[conf=reserved]_path]:fill-[var(--reserved-color)] [&_g[conf=sold]_path]:fill-[var(--sold-color)] [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all hover:[&_path]:fill-[var(--path-hover-color)]"
+        class="canvas absolute left-0 top-0 h-full w-full [&_g[conf=reserved]_path]:fill-[var(--reserved-color)] [&_g[conf=sold]_path]:fill-[var(--sold-color)] [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all hover:[&_path]:fill-[var(--path-hover-color)]"
         v-html="floorSvg"
         :key="floorSvg"
         @mouseover="onSvgMouseOver"

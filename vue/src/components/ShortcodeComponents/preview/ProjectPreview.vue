@@ -22,7 +22,6 @@ const props = defineProps<{
   blocks: BlockItem[] | undefined;
   flats: FlatItem[] | undefined;
   projectMeta: ProjectMeta[] | undefined;
-  cssVariables: any;
 }>();
 
 const hoveredSvg = ref<HTMLElement>();
@@ -37,7 +36,7 @@ const projectSvg = computed(() => {
 
 const isContainImage = computed(() => {
   const findMeta = props.projectMeta?.find((item) => item.meta_key === "project_img_contain")?.meta_value;
-  return JSON.parse(findMeta || "false");
+  return JSON.parse(findMeta?.toString() || "false");
 });
 
 const onSvgMouseOver = (e: any) => {
@@ -117,7 +116,7 @@ watch(
 </script>
 
 <template>
-  <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]" :style="cssVariables">
+  <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
     <img
       :src="project?.project_image[0].url"
       alt=""
@@ -125,7 +124,7 @@ watch(
       :class="{ 'object-contain': isContainImage, 'object-cover': !isContainImage }"
     />
     <div
-      class="absolute left-0 top-0 h-full w-full [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all"
+      class="canvas absolute left-0 top-0 h-full w-full [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all"
       :class="[
         {
           'hover:[&_path]:fill-[var(--reserved-color)]': hoveredData?.conf === 'reserved',
