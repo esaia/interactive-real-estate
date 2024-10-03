@@ -185,7 +185,7 @@ export interface ProjectMeta {
   id?: number;
   project_id: number;
   meta_key: string;
-  meta_value: string;
+  meta_value: string | number;
 }
 export interface ShortcodeData {
   flats: FlatItem[];

@@ -22,6 +22,10 @@
   @apply h-fit cursor-pointer border border-r-0 border-primary p-1 transition-all first:rounded-l-sm last-of-type:rounded-r-sm last-of-type:border-r hover:text-white [&_svg]:h-3 [&_svg]:w-3;
 }
 
+.label {
+  @apply mb-1 text-xs capitalize text-gray-600;
+}
+
 .v-toast.v-toast--top {
   z-index: 999999;
 }

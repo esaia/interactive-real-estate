@@ -35,8 +35,10 @@ window.constants = {
 
   PREVIEW_PATH_COLOR: "rgba(160, 160, 173, 0.49)",
   PREVIEW_PATH_HOVER_COLOR: "rgba(160, 160, 173, 0.80)",
-  PREVIEW_RESERVEDD_COLOR: "rgba(255, 247, 89, 0.45)",
-  PREVIEW_SOLD_COLOR: "rgba(219, 64, 64, 0.45)"
+  PREVIEW_RESERVED_COLOR: "rgba(255, 247, 89, 0.45)",
+  PREVIEW_SOLD_COLOR: "rgba(219, 64, 64, 0.45)",
+  PREVIEW_STROKE_COLOR: "rgba(0, 0, 0,  1)",
+  PREVIEW_STROKE_WIDTH: 0
 };
 
 app.mount("#my-vue-app");

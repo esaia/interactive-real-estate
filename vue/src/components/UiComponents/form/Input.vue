@@ -33,9 +33,7 @@ const inputModel = computed({
 
 <template>
   <div class="w-full">
-    <p v-if="label" class="mb-1 text-xs capitalize text-gray-600">
-      {{ label }} <span v-if="required" class="text-red-600">*</span>
-    </p>
+    <p v-if="label" class="label">{{ label }} <span v-if="required" class="text-red-600">*</span></p>
     <input
       v-model="inputModel"
       class="h-full !min-h-fit w-full !border-none bg-transparent !py-2 px-4 outline-none !ring-1 ring-gray-200 transition-all focus:!border-none focus:!shadow-none focus:!ring-2 focus:ring-primary"

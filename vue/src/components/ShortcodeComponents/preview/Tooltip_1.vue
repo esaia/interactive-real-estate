@@ -9,7 +9,10 @@ defineProps<{
 
 <template>
   <Transition name="fade-in-out">
-    <div v-if="type && hoveredData" class="absolute bottom-5 right-5 border bg-white p-4">
+    <div
+      v-if="type && hoveredData"
+      class="pointer-events-none absolute bottom-5 right-5 select-none border bg-white p-4"
+    >
       <div v-if="type === 'floor'" class="flex items-center gap-3">
         <div class="flex flex-col items-center">
           <p class="text-lg">

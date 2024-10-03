@@ -1,55 +1,40 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import ColorPicker from "../../form/ColorPicker.vue";
-import { useProjectStore } from "@/src/stores/useProject";
-
-const projectStore = useProjectStore();
-const { PREVIEW_PATH_COLOR, PREVIEW_PATH_HOVER_COLOR, PREVIEW_RESERVEDD_COLOR, PREVIEW_SOLD_COLOR } = constants;
+import { useMetaStore } from "@/src/stores/useMeta";
+const metaStore = useMetaStore();
 
 const colors = ref({
-  path: PREVIEW_PATH_COLOR,
-  path_hover: PREVIEW_PATH_HOVER_COLOR,
-  reserved: PREVIEW_RESERVEDD_COLOR,
-  sold: PREVIEW_SOLD_COLOR
+  path: "",
+  path_hover: "",
+  reserved: "",
+  sold: "",
+  stroke: "",
+  stroke_width: 0
 });
 
 const metaColors = computed(() => {
   const arr: { key: string; value: any }[] = [];
 
   Object.entries(colors.value).forEach(async (item) => {
+    if (item[0] === "stroke_width") return;
     arr.push({ key: item[0] + "_color", value: item[1] });
   });
+
+  arr.push({ key: "stroke_width", value: colors.value.stroke_width });
 
   return arr;
 });
 
-const getColorMeta = (metaKey: string) => {
-  return projectStore.projectMeta?.find((meta) => meta.meta_key === metaKey)?.meta_value;
-};
-
 watch(
-  () => projectStore.projectMeta,
+  () => metaStore.projectMeta,
   () => {
-    const path_color = getColorMeta("path_color");
-    const path_hover_color = getColorMeta("path_hover_color");
-    const reserved_color = getColorMeta("reserved_color");
-    const sold_color = getColorMeta("sold_color");
-
-    if (path_color) {
-      colors.value.path = path_color;
-    }
-
-    if (path_hover_color) {
-      colors.value.path_hover = path_hover_color;
-    }
-
-    if (reserved_color) {
-      colors.value.reserved = reserved_color;
-    }
-
-    if (sold_color) {
-      colors.value.sold = sold_color;
-    }
+    colors.value.path = metaStore.getMeta("path_color")?.meta_value.toString() || "";
+    colors.value.path_hover = metaStore.getMeta("path_hover_color")?.meta_value.toString() || "";
+    colors.value.reserved = metaStore.getMeta("reserved_color")?.meta_value.toString() || "";
+    colors.value.sold = metaStore.getMeta("sold_color")?.meta_value.toString() || "";
+    colors.value.stroke = metaStore.getMeta("stroke_color")?.meta_value.toString() || "";
+    colors.value.stroke_width = Number(metaStore.getMeta("stroke_width")?.meta_value) || 0;
   },
   { deep: true, immediate: true }
 );
@@ -65,5 +50,19 @@ defineExpose({
     <ColorPicker label="path hover" v-model="colors.path_hover" />
     <ColorPicker label="reserved path" v-model="colors.reserved" />
     <ColorPicker label="sold path" v-model="colors.sold" />
+    <ColorPicker label="stroke" v-model="colors.stroke" />
+
+    <div>
+      <label>
+        <p class="label">Stroke width</p>
+
+        <div class="flex flex-col">
+          <input type="range" v-model="colors.stroke_width" min="0" max="10" />
+        </div>
+      </label>
+      <p>
+        {{ colors.stroke_width }}
+      </p>
+    </div>
   </div>
 </template>

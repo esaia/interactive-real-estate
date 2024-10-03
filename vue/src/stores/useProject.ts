@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { imageInterface, PolygonDataCollection, ProjectInterface, ProjectMeta } from "../../types/components";
+import { imageInterface, PolygonDataCollection, ProjectInterface } from "../../types/components";
 import { transformSvgString } from "../composables/helpers";
-import ajaxAxios from "@/src/utils/axios";
+import { useMetaStore } from "./useMeta";
 
 export const useProjectStore = defineStore("project", () => {
+  const metaStore = useMetaStore();
+
   const id = ref();
   const title = ref("");
   const svg = ref("");
@@ -17,31 +19,6 @@ export const useProjectStore = defineStore("project", () => {
 
   const svgRef = ref<HTMLDivElement | null>(null);
   const activeGroup = ref<SVGGElement | null>(null);
-
-  const { PREVIEW_PATH_COLOR, PREVIEW_PATH_HOVER_COLOR, PREVIEW_RESERVEDD_COLOR, PREVIEW_SOLD_COLOR } = constants;
-
-  const projectMeta = ref<ProjectMeta[]>([
-    {
-      project_id: id.value,
-      meta_key: "path_color",
-      meta_value: PREVIEW_PATH_COLOR
-    },
-    {
-      project_id: id.value,
-      meta_key: "path_hover_color",
-      meta_value: PREVIEW_PATH_HOVER_COLOR
-    },
-    {
-      project_id: id.value,
-      meta_key: "reserved_color",
-      meta_value: PREVIEW_RESERVEDD_COLOR
-    },
-    {
-      project_id: id.value,
-      meta_key: "sold_color",
-      meta_value: PREVIEW_SOLD_COLOR
-    }
-  ]);
 
   const addPolygonData = (key: string) => {
     polygon_data.value = [...polygon_data.value, { id: "", key, type: "" }];
@@ -77,23 +54,7 @@ export const useProjectStore = defineStore("project", () => {
     created_at.value = project.created_at || "";
     updated_at.value = project.updated_at || "";
 
-    getProjectMeta();
-  };
-
-  const isContainImage = computed(() => {
-    const findMeta = projectMeta.value?.find((item) => item.meta_key === "project_img_contain")?.meta_value;
-    return JSON.parse(findMeta || "false");
-  });
-
-  const getProjectMeta = async () => {
-    const { data } = await ajaxAxios.post("", {
-      action: "ire_get_meta",
-      nonce: irePlugin.nonce,
-      project_id: id.value
-    });
-    if (data?.success) {
-      projectMeta.value = data.data;
-    }
+    metaStore.getProjectMeta();
   };
 
   return {
@@ -110,9 +71,6 @@ export const useProjectStore = defineStore("project", () => {
     addPolygonData,
     editpoligonData,
     removePoligonItem,
-    setProject,
-    projectMeta,
-    isContainImage,
-    getProjectMeta
+    setProject
   };
 });

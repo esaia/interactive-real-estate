@@ -7,12 +7,12 @@ import FloorPreview from "./FloorPreview.vue";
 import FlatPreview from "./FlatPreview.vue";
 import BlockPreview from "./BlockPreview.vue";
 
-const { PREVIEW_PATH_COLOR, PREVIEW_PATH_HOVER_COLOR, PREVIEW_RESERVEDD_COLOR, PREVIEW_SOLD_COLOR } = constants;
+const { PREVIEW_PATH_COLOR, PREVIEW_PATH_HOVER_COLOR, PREVIEW_RESERVED_COLOR, PREVIEW_SOLD_COLOR } = constants;
 
 const colors = reactive({
   path: PREVIEW_PATH_COLOR,
   path_hover: PREVIEW_PATH_HOVER_COLOR,
-  reserved: PREVIEW_RESERVEDD_COLOR,
+  reserved: PREVIEW_RESERVED_COLOR,
   sold: PREVIEW_SOLD_COLOR
 });
 
@@ -126,19 +126,19 @@ watch(
     const sold_color = getColorMeta("sold_color");
 
     if (path_color) {
-      colors.path = path_color;
+      colors.path = path_color.toString();
     }
 
     if (path_hover_color) {
-      colors.path_hover = path_hover_color;
+      colors.path_hover = path_hover_color.toString();
     }
 
     if (reserved_color) {
-      colors.reserved = reserved_color;
+      colors.reserved = reserved_color.toString();
     }
 
     if (sold_color) {
-      colors.sold = sold_color;
+      colors.sold = sold_color.toString();
     }
   }
 );

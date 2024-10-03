@@ -16,8 +16,10 @@ declare const constants: {
 
   PREVIEW_PATH_COLOR: string;
   PREVIEW_PATH_HOVER_COLOR: string;
-  PREVIEW_RESERVEDD_COLOR: string;
+  PREVIEW_RESERVED_COLOR: string;
   PREVIEW_SOLD_COLOR: string;
+  PREVIEW_STROKE_COLOR: string;
+  PREVIEW_STROKE_WIDTH: number;
 };
 
 declare const wp: any;

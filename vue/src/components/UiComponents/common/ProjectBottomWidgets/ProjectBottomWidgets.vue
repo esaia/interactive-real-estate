@@ -9,35 +9,27 @@ import UploadImg from "../../form/UploadImg.vue";
 import Input from "../../form/Input.vue";
 import Button from "../../form/Button.vue";
 import ColorVariables from "./ColorVariables.vue";
+import { useMetaStore } from "@/src/stores/useMeta";
 
 const projectStore = useProjectStore();
+const metaStore = useMetaStore();
 
-const { id, title, slug, polygon_data, svgRef, activeGroup, project_image, isContainImage } = storeToRefs(projectStore);
+const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = storeToRefs(projectStore);
+const { isContainImage, projectMeta } = storeToRefs(metaStore);
 
 const projectImage = ref<imageInterface[] | null>(null);
 const colorsRef = ref();
 
-const setProjectMeta = async (metaArr: { key: string; value: any }[]) => {
-  await ajaxAxios.post("", {
-    action: "ire_create_or_update_meta",
-    nonce: irePlugin.nonce,
-    project_id: id.value,
-    meta_data: metaArr
-  });
-
-  projectStore.getProjectMeta();
-};
-
 const containImageCheckbox = () => {
-  const imgContainMeta = projectStore.projectMeta?.find((item) => item.meta_key === "project_img_contain");
+  const imgContainMeta = projectMeta.value?.find((item) => item.meta_key === "project_img_contain");
 
   if (imgContainMeta) {
-    imgContainMeta.meta_value = projectStore.isContainImage ? "false" : "true";
+    imgContainMeta.meta_value = isContainImage.value ? "false" : "true";
   }
 };
 
 const updateProject = async () => {
-  setProjectMeta([
+  metaStore.setProjectMeta([
     { key: "project_img_contain", value: JSON.parse(isContainImage.value || "false") },
     ...colorsRef.value?.metaColors
   ]);
@@ -115,7 +107,7 @@ onMounted(() => {
         <UploadImg v-model="projectImage" title="Upload project image" required />
       </div>
 
-      <div class="w-60 rounded-md bg-white p-4">
+      <div class="rounded-md bg-white p-4">
         <ColorVariables ref="colorsRef" />
       </div>
     </div>
