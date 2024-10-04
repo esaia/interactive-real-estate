@@ -14,6 +14,7 @@ import Button from "../form/Button.vue";
 import CreateEditFlatModal from "./CreateEditFlatModal.vue";
 import { getBlockTitleById } from "@/src/composables/helpers";
 import Filteres from "./Filteres.vue";
+import EmptyState from "../common/EmptyState.vue";
 
 const projectStore = useProjectStore();
 const { id } = storeToRefs(projectStore);
@@ -146,9 +147,8 @@ onMounted(() => {
       </div>
     </form>
 
-    <div class="relative overflow-x-auto shadow-sm">
+    <div v-if="flats?.data.length" class="relative overflow-x-auto shadow-sm">
       <Table
-        v-if="flats?.data"
         :data="flats?.data"
         @edit-action="(flat: FlatItem | null) => editFlat(flat)"
         @duplicate-action="(flat: FlatItem | null) => duplicateFlat(flat)"
@@ -230,6 +230,8 @@ onMounted(() => {
 
       <Pagination :totalItems="Number(flats?.total)" :perPage="perPage" v-model="currentPage" />
     </div>
+
+    <EmptyState v-else />
   </div>
 
   <teleport to="#my-vue-app">

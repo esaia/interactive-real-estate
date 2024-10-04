@@ -12,6 +12,7 @@ import DeleteModal from "../common/DeleteModal.vue";
 import Input from "../form/Input.vue";
 import Button from "../form/Button.vue";
 import CreateEditTypeModal from "./CreateEditTypeModal.vue";
+import EmptyState from "../common/EmptyState.vue";
 
 const projectStore = useProjectStore();
 const { id } = storeToRefs(projectStore);
@@ -123,9 +124,8 @@ onMounted(() => {
       </div>
     </form>
 
-    <div class="relative overflow-x-auto shadow-sm">
+    <div v-if="types?.data?.length" class="relative overflow-x-auto shadow-sm">
       <Table
-        v-if="types?.data"
         :data="types.data"
         @edit-action="(flat: TypeItem | null) => editType(flat)"
         @duplicate-action="(flat: TypeItem | null) => duplicateType(flat)"
@@ -169,6 +169,8 @@ onMounted(() => {
 
       <Pagination :totalItems="Number(types?.total)" :perPage="perPage" v-model="currentPage" />
     </div>
+
+    <EmptyState v-else />
   </div>
 
   <teleport to="#my-vue-app">

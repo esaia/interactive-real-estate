@@ -15,13 +15,13 @@ const projectStore = useProjectStore();
 const metaStore = useMetaStore();
 
 const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = storeToRefs(projectStore);
-const { isContainImage, projectMeta } = storeToRefs(metaStore);
+const { isContainImage } = storeToRefs(metaStore);
 
 const projectImage = ref<imageInterface[] | null>(null);
 const colorsRef = ref();
 
 const containImageCheckbox = () => {
-  const imgContainMeta = projectMeta.value?.find((item) => item.meta_key === "project_img_contain");
+  const imgContainMeta = metaStore.getMeta("project_img_contain");
 
   if (imgContainMeta) {
     imgContainMeta.meta_value = isContainImage.value ? "false" : "true";

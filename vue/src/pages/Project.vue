@@ -9,15 +9,16 @@ import { useFloorsStore } from "../stores/useFloors";
 import { useTypesStore } from "../stores/useTypes";
 import { useFlatsStore } from "../stores/useFlats";
 import { useBlocksStore } from "../stores/useBlock";
-import Preview from "../components/ShortcodeComponents/preview/Preview.vue";
+import { useMetaStore } from "../stores/useMeta";
 
 const projectStore = useProjectStore();
+const metaStore = useMetaStore();
 const floorsStore = useFloorsStore();
 const blockStore = useBlocksStore();
 const typesStore = useTypesStore();
 const flatsStore = useFlatsStore();
 
-const { polygon_data, activeGroup, svgRef, svg, id, isContainImage, project_image } = storeToRefs(projectStore);
+const { polygon_data, activeGroup, svgRef, svg, id, project_image } = storeToRefs(projectStore);
 
 const deleteG = (key: string) => {
   activeGroup.value = null;
@@ -46,7 +47,7 @@ onMounted(() => {
       :svg="svg"
       :activeGroup="activeGroup"
       :isFloorsCanvas="false"
-      :isImageContain="isContainImage"
+      :isImageContain="metaStore?.isContainImage"
       @set-svg-ref="(svgContainer) => (svgRef = svgContainer)"
       @set-active-g="(gTag) => (activeGroup = gTag)"
       @delete-g="(key) => deleteG(key)"

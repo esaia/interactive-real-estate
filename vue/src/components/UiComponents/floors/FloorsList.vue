@@ -15,6 +15,7 @@ import Input from "../form/Input.vue";
 import Button from "../form/Button.vue";
 import { getBlockTitleById } from "@/src/composables/helpers";
 import FilterBlocks from "../blocks/FilterBlocks.vue";
+import EmptyState from "../common/EmptyState.vue";
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
@@ -142,7 +143,7 @@ onMounted(() => {
       </div>
     </form>
 
-    <div class="relative overflow-x-auto shadow-sm">
+    <div v-if="floors?.data?.length" class="relative overflow-x-auto shadow-sm">
       <Table
         :data="floors?.data"
         @edit-action="(floor: FloorItem | null) => editFloor(floor)"
@@ -197,6 +198,8 @@ onMounted(() => {
 
       <Pagination :totalItems="Number(floors?.total)" :perPage="perPage" v-model="currentPage" />
     </div>
+
+    <EmptyState v-else />
   </div>
 
   <teleport to="#my-vue-app">

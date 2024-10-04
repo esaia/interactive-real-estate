@@ -13,6 +13,7 @@ import Input from "../form/Input.vue";
 import Button from "../form/Button.vue";
 import { useBlocksStore } from "@/src/stores/useBlock";
 import CreateEditBlockModal from "./CreateEditBlockModal.vue";
+import EmptyState from "../common/EmptyState.vue";
 
 const projectStore = useProjectStore();
 const blockStore = useBlocksStore();
@@ -127,7 +128,7 @@ onMounted(() => {
       </div>
     </form>
 
-    <div class="relative overflow-x-auto shadow-sm">
+    <div v-if="blocks?.data?.length" class="relative overflow-x-auto shadow-sm">
       <Table
         :data="blocks?.data"
         @edit-action="(block: BlockItem | null) => editBlock(block)"
@@ -172,6 +173,8 @@ onMounted(() => {
 
       <Pagination :totalItems="Number(blocks?.total)" :perPage="perPage" v-model="currentPage" />
     </div>
+
+    <EmptyState v-else />
   </div>
 
   <teleport to="#my-vue-app">
