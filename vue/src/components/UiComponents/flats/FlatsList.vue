@@ -24,6 +24,7 @@ const filterBlockId = ref();
 const filterFloorId = ref();
 
 const showEditFlatModal = ref(false);
+
 const flats = ref<FlatsInterface>();
 const sortField = ref("");
 const sortOrder = ref<"ASC" | "DESC" | "">("ASC");

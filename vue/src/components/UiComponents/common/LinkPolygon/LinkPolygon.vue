@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import Select from "../form/Select.vue";
 import { useFloorsStore } from "@/src/stores/useFloors";
 import { storeToRefs } from "pinia";
-import Close from "../icons/Close.vue";
 import { useProjectStore } from "@/src/stores/useProject";
 import { PolygonDataCollection, selectDataItem } from "@/types/components";
 import { useFlatsStore } from "@/src/stores/useFlats";
 import { useBlocksStore } from "@/src/stores/useBlock";
-import { getBlockTitleById } from "@/src/composables/helpers";
+import Select from "../../form/Select.vue";
+import Close from "../../icons/Close.vue";
+import CustomTooltipSetup from "./CustomTooltipSetup.vue";
 
 const props = defineProps<{
   activeGroup: SVGGElement | null;
@@ -19,7 +19,7 @@ const props = defineProps<{
 
 const key = props.activeGroup?.getAttribute("id");
 
-const activeTab = ref<"block" | "flat" | "floor" | "">("");
+const activeTab = ref<"tooltip" | "block" | "flat" | "floor" | "">("");
 const selectedItem = ref<selectDataItem>({ title: "choose", value: "", isLinked: false, type: "" });
 const showModal = ref(true);
 
@@ -176,6 +176,14 @@ onMounted(() => {
 
       <div v-if="!isFloorsCanvas" class="mt-2 flex [&_div]:px-3">
         <div
+          class="sidebar-item-icon icon-hover-text bg-gray-100"
+          :class="{ '!bg-black text-white': activeTab === 'tooltip' }"
+          @click="activeTab = 'tooltip'"
+        >
+          Action
+        </div>
+
+        <div
           v-if="!isBlockCanvas"
           class="sidebar-item-icon icon-hover-text bg-gray-100"
           :class="{ '!bg-black text-white': activeTab === 'block' }"
@@ -200,20 +208,27 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="activeTab === 'block'" class="mt-3 flex items-center gap-3">
+      <div v-if="activeTab === 'tooltip'" class="mt-3 flex items-center gap-3">
+        <CustomTooltipSetup :is-block-canvas="isBlockCanvas" :is-floors-canvas="isFloorsCanvas" />
+      </div>
+
+      <div v-if="activeTab === 'block'" class="mt-3 flex flex-col items-start">
+        <p class="label">Select block:</p>
         <Select v-model="selectedItem" :data="blocksSelectData" />
       </div>
 
-      <div v-else-if="activeTab === 'floor'" class="mt-3 flex flex-col items-start gap-3">
+      <div v-else-if="activeTab === 'floor'" class="mt-3 flex flex-col items-start">
+        <p class="label">Select floor:</p>
+
         <Select v-model="selectedItem" :data="floorsSelectData" />
 
-        <span v-if="!floorsSelectData.length" class="text-lg text-red-500">Please add Floor!!!</span>
+        <span v-if="!floorsSelectData.length" class="mt-3 text-lg text-red-500">Please add Floor!!!</span>
       </div>
 
-      <div v-else-if="activeTab === 'flat'" class="mt-3 flex flex-col items-start gap-1">
-        <p v-if="isFloorsCanvas" class="text-gray-500">Choose floor flats</p>
+      <div v-else-if="activeTab === 'flat'" class="mt-3 flex flex-col items-start">
+        <p class="label">Select flat:</p>
         <Select v-model="selectedItem" :data="flatsSelectData" />
-        <span v-if="!flatsSelectData.length" class="text-lg text-red-500">Please add flat for this floor!!!</span>
+        <span v-if="!flatsSelectData.length" class="mt-3 text-lg text-red-500">Please add flat for this floor!!!</span>
       </div>
     </div>
   </Transition>

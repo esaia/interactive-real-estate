@@ -3,7 +3,7 @@
 import SvgCanvas from "./SvgCanvas.vue";
 import { PolygonDataCollection } from "../../types/components";
 import Sidebar from "./UiComponents/common/Sidebar.vue";
-import LinkPolygon from "./UiComponents/common/LinkPolygon.vue";
+import LinkPolygon from "./UiComponents/common/LinkPolygon/LinkPolygon.vue";
 
 defineEmits<{
   (e: "setActiveG", gTag: SVGGElement | null): void;

@@ -13,8 +13,10 @@ import { useProjectStore } from "@/src/stores/useProject";
 import { useFloorsStore } from "@/src/stores/useFloors";
 import { useFlatsStore } from "@/src/stores/useFlats";
 import BlocksList from "../blocks/BlocksList.vue";
+import FlagIcon from "../icons/FlagIcon.vue";
+import ActionList from "../tooltip/ActionList.vue";
 
-const showModal = ref<"block" | "floor" | "flat" | "type" | "">("");
+const showModal = ref<"action" | "block" | "floor" | "flat" | "type" | "">("action");
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
@@ -39,6 +41,14 @@ watch(
 
 <template>
   <div class="flex w-full items-center gap-3">
+    <div class="modal-box-item" @click="showModal = 'action'">
+      <FlagIcon />
+      <div>
+        <h4 class="font-semibold">Action</h4>
+        <p>2 actions</p>
+      </div>
+    </div>
+
     <div class="modal-box-item" @click="showModal = 'block'">
       <Building />
       <div>
@@ -70,6 +80,14 @@ watch(
         <p>5 type</p>
       </div>
     </div>
+
+    <teleport to="#my-vue-app">
+      <Transition name="fade">
+        <Modal v-if="showModal === 'action'" type="2" width="w-11/12" @close="showModal = ''">
+          <ActionList />
+        </Modal>
+      </Transition>
+    </teleport>
 
     <teleport to="#my-vue-app">
       <Transition name="fade">

@@ -196,6 +196,34 @@ export interface ShortcodeData {
   meta: ProjectMeta[];
 }
 
+export interface ActionInterface {
+  data: ActionItem[];
+  page: number;
+  per_page: number;
+  total: number;
+}
+
+export interface ActionItem {
+  id: string;
+  title: string;
+  data: actionData;
+  created_at: string;
+  updated_at: string;
+}
+
+
+interface actionData {
+  url: string;
+  actionType: string;
+  modalObject: ModalObject;
+}
+
+export interface ModalObject {
+  title: string;
+  description: string;
+  modalImage: null | imageInterface
+}
+
 // export interface PolygonDataCollection {
 //   [key: string]: PolygonData;
 // }

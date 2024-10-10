@@ -156,6 +156,22 @@ function ire_create_tables()
     ) $charset_collate;";
 
 
+
+    // Table for Flats
+    $tooltip_table_name = $wpdb->prefix . 'ire_tooltip';
+    $tooltip_sql = "CREATE TABLE $tooltip_table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        project_id mediumint(9) NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        data JSON,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
+    ) $charset_collate;";
+
+
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($projects_sql);
     dbDelta($floors_sql);
@@ -163,6 +179,8 @@ function ire_create_tables()
     dbDelta($flats_sql);
     dbDelta($types_sql);
     dbDelta($meta_sql);
+    dbDelta($meta_sql);
+    dbDelta($tooltip_sql);
 }
 
 

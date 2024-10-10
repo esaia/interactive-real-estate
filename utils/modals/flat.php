@@ -20,6 +20,7 @@ class IreFlat
     public function get_flats($data)
     {
         check_nonce($data['nonce'], 'ire_nonce');
+
         has_project_id($data);
         $data = sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf', 'block_id']);
 
@@ -54,8 +55,8 @@ class IreFlat
 
         // Add pagination
         $query .= " ORDER BY " . esc_sql($data['sort_field']) . " " . esc_sql($data['sort_order']) . " LIMIT %d OFFSET %d";
-        $params[] =  $data['per_page'];
-        $params[] =   $offset;
+        $params[] = $data['per_page'];
+        $params[] = $offset;
 
         // Prepare and execute the main query
         $query = $this->wpdb->prepare($query, ...$params);
@@ -96,12 +97,15 @@ class IreFlat
             return [false, $results->get_error_message()];
         } else {
 
-            return [true, [
-                'data' => $results,
-                'total' => $total_results,
-                'page' => $data['page'],
-                'per_page' => $data['per_page']
-            ]];
+            return [
+                true,
+                [
+                    'data' => $results,
+                    'total' => $total_results,
+                    'page' => $data['page'],
+                    'per_page' => $data['per_page']
+                ]
+            ];
         }
     }
 
@@ -126,7 +130,7 @@ class IreFlat
             send_json_response(false, 'Database error');
         } else {
             $new_flat_id = $this->wpdb->insert_id;
-            $new_flat =  get($this->table_name, $new_flat_id);
+            $new_flat = get($this->table_name, $new_flat_id);
 
             if (isset($new_flat->polygon_data)) {
                 $new_flat->polygon_data = handle_json_data($new_flat->polygon_data);
