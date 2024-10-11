@@ -47,7 +47,9 @@ class IreTooltip
 
         $results = array_map(
             function ($result) {
-                $result['data'] = handle_json_data($result['data']);
+                $result['data'] =
+                    handle_json_data($result['data']);
+                $result['data']->targetBlank = handle_json_data($result['data']->targetBlank);
                 return $result;
             },
             $results
@@ -111,7 +113,7 @@ class IreTooltip
         if ($this->wpdb->last_error) {
             send_json_response(false, 'Database error');
         } else {
-            send_json_response(true, 'Type updated successfully');
+            send_json_response(true, 'Tooltip updated successfully');
         }
     }
 

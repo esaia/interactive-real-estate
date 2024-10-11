@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, Transition } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 import Close from "./icons/Close.vue";
 
 defineEmits<{

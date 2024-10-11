@@ -10,6 +10,7 @@ import { useTypesStore } from "../stores/useTypes";
 import { useFlatsStore } from "../stores/useFlats";
 import { useBlocksStore } from "../stores/useBlock";
 import { useMetaStore } from "../stores/useMeta";
+import { useActionsStore } from "../stores/useActions";
 
 const projectStore = useProjectStore();
 const metaStore = useMetaStore();
@@ -17,6 +18,7 @@ const floorsStore = useFloorsStore();
 const blockStore = useBlocksStore();
 const typesStore = useTypesStore();
 const flatsStore = useFlatsStore();
+const actionsStore = useActionsStore();
 
 const { polygon_data, activeGroup, svgRef, svg, id, project_image } = storeToRefs(projectStore);
 
@@ -33,6 +35,7 @@ onMounted(() => {
   blockStore.fetchProjectBLocks(projectId);
   typesStore.fetchProjectTypes(projectId);
   flatsStore.fetchProjectFlats(projectId);
+  actionsStore.fetchProjectActions(projectId);
 });
 </script>
 

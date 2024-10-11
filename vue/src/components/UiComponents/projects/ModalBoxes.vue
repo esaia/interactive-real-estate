@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Transition, watch } from "vue";
+import { ref, watch } from "vue";
 import FloorsList from "../floors/FloorsList.vue";
 import Building from "../icons/Building.vue";
 import Flat from "../icons/Flat.vue";
@@ -15,10 +15,14 @@ import { useFlatsStore } from "@/src/stores/useFlats";
 import BlocksList from "../blocks/BlocksList.vue";
 import FlagIcon from "../icons/FlagIcon.vue";
 import ActionList from "../tooltip/ActionList.vue";
+import { useBlocksStore } from "@/src/stores/useBlock";
+import { useActionsStore } from "@/src/stores/useActions";
 
-const showModal = ref<"action" | "block" | "floor" | "flat" | "type" | "">("action");
+const showModal = ref<"tooltip" | "block" | "floor" | "flat" | "type" | "">("");
 
+const actionsStore = useActionsStore();
 const projectStore = useProjectStore();
+const blocksStore = useBlocksStore();
 const floorStore = useFloorsStore();
 const typesStore = useTypesStore();
 const flatStore = useFlatsStore();
@@ -28,7 +32,12 @@ watch(
   (_, os) => {
     const id = Number(projectStore?.id);
 
-    if (os === "type") {
+    console.log(os);
+    if (os === "tooltip") {
+      actionsStore.fetchProjectActions(id);
+    } else if (os === "block") {
+      blocksStore.fetchProjectBLocks(id);
+    } else if (os === "type") {
       typesStore.fetchProjectTypes(id);
     } else if (os === "floor") {
       floorStore.fetchProjectFloors(id);
@@ -41,7 +50,7 @@ watch(
 
 <template>
   <div class="flex w-full items-center gap-3">
-    <div class="modal-box-item" @click="showModal = 'action'">
+    <div class="modal-box-item" @click="showModal = 'tooltip'">
       <FlagIcon />
       <div>
         <h4 class="font-semibold">Action</h4>
@@ -83,7 +92,7 @@ watch(
 
     <teleport to="#my-vue-app">
       <Transition name="fade">
-        <Modal v-if="showModal === 'action'" type="2" width="w-11/12" @close="showModal = ''">
+        <Modal v-if="showModal === 'tooltip'" type="2" width="w-11/12" @close="showModal = ''">
           <ActionList />
         </Modal>
       </Transition>

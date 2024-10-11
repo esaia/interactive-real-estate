@@ -8,7 +8,7 @@ import { useFlatsStore } from "@/src/stores/useFlats";
 import { useBlocksStore } from "@/src/stores/useBlock";
 import Select from "../../form/Select.vue";
 import Close from "../../icons/Close.vue";
-import CustomTooltipSetup from "./CustomTooltipSetup.vue";
+import { useActionsStore } from "@/src/stores/useActions";
 
 const props = defineProps<{
   activeGroup: SVGGElement | null;
@@ -27,31 +27,24 @@ const projectsStore = useProjectStore();
 const floorsStore = useFloorsStore();
 const blockStore = useBlocksStore();
 const flatsStore = useFlatsStore();
+const actionsStore = useActionsStore();
 const { projectFloors, activeFloor } = storeToRefs(floorsStore);
 const { projectBlocks, activeBlock } = storeToRefs(blockStore);
 const { projectFlats } = storeToRefs(flatsStore);
 
-const floorsSelectData = computed<selectDataItem[]>(() => {
-  if (!projectFloors.value) return [];
+const actionSelectData = computed<selectDataItem[]>(() => {
+  if (!actionsStore.projectActions) return [];
 
-  return projectFloors.value
-    .filter((floor) => {
-      if (activeBlock.value) {
-        return activeBlock.value.id?.toString() === floor.block_id?.toString();
-      } else {
-        return !floor.block_id;
-      }
-    })
-    ?.map((item) => {
-      const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "floor");
+  return actionsStore.projectActions?.map((item) => {
+    const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "tooltip");
 
-      return {
-        title: `id: ${item.id} | floor #${item.floor_number.toString()} ${item.conf ? " | " + item.conf : ""}`,
-        value: item.id.toString(),
-        isLinked,
-        type: "floor"
-      };
-    });
+    return {
+      title: `id: ${item.id} | ${item.title}`,
+      value: item.id.toString(),
+      isLinked,
+      type: "tooltip"
+    };
+  });
 });
 
 const blocksSelectData = computed<selectDataItem[]>(() => {
@@ -69,6 +62,29 @@ const blocksSelectData = computed<selectDataItem[]>(() => {
   });
 });
 
+const floorsSelectData = computed<selectDataItem[]>(() => {
+  if (!projectFloors.value) return [];
+
+  return projectFloors.value
+    .filter((floor) => {
+      if (activeBlock.value) {
+        return activeBlock.value.id?.toString() === floor.block_id?.toString();
+      } else {
+        return !floor.block_id;
+      }
+    })
+    ?.sort((a, b) => a.floor_number - b.floor_number)
+    ?.map((item) => {
+      const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "floor");
+
+      return {
+        title: `id: ${item.id} | floor #${item.floor_number.toString()} ${item.conf ? " | " + item.conf : ""}`,
+        value: item.id.toString(),
+        isLinked,
+        type: "floor"
+      };
+    });
+});
 const flatsSelectData = computed<selectDataItem[]>(() => {
   if (!projectFlats.value) return [];
 
@@ -125,6 +141,15 @@ onMounted(() => {
 
   if (polygonId) {
     switch (polygonType) {
+      case "tooltip":
+        const activeAction = actionSelectData.value?.find((action) => action.value === polygonId);
+
+        if (activeAction) {
+          selectedItem.value = activeAction;
+        }
+
+        break;
+
       case "floor":
         const activeFloor = floorsSelectData.value?.find((floor) => floor.value === polygonId);
 
@@ -208,26 +233,21 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="activeTab === 'tooltip'" class="mt-3 flex items-center gap-3">
-        <CustomTooltipSetup :is-block-canvas="isBlockCanvas" :is-floors-canvas="isFloorsCanvas" />
+      <div v-if="activeTab === 'tooltip'" class="mt-3 flex flex-col items-start">
+        <Select v-model="selectedItem" :data="actionSelectData" label="Select Action:" />
       </div>
 
       <div v-if="activeTab === 'block'" class="mt-3 flex flex-col items-start">
-        <p class="label">Select block:</p>
-        <Select v-model="selectedItem" :data="blocksSelectData" />
+        <Select v-model="selectedItem" :data="blocksSelectData" label="Select block:" />
       </div>
 
       <div v-else-if="activeTab === 'floor'" class="mt-3 flex flex-col items-start">
-        <p class="label">Select floor:</p>
-
-        <Select v-model="selectedItem" :data="floorsSelectData" />
-
+        <Select v-model="selectedItem" :data="floorsSelectData" label="Select floor:" />
         <span v-if="!floorsSelectData.length" class="mt-3 text-lg text-red-500">Please add Floor!!!</span>
       </div>
 
       <div v-else-if="activeTab === 'flat'" class="mt-3 flex flex-col items-start">
-        <p class="label">Select flat:</p>
-        <Select v-model="selectedItem" :data="flatsSelectData" />
+        <Select v-model="selectedItem" :data="flatsSelectData" label="Select flat:" />
         <span v-if="!flatsSelectData.length" class="mt-3 text-lg text-red-500">Please add flat for this floor!!!</span>
       </div>
     </div>

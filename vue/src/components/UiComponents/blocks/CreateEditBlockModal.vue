@@ -14,6 +14,8 @@ import Modal from "../Modal.vue";
 import CreateEditFlatModal from "../flats/CreateEditFlatModal.vue";
 import { useFlatsStore } from "@/src/stores/useFlats";
 import { useBlocksStore } from "@/src/stores/useBlock";
+import CreateEditFloorModal from "../floors/CreateEditFloorModal.vue";
+import { useFloorsStore } from "@/src/stores/useFloors";
 
 const props = defineProps<{
   duplicatedBlock?: BlockItem | null;
@@ -26,10 +28,13 @@ const defaultConf = [
 
 const projectStore = useProjectStore();
 const blockStore = useBlocksStore();
+const floorsStore = useFloorsStore();
 const flatStore = useFlatsStore();
+
 const { id, svgRef } = storeToRefs(projectStore);
 const { activeBlock, activeBlockGroup, blockSvgRef } = storeToRefs(blockStore);
 const addFlatModal = ref(false);
+const addFloorModal = ref(false);
 
 const deleteG = (key: string) => {
   activeBlockGroup.value = null;
@@ -130,6 +135,15 @@ watch(
   (ns) => {
     if (!ns) {
       flatStore.fetchProjectFlats(id.value);
+    }
+  }
+);
+
+watch(
+  () => addFloorModal.value,
+  (ns) => {
+    if (!ns) {
+      floorsStore.fetchProjectFloors(id.value);
     }
   }
 );
@@ -240,6 +254,7 @@ onUnmounted(() => {
         </div>
       </form>
       <Button title="Add flat" @click="addFlatModal = true" :outlined="true" />
+      <Button title="Add floor" @click="addFloorModal = true" :outlined="true" />
     </div>
   </div>
 
@@ -247,6 +262,14 @@ onUnmounted(() => {
     <Transition name="fade">
       <Modal v-if="addFlatModal" @close="addFlatModal = false" type="2" width="w-[400px]">
         <CreateEditFlatModal :activeFlat="null" />
+      </Modal>
+    </Transition>
+  </teleport>
+
+  <teleport to="#my-vue-app">
+    <Transition name="fade">
+      <Modal v-if="addFloorModal" @close="addFloorModal = false" type="2">
+        <CreateEditFloorModal />
       </Modal>
     </Transition>
   </teleport>

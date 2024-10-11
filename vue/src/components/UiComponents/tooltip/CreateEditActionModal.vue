@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
+import { onMounted, ref } from "vue";
 import Button from "../form/Button.vue";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
 import { useFloorsStore } from "@/src/stores/useFloors";
-import { storeToRefs } from "pinia";
-import { useTypesStore } from "@/src/stores/useTypes";
 import ajaxAxios from "@/src/utils/axios";
 import { useProjectStore } from "@/src/stores/useProject";
-import { ActionItem, imageInterface, ModalObject } from "@/types/components";
+import { ActionItem, ModalObject } from "@/types/components";
 import { showToast } from "@/src/composables/helpers";
+import TextArea from "../form/TextArea.vue";
+import UploadImg from "../form/UploadImg.vue";
 
 const emits = defineEmits<{
   (e: "setActiveAction", activeType: ActionItem): void;
@@ -22,8 +22,6 @@ const props = defineProps<{
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
-const typesStore = useTypesStore();
-const { projectTypes } = storeToRefs(typesStore);
 
 const actions = [
   { title: "no action", value: "no-action" },
@@ -39,10 +37,7 @@ const modalObject = ref<ModalObject>({
   modalImage: null
 });
 const url = ref("#");
-// const modalImage = ref<imageInterface[] | null>(null);
-
-const showTypeModal = ref(false);
-const activeType = ref<ActionItem | null>(null);
+const targetBlank = ref();
 
 const submitForm = async () => {
   const params = {
@@ -52,7 +47,8 @@ const submitForm = async () => {
     data: {
       actionType: action.value?.value,
       modalObject: modalObject.value,
-      url: url.value
+      url: url.value,
+      targetBlank: targetBlank.value
     }
   };
   if (props.activeAction) {
@@ -107,6 +103,7 @@ onMounted(() => {
     action.value = actions.find((item) => item.value === actionInstance.data?.actionType) || actions[0];
     modalObject.value = actionInstance?.data?.modalObject;
     url.value = actionInstance?.data?.url;
+    targetBlank.value = actionInstance?.data?.targetBlank;
   }
 });
 </script>
@@ -126,30 +123,23 @@ onMounted(() => {
 
       <Select v-model="action" :data="actions" label="Select Action" required />
 
-      <div v-if="action.value === 'modal'" class="mt-3 w-full">
-        <input
-          v-model="modalObject.title"
-          type="text"
-          placeholder="Title..."
-          class="mb-2 w-full !border-none !px-0 font-bold !outline-none focus:!shadow-none"
-        />
+      <div v-if="action.value !== 'no-action'" class="w-full rounded-md border border-gray-200 p-3">
+        <h4 class="font-bold capitalize">{{ action.title }}:</h4>
+        <div v-if="action.value === 'modal'" class="mt-3 flex w-full flex-col gap-3">
+          <Input v-model="modalObject.title" label="Action title" />
+          <TextArea v-model="modalObject.description" label="Description" />
 
-        <textarea
-          v-model="modalObject.description"
-          placeholder="Description..."
-          class="block w-full !border-none !outline-none focus:!shadow-none"
-        ></textarea>
+          <UploadImg v-model="modalObject.modalImage" title="Upload modal image" />
+        </div>
 
-        <UploadImg v-model="modalObject.modalImage" title="Upload modal image" required />
-      </div>
+        <div v-else-if="action.value === 'url'" class="mt-3 w-full">
+          <Input v-model="url" label="url" />
 
-      <div v-else-if="action.value === 'url'" class="mt-3 w-full">
-        <Input v-model="url" label="url" />
-
-        <label class="mt-3 flex w-fit items-center">
-          <input type="checkbox" />
-          <p class="label cursor-pointer capitalize">Open in new window</p>
-        </label>
+          <label class="mt-3 flex w-fit items-center">
+            <input v-model="targetBlank" type="checkbox" />
+            <p class="label cursor-pointer capitalize">Open in new window</p>
+          </label>
+        </div>
       </div>
 
       <label class="mt-3 flex items-center border-t pt-3">
