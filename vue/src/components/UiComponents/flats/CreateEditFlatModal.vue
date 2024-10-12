@@ -86,7 +86,7 @@ const submitForm = async () => {
     type_id: (obj.type_id as selectDataItem | null)?.value,
     floor_number: (obj.floor_number as selectDataItem | null)?.value,
     project_id: projectStore?.id,
-    block_id: obj.block_id?.value
+    block_id: obj.block_id?.value || null
   };
 
   if (props.activeFlat) {

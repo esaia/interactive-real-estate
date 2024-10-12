@@ -57,7 +57,7 @@ class IreProject
         check_nonce($data['nonce'], 'ire_nonce');
 
         $title = isset($data['title']) ? sanitize_text_field($data['title']) : '';
-        $project_image = isset($data['project_image']['id']) ? sanitize_text_field($data['project_image']['id']) : '';
+        $project_image = isset($data['project_image']) ? sanitize_text_field($data['project_image']) : '';
         $slug = sanitize_title($title);
 
         $this->wpdb->insert(

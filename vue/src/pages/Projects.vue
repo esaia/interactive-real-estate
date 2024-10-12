@@ -5,11 +5,15 @@ import Modal from "../components/UiComponents/Modal.vue";
 import Plus from "../components/UiComponents/icons/Plus.vue";
 import AddProjectModal from "../components/UiComponents/projects/AddProjectModal.vue";
 
-defineProps<{
+const props = defineProps<{
   projects: any;
 }>();
 
 const isModalOpen = ref(false);
+
+setTimeout(() => {
+  console.log(props.projects);
+}, 500);
 </script>
 
 <template>
@@ -32,8 +36,8 @@ const isModalOpen = ref(false);
       >
         <div class="relative overflow-hidden rounded-lg pt-[50%]">
           <img
-            v-if="project.project_image"
-            :src="project.project_image"
+            v-if="project.project_image.length"
+            :src="project.project_image?.[0]?.url"
             alt=""
             class="absolute left-0 top-0 h-full w-full object-cover shadow-lg transition-all duration-200 hover:opacity-75 group-hover:scale-105"
           />

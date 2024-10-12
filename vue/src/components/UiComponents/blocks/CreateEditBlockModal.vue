@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "@/src/stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
@@ -10,12 +10,7 @@ import { resetCanvasAfterSave, showToast, transformSvgString } from "@/src/compo
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
-import Modal from "../Modal.vue";
-import CreateEditFlatModal from "../flats/CreateEditFlatModal.vue";
-import { useFlatsStore } from "@/src/stores/useFlats";
 import { useBlocksStore } from "@/src/stores/useBlock";
-import CreateEditFloorModal from "../floors/CreateEditFloorModal.vue";
-import { useFloorsStore } from "@/src/stores/useFloors";
 import FloorsList from "../floors/FloorsList.vue";
 
 const props = defineProps<{
@@ -29,13 +24,9 @@ const defaultConf = [
 
 const projectStore = useProjectStore();
 const blockStore = useBlocksStore();
-const floorsStore = useFloorsStore();
-const flatStore = useFlatsStore();
 
 const { id, svgRef } = storeToRefs(projectStore);
 const { activeBlock, activeBlockGroup, blockSvgRef } = storeToRefs(blockStore);
-const addFlatModal = ref(false);
-const addFloorModal = ref(false);
 
 const title = ref("");
 const block_image = ref<imageInterface[] | null>(null);
@@ -138,24 +129,6 @@ const createBlock = async () => {
     showToast("error", "Something went wrong!");
   }
 };
-
-watch(
-  () => addFlatModal.value,
-  (ns) => {
-    if (!ns) {
-      flatStore.fetchProjectFlats(id.value);
-    }
-  }
-);
-
-watch(
-  () => addFloorModal.value,
-  (ns) => {
-    if (!ns) {
-      floorsStore.fetchProjectFloors(id.value);
-    }
-  }
-);
 
 onMounted(() => {
   if (activeBlock.value) {
@@ -264,24 +237,6 @@ onUnmounted(() => {
           <Button type="submit" :title="activeBlock ? 'Edit block' : 'Add block'" />
         </div>
       </form>
-      <Button title="Add flat" @click="addFlatModal = true" :outlined="true" />
-      <Button title="Add floor" @click="addFloorModal = true" :outlined="true" />
     </div>
   </div>
-
-  <teleport to="#my-vue-app">
-    <Transition name="fade">
-      <Modal v-if="addFlatModal" @close="addFlatModal = false" type="2" width="w-[400px]">
-        <CreateEditFlatModal :activeFlat="null" />
-      </Modal>
-    </Transition>
-  </teleport>
-
-  <teleport to="#my-vue-app">
-    <Transition name="fade">
-      <Modal v-if="addFloorModal" @close="addFloorModal = false" type="2">
-        <CreateEditFloorModal />
-      </Modal>
-    </Transition>
-  </teleport>
 </template>

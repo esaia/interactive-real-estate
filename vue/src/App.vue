@@ -37,6 +37,6 @@ onMounted(async () => {
     <Project v-if="project" />
     <div v-else>not found</div>
   </template>
-  <Projects v-else-if="projects" :projects="projects" />
-  <div v-else>error</div>
+  <Projects v-else :projects="projects" />
+  <!-- <div v-else>error</div> -->
 </template>

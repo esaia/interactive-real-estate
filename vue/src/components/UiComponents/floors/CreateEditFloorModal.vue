@@ -11,8 +11,6 @@ import { resetCanvasAfterSave, showToast, transformSvgString } from "@/src/compo
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
-import Modal from "../Modal.vue";
-import CreateEditFlatModal from "../flats/CreateEditFlatModal.vue";
 import { useFlatsStore } from "@/src/stores/useFlats";
 import { useBlocksStore } from "@/src/stores/useBlock";
 import FlatsList from "../flats/FlatsList.vue";
@@ -28,12 +26,10 @@ const defaultConf = [
 
 const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
-const flatStore = useFlatsStore();
 const blockStore = useBlocksStore();
 const { activeBlock } = storeToRefs(blockStore);
 const { id, svgRef } = storeToRefs(projectStore);
 const { activeFloor, activeGroup, floorSvgRef } = storeToRefs(floorStore);
-const addFlatModal = ref(false);
 
 const title = ref("");
 const floor_number = ref();
@@ -78,10 +74,10 @@ const deleteG = (key: string) => {
 
 const submitForm = async () => {
   if (floorSvgRef.value) {
-    await resetCanvasAfterSave(floorSvgRef.value);
+    resetCanvasAfterSave(floorSvgRef.value);
   }
   if (svgRef.value) {
-    await resetCanvasAfterSave(svgRef.value);
+    resetCanvasAfterSave(svgRef.value);
   }
 
   activeGroup.value = null;
@@ -166,15 +162,6 @@ const createFloor = async () => {
     showToast("error", "Something went wrong!");
   }
 };
-
-watch(
-  () => addFlatModal.value,
-  (ns) => {
-    if (!ns) {
-      flatStore.fetchProjectFlats(id.value);
-    }
-  }
-);
 
 const sedDefaultValues = (source: FloorItem) => {
   title.value = source.title;
@@ -285,15 +272,6 @@ onUnmounted(() => {
           <Button type="submit" :title="activeFloor ? 'Edit floor' : 'Add floor'" />
         </div>
       </form>
-      <Button title="Add flat" @click="addFlatModal = true" :outlined="true" />
     </div>
   </div>
-
-  <teleport to="#my-vue-app">
-    <Transition name="fade">
-      <Modal v-if="addFlatModal" @close="addFlatModal = false" type="2" width="w-[400px]">
-        <CreateEditFlatModal :activeFlat="null" />
-      </Modal>
-    </Transition>
-  </teleport>
 </template>

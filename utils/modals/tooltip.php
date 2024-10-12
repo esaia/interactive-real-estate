@@ -47,9 +47,12 @@ class IreTooltip
 
         $results = array_map(
             function ($result) {
-                $result['data'] =
-                    handle_json_data($result['data']);
-                $result['data']->targetBlank = handle_json_data($result['data']->targetBlank);
+                $result['data'] = handle_json_data($result['data']);
+
+                if (isset($result['data']->targetBlank)) {
+                    $result['data']->targetBlank = handle_json_data($result['data']->targetBlank);
+                }
+
                 return $result;
             },
             $results

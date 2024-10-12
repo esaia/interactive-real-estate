@@ -160,6 +160,8 @@ class IreFlat
         $keys = ['flat_number', 'price', 'type_id', 'floor_number', 'project_id', 'block_id', 'offer_price', 'conf'];
         $params = validate_and_sanitize_input($data, $keys, false);
 
+        $params['block_id'] ??= null;
+
 
         $where = ['id' => $flat_id];
         $this->wpdb->update($this->table_name, $params, $where);

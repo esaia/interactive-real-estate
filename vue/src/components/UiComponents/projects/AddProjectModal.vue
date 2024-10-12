@@ -10,17 +10,17 @@ const emit = defineEmits<{
 }>();
 
 const title = ref("");
-const selectedImage = ref<imageInterface>();
+const selectedImage = ref<imageInterface[] | null>(null);
 
 const onFormSubmits = async () => {
-  if (!selectedImage.value?.id) return;
+  // if (!selectedImage.value?.length) return;
 
   try {
     await ajaxAxios.post("", {
       action: "create_project",
       nonce: irePlugin.nonce,
       title: title.value,
-      project_image: selectedImage.value,
+      project_image: selectedImage.value?.[0]?.id,
       svg: ""
     });
     emit("close");
@@ -34,9 +34,11 @@ const onFormSubmits = async () => {
 
     <form class="flex flex-col gap-3" @submit.prevent="onFormSubmits">
       <input v-model="title" type="text" class="w-full" placeholder="project title" required />
-      <UploadImg v-model="selectedImage" />
+      <UploadImg v-model="selectedImage" title="upload project image" />
 
-      <Button title="Create" />
+      <div @click="onFormSubmits">
+        <Button title="Create 1" type="submit" />
+      </div>
     </form>
   </div>
 </template>
