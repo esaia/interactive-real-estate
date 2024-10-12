@@ -15,6 +15,7 @@ import Modal from "../Modal.vue";
 import CreateEditFlatModal from "../flats/CreateEditFlatModal.vue";
 import { useFlatsStore } from "@/src/stores/useFlats";
 import { useBlocksStore } from "@/src/stores/useBlock";
+import FlatsList from "../flats/FlatsList.vue";
 
 const props = defineProps<{
   duplicatedFloor?: FloorItem | null;
@@ -29,15 +30,10 @@ const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
 const flatStore = useFlatsStore();
 const blockStore = useBlocksStore();
+const { activeBlock } = storeToRefs(blockStore);
 const { id, svgRef } = storeToRefs(projectStore);
 const { activeFloor, activeGroup, floorSvgRef } = storeToRefs(floorStore);
 const addFlatModal = ref(false);
-
-const deleteG = (key: string) => {
-  activeGroup.value = null;
-  floorStore.removePoligonItem(key);
-  floorSvgRef.value?.querySelector(`#${key}`)?.remove();
-};
 
 const title = ref("");
 const floor_number = ref();
@@ -46,6 +42,22 @@ const conf = ref({ title: "Choose", value: "" });
 const block = ref();
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
 const img_contain = ref(false);
+
+const defaultBlockId = computed(() => {
+  if (activeBlock.value) {
+    return activeBlock.value?.id;
+  } else if (activeFloor.value?.block_id) {
+    return activeFloor.value?.block_id.toString();
+  }
+});
+
+const defaultFloorId = computed(() => {
+  if (activeFloor.value) {
+    return activeFloor.value?.floor_number.toString();
+  } else if (props.duplicatedFloor) {
+    return props.duplicatedFloor?.floor_number.toString();
+  }
+});
 
 const blockSelectData = computed(() => {
   return (
@@ -58,6 +70,12 @@ const blockSelectData = computed(() => {
   );
 });
 
+const deleteG = (key: string) => {
+  activeGroup.value = null;
+  floorStore.removePoligonItem(key);
+  floorSvgRef.value?.querySelector(`#${key}`)?.remove();
+};
+
 const submitForm = async () => {
   if (floorSvgRef.value) {
     await resetCanvasAfterSave(floorSvgRef.value);
@@ -69,10 +87,12 @@ const submitForm = async () => {
   activeGroup.value = null;
 
   if (activeFloor.value) {
-    updateFloor();
+    await updateFloor();
   } else {
-    createFloor();
+    await createFloor();
   }
+
+  floorStore.fetchProjectFloors(id.value);
 };
 
 const updateFloor = async () => {
@@ -230,6 +250,8 @@ onUnmounted(() => {
         @delete-g="(key) => deleteG(key)"
         @add-polygon-data="(key) => duplicatedFloorPolygonData?.push({ id: '', key, type: '' })"
       />
+
+      <FlatsList v-if="activeFloor" :default-floor="defaultFloorId" :default-block="defaultBlockId" />
     </div>
 
     <div class="flex flex-col gap-10">

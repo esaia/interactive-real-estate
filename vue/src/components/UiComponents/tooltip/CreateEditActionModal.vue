@@ -89,8 +89,6 @@ const createAction = async (params: any) => {
 };
 
 onMounted(() => {
-  floorStore.fetchProjectFloors(Number(projectStore.id));
-
   let actionInstance = null;
   if (props.activeAction) {
     actionInstance = props.activeAction;

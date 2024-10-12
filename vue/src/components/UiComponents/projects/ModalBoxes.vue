@@ -32,7 +32,6 @@ watch(
   (_, os) => {
     const id = Number(projectStore?.id);
 
-    console.log(os);
     if (os === "tooltip") {
       actionsStore.fetchProjectActions(id);
     } else if (os === "block") {

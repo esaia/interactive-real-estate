@@ -14,15 +14,19 @@ import DeleteModal from "../common/DeleteModal.vue";
 import Input from "../form/Input.vue";
 import Button from "../form/Button.vue";
 import { getBlockTitleById } from "@/src/composables/helpers";
-import FilterBlocks from "../blocks/FilterBlocks.vue";
 import EmptyState from "../common/EmptyState.vue";
+import Filteres from "../common/Filteres.vue";
+
+const props = defineProps<{
+  defaultBlockId?: string;
+}>();
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
 const { id } = storeToRefs(projectStore);
 
 const searchFloor = ref("");
-const filterBlockId = ref();
+const selectedBlockId = ref(props.defaultBlockId || "");
 const showFloorModal = ref(false);
 const floors = ref<FloorInterface>();
 const sortField = ref("");
@@ -83,7 +87,7 @@ const fetchFloors = async () => {
     page: currentPage.value,
     per_page: perPage.value,
     search: searchFloor.value,
-    block: filterBlockId.value
+    block: selectedBlockId.value
   });
 
   if (!data.success) {
@@ -117,7 +121,7 @@ watch(
 );
 
 watch(
-  () => filterBlockId.value,
+  () => selectedBlockId.value,
   () => {
     currentPage.value = 1;
     fetchFloors();
@@ -136,7 +140,7 @@ onMounted(() => {
 
       <Input v-model="searchFloor" placeholder="Filter floors list..." @keyup.enter="submitForm" />
 
-      <FilterBlocks @filter-by-block="(selectedBlock) => (filterBlockId = selectedBlock?.value || null)" />
+      <Filteres v-model:block="selectedBlockId" :showOnlyBlocks="true" />
 
       <div class="min-w-max" @click="showFloorModal = true">
         <Button title="Add Floor" outlined />

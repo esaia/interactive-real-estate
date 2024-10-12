@@ -13,6 +13,7 @@ import CreateEditTypeModal from "../types/CreateEditTypeModal.vue";
 import Modal from "../Modal.vue";
 import { useBlocksStore } from "@/src/stores/useBlock";
 import { showToast } from "@/src/composables/helpers";
+import { useFlatsStore } from "@/src/stores/useFlats";
 
 const emits = defineEmits<{
   (e: "setActiveFlat", activeType: FlatItem): void;
@@ -27,6 +28,7 @@ const projectStore = useProjectStore();
 const floorStore = useFloorsStore();
 const blockStore = useBlocksStore();
 const typesStore = useTypesStore();
+const flatStore = useFlatsStore();
 const { projectFloors } = storeToRefs(floorStore);
 const { projectTypes } = storeToRefs(typesStore);
 
@@ -88,10 +90,12 @@ const submitForm = async () => {
   };
 
   if (props.activeFlat) {
-    editFlat(params);
+    await editFlat(params);
   } else {
-    createFlat(params);
+    await createFlat(params);
   }
+
+  flatStore.fetchProjectFlats(projectStore.id);
 };
 
 const editFlat = async (params: any) => {

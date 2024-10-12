@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "@/src/stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
@@ -16,6 +16,7 @@ import { useFlatsStore } from "@/src/stores/useFlats";
 import { useBlocksStore } from "@/src/stores/useBlock";
 import CreateEditFloorModal from "../floors/CreateEditFloorModal.vue";
 import { useFloorsStore } from "@/src/stores/useFloors";
+import FloorsList from "../floors/FloorsList.vue";
 
 const props = defineProps<{
   duplicatedBlock?: BlockItem | null;
@@ -36,17 +37,25 @@ const { activeBlock, activeBlockGroup, blockSvgRef } = storeToRefs(blockStore);
 const addFlatModal = ref(false);
 const addFloorModal = ref(false);
 
-const deleteG = (key: string) => {
-  activeBlockGroup.value = null;
-  blockStore.removePoligonItem(key);
-  blockSvgRef.value?.querySelector(`#${key}`)?.remove();
-};
-
 const title = ref("");
 const block_image = ref<imageInterface[] | null>(null);
 const conf = ref({ title: "Choose", value: "" });
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
 const img_contain = ref(false);
+
+const defaultBlockId = computed(() => {
+  if (activeBlock.value) {
+    return activeBlock.value?.id;
+  } else if (props.duplicatedBlock) {
+    return props.duplicatedBlock?.id;
+  }
+});
+
+const deleteG = (key: string) => {
+  activeBlockGroup.value = null;
+  blockStore.removePoligonItem(key);
+  blockSvgRef.value?.querySelector(`#${key}`)?.remove();
+};
 
 const submitForm = async () => {
   if (blockSvgRef.value) {
@@ -223,6 +232,8 @@ onUnmounted(() => {
         @delete-g="(key) => deleteG(key)"
         @add-polygon-data="(key) => duplicatedFloorPolygonData?.push({ id: '', key, type: '' })"
       />
+
+      <FloorsList v-if="activeBlock" :default-block-id="defaultBlockId" />
     </div>
 
     <div class="flex flex-col gap-10">

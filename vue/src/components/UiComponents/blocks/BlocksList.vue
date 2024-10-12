@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, Transition, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import Modal from "@components/UiComponents/Modal.vue";
 import { BlockInterface, BlockItem } from "@/types/components";
 import ajaxAxios from "@/src/utils/axios";

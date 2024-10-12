@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import Collapse from "../icons/Collapse.vue";
 import Edit from "../icons/Edit.vue";
-import { FlatItem, PolygonDataCollection } from "../../../../types/components";
+import { BlockItem, FlatItem, FloorItem, PolygonDataCollection } from "../../../../types/components";
 import Info from "../icons/Info.vue";
 import Eye from "../icons/Eye.vue";
 import Delete from "../icons/Delete.vue";
@@ -37,6 +37,10 @@ const flatStore = useFlatsStore();
 const showEditModal = ref<"flat" | "floor" | "block" | "">("");
 const activeFlat = ref<FlatItem>();
 
+const duplicatedBlock = ref<BlockItem | null>(null);
+const duplicatedFloor = ref<FloorItem | null>(null);
+const duplicatedFlat = ref<FlatItem | null>(null);
+
 const setActiveG = (item: PolygonDataCollection) => {
   const gTag = (props.svgRef?.querySelector(`g#${item.key}`) as SVGGElement) || null;
 
@@ -54,29 +58,60 @@ const unlink = (key: string) => {
   emit("setActiveG", null);
 };
 
-const editPolygon = (item: PolygonDataCollection) => {
-  if (item.type === "floor") {
-    const activeFloor = floorsStore.projectFloors?.find((floor) => floor.id === item.id);
+const editOrDuplicateModal = (item: PolygonDataCollection, duplicate: boolean = false) => {
+  switch (item.type) {
+    case "floor": {
+      const activeFloor = floorsStore.projectFloors?.find((floor) => floor.id === item.id);
 
-    if (activeFloor) {
-      floorsStore.setActiveFloor(activeFloor);
+      if (!activeFloor) return;
+
+      if (duplicate) {
+        duplicatedFloor.value = activeFloor;
+      } else {
+        floorsStore.setActiveFloor(activeFloor);
+      }
+
       showEditModal.value = "floor";
-    }
-  } else if (item.type === "block") {
-    const activeBlock = blocksStore.projectBlocks?.find((block) => block.id === item.id);
 
-    if (activeBlock) {
-      blocksStore.setActiveBlock(activeBlock);
+      break;
+    }
+    case "block": {
+      const activeBlock = blocksStore.projectBlocks?.find((block) => block.id === item.id);
+
+      if (!activeBlock) return;
+
+      if (duplicate) {
+        duplicatedBlock.value = activeBlock;
+      } else {
+        blocksStore.setActiveBlock(activeBlock);
+      }
       showEditModal.value = "block";
+      break;
     }
-  } else if (item.type === "flat") {
-    const findActiveFlat = flatStore.projectFlats?.find((flat) => flat.id === item.id);
+    case "flat": {
+      const findedActiveFlat = flatStore.projectFlats?.find((flat) => flat.id === item.id);
 
-    if (findActiveFlat) {
-      activeFlat.value = findActiveFlat;
+      if (!findedActiveFlat) return;
+
+      if (duplicate) {
+        duplicatedFlat.value = findedActiveFlat;
+      } else {
+        activeFlat.value = findedActiveFlat;
+      }
       showEditModal.value = "flat";
+      break;
     }
+    default:
+      break;
   }
+};
+
+const editPolygon = (item: PolygonDataCollection) => {
+  editOrDuplicateModal(item);
+};
+
+const duplicateAction = (item: PolygonDataCollection) => {
+  editOrDuplicateModal(item, true);
 };
 
 watch(
@@ -153,7 +188,7 @@ watch(
             <Delete />
           </div>
 
-          <div class="sidebar-item-icon icon-hover-text">
+          <div class="sidebar-item-icon icon-hover-text" @click="duplicateAction(item)">
             <Eye />
           </div>
         </div>
@@ -163,19 +198,19 @@ watch(
     <teleport to="#my-vue-app">
       <Transition name="fade">
         <Modal v-if="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
-          <CreateEditFloorModal />
+          <CreateEditFloorModal :duplicatedFloor="duplicatedFloor" />
         </Modal>
       </Transition>
 
       <Transition name="fade">
         <Modal v-if="showEditModal === 'block'" @close="showEditModal = ''" type="2" width="w-11/12">
-          <CreateEditBlockModal />
+          <CreateEditBlockModal :duplicatedBlock="duplicatedBlock" />
         </Modal>
       </Transition>
 
       <Transition name="fade">
         <Modal v-if="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[400px]">
-          <CreateEditFlatModal :activeFlat="activeFlat" />
+          <CreateEditFlatModal :activeFlat="activeFlat" :duplicatedFlat="duplicatedFlat" />
         </Modal>
       </Transition>
     </teleport>

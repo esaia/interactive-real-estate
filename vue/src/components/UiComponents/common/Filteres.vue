@@ -1,19 +1,34 @@
 <script setup lang="ts">
 import { useBlocksStore } from "@/src/stores/useBlock";
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 import Select from "../form/Select.vue";
 import { selectDataItem } from "@/types/components";
 import { useFloorsStore } from "@/src/stores/useFloors";
 
-const emits = defineEmits<{
-  (e: "filterByBlock", selectedBlock: selectDataItem | null): void;
-  (e: "filterByFloor", selectedFloor: selectDataItem | null): void;
+const selectedBlock = defineModel<any>("block", {
+  set: (block: selectDataItem | undefined) => {
+    return block?.value;
+  },
+  get: (blockId: string | undefined) => {
+    return blocks.value?.find((block) => block.value === blockId);
+  }
+});
+
+const selectedFloor = defineModel<any>("floor", {
+  set: (floor: selectDataItem | undefined) => {
+    return floor?.value;
+  },
+  get: (floorId: string | undefined) => {
+    return floors.value?.find((floor) => floor.value === floorId);
+  }
+});
+
+defineProps<{
+  showOnlyBlocks?: boolean;
 }>();
 
 const blocksStore = useBlocksStore();
 const floorStore = useFloorsStore();
-const selectedBlock = ref();
-const selectedFloor = ref();
 
 const blocks = computed(() => {
   return blocksStore.projectBlocks?.map((block) => {
@@ -36,39 +51,26 @@ const floors = computed(() => {
       };
     });
 });
-
-watch(
-  () => selectedFloor.value,
-  (ns) => {
-    emits("filterByFloor", ns);
-  }
-);
-
-watch(
-  () => selectedBlock.value,
-  (ns) => {
-    emits("filterByBlock", ns);
-  }
-);
 </script>
 
 <template>
   <div class="flex items-center gap-4">
-    <Select
-      v-if="floors"
-      v-model="selectedFloor"
-      :data="floors"
-      placeholder="Filter by Floors"
-      clearable
-      class="w-[200px]"
-    />
     <Select
       v-if="blocks"
       v-model="selectedBlock"
       :data="blocks"
       placeholder="Filter by block"
       clearable
-      class="w-[200px]"
+      class="min-w-[150px]"
+    />
+
+    <Select
+      v-if="floors && !showOnlyBlocks"
+      v-model="selectedFloor"
+      :data="floors"
+      placeholder="Filter by Floors"
+      clearable
+      class="min-w-[150px]"
     />
   </div>
 </template>

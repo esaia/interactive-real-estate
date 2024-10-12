@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref, Transition, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import Modal from "@components/UiComponents/Modal.vue";
-import { FlatItem, FlatsInterface } from "@/types/components";
+import { FlatItem, FlatsInterface, selectDataItem } from "@/types/components";
 import ajaxAxios from "@/src/utils/axios";
 import { useProjectStore } from "@/src/stores/useProject";
 import { storeToRefs } from "pinia";
@@ -13,15 +13,21 @@ import Input from "../form/Input.vue";
 import Button from "../form/Button.vue";
 import CreateEditFlatModal from "./CreateEditFlatModal.vue";
 import { getBlockTitleById } from "@/src/composables/helpers";
-import Filteres from "./Filteres.vue";
+import Filteres from "../common/Filteres.vue";
 import EmptyState from "../common/EmptyState.vue";
+
+const props = defineProps<{
+  defaultBlock?: string;
+  defaultFloor?: string;
+}>();
 
 const projectStore = useProjectStore();
 const { id } = storeToRefs(projectStore);
 
 const searchFlat = ref("");
-const filterBlockId = ref();
-const filterFloorId = ref();
+
+const filterBlockId = ref(props.defaultBlock || "");
+const filterFloorId = ref(props.defaultFloor || "");
 
 const showEditFlatModal = ref(false);
 
@@ -93,8 +99,6 @@ const fetchFlats = async () => {
     return;
   }
 
-  console.log(data.data);
-
   flats.value = data.data;
 };
 
@@ -138,10 +142,7 @@ onMounted(() => {
 
       <Input v-model="searchFlat" placeholder="Filter flats list..." @keyup.enter="submitForm" />
 
-      <Filteres
-        @filter-by-block="(selectedBlock) => (filterBlockId = selectedBlock?.value || null)"
-        @filter-by-floor="(selectedFloor) => (filterFloorId = selectedFloor?.value || null)"
-      />
+      <Filteres v-model:block="filterBlockId" v-model:floor="filterFloorId" />
 
       <div class="min-w-max">
         <Button type="button" title="Add Flat" outlined @click="showEditFlatModal = true" />
