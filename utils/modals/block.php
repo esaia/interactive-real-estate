@@ -35,10 +35,10 @@ class IreBlock
         }
 
         // Filter by block if provided
-        if (!empty($data['block'])) {
-            $query .= " AND block_id = %d";
-            $params[] = $data['block'];
-        }
+        // if (!empty($data['block'])) {
+        //     $query .= " AND block_id = %d";
+        //     $params[] = $data['block'];
+        // }
 
         // Add ordering and pagination
         $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
@@ -60,10 +60,16 @@ class IreBlock
             $total_params[] = $searchTerm;
         }
 
-        if (!empty($data['block'])) {
-            $total_query .= " AND block_id = %d";
-            $total_params[] = $data['block'];
-        }
+
+        // if (!empty($data['block']) && $data['block'] != 'null') {
+        //     if ($data['block'] !== 'all') {
+        //         $query .= " AND block_id = %d";
+        //         $params[] = $data['block'];
+        //     }
+        // } else {
+        //     $query .=
+        //         " AND block_id IS NULL";
+        // }
 
         // Prepare and execute the total count query
         $total_query = $this->wpdb->prepare($total_query, ...$total_params);

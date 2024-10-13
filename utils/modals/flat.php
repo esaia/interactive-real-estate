@@ -71,11 +71,17 @@ class IreFlat
         $total_query = "SELECT COUNT(*) FROM $this->table_name WHERE project_id = %d";
         $total_params = [$data['project_id']];
 
-        // Apply the same filters for total count
-        if (!empty($data['block'])) {
-            $total_query .= " AND block_id = %d";
-            $total_params[] = $data['block'];
+
+        if (!empty($data['block']) && $data['block'] != 'null') {
+            if ($data['block'] !== 'all') {
+                $total_query .= " AND block_id = %d";
+                $total_params[] = $data['block'];
+            }
+        } else {
+            $total_query .=
+                " AND block_id IS NULL";
         }
+
 
 
         if (!empty($data['floor'])) {

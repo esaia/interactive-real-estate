@@ -11,7 +11,8 @@ export const useFlatsStore = defineStore("flats", () => {
       action: "get_flats",
       nonce: irePlugin.nonce,
       project_id: id,
-      per_page: 99999
+      per_page: 99999,
+      block: 'all'
     });
 
     if (!data.success) {

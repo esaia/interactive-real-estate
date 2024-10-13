@@ -26,7 +26,7 @@ const floorsStore = useFloorsStore();
 const { id } = storeToRefs(projectStore);
 
 const searchFloor = ref("");
-const selectedBlockId = ref(props.defaultBlockId || "");
+const selectedBlockId = ref(props.defaultBlockId || "all");
 const showFloorModal = ref(false);
 const floors = ref<FloorInterface>();
 const sortField = ref("");

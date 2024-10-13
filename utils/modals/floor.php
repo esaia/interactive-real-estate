@@ -32,10 +32,16 @@ class IreFloor
             $params[] = $searchTerm;
         }
 
-        if (!empty($data['block'])) {
-            $query .= " AND block_id = %d";
-            $params[] = $data['block'];
+        if (!empty($data['block']) && $data['block'] != 'null') {
+            if ($data['block'] !== 'all') {
+                $query .= " AND block_id = %d";
+                $params[] = $data['block'];
+            }
+        } else {
+            $query .=
+                " AND block_id IS NULL";
         }
+
 
         $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
         $params[] = $data['per_page'];
@@ -54,9 +60,15 @@ class IreFloor
             $total_params[] = $searchTerm;
         }
 
-        if (!empty($data['block'])) {
-            $total_query .= " AND block_id = %d";
-            $total_params[] = $data['block'];
+
+        if (!empty($data['block']) && $data['block'] != 'null') {
+            if ($data['block'] !== 'all') {
+                $total_query  .= " AND block_id = %d";
+                $total_params[] = $data['block'];
+            }
+        } else {
+            $total_query .=
+                " AND block_id IS NULL";
         }
 
         $total_query = $this->wpdb->prepare($total_query, ...$total_params);

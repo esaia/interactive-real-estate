@@ -37,7 +37,7 @@ const blocks = computed(() => {
       value: block.id
     };
   });
-  selectBlockData?.unshift({ title: "all", value: "all" });
+  selectBlockData?.unshift({ title: "All", value: "all" });
   return selectBlockData;
 });
 
