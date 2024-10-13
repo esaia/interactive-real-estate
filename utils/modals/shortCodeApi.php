@@ -15,6 +15,7 @@ class ShortcodeApi
         $flat = new IreFlat();
         $type = new IreType();
         $meta = new IreMetaProject();
+        $tooltip = new IreTooltip();
 
         has_project_id($data);
 
@@ -27,6 +28,7 @@ class ShortcodeApi
         $flats = $flat->get_flats($data)[1]['data'];
         $types = $type->get_types($data)[1]['data'];
         $meta = $meta->get_meta($data)[1];
+        $tooltips = $tooltip->get_tooltip($data)[1];
 
         $types_lookup = [];
 
@@ -137,7 +139,8 @@ class ShortcodeApi
             'blocks' => $blocks,
             'flats' => $flats,
             'types' => $types,
-            'meta' => $meta
+            'meta' => $meta,
+            'actions' => $tooltips
         ];
 
         send_json_response(true, $data);

@@ -31,9 +31,14 @@ class IreFlat
         $params = [$data['project_id']];
 
         // Filter by block if provided
-        if (!empty($data['block'])) {
-            $query .= " AND block_id = %d";
-            $params[] = $data['block'];
+        if (!empty($data['block']) && $data['block'] != 'null') {
+            if ($data['block'] !== 'all') {
+                $query .= " AND block_id = %d";
+                $params[] = $data['block'];
+            }
+        } else {
+            $query .=
+                " AND block_id IS NULL";
         }
 
         if (!empty($data['floor'])) {

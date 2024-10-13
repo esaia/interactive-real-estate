@@ -3,7 +3,7 @@ import { BlockItem, FloorItem, TypeItem } from "@/types/components";
 
 defineProps<{
   hoveredData: any;
-  type: "" | "floor" | "flat" | "block";
+  type: "flat" | "floor" | "block" | "tooltip" | "";
 }>();
 </script>
 
@@ -22,7 +22,7 @@ defineProps<{
           <p>Floor</p>
         </div>
 
-        <div v-if="hoveredData?.conf || hoveredData?.flats?.length" class="bg-gray-100 p-3">
+        <div v-if="hoveredData?.conf || hoveredData?.flats?.length" class="bg-gray-100 px-5 py-2">
           <div v-if="hoveredData?.conf" class="text-lg">
             {{ hoveredData.conf }}
           </div>

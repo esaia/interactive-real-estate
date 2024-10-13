@@ -194,6 +194,7 @@ export interface ShortcodeData {
   project: ProjectInterface;
   types: TypeItem[];
   meta: ProjectMeta[];
+  actions: ActionItem[];
 }
 
 export interface ActionInterface {
@@ -206,13 +207,13 @@ export interface ActionInterface {
 export interface ActionItem {
   id: string;
   title: string;
-  data: actionData;
+  data: ActionData;
   created_at: string;
   updated_at: string;
 }
 
 
-interface actionData {
+export interface ActionData {
   url: string;
   targetBlank: boolean;
   actionType: string;

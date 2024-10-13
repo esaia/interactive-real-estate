@@ -21,11 +21,9 @@ class IreFloor
         $data = sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf', 'block_id']);
         $offset = ($data['page'] - 1) * $data['per_page'];
 
-        // Base query for fetching records
         $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d";
         $params = [$data['project_id']];
 
-        // Search filter
         if (!empty($data['search'])) {
             $query .= " AND (title LIKE %s OR id LIKE %s OR floor_number LIKE %s)";
             $searchTerm = '%' . $data['search'] . '%';
@@ -34,26 +32,21 @@ class IreFloor
             $params[] = $searchTerm;
         }
 
-        // Filter by block if provided
         if (!empty($data['block'])) {
             $query .= " AND block_id = %d";
             $params[] = $data['block'];
         }
 
-        // Add ordering and pagination
         $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
         $params[] = $data['per_page'];
         $params[] = $offset;
 
-        // Prepare and execute the main query
         $query = $this->wpdb->prepare($query, ...$params);
         $results = $this->wpdb->get_results($query, ARRAY_A);
 
-        // Create a total count query
         $total_query = "SELECT COUNT(*) FROM {$this->table_name} WHERE project_id = %d";
         $total_params = [$data['project_id']];
 
-        // Apply the same filters for total count
         if (!empty($data['search'])) {
             $total_query .= " AND (title LIKE %s OR id LIKE %s OR floor_number LIKE %s)";
             $total_params[] = $searchTerm;
@@ -66,13 +59,10 @@ class IreFloor
             $total_params[] = $data['block'];
         }
 
-        // Prepare and execute the total count query
         $total_query = $this->wpdb->prepare($total_query, ...$total_params);
         $total_results = $this->wpdb->get_var($total_query);
 
         if (is_wp_error($results)) {
-            // send_json_response(false, $results->get_error_message());
-
             return [false,  $results->get_error_message()];
         } else {
             if ($results) {
@@ -117,7 +107,7 @@ class IreFloor
             $data['polygon_data'] = handle_json_data($data['polygon_data']);
         }
 
-
+        $data['block_id'] = $data['block_id'] ??  null;
         $this->check_floor_exists_or_not($data['project_id'], $data['floor_number'], $data['block_id']);
 
         $this->wpdb->insert($this->table_name, $data);
@@ -218,20 +208,20 @@ class IreFloor
 
     public function check_floor_exists_or_not($project_id, $floor_number, $block_id)
     {
-
         $params = [];
-        $query =  "SELECT * FROM {$this->table_name} WHERE project_id = %d AND floor_number = %d";
+        $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d AND floor_number = %d";
         $params[] = $project_id;
         $params[] = $floor_number;
 
-        if ($block_id) {
-            $query .= "AND block_id %d";
+        if ($block_id !== null) {
+            $query .= " AND block_id = %d";
             $params[] = $block_id;
+        } else {
+            $query .= " AND block_id IS NULL";
         }
 
         $query = $this->wpdb->prepare($query, ...$params);
         $result = $this->wpdb->get_row($query, ARRAY_A);
-
 
         if (isset($result)) {
             send_json_response(false, 'Floor number already exists for this project.');

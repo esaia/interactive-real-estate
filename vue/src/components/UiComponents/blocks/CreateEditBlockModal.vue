@@ -210,7 +210,7 @@ onUnmounted(() => {
     </div>
 
     <div class="flex flex-col gap-10">
-      <form class="h-fit w-60 rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
+      <form class="sticky top-14 h-fit w-60 rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
         <div class="flex w-full items-center justify-center bg-gray-50 p-3">
           <h2 class="text-lg">
             {{ activeBlock ? "Editing block with ID - " : "Add Block" }}

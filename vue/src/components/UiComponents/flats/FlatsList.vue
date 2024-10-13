@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import Modal from "@components/UiComponents/Modal.vue";
-import { FlatItem, FlatsInterface, selectDataItem } from "@/types/components";
+import { FlatItem, FlatsInterface } from "@/types/components";
 import ajaxAxios from "@/src/utils/axios";
 import { useProjectStore } from "@/src/stores/useProject";
 import { storeToRefs } from "pinia";
@@ -26,7 +26,7 @@ const { id } = storeToRefs(projectStore);
 
 const searchFlat = ref("");
 
-const filterBlockId = ref(props.defaultBlock || "");
+const filterBlockId = ref(props.defaultBlock || "all");
 const filterFloorId = ref(props.defaultFloor || "");
 
 const showEditFlatModal = ref(false);

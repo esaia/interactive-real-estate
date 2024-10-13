@@ -163,6 +163,9 @@ onMounted(() => {
             :sortOrder="sortOrder"
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
+
+          <TableTh fieldTitle="title" field="title" />
+
           <TableTh
             fieldTitle="Floor"
             field="floor_number"
@@ -171,7 +174,6 @@ onMounted(() => {
             :sortOrder="sortOrder"
             @sort="(field, sortOrder) => sort(field, sortOrder)"
           />
-          <TableTh fieldTitle="title" field="title" />
 
           <TableTh
             fieldTitle="Block"
@@ -193,8 +195,8 @@ onMounted(() => {
 
         <template #default="floor">
           <td>{{ floor.slotProps?.id }}</td>
-          <td>{{ floor.slotProps?.floor_number }}</td>
           <td>{{ floor.slotProps?.title }}</td>
+          <td>{{ floor.slotProps?.floor_number }}</td>
           <td>{{ getBlockTitleById(floor.slotProps?.block_id) }}</td>
           <td>{{ floor.slotProps?.conf }}</td>
         </template>

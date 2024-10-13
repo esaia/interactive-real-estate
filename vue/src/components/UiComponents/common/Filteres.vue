@@ -31,12 +31,14 @@ const blocksStore = useBlocksStore();
 const floorStore = useFloorsStore();
 
 const blocks = computed(() => {
-  return blocksStore.projectBlocks?.map((block) => {
+  const selectBlockData = blocksStore.projectBlocks?.map((block) => {
     return {
       title: block.title,
       value: block.id
     };
   });
+  selectBlockData?.unshift({ title: "all", value: "all" });
+  return selectBlockData;
 });
 
 const floors = computed(() => {
@@ -56,7 +58,7 @@ const floors = computed(() => {
 <template>
   <div class="flex items-center gap-4">
     <Select
-      v-if="blocks"
+      v-if="blocks && blocks?.length > 1"
       v-model="selectedBlock"
       :data="blocks"
       placeholder="Filter by block"
@@ -65,7 +67,7 @@ const floors = computed(() => {
     />
 
     <Select
-      v-if="floors && !showOnlyBlocks"
+      v-if="!showOnlyBlocks"
       v-model="selectedFloor"
       :data="floors"
       placeholder="Filter by Floors"

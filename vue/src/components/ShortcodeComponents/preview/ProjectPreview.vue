@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { transformSvgString } from "@/src/composables/helpers";
 import {
+  ActionItem,
   BlockItem,
   FlatItem,
   FloorItem,
@@ -13,7 +14,7 @@ import { ref, watch } from "vue";
 import Tooltip_1 from "./Tooltip_1.vue";
 
 const emits = defineEmits<{
-  (e: "changeComponent", flowComponent: "" | "flat" | "floor" | "block", hoveredData: any): void;
+  (e: "changeComponent", flowComponent: "flat" | "floor" | "block" | "tooltip" | "", hoveredData: any): void;
 }>();
 
 const props = defineProps<{
@@ -21,6 +22,7 @@ const props = defineProps<{
   floors: FloorItem[] | undefined;
   blocks: BlockItem[] | undefined;
   flats: FlatItem[] | undefined;
+  actions: ActionItem[] | undefined;
   projectMeta: ProjectMeta[] | undefined;
 }>();
 
@@ -50,7 +52,6 @@ const onPathClick = (e: any) => {
   const target: SVGPathElement = e.target;
   if (target.nodeName !== "path") return;
   if (hoveredData.value?.conf === "sold" || hoveredData.value?.conf === "reserved") return;
-
   emits("changeComponent", activePolygon.value?.type || "", hoveredData.value);
 };
 
@@ -83,6 +84,13 @@ watch(
           hoveredData.value = activeFlat;
 
           break;
+
+        case "tooltip":
+          const activeAction = props.actions?.find((action) => action.id === polygonId);
+
+          hoveredData.value = activeAction;
+          break;
+
         default:
           break;
       }

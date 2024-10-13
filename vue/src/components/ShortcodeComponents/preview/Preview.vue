@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import ajaxAxios from "@/src/utils/axios";
-import { ShortcodeData } from "@/types/components";
+import { ActionData, ShortcodeData } from "@/types/components";
 import { computed, onMounted, reactive, ref, watch } from "vue";
 import ProjectPreview from "./ProjectPreview.vue";
 import FloorPreview from "./FloorPreview.vue";
 import FlatPreview from "./FlatPreview.vue";
 import BlockPreview from "./BlockPreview.vue";
+import Modal from "../../UiComponents/Modal.vue";
+import ActionModal from "./ActionModal.vue";
 
 const {
   PREVIEW_PATH_COLOR,
@@ -40,6 +42,7 @@ const shortcodeData = ref<ShortcodeData>();
 
 const flow = ref<"projectFlow" | "floorFlow" | "blockFlow" | "flatFlow">("projectFlow");
 const hoveredData = ref();
+const showModal = ref(false);
 
 const project = computed(() => {
   if (!shortcodeData.value) return;
@@ -76,6 +79,12 @@ const flats = computed(() => {
 
     return flat;
   });
+});
+
+const actions = computed(() => {
+  if (!shortcodeData.value) return;
+
+  return shortcodeData.value.actions;
 });
 
 const projectMeta = computed(() => {
@@ -120,6 +129,18 @@ const changeRoute = (flowType: string, polygonItem: any) => {
     case "flat":
       flow.value = "flatFlow";
       hoveredData.value = polygonItem;
+
+      break;
+    case "tooltip":
+      const actionData: ActionData = polygonItem?.data;
+      hoveredData.value = actionData;
+
+      if (actionData.actionType === "url") {
+        console.log("runned");
+        window.open(actionData.url, actionData.targetBlank ? "_blank" : "_self");
+      } else if (actionData.actionType === "modal") {
+        showModal.value = true;
+      }
 
       break;
 
@@ -180,6 +201,15 @@ onMounted(() => {
           :flats="flats"
           :projectMeta="projectMeta"
           :blocks="blocks"
+          :actions="actions"
+          @changeComponent="(x, y) => changeRoute(x, y)"
+        />
+
+        <BlockPreview
+          v-else-if="flow === 'blockFlow' && flats && floors && blocks"
+          :block="hoveredData"
+          :flats="flats"
+          :floors="floors"
           @changeComponent="(x, y) => changeRoute(x, y)"
         />
 
@@ -192,14 +222,6 @@ onMounted(() => {
           @changeComponent="(x, y) => changeRoute(x, y)"
         />
 
-        <BlockPreview
-          v-else-if="flow === 'blockFlow' && flats && floors && blocks"
-          :block="hoveredData"
-          :flats="flats"
-          :floors="floors"
-          @changeComponent="(x, y) => changeRoute(x, y)"
-        />
-
         <FlatPreview
           v-else-if="flow === 'flatFlow'"
           :flat="hoveredData"
@@ -208,6 +230,14 @@ onMounted(() => {
         />
       </div>
     </Transition>
+
+    <teleport to="#ire-shortcode">
+      <Transition name="fade-in-out" appear>
+        <Modal v-if="showModal" @close="showModal = false">
+          <ActionModal :modalData="hoveredData" />
+        </Modal>
+      </Transition>
+    </teleport>
   </div>
 </template>
 

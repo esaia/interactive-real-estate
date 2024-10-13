@@ -51,7 +51,7 @@ setTimeout(() => {
 
   <teleport to="#my-vue-app">
     <transition name="fade-in-out">
-      <Modal v-if="isModalOpen" :bool="isModalOpen" @close="isModalOpen = false">
+      <Modal v-if="isModalOpen" @close="isModalOpen = false">
         <AddProjectModal @close="isModalOpen = false" />
       </Modal>
     </transition>

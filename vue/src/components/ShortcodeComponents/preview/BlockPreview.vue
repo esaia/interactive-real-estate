@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { BlockItem, FlatItem, FloorItem } from "@/types/components";
 import BackButton from "../BackButton.vue";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { transformSvgString } from "@/src/composables/helpers";
 import Tooltip_1 from "./Tooltip_1.vue";
 
@@ -93,7 +93,7 @@ watch(
 </script>
 
 <template>
-  <div>
+  <div class="p-5">
     <div class="mb-3 flex items-center justify-between">
       <BackButton @click="$emit('changeComponent', 'project', null)" />
 
