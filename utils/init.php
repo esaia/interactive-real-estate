@@ -29,8 +29,6 @@ function ire_enqueue_scripts($hook)
 add_action('admin_enqueue_scripts', 'ire_enqueue_scripts');
 
 
-
-
 function render_vue_preview_shortcode($atts)
 {
     $atts = shortcode_atts(array(
@@ -38,17 +36,17 @@ function render_vue_preview_shortcode($atts)
     ), $atts, 'vue_preview');
 
     $project_id = intval($atts['id']);
+    $unique_id = 'ire-shortcode-' . uniqid();
 
     ob_start();
 ?>
-    <div id="ire-shortcode" data-project-id="<?php echo esc_attr($project_id); ?>">
+    <div id="<?php echo esc_attr($unique_id); ?>" data-project-id="<?php echo esc_attr($project_id); ?>">
     </div>
 <?php
     return ob_get_clean(); // Return the buffered content
 }
 
 add_shortcode('ire_project', 'render_vue_preview_shortcode');
-
 
 
 function enqueue_vue_scripts()

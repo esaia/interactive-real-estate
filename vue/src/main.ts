@@ -1,7 +1,6 @@
 import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
-import Shortcode from "./Shortcode.vue";
 import { createPinia } from "pinia";
 import ToastPlugin from "vue-toast-notification";
 import VueAwesomePaginate from "vue-awesome-paginate";
@@ -10,12 +9,11 @@ import "vue-awesome-paginate/dist/style.css";
 import vClickOutside from "click-outside-vue3";
 import Vue3ColorPicker from "vue3-colorpicker";
 import "vue3-colorpicker/style.css";
+import Preview from "./components/ShortcodeComponents/preview/Preview.vue";
 
 const pinia = createPinia();
 const app = createApp(App);
-const shortcode = createApp(Shortcode);
 
-shortcode.use(vClickOutside);
 app.use(vClickOutside);
 app.use(pinia);
 app.use(VueAwesomePaginate);
@@ -42,4 +40,15 @@ window.constants = {
 };
 
 app.mount("#my-vue-app");
-shortcode.mount("#ire-shortcode");
+
+
+document.querySelectorAll("[id^='ire-shortcode-']").forEach(shortcodeElement => {
+  
+  const projectId = shortcodeElement.getAttribute("data-project-id");
+  const componentId = shortcodeElement.getAttribute("id");
+  const shortcodeApp = createApp(Preview, { projectId ,componentId }); 
+  
+  shortcodeApp.use(vClickOutside);
+
+  shortcodeApp.mount(shortcodeElement);
+});

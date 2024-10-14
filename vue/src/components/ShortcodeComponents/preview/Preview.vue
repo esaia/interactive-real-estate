@@ -19,6 +19,11 @@ const {
   PREVIEW_STROKE_WIDTH
 } = constants;
 
+const props = defineProps<{
+  projectId: string;
+  componentId: string;
+}>();
+
 const colors = reactive({
   path: PREVIEW_PATH_COLOR,
   path_hover: PREVIEW_PATH_HOVER_COLOR,
@@ -98,12 +103,10 @@ const getColorMeta = (metaKey: string) => {
 };
 
 const fetchData = async () => {
-  const projectId = document.getElementById("ire-shortcode")?.getAttribute("data-project-id");
-
   const { data } = await ajaxAxios.post("", {
     action: "get_shortcode_data",
     nonce: irePlugin.nonce,
-    project_id: projectId || 83, //temporarily,
+    project_id: props?.projectId || 83,
     block: "all"
   });
 
@@ -233,7 +236,7 @@ onMounted(() => {
       </div>
     </Transition>
 
-    <teleport to="#ire-shortcode">
+    <teleport :to="'#' + componentId">
       <Transition name="fade-in-out" appear>
         <Modal v-if="showModal" @close="showModal = false">
           <ActionModal :modalData="hoveredData" />
