@@ -8,6 +8,7 @@ import FlatPreview from "./FlatPreview.vue";
 import BlockPreview from "./BlockPreview.vue";
 import Modal from "../../UiComponents/Modal.vue";
 import ActionModal from "./ActionModal.vue";
+import Input from "../../UiComponents/form/Input.vue";
 
 const {
   PREVIEW_PATH_COLOR,

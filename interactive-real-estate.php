@@ -17,6 +17,7 @@ define('PLUGIN_URL', admin_url('admin.php?page=ire'));
 
 
 require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/init.php';
+require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/migrations.php';
 require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './utils/ajax.php';
 
 

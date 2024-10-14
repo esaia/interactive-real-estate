@@ -161,13 +161,13 @@ watch(
         v-if="polygon_data"
         v-for="item in Object.values(polygon_data)"
         :key="item.key"
-        class="group flex w-full min-w-60 cursor-pointer items-center justify-between px-3 py-3 transition-colors hover:bg-white/90 hover:ring-1 hover:ring-primary"
+        class="group flex w-full min-w-60 cursor-pointer items-center justify-between gap-5 px-3 py-3 transition-colors hover:bg-white/90 hover:ring-1 hover:ring-primary"
         :class="{
           'bg-white/90 ring-1 ring-primary': item.key === activeGroup?.getAttribute('id')
         }"
         @click="setActiveG(item)"
       >
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1 text-sm">
           <p>shape |</p>
           <span v-if="item.type"> {{ item.type }} id: {{ item.id }} </span>
           <span v-else>#{{ item.key?.slice(0, 6) }}</span>

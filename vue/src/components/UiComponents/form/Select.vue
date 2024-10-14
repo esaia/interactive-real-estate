@@ -3,6 +3,7 @@ import { computed, ref, watch, watchEffect } from "vue";
 import ArrowRight from "../icons/ArrowRight.vue";
 import { selectDataItem } from "@/types/components";
 import Close from "../icons/Close.vue";
+import Input from "./Input.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -100,12 +101,18 @@ watch(
       class="relative flex h-full w-full min-w-20 cursor-pointer items-center justify-between rounded-sm ring-1 ring-gray-200 transition-all focus-within:!ring-2 focus-within:!ring-primary"
       @click="isModalOpen = true"
     >
-      <input
+      <!-- <input
         v-model="input"
         type="text"
-        class="w-full !rounded-md !border-none p-2 shadow-none outline-none focus:!shadow-none"
+        class="w-full !rounded-md !border-none shadow-none outline-none focus:!shadow-none"
         :class="{ 'placeholder:text-gray-600': modelValue?.value }"
         :placeholder="inputPlaceholder"
+      /> -->
+      <Input
+        v-model="input"
+        :placeholder="inputPlaceholder"
+        class="[&_input]:!ring-0 focus:[&_input]:!ring-0"
+        :class="{ '[&_input]:placeholder:text-black': selectModelValue?.value }"
       />
 
       <div class="mx-2 flex items-center gap-1 [&_path]:fill-gray-400">
@@ -120,7 +127,7 @@ watch(
       </div>
 
       <div
-        class="absolute left-0 top-[calc(100%+10px)] z-20 h-fit max-h-[200px] w-full origin-top overflow-y-auto rounded-md border bg-white p-2 shadow-sm transition-all duration-200"
+        class="absolute left-0 top-[calc(100%+10px)] z-20 h-fit max-h-[200px] w-full origin-top overflow-y-auto rounded-md !border !border-solid !border-gray-100 bg-white p-2 !shadow-sm transition-all duration-200"
         :class="{
           'scale-y-100': isModalOpen,
           'scale-y-0': !isModalOpen
