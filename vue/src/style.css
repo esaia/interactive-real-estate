@@ -106,6 +106,6 @@
 
 #my-vue-app input,
 [id^="ire-shortcode-"] input {
-  all: unset;
+  /* all: unset; */
   box-sizing: border-box;
 }

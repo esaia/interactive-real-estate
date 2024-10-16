@@ -136,7 +136,7 @@ onMounted(() => {
 <template>
   <div class="mt-14">
     <form @submit.prevent="submitForm" class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
-      <h3 class="text-lg font-semibold capitalize">Floors</h3>
+      <h3 class="!text-lg font-semibold capitalize">Floors</h3>
 
       <Input v-model="searchFloor" placeholder="Filter floors list..." @keyup.enter="submitForm" />
 

@@ -115,7 +115,7 @@ onMounted(() => {
 <template>
   <div class="mt-14">
     <form @submit.prevent="submitForm" class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
-      <h3 class="text-lg font-semibold capitalize">Actions</h3>
+      <h3 class="!text-lg font-semibold capitalize">Actions</h3>
 
       <Input v-model="searchAction" placeholder="Filter flats list..." />
 

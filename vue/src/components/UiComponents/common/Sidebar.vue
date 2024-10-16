@@ -149,7 +149,7 @@ watch(
     </div>
 
     <div class="flex items-center justify-between border-b p-3">
-      <h3 class="text-lg">Shapes:</h3>
+      <h3 class="!text-lg">Shapes:</h3>
 
       <div class="cursor-pointer">
         <Info />

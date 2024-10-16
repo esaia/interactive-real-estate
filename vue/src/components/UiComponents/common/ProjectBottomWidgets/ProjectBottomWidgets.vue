@@ -10,6 +10,7 @@ import Input from "../../form/Input.vue";
 import Button from "../../form/Button.vue";
 import ColorVariables from "./ColorVariables.vue";
 import { useMetaStore } from "@/src/stores/useMeta";
+import Checkbox from "../../form/Checkbox.vue";
 
 const projectStore = useProjectStore();
 const metaStore = useMetaStore();

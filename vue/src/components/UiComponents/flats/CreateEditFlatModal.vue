@@ -167,7 +167,7 @@ onMounted(() => {
 <template>
   <form class="h-full w-full rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
     <div class="flex w-full items-center justify-center bg-gray-50 p-3">
-      <h2 class="text-lg">
+      <h2 class="!text-lg">
         {{ activeFlat ? "Editing flat with ID - " : "Add flat" }}
 
         <span v-if="activeFlat?.id" class="text-red-600"> {{ activeFlat?.id }} </span>

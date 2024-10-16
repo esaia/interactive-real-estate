@@ -120,7 +120,7 @@ onMounted(() => {
 <template>
   <div class="mt-14">
     <form @submit.prevent="submitForm" class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
-      <h3 class="text-lg font-semibold capitalize">Blocks</h3>
+      <h3 class="!text-lg font-semibold capitalize">Blocks</h3>
 
       <Input v-model="searchBlock" placeholder="Filter blocks list..." />
       <div class="min-w-max" @click="showBlockModal = true">
