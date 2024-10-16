@@ -2,9 +2,9 @@
 import { transformSvgString } from "@/src/composables/helpers";
 import { BlockItem, FlatItem, FloorItem } from "@/types/components";
 import { computed, onMounted, ref, watch } from "vue";
-import Tooltip_1 from "./Tooltip_1.vue";
 import BackButton from "@/src/components/ShortcodeComponents/BackButton.vue";
 import Select from "../../UiComponents/form/Select.vue";
+import PreviewLayout from "../layout/PreviewLayout.vue";
 
 const emits = defineEmits<{
   (e: "changeComponent", flow: "" | "flat" | "floor" | "block" | "project", hoveredData: any): void;
@@ -141,17 +141,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-5">
-    <div class="mb-3 flex items-center justify-between">
+  <PreviewLayout :hoverdData="activeFlat" :type="activePolygon?.type">
+    <template #header>
       <BackButton @click="goBack" />
 
       <span v-if="floorBlock">
         {{ floorBlock?.title }}
       </span>
       <div class="w-fit bg-white">
-        <Select v-model="selectedFloor" :data="floorsSelect" placeholderPrefix="Floor " />
+        <Select v-model="selectedFloor" :data="floorsSelect" placeholderPrefix="Floor " :isSearchable="false" />
       </div>
-    </div>
+    </template>
 
     <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
       <img
@@ -172,8 +172,6 @@ onMounted(() => {
         @mouseover="onSvgMouseOver"
         @click="onPathClick"
       ></div>
-
-      <Tooltip_1 :hovered-data="activeFlat" :type="activePolygon?.type || ''" />
     </div>
-  </div>
+  </PreviewLayout>
 </template>

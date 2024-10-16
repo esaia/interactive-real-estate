@@ -54,7 +54,7 @@ const blocksSelectData = computed<selectDataItem[]>(() => {
     const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "block");
 
     return {
-      title: `id: ${item.id} | block: #${item.title} ${item.conf ? " | " + item.conf : ""}`,
+      title: `id: ${item.id} | block: ${item.title} ${item.conf ? " | " + item.conf : ""}`,
       value: item.id.toString(),
       isLinked,
       type: "block"
@@ -201,7 +201,7 @@ onMounted(() => {
 
       <div v-if="!isFloorsCanvas" class="mt-2 flex [&_div]:px-3">
         <div
-          class="sidebar-item-icon icon-hover-text bg-gray-100"
+          class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
           :class="{ '!bg-black text-white': activeTab === 'tooltip' }"
           @click="activeTab = 'tooltip'"
         >
@@ -210,14 +210,14 @@ onMounted(() => {
 
         <div
           v-if="!isBlockCanvas"
-          class="sidebar-item-icon icon-hover-text bg-gray-100"
+          class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
           :class="{ '!bg-black text-white': activeTab === 'block' }"
           @click="activeTab = 'block'"
         >
           Block
         </div>
         <div
-          class="sidebar-item-icon icon-hover-text bg-gray-100"
+          class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
           :class="{ '!bg-black text-white': activeTab === 'floor' }"
           @click="activeTab = 'floor'"
         >
@@ -225,7 +225,7 @@ onMounted(() => {
         </div>
 
         <div
-          class="sidebar-item-icon icon-hover-text bg-gray-100"
+          class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
           :class="{ '!bg-black text-white': activeTab === 'flat' }"
           @click="activeTab = 'flat'"
         >

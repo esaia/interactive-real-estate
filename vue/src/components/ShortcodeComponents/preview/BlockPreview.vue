@@ -4,6 +4,7 @@ import BackButton from "../BackButton.vue";
 import { computed, ref, watch } from "vue";
 import { transformSvgString } from "@/src/composables/helpers";
 import Tooltip_1 from "./Tooltip_1.vue";
+import PreviewLayout from "../layout/PreviewLayout.vue";
 
 const emits = defineEmits<{
   (e: "changeComponent", flow: "" | "flat" | "floor" | "block" | "project", hoveredData: any): void;
@@ -93,12 +94,11 @@ watch(
 </script>
 
 <template>
-  <div class="p-5">
-    <div class="mb-3 flex items-center justify-between">
+  <PreviewLayout :hoverdData="activeFlatOrFloor" :type="activePolygon?.type">
+    <template #header>
       <BackButton @click="$emit('changeComponent', 'project', null)" />
-
       <p>{{ block?.title }}</p>
-    </div>
+    </template>
 
     <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
       <img
@@ -126,8 +126,6 @@ watch(
         @mouseover="onSvgMouseOver"
         @click="onPathClick"
       ></div>
-
-      <Tooltip_1 :hovered-data="activeFlatOrFloor" :type="activePolygon?.type || ''" />
     </div>
-  </div>
+  </PreviewLayout>
 </template>

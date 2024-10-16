@@ -11,7 +11,7 @@ import {
 } from "@/types/components";
 import { computed } from "@vue/reactivity";
 import { ref, watch } from "vue";
-import Tooltip_1 from "./Tooltip_1.vue";
+import PreviewLayout from "../layout/PreviewLayout.vue";
 
 const emits = defineEmits<{
   (e: "changeComponent", flowComponent: "flat" | "floor" | "block" | "tooltip" | "", hoveredData: any): void;
@@ -124,28 +124,28 @@ watch(
 </script>
 
 <template>
-  <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
-    <img
-      :src="project?.project_image[0].url"
-      alt=""
-      class="absolute left-0 top-0 h-full w-full"
-      :class="{ 'object-contain': isContainImage, 'object-cover': !isContainImage }"
-    />
-    <div
-      class="canvas absolute left-0 top-0 h-full w-full [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all"
-      :class="[
-        {
-          'hover:[&_path]:fill-[var(--reserved-color)]': hoveredData?.conf === 'reserved',
-          'hover:[&_path]:fill-[var(--sold-color)]': hoveredData?.conf === 'sold',
-          'hover:[&_path]:fill-[var(--path-hover-color)]': !hoveredData?.conf
-        }
-      ]"
-      v-html="projectSvg"
-      :key="projectSvg"
-      @mouseover="onSvgMouseOver"
-      @click="onPathClick"
-    ></div>
-
-    <Tooltip_1 :hoveredData="hoveredData" :type="activePolygon?.type || ''" />
-  </div>
+  <PreviewLayout :hoverdData="hoveredData" :type="activePolygon?.type">
+    <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
+      <img
+        :src="project?.project_image[0].url"
+        alt=""
+        class="absolute left-0 top-0 h-full w-full"
+        :class="{ 'object-contain': isContainImage, 'object-cover': !isContainImage }"
+      />
+      <div
+        class="canvas absolute left-0 top-0 h-full w-full [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all"
+        :class="[
+          {
+            'hover:[&_path]:fill-[var(--reserved-color)]': hoveredData?.conf === 'reserved',
+            'hover:[&_path]:fill-[var(--sold-color)]': hoveredData?.conf === 'sold',
+            'hover:[&_path]:fill-[var(--path-hover-color)]': !hoveredData?.conf
+          }
+        ]"
+        v-html="projectSvg"
+        :key="projectSvg"
+        @mouseover="onSvgMouseOver"
+        @click="onPathClick"
+      ></div>
+    </div>
+  </PreviewLayout>
 </template>

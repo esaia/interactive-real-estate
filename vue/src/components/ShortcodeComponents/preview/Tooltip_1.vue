@@ -11,41 +11,39 @@ defineProps<{
   <Transition name="fade-in-out">
     <div
       v-if="type && hoveredData"
-      class="pointer-events-none absolute bottom-5 right-5 select-none border bg-white p-4"
+      class="pointer-events-none absolute !bottom-10 !right-10 w-fit select-none border bg-white p-4"
     >
       <div v-if="type === 'floor'" class="flex items-center gap-3">
         <div class="flex flex-col items-center">
-          <p class="text-lg">
-            {{ (hoveredData as FloorItem).floor_number }}
-          </p>
+          <p class="!text-2xl">{{ (hoveredData as FloorItem).floor_number }}</p>
 
-          <p>Floor</p>
+          <p class="!text-sm uppercase">Floor</p>
         </div>
 
         <div v-if="hoveredData?.conf || hoveredData?.flats?.length" class="bg-gray-100 px-5 py-2">
-          <div v-if="hoveredData?.conf" class="text-lg">
+          <div v-if="hoveredData?.conf" class="!text-2xl">
             {{ hoveredData.conf }}
           </div>
           <div v-else>
             <div v-if="hoveredData?.counts?.available" class="flex items-center gap-2">
-              <p class="min-w-3 text-lg">
+              <p class="min-w-3 !text-2xl">
                 {{ hoveredData?.counts?.available || 0 }}
               </p>
-              <p>Available</p>
+              <p class="!text-sm uppercase">Available</p>
             </div>
 
             <div v-if="hoveredData?.counts?.reserved" class="flex items-center gap-2">
-              <p class="min-w-3 text-lg">
+              <p class="min-w-3 !text-2xl">
                 {{ hoveredData.counts.reserved }}
               </p>
-              <p>Reserved</p>
+              <p class="!text-sm uppercase">Reserved</p>
             </div>
 
             <div v-if="hoveredData?.counts?.sold" class="flex items-center gap-2">
-              <p class="min-w-3 text-lg">
+              <p class="min-w-3 !text-2xl">
                 {{ hoveredData.counts.sold }}
               </p>
-              <p>Sold</p>
+              <p class="!text-sm uppercase">Sold</p>
             </div>
           </div>
         </div>
@@ -53,7 +51,7 @@ defineProps<{
 
       <div v-else-if="type === 'block'" class="flex items-center gap-3">
         <div class="flex flex-col items-center">
-          <p class="text-lg">
+          <p class="!text-2xl">
             {{ (hoveredData as BlockItem).title }}
           </p>
         </div>
@@ -61,17 +59,17 @@ defineProps<{
 
       <div v-else-if="type === 'flat'" class="flex w-full flex-col items-center gap-3">
         <div class="flex flex-col items-center">
-          <p class="text-lg">{{ hoveredData?.flat_number }}</p>
+          <p class="!text-2xl">{{ hoveredData?.flat_number }}</p>
 
-          <p class="text-xs uppercase">Apartment</p>
+          <p class="!mt-2 !text-xs uppercase">Apartment</p>
         </div>
 
         <div class="flex min-w-36 flex-col items-center bg-gray-100 px-7 py-3">
-          <p v-if="hoveredData?.conf" class="text-lg uppercase">{{ hoveredData.conf }}</p>
+          <p v-if="hoveredData?.conf" class="!text-2xl uppercase">{{ hoveredData.conf }}</p>
 
           <template v-else>
-            <p class="text-xs uppercase text-gray-500">Price</p>
-            <p class="text-lg">{{ Number(hoveredData?.price).toLocaleString() }}$</p>
+            <p class="!text-xs uppercase text-gray-500">Price</p>
+            <p class="!text-2xl">{{ Number(hoveredData?.price).toLocaleString() }}$</p>
           </template>
         </div>
 

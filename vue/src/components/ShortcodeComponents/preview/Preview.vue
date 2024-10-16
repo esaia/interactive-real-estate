@@ -197,6 +197,7 @@ onMounted(() => {
 
 <template>
   <div>
+    <h2>this is h2 text</h2>
     <Transition name="fade-in-out" mode="out-in" :style="cssVariables" class="stroke">
       <div v-if="shortcodeData" :key="flow">
         <ProjectPreview

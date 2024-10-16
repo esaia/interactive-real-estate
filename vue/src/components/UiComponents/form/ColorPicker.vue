@@ -23,9 +23,7 @@ const inputModel = computed({
 </script>
 <template>
   <div>
-    <p v-if="label" class="mb-1 text-xs capitalize text-gray-600">
-      {{ label }} <span v-if="required" class="text-red-600">*</span>
-    </p>
+    <p v-if="label" class="label">{{ label }} <span v-if="required" class="text-red-600">*</span></p>
     <ColorPicker v-model:pureColor="inputModel" picker-type="chrome" />
   </div>
 </template>

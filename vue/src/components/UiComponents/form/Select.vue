@@ -15,13 +15,15 @@ const props = withDefaults(
     placeholderPrefix?: string;
     clearable?: boolean;
     required?: boolean;
+    isSearchable?: boolean;
   }>(),
   {
     placeholder: "Choose",
     placeholderPrefix: "",
     defaultValue: null,
     label: "",
-    clearable: false
+    clearable: false,
+    isSearchable: true
   }
 );
 
@@ -109,11 +111,13 @@ watch(
         :placeholder="inputPlaceholder"
       /> -->
       <Input
+        v-if="isSearchable"
         v-model="input"
         :placeholder="inputPlaceholder"
         class="[&_input]:!ring-0 focus:[&_input]:!ring-0"
         :class="{ '[&_input]:placeholder:text-black': selectModelValue?.value }"
       />
+      <p v-else class="!px-2 !py-1">{{ inputPlaceholder }}</p>
 
       <div class="mx-2 flex items-center gap-1 [&_path]:fill-gray-400">
         <div class="group" @click.stop="clearData">
@@ -138,7 +142,7 @@ watch(
             v-for="item in activeItems"
             :key="item.value"
             type="button"
-            class="line-clamp-2 w-full min-w-32 cursor-pointer rounded-sm px-[8px] py-[6px] text-start transition-all hover:bg-gray-100"
+            class="line-clamp-2 w-full cursor-pointer rounded-sm px-[8px] py-[6px] text-start transition-all hover:bg-gray-100"
             :class="`${item.value === selectModelValue?.value && item.type === selectModelValue.type ? '!bg-primary text-white' : item?.isLinked ? '!cursor-not-allowed text-gray-400 hover:bg-white' : ''} `"
             @click="selectItem(item)"
           >

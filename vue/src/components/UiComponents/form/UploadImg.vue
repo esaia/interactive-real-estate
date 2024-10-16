@@ -39,7 +39,9 @@ onMounted(() => {
 </script>
 <template>
   <div class="w-full">
-    <p class="mb-1 text-xs capitalize text-gray-600">{{ title }} <span v-if="required" class="text-red-600">*</span></p>
+    <p class="!mb-1 text-xs capitalize text-gray-600">
+      {{ title }} <span v-if="required" class="text-red-600">*</span>
+    </p>
 
     <div class="flex w-full flex-wrap gap-2">
       <div
