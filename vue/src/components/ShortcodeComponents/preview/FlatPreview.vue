@@ -62,7 +62,7 @@ onMounted(() => {
         <div class="mt-10 flex w-fit items-center border-gray-400 bg-white p-1">
           <div
             v-if="flat?.type?.image_2d?.[0]?.url"
-            class="group flex cursor-pointer items-center gap-2 p-3 text-xs transition-all hover:bg-primary hover:text-white"
+            class="group flex cursor-pointer items-center gap-2 p-3 !text-xs transition-all hover:bg-primary hover:text-white"
             :class="{ 'bg-primary text-white': show2dImage }"
             @click="show2dImage = true"
           >
@@ -74,7 +74,7 @@ onMounted(() => {
           </div>
           <div
             v-if="flat?.type?.image_3d?.[0]?.url"
-            class="group flex cursor-pointer items-center gap-2 p-3 text-xs transition-all hover:bg-primary hover:text-white"
+            class="group flex cursor-pointer items-center gap-2 p-3 !text-xs transition-all hover:bg-primary hover:text-white"
             :class="{ 'bg-primary text-white': !show2dImage }"
             @click="show2dImage = false"
           >
@@ -88,8 +88,8 @@ onMounted(() => {
 
       <div class="flex flex-col items-center gap-2">
         <div class="flex w-fit flex-col items-center border-b border-b-gray-300 py-4">
-          <p class="text-2xl font-semibold">{{ flat?.flat_number }}</p>
-          <p class="text-xs text-gray-400">Apartment</p>
+          <p class="!text-2xl font-semibold">{{ flat?.flat_number }}</p>
+          <p class="!text-xs text-gray-600">Apartment</p>
         </div>
 
         <div class="text-center">
@@ -98,22 +98,22 @@ onMounted(() => {
         </div>
 
         <div class="flex w-fit flex-col items-center border-b border-b-gray-300 py-4">
-          <p class="text-2xl">{{ flat?.floor_number }}</p>
-          <p class="text-xs text-gray-400">Floor</p>
+          <p class="!text-2xl">{{ flat?.floor_number }}</p>
+          <p class="!text-xs text-gray-600">Floor</p>
         </div>
 
         <div class="flex w-fit flex-col items-center border-b border-b-gray-300 py-4">
-          <p class="text-2xl">
+          <p class="!text-2xl">
             {{ flat?.type?.area_m2 }}
 
-            <span class="font-light"> M <sup class="inline-block -translate-x-1">2</sup> </span>
+            <span class="font-light"> M <sup class="inline-block -translate-x-1 !text-sm">2</sup> </span>
           </p>
-          <p class="text-xs text-gray-400">Area</p>
+          <p class="!text-xs text-gray-600">Area</p>
         </div>
 
         <div class="flex w-fit flex-col items-center border-b border-b-gray-300 py-4">
-          <p class="text-2xl">{{ flat?.price }}$</p>
-          <p class="text-xs text-gray-400">Price</p>
+          <p class="!text-2xl">{{ flat?.price }}<sup class="!text-sm">$</sup></p>
+          <p class="!text-xs text-gray-600">Price</p>
         </div>
       </div>
     </div>

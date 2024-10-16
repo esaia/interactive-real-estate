@@ -37,7 +37,7 @@ class ShortcodeApi
         }
 
 
-        if ($floors[0]) {
+        if (isset($floors[0]) && $floors[0]) {
 
             foreach ($floors as &$floor) {
                 $floor_number = $floor['floor_number'];

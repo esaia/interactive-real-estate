@@ -3,8 +3,8 @@ import { transformSvgString } from "@/src/composables/helpers";
 import { BlockItem, FlatItem, FloorItem } from "@/types/components";
 import { computed, onMounted, ref, watch } from "vue";
 import BackButton from "@/src/components/ShortcodeComponents/BackButton.vue";
-import Select from "../../UiComponents/form/Select.vue";
 import PreviewLayout from "../layout/PreviewLayout.vue";
+import PreviewSelect from "../form/PreviewSelect.vue";
 
 const emits = defineEmits<{
   (e: "changeComponent", flow: "" | "flat" | "floor" | "block" | "project", hoveredData: any): void;
@@ -41,7 +41,7 @@ const floorsSelect = computed(() => {
       )
       .map((floor) => {
         return {
-          title: floor?.floor_number?.toString(),
+          title: floor?.floor_number?.toString() + " Floor",
           value: floor.id
         };
       })
@@ -121,9 +121,11 @@ watch(
 watch(
   () => selectedFloor.value,
   () => {
-    const chosenFloor = props.floors.find((floor) => floor.id === selectedFloor.value?.value);
+    const chosenFloor = props.floors.find((floor) => floor.id === selectedFloor.value);
 
-    emits("changeComponent", "floor", chosenFloor);
+    if (chosenFloor) {
+      emits("changeComponent", "floor", chosenFloor);
+    }
 
     setTimeout(() => {
       setPathAttributes();
@@ -133,8 +135,7 @@ watch(
 
 onMounted(() => {
   floorBlock.value = props.blocks?.find((block) => block.id === props.floor.block_id?.toString());
-
-  selectedFloor.value = floorsSelect.value.find((floorSelect) => floorSelect?.value == props.floor?.id);
+  selectedFloor.value = floorsSelect.value?.find((floorSelect) => floorSelect?.value == props.floor?.id)?.value;
 
   setPathAttributes();
 });
@@ -145,11 +146,12 @@ onMounted(() => {
     <template #header>
       <BackButton @click="goBack" />
 
-      <span v-if="floorBlock">
+      <span v-if="floorBlock" class="text-xl">
         {{ floorBlock?.title }}
       </span>
       <div class="w-fit bg-white">
-        <Select v-model="selectedFloor" :data="floorsSelect" placeholderPrefix="Floor " :isSearchable="false" />
+        <!-- <Select v-model="selectedFloor" :data="floorsSelect" placeholderPrefix="Floor " :isSearchable="false" /> -->
+        <PreviewSelect v-model="selectedFloor" :data="floorsSelect" />
       </div>
     </template>
 
@@ -166,7 +168,7 @@ onMounted(() => {
 
       <div
         ref="svgRef"
-        class="canvas absolute left-0 top-0 h-full w-full [&_g[conf=reserved]_path]:fill-[var(--reserved-color)] [&_g[conf=sold]_path]:fill-[var(--sold-color)] [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all hover:[&_path]:fill-[var(--path-hover-color)]"
+        class="canvas absolute left-0 top-0 h-full w-full [&_g[conf=reserved]_path]:fill-[var(--reserved-color)] [&_g[conf=sold]_path]:fill-[var(--sold-color)] [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:!transition-all hover:[&_path]:fill-[var(--path-hover-color)]"
         v-html="floorSvg"
         :key="floorSvg"
         @mouseover="onSvgMouseOver"

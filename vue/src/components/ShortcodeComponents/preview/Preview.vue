@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ajaxAxios from "@/src/utils/axios";
-import { ActionData, ShortcodeData } from "@/types/components";
+import { ActionData, FlatItem, ShortcodeData } from "@/types/components";
 import { computed, onMounted, reactive, ref, watch } from "vue";
 import ProjectPreview from "./ProjectPreview.vue";
 import FloorPreview from "./FloorPreview.vue";
@@ -8,7 +8,6 @@ import FlatPreview from "./FlatPreview.vue";
 import BlockPreview from "./BlockPreview.vue";
 import Modal from "../../UiComponents/Modal.vue";
 import ActionModal from "./ActionModal.vue";
-import Input from "../../UiComponents/form/Input.vue";
 
 const {
   PREVIEW_PATH_COLOR,
@@ -58,6 +57,21 @@ const project = computed(() => {
 
 const floors = computed(() => {
   if (!shortcodeData.value) return;
+
+  shortcodeData.value.floors?.forEach((floor) => {
+    const { flats, conf } = floor || {};
+
+    if (flats?.length && !conf) {
+      const allReserved = flats.every((flat: FlatItem) => flat.conf === "reserved");
+      const allSold = flats.every((flat: FlatItem) => flat.conf === "sold");
+
+      if (allReserved) {
+        floor.conf = "reserved";
+      } else if (allSold) {
+        floor.conf = "sold";
+      }
+    }
+  });
 
   return shortcodeData.value.floors;
 });
@@ -197,7 +211,6 @@ onMounted(() => {
 
 <template>
   <div>
-    <h2>this is h2 text</h2>
     <Transition name="fade-in-out" mode="out-in" :style="cssVariables" class="stroke">
       <div v-if="shortcodeData" :key="flow">
         <ProjectPreview

@@ -74,22 +74,29 @@ class IreType
         has_project_id($data);
 
 
-        $required_data = validate_and_sanitize_input($data, ['title', 'project_id']);
+        $required_data = validate_and_sanitize_input($data, ['title', 'project_id', 'area_m2']);
 
         if (!$required_data) {
             send_json_response(false, 'Required fields are missing.');
             return;
         }
 
-        $non_required_fields = ['teaser', 'image_2d', 'image_3d', 'area_m2', 'rooms_count'];
+        $non_required_fields = ['teaser', 'rooms_count'];
         $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
+
+        if (!empty($data['image_2d'])) {
+            $non_required_data['image_2d'] = handle_json_data($data['image_2d']);
+        }
+
+        if (!empty($data['image_3d'])) {
+            $non_required_data['image_3d'] = handle_json_data($data['image_3d']);
+        }
 
         if (!empty($data['gallery'])) {
             $non_required_data['gallery'] = handle_json_data($data['gallery']);
         }
 
         $data = array_merge($required_data, $non_required_data);
-
 
         $this->wpdb->insert($this->table_name, $data);
 
@@ -113,8 +120,16 @@ class IreType
             return;
         }
 
-        $keys = ['title', 'teaser', 'image_2d', 'image_3d', 'area_m2', 'rooms_count'];
+        $keys = ['title', 'teaser', 'area_m2', 'rooms_count'];
         $params = validate_and_sanitize_input($data, $keys, false);
+
+        if (!empty($data['image_2d'])) {
+            $params['image_2d'] = handle_json_data($data['image_2d']);
+        }
+
+        if (!empty($data['image_3d'])) {
+            $params['image_3d'] = handle_json_data($data['image_3d']);
+        }
 
         if (!empty($data['gallery'])) {
             $params['gallery'] = handle_json_data($data['gallery']);
@@ -155,13 +170,25 @@ class IreType
 
     private function map_images($item)
     {
+        // if ($item['image_2d']) {
+        //     $item['image_2d'] = [get_image_instance($item['image_2d'])];
+        // }
+
+        // if ($item['image_3d']) {
+        //     $item['image_3d'] = [get_image_instance($item['image_3d'])];
+        // }
+
         if ($item['image_2d']) {
-            $item['image_2d'] = [get_image_instance($item['image_2d'])];
+            $image_2d_ids = handle_json_data($item['image_2d']);
+            $item['image_2d'] = array_map('get_image_instance', $image_2d_ids);
         }
 
+
         if ($item['image_3d']) {
-            $item['image_3d'] = [get_image_instance($item['image_3d'])];
+            $image_3d_ids = handle_json_data($item['image_3d']);
+            $item['image_3d'] = array_map('get_image_instance', $image_3d_ids);
         }
+
 
         if ($item['gallery']) {
             $gallery_ids = handle_json_data($item['gallery']);

@@ -95,7 +95,7 @@ watch(
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="custom-scroll w-full">
     <p v-if="label" class="label">{{ label }} <span v-if="required" class="text-red-600">*</span></p>
 
     <div

@@ -100,27 +100,6 @@ watch(
     }
   }
 );
-
-watch(
-  () => hoveredData.value,
-  () => {
-    if (activePolygon.value?.type === "floor") {
-      if (
-        hoveredData.value?.flats?.length &&
-        !hoveredData.value.conf &&
-        hoveredData.value?.flats.every((flat: FlatItem) => flat.conf === "reserved")
-      ) {
-        hoveredData.value.conf = "reserved";
-      } else if (
-        hoveredData.value?.flats?.length &&
-        !hoveredData.value.conf &&
-        hoveredData.value?.flats.every((flat: FlatItem) => flat.conf === "sold")
-      ) {
-        hoveredData.value.conf = "sold";
-      }
-    }
-  }
-);
 </script>
 
 <template>

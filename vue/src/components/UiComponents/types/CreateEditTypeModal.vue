@@ -47,11 +47,11 @@ const submitForm = async () => {
   const params: any = { ...obj };
 
   if (obj.image_2d) {
-    params.image_2d = obj.image_2d?.[0]?.id;
+    params.image_2d = obj.image_2d.map((i) => i.id);
   }
 
   if (obj.image_3d) {
-    params.image_3d = obj.image_3d?.[0]?.id;
+    params.image_3d = obj.image_3d.map((i) => i.id);
   }
 
   if (obj.gallery) {
@@ -130,11 +130,11 @@ onMounted(() => {
       <Input v-model="obj.title" placeholder="" label="Type title" required />
       <Input v-model="obj.teaser" placeholder="" label="Type teaser" />
 
-      <Input v-model="obj.area_m2" placeholder="62.5" label="area m²" is-float />
+      <Input v-model="obj.area_m2" placeholder="62.5" label="area m²" is-float required />
       <Input v-model="obj.rooms_count" placeholder="3" label="Rooms count" type="number" />
 
-      <UploadImg v-model="obj.image_2d" title="upload image 2d" />
-      <UploadImg v-model="obj.image_3d" title="upload image 3d" />
+      <UploadImg v-model="obj.image_2d" title="upload image 2d" multiple />
+      <UploadImg v-model="obj.image_3d" title="upload image 3d" multiple />
       <UploadImg v-model="obj.gallery" title="upload gallery" multiple />
 
       <Button type="submit" :title="activeType ? 'Edit type' : 'Add type'" />

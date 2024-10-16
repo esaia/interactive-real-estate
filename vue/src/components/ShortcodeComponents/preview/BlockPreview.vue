@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { BlockItem, FlatItem, FloorItem } from "@/types/components";
 import BackButton from "../BackButton.vue";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { transformSvgString } from "@/src/composables/helpers";
-import Tooltip_1 from "./Tooltip_1.vue";
 import PreviewLayout from "../layout/PreviewLayout.vue";
 
 const emits = defineEmits<{
@@ -73,31 +72,13 @@ watch(
     }
   }
 );
-watch(
-  () => activeFlatOrFloor.value,
-  () => {
-    const { type } = activePolygon.value || {};
-    const { flats, conf } = activeFlatOrFloor.value || {};
-
-    if (type === "floor" && flats?.length && !conf) {
-      const allReserved = flats.every((flat: FlatItem) => flat.conf === "reserved");
-      const allSold = flats.every((flat: FlatItem) => flat.conf === "sold");
-
-      if (allReserved) {
-        activeFlatOrFloor.value.conf = "reserved";
-      } else if (allSold) {
-        activeFlatOrFloor.value.conf = "sold";
-      }
-    }
-  }
-);
 </script>
 
 <template>
   <PreviewLayout :hoverdData="activeFlatOrFloor" :type="activePolygon?.type">
     <template #header>
       <BackButton @click="$emit('changeComponent', 'project', null)" />
-      <p>{{ block?.title }}</p>
+      <p class="!text-xl">{{ block?.title }}</p>
     </template>
 
     <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">

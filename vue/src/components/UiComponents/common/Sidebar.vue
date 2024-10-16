@@ -110,10 +110,6 @@ const editPolygon = (item: PolygonDataCollection) => {
   editOrDuplicateModal(item);
 };
 
-const duplicateAction = (item: PolygonDataCollection) => {
-  editOrDuplicateModal(item, true);
-};
-
 watch(
   () => showEditModal.value,
   (_, os) => {
@@ -130,7 +126,7 @@ watch(
 
 <template>
   <div
-    class="absolute left-0 top-0 flex h-full flex-col bg-white/70 transition-all duration-300 ease-out"
+    class="custom-scroll absolute left-0 top-0 flex h-full flex-col bg-white/70 transition-all duration-300 ease-out"
     :class="{
       '-translate-x-full': isClollapsed,
       'translate-x-0': !isClollapsed
@@ -188,9 +184,9 @@ watch(
             <Delete />
           </div>
 
-          <div class="sidebar-item-icon icon-hover-text" @click="duplicateAction(item)">
+          <!-- <div class="sidebar-item-icon icon-hover-text" @click="duplicateAction(item)">
             <Eye />
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

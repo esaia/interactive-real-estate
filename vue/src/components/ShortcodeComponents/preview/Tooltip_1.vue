@@ -74,7 +74,9 @@ defineProps<{
         </div>
 
         <div class="border border-gray-800 p-2">
-          <p class="translate-x-3 bg-white">{{ (hoveredData?.type as TypeItem)?.area_m2 }} M<sup>2</sup></p>
+          <p class="translate-x-3 bg-white">
+            {{ (hoveredData?.type as TypeItem)?.area_m2 }} M<sup class="bg-white !text-sm">2</sup>
+          </p>
         </div>
       </div>
     </div>
