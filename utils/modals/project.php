@@ -99,6 +99,25 @@ class IreProject
             send_json_response(true, 'Project updated');
         }
     }
+
+    public function delete_project($data)
+    {
+        check_nonce($data['nonce'], 'ire_nonce');
+
+        $project_id = isset($data['project_id']) ? intval($data['project_id']) : null;
+        if (!$project_id) {
+            send_json_response(false, 'project_id is required');
+            return;
+        }
+
+        $delete_result = $this->wpdb->delete($this->table_name, ['id' => $project_id]);
+
+        if ($delete_result) {
+            send_json_response(true, 'Project deleted successfully');
+        } else {
+            send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+        }
+    }
 }
 
 
@@ -133,7 +152,16 @@ function ire_update_project()
 
 
 
+function ire_delete_project()
+{
+    global $project;
+    $project->delete_project($_POST);
+}
+
+
+
 // Add action hooks
 add_action('wp_ajax_get_projects', 'ire_get_projects');
 add_action('wp_ajax_create_project', 'ire_create_project');
 add_action('wp_ajax_update_project', 'ire_update_project');
+add_action('wp_ajax_delete_project', 'ire_delete_project');

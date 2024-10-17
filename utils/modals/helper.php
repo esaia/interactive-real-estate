@@ -157,3 +157,14 @@ function database_duplicate_error($wpdb, $duplicateMessage, $defaultErrorMessage
         send_json_response(false, $defaultErrorMessage . ': ' . $wpdb->last_error);
     }
 }
+
+
+function check_required_data($data, $required_fields,)
+{
+    $required_data = validate_and_sanitize_input($data, $required_fields);
+    if (!$required_data) {
+        send_json_response(false, 'Required fields are missing.');
+        return;
+    }
+    return $required_data;
+}

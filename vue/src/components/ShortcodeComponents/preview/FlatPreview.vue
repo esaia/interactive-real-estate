@@ -128,28 +128,28 @@ onMounted(() => {
         </div>
 
         <div class="flex items-center gap-3">
-          <div class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
-            <p class="!text-2xl">{{ flat?.floor_number }}</p>
+          <div v-if="flat?.floor_number" class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
+            <p class="!text-2xl">{{ flat.floor_number }}</p>
             <p class="!text-xs text-gray-600">Floor</p>
           </div>
 
-          <div class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
-            <p class="!text-2xl">{{ flat?.type?.rooms_count }}</p>
+          <div v-if="flat?.type?.rooms_count" class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
+            <p class="!text-2xl">{{ flat.type.rooms_count }}</p>
             <p class="!text-xs text-gray-600">Room</p>
           </div>
         </div>
 
         <div class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
-          <p class="!text-2xl">
-            {{ flat?.type?.area_m2 }}
+          <p v-if="flat?.type?.area_m2" class="!text-2xl">
+            {{ flat.type.area_m2 }}
 
             <span class="font-light"> M <sup class="inline-block -translate-x-1 !text-sm">2</sup> </span>
           </p>
           <p class="!text-xs text-gray-600">Area</p>
         </div>
 
-        <div class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
-          <p class="!text-2xl">{{ flat?.price }}<sup class="!text-sm">$</sup></p>
+        <div v-if="flat?.price" class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
+          <p class="!text-2xl">{{ flat.price }}<sup class="!text-sm">$</sup></p>
           <p class="!text-xs text-gray-600">Price</p>
         </div>
       </div>

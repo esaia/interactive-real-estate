@@ -125,12 +125,8 @@ class IreFlat
         check_nonce($data['nonce'], 'ire_nonce');
 
         $required_fields = ['flat_number', 'price', 'type_id', 'project_id'];
-        $required_data = validate_and_sanitize_input($data, $required_fields);
+        $required_data = check_required_data($data, $required_fields);
 
-        if (!$required_data) {
-            send_json_response(false, 'Required fields are missing.');
-            return;
-        }
 
         $non_required_data = validate_and_sanitize_input($data, ['floor_number', 'offer_price', 'conf', 'block_id'], false);
         $data = array_merge($required_data, $non_required_data);
@@ -147,7 +143,6 @@ class IreFlat
                 $new_flat->polygon_data = handle_json_data($new_flat->polygon_data);
             }
 
-            // $new_flat->floor_image = wp_get_attachment_image_url($new_flat->floor_image, 90);
 
             send_json_response(true, $new_flat);
         }
@@ -166,11 +161,13 @@ class IreFlat
             return;
         }
 
+        $required_fields = ['flat_number', 'price', 'type_id'];
+        $required_data = check_required_data($data, $required_fields);
 
-
-        $keys = ['flat_number', 'price', 'type_id', 'floor_number', 'project_id', 'block_id', 'offer_price', 'conf'];
+        $keys = ['floor_number', 'project_id', 'block_id', 'offer_price', 'conf'];
         $params = validate_and_sanitize_input($data, $keys, false);
 
+        $params = [...$required_data, ...$params];
         $params['block_id'] ??= null;
 
 

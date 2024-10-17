@@ -16,7 +16,7 @@ defineProps<{ text: string }>();
     </div>
 
     <div class="text-center">
-      <h3 class="my-5 text-lg font-normal text-gray-500">{{ text }}</h3>
+      <h3 class="!my-5 !text-lg font-normal text-gray-500">{{ text }}</h3>
 
       <button
         type="button"

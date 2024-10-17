@@ -4,6 +4,7 @@ import Button from "../form/Button.vue";
 import ajaxAxios from "../../../utils/axios";
 import { imageInterface } from "@/types/components";
 import UploadImg from "@components/UiComponents/form/UploadImg.vue";
+import Input from "../form/Input.vue";
 
 const emit = defineEmits<{
   (e: "close"): void;
@@ -14,6 +15,7 @@ const selectedImage = ref<imageInterface[] | null>(null);
 
 const onFormSubmits = async () => {
   // if (!selectedImage.value?.length) return;
+  if (!title.value) return;
 
   try {
     await ajaxAxios.post("", {
@@ -30,14 +32,15 @@ const onFormSubmits = async () => {
 
 <template>
   <div>
-    <h3 class="mb-4 min-w-80 text-lg font-semibold">Add New Project</h3>
+    <h3 class="!mb-4 min-w-80 !text-lg font-semibold">Add New Project</h3>
 
     <form class="flex flex-col gap-3" @submit.prevent="onFormSubmits">
-      <input v-model="title" type="text" class="w-full" placeholder="project title" required />
-      <UploadImg v-model="selectedImage" title="upload project image" />
+      <!-- <input v-model="title" type="text" class="w-full" placeholder="project title" required /> -->
+      <Input v-model="title" placeholder="project title" required></Input>
+      <UploadImg v-model="selectedImage" title="upload project image" required />
 
       <div @click="onFormSubmits">
-        <Button title="Create 1" type="submit" />
+        <Button title="Add project" type="submit" />
       </div>
     </form>
   </div>

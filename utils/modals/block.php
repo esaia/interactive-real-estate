@@ -99,13 +99,7 @@ class IreBlock
 
 
         $required_fields = ['title', 'block_image', 'project_id'];
-        $rqeuired_data = validate_and_sanitize_input($data, $required_fields);
-
-
-        if (!$rqeuired_data) {
-            send_json_response(false, 'Required fields are missing.');
-            return;
-        }
+        $required_data = check_required_data($data, $required_fields);
 
         $non_required_fields = ['conf', 'polygon_data', 'svg', 'img_contain'];
         $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
@@ -113,7 +107,7 @@ class IreBlock
         $non_required_data['polygon_data'] = $data['polygon_data'] ?? null;
         $non_required_data['svg'] = !empty($data['svg']) ? $data['svg'] : '';
 
-        $data  = array_merge($non_required_data, $rqeuired_data);
+        $data  = array_merge($non_required_data, $required_data);
         $data['img_contain'] = isset($data['img_contain']) && $data['img_contain'] === 'true' ? 1 : 0;
 
 
@@ -145,22 +139,13 @@ class IreBlock
             return;
         }
 
-
         $required_fields = ['title', 'block_image'];
-        $rqeuired_data = validate_and_sanitize_input($data, $required_fields);
-
-        if (!$rqeuired_data) {
-            send_json_response(false, 'Required fields are missing.');
-            return;
-        }
-
-
+        $required_data = check_required_data($data, $required_fields);
 
         $non_required_fields = ['conf', 'polygon_data', 'svg', 'img_contain'];
         $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
 
-        $params  = array_merge($non_required_data, $rqeuired_data);
-
+        $params  = array_merge($non_required_data, $required_data);
 
         if (isset($data['svg'])) {
             $params['svg'] = $data['svg'];

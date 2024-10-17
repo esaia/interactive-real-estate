@@ -74,12 +74,8 @@ class IreType
         has_project_id($data);
 
 
-        $required_data = validate_and_sanitize_input($data, ['title', 'project_id', 'area_m2']);
+        $required_data = check_required_data($data, ['title', 'project_id', 'area_m2']);
 
-        if (!$required_data) {
-            send_json_response(false, 'Required fields are missing.');
-            return;
-        }
 
         $non_required_fields = ['teaser', 'rooms_count'];
         $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
@@ -120,8 +116,13 @@ class IreType
             return;
         }
 
-        $keys = ['title', 'teaser', 'area_m2', 'rooms_count'];
+        $required_data = check_required_data($data, ['title', 'area_m2']);
+
+        $keys = ['teaser', 'rooms_count'];
         $params = validate_and_sanitize_input($data, $keys, false);
+
+        $params = [...$required_data, ...$params];
+
 
         if (!empty($data['image_2d'])) {
             $params['image_2d'] = handle_json_data($data['image_2d']);
