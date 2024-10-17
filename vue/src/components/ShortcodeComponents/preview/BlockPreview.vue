@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { BlockItem, FlatItem, FloorItem } from "@/types/components";
 import BackButton from "../BackButton.vue";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { transformSvgString } from "@/src/composables/helpers";
 import PreviewLayout from "../layout/PreviewLayout.vue";
 
@@ -78,10 +78,10 @@ watch(
   <PreviewLayout :hoverdData="activeFlatOrFloor" :type="activePolygon?.type">
     <template #header>
       <BackButton @click="$emit('changeComponent', 'project', null)" />
-      <p class="!text-xl">{{ block?.title }}</p>
+      <p class="lg:!text-xl">{{ block?.title }}</p>
     </template>
 
-    <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
+    <div class="relative h-full select-none overflow-hidden pt-[50%]">
       <img
         :src="block?.block_image?.[0]?.url || ''"
         alt=""

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FlatItem, FloorItem } from "@/types/components";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import BackButton from "@/src/components/ShortcodeComponents/BackButton.vue";
 import FlatIcon from "../../UiComponents/icons/FlatIcon.vue";
@@ -16,6 +16,13 @@ const props = defineProps<{
 }>();
 
 const show2dImage = ref(true);
+const selectedFloor = ref(0);
+
+const floorArray = computed(() => {
+  const endSlice = show2dImage.value ? props.flat?.type?.image_2d?.length : props.flat?.type?.image_3d?.length;
+
+  return ["I", "II", "III"].slice(0, endSlice);
+});
 
 const goBack = () => {
   const flatFloor = props.floors?.find(
@@ -31,6 +38,13 @@ const goBack = () => {
   }
 };
 
+watch(
+  () => show2dImage.value,
+  () => {
+    selectedFloor.value = 0;
+  }
+);
+
 onMounted(() => {
   if (!props.flat?.type?.image_2d) {
     show2dImage.value = false;
@@ -38,71 +52,94 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="p-5">
-    <BackButton @click="goBack" />
+  <div>
+    <div class="mb-3 flex h-[48px] items-center justify-between">
+      <BackButton @click="goBack" />
+    </div>
 
-    <div class="flex items-start justify-center gap-20">
-      <div class="flex flex-col">
+    <div class="flex flex-col items-start justify-center gap-10 lg:flex-row lg:gap-20">
+      <div class="flex w-full flex-col items-center justify-center lg:w-auto">
         <Transition name="fade-in-out" mode="out-in">
           <img
-            v-if="show2dImage && flat?.type?.image_2d?.[0]?.url"
-            class="h-96 w-96 bg-contain"
-            :src="flat?.type?.image_2d?.[0]?.url"
-            alt=""
+            v-if="show2dImage && flat?.type?.image_2d?.[selectedFloor]?.url"
+            :key="flat?.type?.image_2d?.[selectedFloor]?.url"
+            :src="flat?.type?.image_2d?.[selectedFloor]?.url"
+            class="h-96 w-96 object-contain"
           />
 
           <img
-            v-else-if="flat?.type?.image_3d?.[0]?.url"
-            class="h-96 w-96 bg-contain"
-            :src="flat?.type?.image_3d?.[0]?.url"
-            alt=""
+            v-else-if="flat?.type?.image_3d?.[selectedFloor]?.url"
+            :src="flat?.type?.image_3d?.[selectedFloor]?.url"
+            :key="flat?.type?.image_3d?.[selectedFloor]?.url"
+            class="h-96 w-96 object-contain"
           />
         </Transition>
 
-        <div class="mt-10 flex w-fit items-center border-gray-400 bg-white p-1">
-          <div
-            v-if="flat?.type?.image_2d?.[0]?.url"
-            class="group flex cursor-pointer items-center gap-2 p-3 !text-xs transition-all hover:bg-primary hover:text-white"
-            :class="{ 'bg-primary text-white': show2dImage }"
-            @click="show2dImage = true"
-          >
-            <FlatIcon
-              class="[&_path]:stroke-black group-hover:[&_path]:stroke-white"
-              :class="{ '[&_path]:!stroke-white': show2dImage }"
-            />
-            <p>2D plan</p>
-          </div>
-          <div
-            v-if="flat?.type?.image_3d?.[0]?.url"
-            class="group flex cursor-pointer items-center gap-2 p-3 !text-xs transition-all hover:bg-primary hover:text-white"
-            :class="{ 'bg-primary text-white': !show2dImage }"
-            @click="show2dImage = false"
-          >
-            <div>
-              <Cube class="group-hover:[&_path]:stroke-white" :class="{ '[&_path]:!stroke-white': !show2dImage }" />
+        <div class="mt-5 flex flex-col items-center gap-3 lg:flex-row">
+          <div class="flex w-fit items-center border-gray-400 bg-white p-1">
+            <div
+              v-if="flat?.type?.image_2d?.[0]?.url"
+              class="group flex cursor-pointer items-center gap-2 p-3 !text-xs transition-all hover:bg-primary hover:text-white"
+              :class="{ 'bg-primary text-white': show2dImage }"
+              @click="show2dImage = true"
+            >
+              <FlatIcon
+                class="[&_path]:stroke-black group-hover:[&_path]:stroke-white"
+                :class="{ '[&_path]:!stroke-white': show2dImage }"
+              />
+              <p>2D plan</p>
             </div>
-            <p>3D plan</p>
+            <div
+              v-if="flat?.type?.image_3d?.[0]?.url"
+              class="group flex cursor-pointer items-center gap-2 p-3 !text-xs transition-all hover:bg-primary hover:text-white"
+              :class="{ 'bg-primary text-white': !show2dImage }"
+              @click="show2dImage = false"
+            >
+              <div>
+                <Cube class="group-hover:[&_path]:stroke-white" :class="{ '[&_path]:!stroke-white': !show2dImage }" />
+              </div>
+              <p>3D plan</p>
+            </div>
+          </div>
+
+          <div v-if="floorArray.length > 1" class="ml-4 flex items-center gap-1">
+            <div
+              v-for="(item, index) in floorArray"
+              :key="item"
+              class="flex h-10 w-10 cursor-pointer items-center justify-center p-2 transition-all hover:bg-black hover:text-white"
+              :class="{ 'bg-black text-white': selectedFloor === index }"
+              @click="selectedFloor = index"
+            >
+              {{ item }}
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="flex flex-col items-center gap-2">
-        <div class="flex w-fit flex-col items-center border-b border-b-gray-300 py-4">
+      <div class="flex w-full flex-col items-center gap-2 lg:w-auto">
+        <div class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
           <p class="!text-2xl font-semibold">{{ flat?.flat_number }}</p>
           <p class="!text-xs text-gray-600">Apartment</p>
         </div>
 
         <div class="text-center">
-          <p class="text-lg">{{ flat?.type?.title }}</p>
+          <p class="!text-lg font-semibold">{{ flat?.type?.title }}</p>
           <p class="mt-1 text-gray-600">{{ flat?.type?.teaser }}</p>
         </div>
 
-        <div class="flex w-fit flex-col items-center border-b border-b-gray-300 py-4">
-          <p class="!text-2xl">{{ flat?.floor_number }}</p>
-          <p class="!text-xs text-gray-600">Floor</p>
+        <div class="flex items-center gap-3">
+          <div class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
+            <p class="!text-2xl">{{ flat?.floor_number }}</p>
+            <p class="!text-xs text-gray-600">Floor</p>
+          </div>
+
+          <div class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
+            <p class="!text-2xl">{{ flat?.type?.rooms_count }}</p>
+            <p class="!text-xs text-gray-600">Room</p>
+          </div>
         </div>
 
-        <div class="flex w-fit flex-col items-center border-b border-b-gray-300 py-4">
+        <div class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
           <p class="!text-2xl">
             {{ flat?.type?.area_m2 }}
 
@@ -111,7 +148,7 @@ onMounted(() => {
           <p class="!text-xs text-gray-600">Area</p>
         </div>
 
-        <div class="flex w-fit flex-col items-center border-b border-b-gray-300 py-4">
+        <div class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
           <p class="!text-2xl">{{ flat?.price }}<sup class="!text-sm">$</sup></p>
           <p class="!text-xs text-gray-600">Price</p>
         </div>

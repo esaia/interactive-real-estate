@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { selectDataItem } from "@/types/components";
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     data: selectDataItem[];
     placeholder?: string;
@@ -21,7 +21,7 @@ const selectModel = defineModel();
 </script>
 
 <template>
-  <div class="w-full min-w-[200px] max-w-sm">
+  <div class="w-full max-w-[200px] lg:min-w-[250px]">
     <p class="label">{{ label }}</p>
     <div class="relative">
       <select

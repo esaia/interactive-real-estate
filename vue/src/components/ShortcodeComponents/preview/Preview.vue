@@ -211,6 +211,8 @@ onMounted(() => {
 
 <template>
   <div>
+    <!-- <FlatPreview v-if="flats" :flat="flats[0]" :floors="floors" @changeComponent="(x, y) => changeRoute(x, y)" /> -->
+
     <Transition name="fade-in-out" mode="out-in" :style="cssVariables" class="stroke">
       <div v-if="shortcodeData" :key="flow">
         <ProjectPreview

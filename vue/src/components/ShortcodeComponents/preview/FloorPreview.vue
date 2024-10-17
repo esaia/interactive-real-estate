@@ -40,8 +40,10 @@ const floorsSelect = computed(() => {
           (props.floor.block_id ? floorItem.block_id === props.floor.block_id : !floorItem.block_id)
       )
       .map((floor) => {
+        const block = props.blocks?.find((block) => block?.id === floor.block_id?.toString());
+
         return {
-          title: floor?.floor_number?.toString() + " Floor",
+          title: floor?.floor_number?.toString() + " Floor" + (block?.id ? ` - ${block?.title}` : ""),
           value: floor.id
         };
       })
@@ -146,16 +148,12 @@ onMounted(() => {
     <template #header>
       <BackButton @click="goBack" />
 
-      <span v-if="floorBlock" class="text-xl">
-        {{ floorBlock?.title }}
-      </span>
       <div class="w-fit bg-white">
-        <!-- <Select v-model="selectedFloor" :data="floorsSelect" placeholderPrefix="Floor " :isSearchable="false" /> -->
         <PreviewSelect v-model="selectedFloor" :data="floorsSelect" />
       </div>
     </template>
 
-    <div class="relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
+    <div class="relative h-full select-none overflow-hidden pt-[50%]">
       <img
         :src="floor.floor_image?.[0]?.url || ''"
         alt=""

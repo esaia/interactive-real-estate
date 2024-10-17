@@ -22,8 +22,8 @@ export function useSelectImage(multiple?: boolean) {
       if (multiple) {
         const arr = selection;
 
-        if (selectedImages.value) {
-          arr.push(...selectedImages.value);
+        if (selectedImages.value) { 
+          arr.unshift(...selectedImages.value);
         }
 
         selectedImages.value = arr;

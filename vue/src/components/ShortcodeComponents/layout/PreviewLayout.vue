@@ -8,13 +8,13 @@ defineProps<{
 </script>
 
 <template>
-  <div class="relative p-5">
+  <div class="relative">
     <div class="mb-3 flex h-[48px] items-center justify-between">
       <slot name="header" />
     </div>
 
     <slot />
 
-    <Tooltip_1 :hovered-data="hoverdData" :type="type || ''" />
+    <Tooltip_1 :hovered-data="hoverdData" :type="type || ''" class="hidden lg:block" />
   </div>
 </template>
