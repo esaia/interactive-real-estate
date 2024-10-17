@@ -21,8 +21,6 @@ class IreType
         has_project_id($data);
         $data = sanitize_sorting_parameters($data, ['id', 'title', 'area_m2']);
 
-        $offset = ($data['page'] - 1) * $data['per_page'];
-
 
         $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d ";
         $params = [$data['project_id']];
@@ -39,10 +37,8 @@ class IreType
         }
 
         $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
-        $params[] =  $data['per_page'];
-        $params[] =   $offset;
-
-
+        $params[] = $data['per_page'];
+        $params[] = $data['offset'];
 
         $query = $this->wpdb->prepare(
             $query,

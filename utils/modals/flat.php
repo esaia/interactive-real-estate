@@ -24,8 +24,6 @@ class IreFlat
         has_project_id($data);
         $data = sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf', 'block_id']);
 
-        $offset = ($data['page'] - 1) * $data['per_page'];
-
         // Base query for fetching flats
         $query = "SELECT * FROM $this->table_name WHERE project_id = %d";
         $params = [$data['project_id']];
@@ -61,7 +59,7 @@ class IreFlat
         // Add pagination
         $query .= " ORDER BY " . esc_sql($data['sort_field']) . " " . esc_sql($data['sort_order']) . " LIMIT %d OFFSET %d";
         $params[] = $data['per_page'];
-        $params[] = $offset;
+        $params[] = $data['offset'];
 
         // Prepare and execute the main query
         $query = $this->wpdb->prepare($query, ...$params);

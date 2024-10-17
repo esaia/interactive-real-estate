@@ -124,6 +124,9 @@ function sanitize_sorting_parameters(array $data, array $allowedSortFields)
 
     $data['page'] = isset($data['page']) ? intval($data['page']) : 1;
     $data['per_page'] = isset($data['per_page']) ? intval($data['per_page']) : 8;
+    $data['offset'] = ($data['page'] - 1) * $data['per_page'];
+
+
     return $data;
 }
 

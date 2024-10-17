@@ -20,7 +20,6 @@ class IreBlock
         has_project_id($data);
 
         $data = sanitize_sorting_parameters($data, ['id', 'title', 'conf']);
-        $offset = ($data['page'] - 1) * $data['per_page'];
 
         // Base query for fetching blocks
         $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d";
@@ -34,16 +33,10 @@ class IreBlock
             $params[] = $searchTerm;
         }
 
-        // Filter by block if provided
-        // if (!empty($data['block'])) {
-        //     $query .= " AND block_id = %d";
-        //     $params[] = $data['block'];
-        // }
-
         // Add ordering and pagination
         $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
         $params[] = $data['per_page'];
-        $params[] = $offset;
+        $params[] = $data['offset'];
 
         // Prepare and execute the main query
         $query = $this->wpdb->prepare($query, ...$params);
@@ -60,16 +53,6 @@ class IreBlock
             $total_params[] = $searchTerm;
         }
 
-
-        // if (!empty($data['block']) && $data['block'] != 'null') {
-        //     if ($data['block'] !== 'all') {
-        //         $query .= " AND block_id = %d";
-        //         $params[] = $data['block'];
-        //     }
-        // } else {
-        //     $query .=
-        //         " AND block_id IS NULL";
-        // }
 
         // Prepare and execute the total count query
         $total_query = $this->wpdb->prepare($total_query, ...$total_params);
