@@ -4,6 +4,7 @@ import SvgCanvas from "./SvgCanvas.vue";
 import { PolygonDataCollection } from "../../types/components";
 import Sidebar from "./UiComponents/common/Sidebar.vue";
 import LinkPolygon from "./UiComponents/common/LinkPolygon/LinkPolygon.vue";
+import { ref } from "vue";
 
 defineEmits<{
   (e: "setActiveG", gTag: SVGGElement | null): void;
@@ -23,6 +24,8 @@ defineProps<{
   isBlockCanvas?: boolean;
   isImageContain: boolean;
 }>();
+
+const canvasRef = ref();
 </script>
 
 <template>
@@ -36,6 +39,7 @@ defineProps<{
       }"
     />
     <SvgCanvas
+      ref="canvasRef"
       :svgRef="svgRef"
       :svg="svg"
       :active-group="activeGroup"
@@ -54,7 +58,7 @@ defineProps<{
 
     <Transition name="fade-in-out">
       <LinkPolygon
-        v-if="activeGroup"
+        v-if="activeGroup && canvasRef.zoomLevel === 1"
         :key="(activeGroup && activeGroup.getAttribute('id')) || ''"
         :activeGroup="activeGroup"
         :polygon_data="polygon_data"

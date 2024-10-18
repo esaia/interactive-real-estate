@@ -37,9 +37,9 @@ const circleTarget = ref(null);
 const updateMode = ref(false);
 const draggedCircle = ref(null);
 const isDragging = ref(false);
-let zoomLevel = ref(1);
-let lastCursorX = ref(0);
-let lastCursorY = ref(0);
+const zoomLevel = ref(1);
+const lastCursorX = ref(0);
+const lastCursorY = ref(0);
 
 // Setup functions
 const throttle = (fn, delay) => {
@@ -129,6 +129,7 @@ const circleMouseMove = (event) => {
 
 const onCanvasMouseMove = throttle((event) => {
   setCursorValues(event);
+  applyZoom(lastCursorX.value, lastCursorY.value);
 
   if (updateMode.value) {
     circleMouseMove(event);
@@ -371,12 +372,12 @@ const onDocumentKeydown = (event) => {
     }
   }
 
-  if (event.metaKey) {
-    if (event.key === "j") {
+  if (event.ctrlKey) {
+    if (event.key === "=") {
       event.preventDefault();
       zoomLevel.value += 0.4;
       applyZoom(lastCursorX.value, lastCursorY.value);
-    } else if (event.key === "k") {
+    } else if (event.key === "-") {
       resetZoom();
     }
   }
@@ -384,7 +385,6 @@ const onDocumentKeydown = (event) => {
 
 const applyZoom = (cursorX, cursorY) => {
   const container = props.svgRef.parentElement;
-
   const containerOffset = container.getBoundingClientRect();
   const containerWidth = container.clientWidth;
   const containerHeight = container.clientHeight;
@@ -394,14 +394,19 @@ const applyZoom = (cursorX, cursorY) => {
     return;
   }
 
+  // Calculate transform origin based on current zoom level
   let transformOriginX = ((cursorX - containerOffset.left) / containerWidth) * 100;
   let transformOriginY = ((cursorY - containerOffset.top - window.scrollY) / containerHeight) * 100;
 
-  container.querySelector("img").style.transform = `scale(${zoomLevel.value})`;
-  container.querySelector("img").style.transformOrigin = `${transformOriginX}% ${transformOriginY}%`;
+  // Update styles for img and svg elements
+  const imgElement = container.querySelector("img");
+  const svgElement = container.querySelector("svg");
 
-  container.querySelector("svg").style.transform = `scale(${zoomLevel.value})`;
-  container.querySelector("svg").style.transformOrigin = `${transformOriginX}% ${transformOriginY}%`;
+  imgElement.style.transform = `scale(${zoomLevel.value})`;
+  imgElement.style.transformOrigin = `${transformOriginX}% ${transformOriginY}%`;
+
+  svgElement.style.transform = `scale(${zoomLevel.value})`;
+  svgElement.style.transformOrigin = `${transformOriginX}% ${transformOriginY}%`;
 };
 
 const resetZoom = () => {
@@ -435,6 +440,10 @@ onBeforeUnmount(() => {
   svgCanvas.value.removeEventListener("contextmenu", onPathContextMenu);
   document.removeEventListener("keydown", onDocumentKeydown);
 });
+
+defineExpose({
+  zoomLevel
+});
 </script>
 
 <template>
@@ -443,4 +452,8 @@ onBeforeUnmount(() => {
   </div>
 
   <div v-else v-html="svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
+
+  <div v-if="zoomLevel > 1" class="absolute bottom-0 right-0 z-[999] bg-white px-4 py-1">
+    Ctrl/Control + - for reset zoom
+  </div>
 </template>
