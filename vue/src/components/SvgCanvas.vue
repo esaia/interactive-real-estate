@@ -395,7 +395,7 @@ const applyZoom = (cursorX, cursorY) => {
   }
 
   let transformOriginX = ((cursorX - containerOffset.left) / containerWidth) * 100;
-  let transformOriginY = ((cursorY - containerOffset.top) / containerHeight) * 100;
+  let transformOriginY = ((cursorY - containerOffset.top - window.scrollY) / containerHeight) * 100;
 
   container.querySelector("img").style.transform = `scale(${zoomLevel.value})`;
   container.querySelector("img").style.transformOrigin = `${transformOriginX}% ${transformOriginY}%`;
