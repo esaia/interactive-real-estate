@@ -5,17 +5,23 @@ import ajaxAxios from "../../../utils/axios";
 import { imageInterface } from "@/types/components";
 import UploadImg from "@components/UiComponents/form/UploadImg.vue";
 import Input from "../form/Input.vue";
+import { useProjectStore } from "@/src/stores/useProject";
+import { showToast } from "@/src/composables/helpers";
 
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
+const projectStore = useProjectStore();
 
 const title = ref("");
 const selectedImage = ref<imageInterface[] | null>(null);
 
 const onFormSubmits = async () => {
-  // if (!selectedImage.value?.length) return;
-  if (!title.value) return;
+  console.log("runned");
+  if (!selectedImage.value?.length || !title.value) {
+    showToast("error", "Required fields missing!");
+    return;
+  }
 
   try {
     await ajaxAxios.post("", {
@@ -26,7 +32,12 @@ const onFormSubmits = async () => {
       svg: ""
     });
     emit("close");
-  } catch (error) {}
+    showToast("success", "Project created successfully!");
+
+    projectStore.fetchProjects(null);
+  } catch (error) {
+    showToast("error", "Something went wrong!");
+  }
 };
 </script>
 
@@ -35,13 +46,10 @@ const onFormSubmits = async () => {
     <h3 class="!mb-4 min-w-80 !text-lg font-semibold">Add New Project</h3>
 
     <form class="flex flex-col gap-3" @submit.prevent="onFormSubmits">
-      <!-- <input v-model="title" type="text" class="w-full" placeholder="project title" required /> -->
       <Input v-model="title" placeholder="project title" required></Input>
       <UploadImg v-model="selectedImage" title="upload project image" required />
 
-      <div @click="onFormSubmits">
-        <Button title="Add project" type="submit" />
-      </div>
+      <Button title="Add project" type="submit" />
     </form>
   </div>
 </template>

@@ -235,20 +235,22 @@ onMounted(() => {
 
       <div v-if="activeTab === 'tooltip'" class="mt-3 flex flex-col items-start">
         <Select v-model="selectedItem" :data="actionSelectData" label="Select Action:" />
+        <span v-if="!actionSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add Action!</span>
       </div>
 
       <div v-if="activeTab === 'block'" class="mt-3 flex flex-col items-start">
         <Select v-model="selectedItem" :data="blocksSelectData" label="Select block:" />
+        <span v-if="!blocksSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add Block!</span>
       </div>
 
       <div v-else-if="activeTab === 'floor'" class="mt-3 flex flex-col items-start">
         <Select v-model="selectedItem" :data="floorsSelectData" label="Select floor:" />
-        <span v-if="!floorsSelectData.length" class="mt-3 text-lg text-red-500">Please add Floor!!!</span>
+        <span v-if="!floorsSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add Floor!</span>
       </div>
 
       <div v-else-if="activeTab === 'flat'" class="mt-3 flex flex-col items-start">
         <Select v-model="selectedItem" :data="flatsSelectData" label="Select flat:" />
-        <span v-if="!flatsSelectData.length" class="mt-3 text-lg text-red-500">Please add flat for this floor!!!</span>
+        <span v-if="!flatsSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add flat!</span>
       </div>
     </div>
   </Transition>

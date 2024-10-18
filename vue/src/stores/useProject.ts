@@ -3,9 +3,12 @@ import { computed, ref } from "vue";
 import { imageInterface, PolygonDataCollection, ProjectInterface } from "../../types/components";
 import { transformSvgString } from "../composables/helpers";
 import { useMetaStore } from "./useMeta";
+import ajaxAxios from "../utils/axios";
 
 export const useProjectStore = defineStore("project", () => {
   const metaStore = useMetaStore();
+  const project = ref<ProjectInterface>();
+  const projects = ref<ProjectInterface[]>();
 
   const id = ref();
   const title = ref("");
@@ -44,6 +47,21 @@ export const useProjectStore = defineStore("project", () => {
     return transformSvgString(svg.value);
   });
 
+  const fetchProjects = async (projectID: string | null) => {
+    const { data } = await ajaxAxios.post("", {
+      action: "get_projects",
+      nonce: irePlugin.nonce,
+      project_id: projectID
+    });
+
+    if (projectID && data.success && !data.data.length) {
+      setProject(data?.data);
+      project.value = data?.data;
+    } else {
+      projects.value = data?.data;
+    }
+  };
+
   const setProject = (project: ProjectInterface) => {
     id.value = +project.id;
     title.value = project.title || "";
@@ -58,6 +76,8 @@ export const useProjectStore = defineStore("project", () => {
   };
 
   return {
+    project,
+    projects,
     id,
     title,
     svg: transformedTitle,
@@ -71,6 +91,7 @@ export const useProjectStore = defineStore("project", () => {
     addPolygonData,
     editpoligonData,
     removePoligonItem,
-    setProject
+    setProject,
+    fetchProjects
   };
 });

@@ -149,7 +149,7 @@ onMounted(() => {
         </div>
 
         <div v-if="flat?.price" class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
-          <p class="!text-2xl">{{ flat.price }}<sup class="!text-sm">$</sup></p>
+          <p class="!text-2xl">{{ Number(flat.price).toLocaleString() }}<sup class="!text-sm">$</sup></p>
           <p class="!text-xs text-gray-600">Price</p>
         </div>
       </div>

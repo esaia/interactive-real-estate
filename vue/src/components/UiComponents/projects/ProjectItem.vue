@@ -7,10 +7,13 @@ import Modal from "@/src/components/UiComponents/Modal.vue";
 import { ProjectInterface } from "@/types/components";
 import ajaxAxios from "@/src/utils/axios";
 import { showToast } from "@/src/composables/helpers";
+import { useProjectStore } from "@/src/stores/useProject";
 
 const props = defineProps<{
   project: ProjectInterface;
 }>();
+
+const projectStore = useProjectStore();
 
 const showDeleteModal = ref(false);
 
@@ -23,8 +26,9 @@ const deleteFlat = async () => {
     });
 
     if (data?.success) {
-      showToast("success", "Project created successfully!");
+      showToast("success", "Project deleteed successfully!");
       showDeleteModal.value = false;
+      projectStore.fetchProjects(null);
     } else {
       showToast("error", "Something went wrong!");
     }

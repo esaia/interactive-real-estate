@@ -33,17 +33,20 @@ const floorSvg = computed(() => {
 const floorsSelect = computed(() => {
   return (
     props.floors
-      .filter(
-        (floorItem) =>
-          floorItem.conf !== "reserved" &&
-          floorItem.conf !== "sold" &&
-          (props.floor.block_id ? floorItem.block_id === props.floor.block_id : !floorItem.block_id)
+      .filter((floorItem) =>
+        // floorItem.conf !== "reserved" &&
+        // floorItem.conf !== "sold" &&
+        props.floor.block_id ? floorItem.block_id === props.floor.block_id : !floorItem.block_id
       )
       .map((floor) => {
         const block = props.blocks?.find((block) => block?.id === floor.block_id?.toString());
 
         return {
-          title: floor?.floor_number?.toString() + " Floor" + (block?.id ? ` - ${block?.title}` : ""),
+          title:
+            floor?.floor_number?.toString() +
+            " Floor" +
+            (block?.id ? ` - ${block?.title}` : "") +
+            (floor?.conf ? " " + floor.conf : ""),
           value: floor.id
         };
       })
@@ -124,6 +127,8 @@ watch(
   () => selectedFloor.value,
   () => {
     const chosenFloor = props.floors.find((floor) => floor.id === selectedFloor.value);
+
+    if (chosenFloor?.conf) return;
 
     if (chosenFloor) {
       emits("changeComponent", "floor", chosenFloor);
