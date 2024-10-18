@@ -2,7 +2,7 @@
 import { transformSvgString } from "@/src/composables/helpers";
 import { BlockItem, FlatItem, FloorItem } from "@/types/components";
 import { computed, onMounted, ref, watch } from "vue";
-import BackButton from "@/src/components/ShortcodeComponents/BackButton.vue";
+import BackButton from "@/src/components/ShortcodeComponents/uiComponents/BackButton.vue";
 import PreviewLayout from "../layout/PreviewLayout.vue";
 import PreviewSelect from "../form/PreviewSelect.vue";
 

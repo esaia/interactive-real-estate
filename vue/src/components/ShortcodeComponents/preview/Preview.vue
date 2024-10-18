@@ -8,6 +8,7 @@ import FlatPreview from "./FlatPreview.vue";
 import BlockPreview from "./BlockPreview.vue";
 import Modal from "../../UiComponents/Modal.vue";
 import ActionModal from "./ActionModal.vue";
+import PreviewModal from "../uiComponents/PreviewModal.vue";
 
 const {
   PREVIEW_PATH_COLOR,
@@ -155,7 +156,6 @@ const changeRoute = (flowType: string, polygonItem: any) => {
       hoveredData.value = actionData;
 
       if (actionData.actionType === "url") {
-        console.log("runned");
         window.open(actionData.url, actionData.targetBlank ? "_blank" : "_self");
       } else if (actionData.actionType === "modal") {
         showModal.value = true;
@@ -254,9 +254,9 @@ onMounted(() => {
 
     <teleport :to="'#' + componentId">
       <Transition name="fade-in-out" appear>
-        <Modal v-if="showModal" @close="showModal = false">
+        <PreviewModal v-if="showModal" @close="showModal = false">
           <ActionModal :modalData="hoveredData" />
-        </Modal>
+        </PreviewModal>
       </Transition>
     </teleport>
   </div>

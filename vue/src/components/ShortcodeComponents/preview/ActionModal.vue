@@ -1,12 +1,17 @@
 <script setup lang="ts">
+import { ActionData } from "@/types/components";
+import BaseEditor from "../uiComponents/BaseEditor.vue";
+
 defineProps<{
-  modalData: any;
+  modalData: ActionData;
 }>();
 </script>
 
 <template>
-  <div class="mt-10 w-full md:min-w-56">
-    <p class="text-2xl font-bold">{{ modalData?.modalObject?.title }}</p>
-    <p>{{ modalData?.modalObject?.description }}</p>
+  <div>
+    <p class="!text-3xl font-bold">{{ modalData?.modalObject?.title }}</p>
+    <BaseEditor :editor="modalData?.modalObject?.description"></BaseEditor>
+
+    <img :src="modalData.modalObject.modalImage?.[0]?.url" alt="" class="mt-5 h-[400px] w-full object-contain" />
   </div>
 </template>

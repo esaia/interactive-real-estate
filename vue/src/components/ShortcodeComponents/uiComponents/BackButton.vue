@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ArrowRight from "../UiComponents/icons/ArrowRight.vue";
+import ArrowRight from "../../UiComponents/icons/ArrowRight.vue";
 </script>
 
 <template>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { BlockItem, FlatItem, FloorItem } from "@/types/components";
-import BackButton from "../BackButton.vue";
 import { computed, ref, watch } from "vue";
 import { transformSvgString } from "@/src/composables/helpers";
 import PreviewLayout from "../layout/PreviewLayout.vue";
+import BackButton from "../uiComponents/BackButton.vue";
 
 const emits = defineEmits<{
   (e: "changeComponent", flow: "" | "flat" | "floor" | "block" | "project", hoveredData: any): void;

@@ -36,12 +36,12 @@ const actionSelectData = computed<selectDataItem[]>(() => {
   if (!actionsStore.projectActions) return [];
 
   return actionsStore.projectActions?.map((item) => {
-    const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "tooltip");
+    // const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "tooltip");
 
     return {
       title: `id: ${item.id} | ${item.title}`,
       value: item.id.toString(),
-      isLinked,
+      isLinked: false,
       type: "tooltip"
     };
   });

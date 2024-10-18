@@ -17,7 +17,6 @@ const title = ref("");
 const selectedImage = ref<imageInterface[] | null>(null);
 
 const onFormSubmits = async () => {
-  console.log("runned");
   if (!selectedImage.value?.length || !title.value) {
     showToast("error", "Required fields missing!");
     return;

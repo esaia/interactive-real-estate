@@ -12,17 +12,30 @@ const { projects, project } = storeToRefs(projectStore);
 
 const urlParams = new URLSearchParams(window.location.search);
 const projectID = ref(urlParams.get("project"));
+const loading = ref(true);
 
 onMounted(async () => {
-  projectStore.fetchProjects(projectID.value);
+  loading.value = true;
+
+  try {
+    await projectStore.fetchProjects(projectID.value);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
 });
 </script>
 
 <template>
-  <template v-if="projectID">
-    <Project v-if="project" />
-    <div v-else>not found</div>
-  </template>
-  <Projects v-else :projects="projects" />
-  <!-- <div v-else>error</div> -->
+  <div v-if="loading" class="p-3">Loading...</div>
+
+  <div v-else>
+    <template v-if="projectID">
+      <Project v-if="project" />
+      <div v-else>not found</div>
+    </template>
+    <Projects v-else-if="projects?.length" :projects="projects" />
+    <div v-else>error</div>
+  </div>
 </template>

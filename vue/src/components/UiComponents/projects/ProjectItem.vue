@@ -26,7 +26,7 @@ const deleteFlat = async () => {
     });
 
     if (data?.success) {
-      showToast("success", "Project deleteed successfully!");
+      showToast("success", "Project deleted successfully!");
       showDeleteModal.value = false;
       projectStore.fetchProjects(null);
     } else {

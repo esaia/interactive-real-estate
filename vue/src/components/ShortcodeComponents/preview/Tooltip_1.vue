@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <Transition name="fade-in-out">
     <div
-      v-if="type && hoveredData"
+      v-if="type && hoveredData && type !== 'tooltip'"
       class="pointer-events-none absolute !bottom-10 !right-10 w-fit select-none border bg-white p-4"
     >
       <div v-if="type === 'floor'" class="flex items-center gap-3">

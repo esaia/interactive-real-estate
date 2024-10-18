@@ -2,7 +2,7 @@
 import { FlatItem, FloorItem } from "@/types/components";
 import { computed, onMounted, ref, watch } from "vue";
 
-import BackButton from "@/src/components/ShortcodeComponents/BackButton.vue";
+import BackButton from "@/src/components/ShortcodeComponents/uiComponents/BackButton.vue";
 import FlatIcon from "../../UiComponents/icons/FlatIcon.vue";
 import Cube from "../../UiComponents/icons/Cube.vue";
 
