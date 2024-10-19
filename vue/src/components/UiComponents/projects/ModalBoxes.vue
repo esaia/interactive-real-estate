@@ -53,7 +53,7 @@ watch(
       <FlagIcon />
       <div>
         <h4 class="font-semibold">Action</h4>
-        <p>2 actions</p>
+        <p>{{ actionsStore.projectActions?.length }} actions</p>
       </div>
     </div>
 
@@ -61,7 +61,7 @@ watch(
       <Building />
       <div>
         <h4 class="font-semibold">Blocks</h4>
-        <p>2 block</p>
+        <p>{{ blocksStore.projectBlocks?.length }} block</p>
       </div>
     </div>
 
@@ -69,7 +69,7 @@ watch(
       <Floor />
       <div>
         <h4 class="font-semibold">Floors</h4>
-        <p>12 floor</p>
+        <p>{{ floorStore.projectFloors?.length }} floor</p>
       </div>
     </div>
 
@@ -77,7 +77,7 @@ watch(
       <Flat />
       <div>
         <h4 class="font-semibold">Flats</h4>
-        <p>55 flat</p>
+        <p>{{ flatStore.projectFlats?.length }} flat</p>
       </div>
     </div>
 
@@ -85,11 +85,11 @@ watch(
       <Stack />
       <div>
         <h4 class="font-semibold">Types</h4>
-        <p>5 type</p>
+        <p>{{ typesStore.projectTypes?.length }} type</p>
       </div>
     </div>
 
-    <teleport to="#my-vue-app">
+    <teleport to="#ire-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'tooltip'" type="2" width="w-11/12" @close="showModal = ''">
           <ActionList />
@@ -97,7 +97,7 @@ watch(
       </Transition>
     </teleport>
 
-    <teleport to="#my-vue-app">
+    <teleport to="#ire-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'floor'" type="2" width="w-11/12" @close="showModal = ''">
           <FloorsList />
@@ -105,7 +105,7 @@ watch(
       </Transition>
     </teleport>
 
-    <teleport to="#my-vue-app">
+    <teleport to="#ire-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'block'" type="2" width="w-11/12" @close="showModal = ''">
           <BlocksList />
@@ -113,7 +113,7 @@ watch(
       </Transition>
     </teleport>
 
-    <teleport to="#my-vue-app">
+    <teleport to="#ire-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'flat'" type="2" width="w-11/12" @close="showModal = ''">
           <FlatsList />
@@ -121,7 +121,7 @@ watch(
       </Transition>
     </teleport>
 
-    <teleport to="#my-vue-app">
+    <teleport to="#ire-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'type'" type="2" width="w-11/12" @close="showModal = ''">
           <TypesList />

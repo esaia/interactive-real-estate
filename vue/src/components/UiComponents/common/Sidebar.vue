@@ -2,9 +2,8 @@
 import { ref, watch } from "vue";
 import Collapse from "../icons/Collapse.vue";
 import Edit from "../icons/Edit.vue";
-import { BlockItem, FlatItem, FloorItem, PolygonDataCollection } from "../../../../types/components";
+import { ActionItem, FlatItem, PolygonDataCollection } from "../../../../types/components";
 import Info from "../icons/Info.vue";
-import Eye from "../icons/Eye.vue";
 import Delete from "../icons/Delete.vue";
 import Unlink from "../icons/Unlink.vue";
 import { useFloorsStore } from "@/src/stores/useFloors";
@@ -15,6 +14,8 @@ import CreateEditFloorModal from "../floors/CreateEditFloorModal.vue";
 import { useProjectStore } from "@/src/stores/useProject";
 import { useBlocksStore } from "@/src/stores/useBlock";
 import CreateEditBlockModal from "../blocks/CreateEditBlockModal.vue";
+import CreateEditActionModal from "../tooltip/CreateEditActionModal.vue";
+import { useActionsStore } from "@/src/stores/useActions";
 const isClollapsed = ref(false);
 
 const emit = defineEmits<{
@@ -33,13 +34,11 @@ const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
 const blocksStore = useBlocksStore();
 const flatStore = useFlatsStore();
+const actionStore = useActionsStore();
 
-const showEditModal = ref<"flat" | "floor" | "block" | "">("");
+const showEditModal = ref<"tooltip" | "flat" | "floor" | "block" | "">("");
 const activeFlat = ref<FlatItem>();
-
-const duplicatedBlock = ref<BlockItem | null>(null);
-const duplicatedFloor = ref<FloorItem | null>(null);
-const duplicatedFlat = ref<FlatItem | null>(null);
+const activeAction = ref<ActionItem>();
 
 const setActiveG = (item: PolygonDataCollection) => {
   const gTag = (props.svgRef?.querySelector(`g#${item.key}`) as SVGGElement) || null;
@@ -58,18 +57,14 @@ const unlink = (key: string) => {
   emit("setActiveG", null);
 };
 
-const editOrDuplicateModal = (item: PolygonDataCollection, duplicate: boolean = false) => {
+const editOrDuplicateModal = (item: PolygonDataCollection) => {
   switch (item.type) {
     case "floor": {
       const activeFloor = floorsStore.projectFloors?.find((floor) => floor.id === item.id);
 
       if (!activeFloor) return;
 
-      if (duplicate) {
-        duplicatedFloor.value = activeFloor;
-      } else {
-        floorsStore.setActiveFloor(activeFloor);
-      }
+      floorsStore.setActiveFloor(activeFloor);
 
       showEditModal.value = "floor";
 
@@ -80,11 +75,8 @@ const editOrDuplicateModal = (item: PolygonDataCollection, duplicate: boolean = 
 
       if (!activeBlock) return;
 
-      if (duplicate) {
-        duplicatedBlock.value = activeBlock;
-      } else {
-        blocksStore.setActiveBlock(activeBlock);
-      }
+      blocksStore.setActiveBlock(activeBlock);
+
       showEditModal.value = "block";
       break;
     }
@@ -93,12 +85,16 @@ const editOrDuplicateModal = (item: PolygonDataCollection, duplicate: boolean = 
 
       if (!findedActiveFlat) return;
 
-      if (duplicate) {
-        duplicatedFlat.value = findedActiveFlat;
-      } else {
-        activeFlat.value = findedActiveFlat;
-      }
+      activeFlat.value = findedActiveFlat;
+
       showEditModal.value = "flat";
+      break;
+    }
+    case "tooltip": {
+      const findedActiveAction = actionStore.projectActions?.find((action) => action.id === item.id);
+      if (!findedActiveAction) return;
+      activeAction.value = findedActiveAction;
+      showEditModal.value = "tooltip";
       break;
     }
     default:
@@ -183,30 +179,34 @@ watch(
           <div class="sidebar-item-icon icon-hover-text" @click.stop="deleteG(item)" title="delete">
             <Delete />
           </div>
-
-          <!-- <div class="sidebar-item-icon icon-hover-text" @click="duplicateAction(item)">
-            <Eye />
-          </div> -->
         </div>
       </div>
     </div>
 
-    <teleport to="#my-vue-app">
+    <teleport to="#ire-vue-app">
       <Transition name="fade">
         <Modal v-if="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
-          <CreateEditFloorModal :duplicatedFloor="duplicatedFloor" />
+          <CreateEditFloorModal />
         </Modal>
       </Transition>
 
       <Transition name="fade">
         <Modal v-if="showEditModal === 'block'" @close="showEditModal = ''" type="2" width="w-11/12">
-          <CreateEditBlockModal :duplicatedBlock="duplicatedBlock" />
+          <CreateEditBlockModal />
         </Modal>
       </Transition>
 
       <Transition name="fade">
         <Modal v-if="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[400px]">
-          <CreateEditFlatModal :activeFlat="activeFlat" :duplicatedFlat="duplicatedFlat" />
+          <CreateEditFlatModal :activeFlat="activeFlat" />
+        </Modal>
+      </Transition>
+    </teleport>
+
+    <teleport to="#ire-vue-app">
+      <Transition name="fade">
+        <Modal v-if="showEditModal === 'tooltip'" @close="showEditModal = ''" type="2" width="w-[500px]">
+          <CreateEditActionModal :activeAction="activeAction || null" />
         </Modal>
       </Transition>
     </teleport>

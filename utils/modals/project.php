@@ -159,7 +159,7 @@ function ire_delete_project()
 
 
 // Add action hooks
-add_action('wp_ajax_get_projects', 'ire_get_projects');
-add_action('wp_ajax_create_project', 'ire_create_project');
-add_action('wp_ajax_update_project', 'ire_update_project');
-add_action('wp_ajax_delete_project', 'ire_delete_project');
+add_action('wp_ajax_ire_get_projects', 'ire_get_projects');
+add_action('wp_ajax_ire_create_project', 'ire_create_project');
+add_action('wp_ajax_ire_update_project', 'ire_update_project');
+add_action('wp_ajax_ire_delete_project', 'ire_delete_project');

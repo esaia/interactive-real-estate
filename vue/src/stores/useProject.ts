@@ -49,7 +49,7 @@ export const useProjectStore = defineStore("project", () => {
 
   const fetchProjects = async (projectID: string | null) => {
     const { data } = await ajaxAxios.post("", {
-      action: "get_projects",
+      action: "ire_get_projects",
       nonce: irePlugin.nonce,
       project_id: projectID
     });

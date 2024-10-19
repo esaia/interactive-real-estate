@@ -66,7 +66,7 @@ export const useBlocksStore = defineStore("blocks", () => {
 
   const fetchProjectBLocks = async (id: number) => {
     const { data } = await ajaxAxios.post("", {
-      action: "get_blocks",
+      action: "ire_get_blocks",
       nonce: irePlugin.nonce,
       project_id: id,
       per_page: 99999

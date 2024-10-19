@@ -59,7 +59,7 @@ const showDeleteFloorModal = (floor: FloorItem | null) => {
 
 const deleteFloor = async () => {
   await ajaxAxios.post("", {
-    action: "delete_floor",
+    action: "ire_delete_floor",
     nonce: irePlugin.nonce,
     floor_id: deleteFloorId.value
   });
@@ -79,7 +79,7 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
 
 const fetchFloors = async () => {
   const { data } = await ajaxAxios.post("", {
-    action: "get_floors",
+    action: "ire_get_floors",
     nonce: irePlugin.nonce,
     project_id: id.value,
     sort_field: sortField.value,
@@ -208,7 +208,7 @@ onMounted(() => {
     <EmptyState v-else />
   </div>
 
-  <teleport to="#my-vue-app">
+  <teleport to="#ire-vue-app">
     <Transition name="fade">
       <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2">
         <CreateEditFloorModal :duplicatedFloor="duplicatedFloor" />
@@ -216,7 +216,7 @@ onMounted(() => {
     </Transition>
   </teleport>
 
-  <teleport to="#my-vue-app">
+  <teleport to="#ire-vue-app">
     <Transition name="fade">
       <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal

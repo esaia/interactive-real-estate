@@ -235,7 +235,7 @@ function ire_delete_flat()
 }
 
 // Add action hooks
-add_action('wp_ajax_get_flats', 'ire_get_flats');
-add_action('wp_ajax_create_flat', 'ire_create_flat');
-add_action('wp_ajax_update_flat', 'ire_update_flat');
-add_action('wp_ajax_delete_flat', 'ire_delete_flat');
+add_action('wp_ajax_ire_get_flats', 'ire_get_flats');
+add_action('wp_ajax_ire_create_flat', 'ire_create_flat');
+add_action('wp_ajax_ire_update_flat', 'ire_update_flat');
+add_action('wp_ajax_ire_delete_flat', 'ire_delete_flat');

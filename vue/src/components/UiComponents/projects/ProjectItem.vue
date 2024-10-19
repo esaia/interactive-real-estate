@@ -20,7 +20,7 @@ const showDeleteModal = ref(false);
 const deleteFlat = async () => {
   try {
     const { data } = await ajaxAxios.post("", {
-      action: "delete_project",
+      action: "ire_delete_project",
       nonce: irePlugin.nonce,
       project_id: props.project?.id
     });
@@ -61,7 +61,7 @@ const deleteFlat = async () => {
     </div>
   </div>
 
-  <Teleport to="#my-vue-app">
+  <Teleport to="#ire-vue-app">
     <Transition name="fade">
       <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal

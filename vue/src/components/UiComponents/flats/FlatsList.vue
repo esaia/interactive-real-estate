@@ -62,7 +62,7 @@ const showDeleteFlatModal = (flat: FlatItem | null) => {
 
 const deleteFlat = async () => {
   await ajaxAxios.post("", {
-    action: "delete_flat",
+    action: "ire_delete_flat",
     nonce: irePlugin.nonce,
     flat_id: deleteFlatId.value
   });
@@ -83,7 +83,7 @@ const submitForm = () => {
 
 const fetchFlats = async () => {
   const { data } = await ajaxAxios.post("", {
-    action: "get_flats",
+    action: "ire_get_flats",
     nonce: irePlugin.nonce,
     project_id: id.value,
     sort_field: sortField.value,
@@ -236,7 +236,7 @@ onMounted(() => {
     <EmptyState v-else />
   </div>
 
-  <teleport to="#my-vue-app">
+  <teleport to="#ire-vue-app">
     <Transition name="fade">
       <Modal v-if="showEditFlatModal" @close="showEditFlatModal = false" type="2" width="w-[400px]">
         <CreateEditFlatModal
@@ -248,7 +248,7 @@ onMounted(() => {
     </Transition>
   </teleport>
 
-  <teleport to="#my-vue-app">
+  <teleport to="#ire-vue-app">
     <Transition name="fade">
       <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal

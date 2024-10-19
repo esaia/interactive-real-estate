@@ -29,7 +29,7 @@ function ire_enqueue_scripts($hook)
 add_action('admin_enqueue_scripts', 'ire_enqueue_scripts');
 
 
-function render_vue_preview_shortcode($atts)
+function ire_render_vue_preview_shortcode($atts)
 {
     $atts = shortcode_atts(array(
         'id' => 0,
@@ -43,13 +43,13 @@ function render_vue_preview_shortcode($atts)
     <div id="<?php echo esc_attr($unique_id); ?>" data-project-id="<?php echo esc_attr($project_id); ?>">
     </div>
 <?php
-    return ob_get_clean(); // Return the buffered content
+    return ob_get_clean();
 }
 
-add_shortcode('ire_project', 'render_vue_preview_shortcode');
+add_shortcode('ire_project', 'ire_render_vue_preview_shortcode');
 
 
-function enqueue_vue_scripts()
+function ire_enqueue_vue_scripts()
 {
     wp_enqueue_media();
     wp_enqueue_script('vue-js', plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
@@ -62,7 +62,7 @@ function enqueue_vue_scripts()
     ));
 }
 
-add_action('wp_enqueue_scripts', 'enqueue_vue_scripts');
+add_action('wp_enqueue_scripts', 'ire_enqueue_vue_scripts');
 
 
 
@@ -71,7 +71,7 @@ add_action('wp_enqueue_scripts', 'enqueue_vue_scripts');
  *  To use import in js
  */
 
-function add_module_type_attribute($tag, $handle)
+function ire_add_module_type_attribute($tag, $handle)
 {
     if ($handle !== 'vue-js') {
         return $tag;
@@ -80,4 +80,4 @@ function add_module_type_attribute($tag, $handle)
     return str_replace('src', 'type="module" defer="defer" src', $tag);
 }
 
-add_filter('script_loader_tag', 'add_module_type_attribute', 10, 2);
+add_filter('script_loader_tag', 'ire_add_module_type_attribute', 10, 2);

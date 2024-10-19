@@ -78,7 +78,7 @@ const updateBlcok = async () => {
   };
 
   const { data } = await ajaxAxios.post("", {
-    action: "update_block",
+    action: "ire_update_block",
     nonce: irePlugin.nonce,
     ...params
   });
@@ -113,7 +113,7 @@ const createBlock = async () => {
 
   try {
     const { data } = await ajaxAxios.post("", {
-      action: "create_block",
+      action: "ire_create_block",
       nonce: irePlugin.nonce,
       ...params
     });

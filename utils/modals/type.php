@@ -233,7 +233,7 @@ function ire_delete_type()
 }
 
 // Add action hooks
-add_action('wp_ajax_get_types', 'ire_get_types');
-add_action('wp_ajax_create_type', 'ire_create_type');
-add_action('wp_ajax_update_type', 'ire_update_type');
-add_action('wp_ajax_delete_type', 'ire_delete_type');
+add_action('wp_ajax_ire_get_types', 'ire_get_types');
+add_action('wp_ajax_ire_create_type', 'ire_create_type');
+add_action('wp_ajax_ire_update_type', 'ire_update_type');
+add_action('wp_ajax_ire_delete_type', 'ire_delete_type');

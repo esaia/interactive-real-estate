@@ -50,7 +50,7 @@ const showDeleteTypeModal = (type: TypeItem | null) => {
 
 const deleteType = async () => {
   await ajaxAxios.post("", {
-    action: "delete_type",
+    action: "ire_delete_type",
     nonce: irePlugin.nonce,
     type_id: deleteTypeId.value
   });
@@ -67,7 +67,7 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
 
 const fetchTypes = async () => {
   const { data } = await ajaxAxios.post("", {
-    action: "get_types",
+    action: "ire_get_types",
     nonce: irePlugin.nonce,
     project_id: id.value,
     sort_field: sortField.value,
@@ -173,7 +173,7 @@ onMounted(() => {
     <EmptyState v-else />
   </div>
 
-  <teleport to="#my-vue-app">
+  <teleport to="#ire-vue-app">
     <Transition name="fade">
       <Modal v-if="showTypeModal" @close="showTypeModal = false" type="2" width="w-[500px]">
         <CreateEditTypeModal
@@ -185,7 +185,7 @@ onMounted(() => {
     </Transition>
   </teleport>
 
-  <teleport to="#my-vue-app">
+  <teleport to="#ire-vue-app">
     <Transition name="fade">
       <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal

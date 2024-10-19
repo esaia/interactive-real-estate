@@ -107,7 +107,7 @@ const updateFloor = async () => {
   };
 
   const { data } = await ajaxAxios.post("", {
-    action: "update_floor",
+    action: "ire_update_floor",
     nonce: irePlugin.nonce,
     ...params
   });
@@ -147,7 +147,7 @@ const createFloor = async () => {
 
   try {
     const { data } = await ajaxAxios.post("", {
-      action: "create_floor",
+      action: "ire_create_floor",
       nonce: irePlugin.nonce,
       ...params
     });

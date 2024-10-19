@@ -100,7 +100,7 @@ const submitForm = async () => {
 
 const editFlat = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
-    action: "update_flat",
+    action: "ire_update_flat",
     nonce: irePlugin.nonce,
     flat_id: props.activeFlat?.id,
     ...params
@@ -115,7 +115,7 @@ const editFlat = async (params: any) => {
 
 const createFlat = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
-    action: "create_flat",
+    action: "ire_create_flat",
     nonce: irePlugin.nonce,
     ...params
   });
@@ -200,7 +200,7 @@ onMounted(() => {
     </div>
   </form>
 
-  <teleport to="#my-vue-app">
+  <teleport to="#ire-vue-app">
     <Transition name="fade">
       <Modal v-if="showTypeModal" @close="closeTypeModal" type="2" width="w-[500px]">
         <CreateEditTypeModal :activeType="activeType" />

@@ -31,23 +31,21 @@ window.constants = {
   CIRCLE_COLOR: "#ffff",
   CIRCLE_HOVER_COLOR: "rgba(255, 255, 255, 0.70)",
 
-  PREVIEW_PATH_COLOR: "rgba(160, 160, 173, 0.49)",
-  PREVIEW_PATH_HOVER_COLOR: "rgba(160, 160, 173, 0.80)",
-  PREVIEW_RESERVED_COLOR: "rgba(255, 247, 89, 0.45)",
+  PREVIEW_PATH_COLOR: "rgba(255, 255, 255, 0.3)",
+  PREVIEW_PATH_HOVER_COLOR: "rgba(250, 250, 250, 0.54)",
+  PREVIEW_RESERVED_COLOR: "rgba(255, 247, 89, 0.53)",
   PREVIEW_SOLD_COLOR: "rgba(219, 64, 64, 0.45)",
   PREVIEW_STROKE_COLOR: "rgba(0, 0, 0,  1)",
-  PREVIEW_STROKE_WIDTH: 0
+  PREVIEW_STROKE_WIDTH: 1
 };
 
-app.mount("#my-vue-app");
+app.mount("#ire-vue-app");
 
-
-document.querySelectorAll("[id^='ire-shortcode-']").forEach(shortcodeElement => {
-  
+document.querySelectorAll("[id^='ire-shortcode-']").forEach((shortcodeElement) => {
   const projectId = shortcodeElement.getAttribute("data-project-id");
   const componentId = shortcodeElement.getAttribute("id");
-  const shortcodeApp = createApp(Preview, { projectId ,componentId }); 
-  
+  const shortcodeApp = createApp(Preview, { projectId, componentId });
+
   shortcodeApp.use(vClickOutside);
 
   shortcodeApp.mount(shortcodeElement);

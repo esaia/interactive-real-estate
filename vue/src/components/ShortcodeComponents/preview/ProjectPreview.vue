@@ -105,9 +105,9 @@ watch(
 <template>
   <PreviewLayout :hoverdData="hoveredData" :type="activePolygon?.type">
     <template #header>
-      <div class="flex w-full items-center justify-center">
-        <p class="!text-xl font-bold lg:!text-4xl">{{ project?.title }}</p>
-      </div>
+      <!-- <div class="flex w-full items-center justify-start">
+        <p class="!text-xl font-semibold lg:!text-2xl">{{ project?.title }}</p>
+      </div> -->
     </template>
 
     <div class="relative h-full select-none overflow-hidden pt-[50%]">

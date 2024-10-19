@@ -230,7 +230,7 @@ function ire_delete_block()
 }
 
 // Add action hooks
-add_action('wp_ajax_get_blocks', 'ire_get_blocks');
-add_action('wp_ajax_create_block', 'ire_create_block');
-add_action('wp_ajax_update_block', 'ire_update_block');
-add_action('wp_ajax_delete_block', 'ire_delete_block');
+add_action('wp_ajax_ire_get_blocks', 'ire_get_blocks');
+add_action('wp_ajax_ire_create_block', 'ire_create_block');
+add_action('wp_ajax_ire_update_block', 'ire_update_block');
+add_action('wp_ajax_ire_delete_block', 'ire_delete_block');

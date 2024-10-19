@@ -140,11 +140,6 @@ onMounted(() => {
         </div>
       </div>
 
-      <label class="mt-3 flex items-center border-t pt-3">
-        <input type="checkbox" />
-        <p class="label">Enable Tooltip</p>
-      </label>
-
       <Button type="submit" :title="activeAction ? 'Edit flat' : 'Add flat'" />
     </div>
   </form>

@@ -48,6 +48,7 @@ const canvasRef = ref();
       @add-polygon-data="(key: string) => $emit('addPolygonData', key)"
     />
     <Sidebar
+      v-if="polygon_data?.length"
       :active-group="activeGroup"
       :polygon_data="polygon_data"
       :svgRef="svgRef"

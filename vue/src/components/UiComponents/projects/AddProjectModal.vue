@@ -24,7 +24,7 @@ const onFormSubmits = async () => {
 
   try {
     await ajaxAxios.post("", {
-      action: "create_project",
+      action: "ire_create_project",
       nonce: irePlugin.nonce,
       title: title.value,
       project_image: selectedImage.value?.[0]?.id,

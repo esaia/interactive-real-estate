@@ -8,11 +8,11 @@ export const useFlatsStore = defineStore("flats", () => {
 
   const fetchProjectFlats = async (id: number) => {
     const { data } = await ajaxAxios.post("", {
-      action: "get_flats",
+      action: "ire_get_flats",
       nonce: irePlugin.nonce,
       project_id: id,
       per_page: 99999,
-      block: 'all'
+      block: "all"
     });
 
     if (!data.success) {

@@ -53,7 +53,7 @@ const updateProject = async () => {
 
   try {
     await ajaxAxios.post("", {
-      action: "update_project",
+      action: "ire_update_project",
       nonce: irePlugin.nonce,
       ...params
     });
@@ -100,7 +100,7 @@ onMounted(() => {
 
         <div>
           <div class="font-semibold">Shortcode:</div>
-          <p>[ire_project id=”{{ projectStore?.id }}″]</p>
+          <p>[ire_project id="{{ projectStore?.id }}"]</p>
         </div>
       </div>
 

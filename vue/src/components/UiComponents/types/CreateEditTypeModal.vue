@@ -67,7 +67,7 @@ const submitForm = async () => {
 
 const editType = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
-    action: "update_type",
+    action: "ire_update_type",
     nonce: irePlugin.nonce,
     type_id: props.activeType?.id,
     ...params
@@ -82,7 +82,7 @@ const editType = async (params: any) => {
 
 const createType = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
-    action: "create_type",
+    action: "ire_create_type",
     nonce: irePlugin.nonce,
     ...params
   });
@@ -119,7 +119,7 @@ onMounted(() => {
 <template>
   <form class="h-fu' w-full rounded-md border border-gray-100 shadow-sm" @submit.prevent="submitForm">
     <div class="flex w-full items-center justify-center bg-gray-50 p-3">
-      <h2 class="text-lg text-primary">
+      <h2 class="!text-lg text-primary">
         {{ activeType ? "Editing type with id - " : "Add type" }}
 
         <span v-if="activeType?.id" class="text-red-600"> {{ activeType?.id }} </span>

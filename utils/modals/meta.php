@@ -106,13 +106,13 @@ class IreMetaProject
 
 
 // Initialize the class
-$meta = new IreMetaProject();
+$ire_meta = new IreMetaProject();
 
 // Action functions
 function ire_get_meta()
 {
-    global $meta;
-    $results = $meta->get_meta($_POST);
+    global $ire_meta;
+    $results = $ire_meta->get_meta($_POST);
 
     if (!$results[0]) {
         send_json_response(false, $results[1]);
@@ -123,8 +123,8 @@ function ire_get_meta()
 
 function create_or_update_meta()
 {
-    global $meta;
-    $meta->create_or_update_meta($_POST);
+    global $ire_meta;
+    $ire_meta->create_or_update_meta($_POST);
 }
 
 

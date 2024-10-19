@@ -71,28 +71,28 @@
 }
 
 .custom-scroll ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.469);
+  background: rgb(164, 163, 163);
   border-radius: 10px;
 }
 
-#my-vue-app h1,
-#my-vue-app h2,
-#my-vue-app h3,
-#my-vue-app h4,
-#my-vue-app h5,
-#my-vue-app h6,
-#my-vue-app p,
-#my-vue-app pre,
-#my-vue-app a,
-#my-vue-app strong,
-#my-vue-app sub,
-#my-vue-app sup,
-#my-vue-app b,
-#my-vue-app u,
-#my-vue-app i,
-#my-vue-app ol,
-#my-vue-app ul,
-#my-vue-app li,
+#ire-vue-app h1,
+#ire-vue-app h2,
+#ire-vue-app h3,
+#ire-vue-app h4,
+#ire-vue-app h5,
+#ire-vue-app h6,
+#ire-vue-app p,
+#ire-vue-app pre,
+#ire-vue-app a,
+#ire-vue-app strong,
+#ire-vue-app sub,
+#ire-vue-app sup,
+#ire-vue-app b,
+#ire-vue-app u,
+#ire-vue-app i,
+#ire-vue-app ol,
+#ire-vue-app ul,
+#ire-vue-app li,
 [id^="ire-shortcode-"] h1,
 [id^="ire-shortcode-"] h2,
 [id^="ire-shortcode-"] h3,
@@ -117,7 +117,7 @@
   font-size: unset;
 }
 
-#my-vue-app input,
+#ire-vue-app input,
 [id^="ire-shortcode-"] input {
   /* all: unset; */
   box-sizing: border-box;

@@ -272,7 +272,7 @@ function ire_delete_floor()
 }
 
 // Add action hooks
-add_action('wp_ajax_get_floors', 'ire_get_floors');
-add_action('wp_ajax_create_floor', 'ire_create_floor');
-add_action('wp_ajax_update_floor', 'ire_update_floor');
-add_action('wp_ajax_delete_floor', 'ire_delete_floor');
+add_action('wp_ajax_ire_get_floors', 'ire_get_floors');
+add_action('wp_ajax_ire_create_floor', 'ire_create_floor');
+add_action('wp_ajax_ire_update_floor', 'ire_update_floor');
+add_action('wp_ajax_ire_delete_floor', 'ire_delete_floor');

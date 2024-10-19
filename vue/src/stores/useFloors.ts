@@ -66,11 +66,11 @@ export const useFloorsStore = defineStore("floors", () => {
 
   const fetchProjectFloors = async (id: number) => {
     const { data } = await ajaxAxios.post("", {
-      action: "get_floors",
+      action: "ire_get_floors",
       nonce: irePlugin.nonce,
       project_id: id,
       per_page: 99999,
-      block: 'all'
+      block: "all"
     });
 
     if (!data.success) {

@@ -12,6 +12,11 @@ defineProps<{
     <p class="!text-3xl font-bold">{{ modalData?.modalObject?.title }}</p>
     <BaseEditor :editor="modalData?.modalObject?.description"></BaseEditor>
 
-    <img :src="modalData.modalObject.modalImage?.[0]?.url" alt="" class="mt-5 h-[400px] w-full object-contain" />
+    <img
+      v-if="modalData.modalObject.modalImage?.[0]?.url"
+      :src="modalData.modalObject.modalImage?.[0]?.url"
+      alt=""
+      class="mt-5 h-[400px] w-full object-contain"
+    />
   </div>
 </template>
