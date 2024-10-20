@@ -38,8 +38,8 @@ const deleteFlat = async () => {
 };
 </script>
 <template>
-  <div class="group focus:shadow-none">
-    <div class="relative overflow-hidden rounded-lg pt-[50%]">
+  <div class="focus:shadow-none">
+    <div class="group relative overflow-hidden rounded-lg pt-[50%]">
       <img
         v-if="project.project_image.length"
         :src="project.project_image?.[0]?.url"
@@ -65,7 +65,7 @@ const deleteFlat = async () => {
     <Transition name="fade">
       <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal
-          :text="`Are you sure you want to delete flat with id ${project?.id || ''}?`"
+          :text="`Are you sure you want to delete project with id ${project?.id || ''}?`"
           @delete-action="deleteFlat()"
           @cancel-action="showDeleteModal = false"
         />

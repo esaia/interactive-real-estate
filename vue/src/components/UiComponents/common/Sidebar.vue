@@ -16,6 +16,12 @@ import { useBlocksStore } from "@/src/stores/useBlock";
 import CreateEditBlockModal from "../blocks/CreateEditBlockModal.vue";
 import CreateEditActionModal from "../tooltip/CreateEditActionModal.vue";
 import { useActionsStore } from "@/src/stores/useActions";
+import RightClick from "../icons/RightClick.vue";
+import LeftClick from "../icons/LeftClick.vue";
+import Esc from "../icons/Esc.vue";
+import Ctrl from "../icons/Ctrl.vue";
+import PlusBtn from "../icons/PlusBtn.vue";
+import MinusBtn from "../icons/MinusBtn.vue";
 const isClollapsed = ref(false);
 
 const emit = defineEmits<{
@@ -39,6 +45,7 @@ const actionStore = useActionsStore();
 const showEditModal = ref<"tooltip" | "flat" | "floor" | "block" | "">("");
 const activeFlat = ref<FlatItem>();
 const activeAction = ref<ActionItem>();
+const showInfo = ref(false);
 
 const setActiveG = (item: PolygonDataCollection) => {
   const gTag = (props.svgRef?.querySelector(`g#${item.key}`) as SVGGElement) || null;
@@ -121,94 +128,149 @@ watch(
 </script>
 
 <template>
-  <div
-    class="custom-scroll absolute left-0 top-0 flex h-full flex-col bg-white/70 transition-all duration-300 ease-out"
-    :class="{
-      '-translate-x-full': isClollapsed,
-      'translate-x-0': !isClollapsed
-    }"
-  >
+  <div>
     <div
-      class="absolute left-full top-1/2 translate-y-1/2 cursor-pointer rounded-r-md bg-white/60 p-1 transition-all hover:bg-white"
-      @click="isClollapsed = !isClollapsed"
+      class="custom-scroll absolute left-0 top-0 flex h-full flex-col bg-white/70 transition-all duration-300 ease-out"
+      :class="{
+        '-translate-x-full': isClollapsed,
+        'translate-x-0': !isClollapsed
+      }"
     >
-      <Collapse
-        :class="{
-          'rotate-180': isClollapsed,
-          'rotate-0': !isClollapsed
-        }"
-      />
-    </div>
-
-    <div class="flex items-center justify-between border-b p-3">
-      <h3 class="!text-lg">Shapes:</h3>
-
-      <div class="cursor-pointer">
-        <Info />
-      </div>
-    </div>
-
-    <div class="flex max-h-full flex-col gap-[1px] overflow-y-auto py-2">
       <div
-        v-if="polygon_data"
-        v-for="item in Object.values(polygon_data)"
-        :key="item.key"
-        class="group flex w-full min-w-60 cursor-pointer items-center justify-between gap-5 px-3 py-3 transition-colors hover:bg-white/90 hover:ring-1 hover:ring-primary"
-        :class="{
-          'bg-white/90 ring-1 ring-primary': item.key === activeGroup?.getAttribute('id')
-        }"
-        @click="setActiveG(item)"
+        class="absolute left-full top-1/2 translate-y-1/2 cursor-pointer rounded-r-md bg-white/60 p-1 transition-all hover:bg-white"
+        @click="isClollapsed = !isClollapsed"
       >
-        <div class="flex items-center gap-1 text-sm">
-          <p>shape |</p>
-          <span v-if="item.type"> {{ item.type }} id: {{ item.id }} </span>
-          <span v-else>#{{ item.key?.slice(0, 6) }}</span>
+        <Collapse
+          :class="{
+            'rotate-180': isClollapsed,
+            'rotate-0': !isClollapsed
+          }"
+        />
+      </div>
+
+      <div class="flex items-center justify-between border-b p-3">
+        <h3 class="!text-lg">Shapes:</h3>
+
+        <div class="cursor-pointer" @mouseenter="showInfo = true" @mouseleave="showInfo = false">
+          <Info />
         </div>
+      </div>
 
-        <div class="flex">
-          <template v-if="item.id">
-            <div class="sidebar-item-icon icon-hover-text" @click="unlink(item.key)" title="unlink">
-              <Unlink />
+      <div class="flex max-h-full flex-col gap-[1px] overflow-y-auto py-2">
+        <div
+          v-if="polygon_data"
+          v-for="item in Object.values(polygon_data)"
+          :key="item.key"
+          class="group flex w-full min-w-60 cursor-pointer items-center justify-between gap-5 px-3 py-3 transition-colors hover:bg-white/90 hover:ring-1 hover:ring-primary"
+          :class="{
+            'bg-white/90 ring-1 ring-primary': item.key === activeGroup?.getAttribute('id')
+          }"
+          @click="setActiveG(item)"
+        >
+          <div class="flex items-center gap-1 text-sm">
+            <p>shape |</p>
+            <span v-if="item.type"> {{ item.type }} id: {{ item.id }} </span>
+            <span v-else>#{{ item.key?.slice(0, 6) }}</span>
+          </div>
+
+          <div class="flex">
+            <template v-if="item.id">
+              <div class="sidebar-item-icon icon-hover-text" @click="unlink(item.key)" title="unlink">
+                <Unlink />
+              </div>
+
+              <div class="sidebar-item-icon icon-hover-text" @click.stop="editPolygon(item)" title="edit">
+                <Edit />
+              </div>
+            </template>
+
+            <div class="sidebar-item-icon icon-hover-text" @click.stop="deleteG(item)" title="delete">
+              <Delete />
             </div>
-
-            <div class="sidebar-item-icon icon-hover-text" @click.stop="editPolygon(item)" title="edit">
-              <Edit />
-            </div>
-          </template>
-
-          <div class="sidebar-item-icon icon-hover-text" @click.stop="deleteG(item)" title="delete">
-            <Delete />
           </div>
         </div>
       </div>
+
+      <teleport to="#ire-vue-app">
+        <Transition name="fade">
+          <Modal v-if="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
+            <CreateEditFloorModal />
+          </Modal>
+        </Transition>
+
+        <Transition name="fade">
+          <Modal v-if="showEditModal === 'block'" @close="showEditModal = ''" type="2" width="w-11/12">
+            <CreateEditBlockModal />
+          </Modal>
+        </Transition>
+
+        <Transition name="fade">
+          <Modal v-if="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[400px]">
+            <CreateEditFlatModal :activeFlat="activeFlat" />
+          </Modal>
+        </Transition>
+      </teleport>
+
+      <teleport to="#ire-vue-app">
+        <Transition name="fade">
+          <Modal v-if="showEditModal === 'tooltip'" @close="showEditModal = ''" type="2" width="w-[500px]">
+            <CreateEditActionModal :activeAction="activeAction || null" />
+          </Modal>
+        </Transition>
+      </teleport>
     </div>
 
-    <teleport to="#ire-vue-app">
-      <Transition name="fade">
-        <Modal v-if="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
-          <CreateEditFloorModal />
-        </Modal>
-      </Transition>
+    <Transition name="fade-in-out">
+      <div
+        v-if="showInfo"
+        class="absolute right-0 top-0 z-[999] flex h-full flex-col gap-8 bg-white/90 px-6 py-4 !text-gray-700 [&_svg]:h-8 [&_svg]:w-8"
+      >
+        <div class="info-item">
+          <LeftClick />
+          <span>-</span>
+          <p>Start drawing</p>
+        </div>
 
-      <Transition name="fade">
-        <Modal v-if="showEditModal === 'block'" @close="showEditModal = ''" type="2" width="w-11/12">
-          <CreateEditBlockModal />
-        </Modal>
-      </Transition>
+        <div class="info-item">
+          <RightClick />
+          <span>-</span>
+          <p>Select item</p>
+        </div>
 
-      <Transition name="fade">
-        <Modal v-if="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[400px]">
-          <CreateEditFlatModal :activeFlat="activeFlat" />
-        </Modal>
-      </Transition>
-    </teleport>
+        <div class="info-item">
+          <Esc class="!h-7 !w-7" />
+          <span>-</span>
+          <p>Cancel drawing</p>
+        </div>
 
-    <teleport to="#ire-vue-app">
-      <Transition name="fade">
-        <Modal v-if="showEditModal === 'tooltip'" @close="showEditModal = ''" type="2" width="w-[500px]">
-          <CreateEditActionModal :activeAction="activeAction || null" />
-        </Modal>
-      </Transition>
-    </teleport>
+        <div class="info-item">
+          <div class="flex items-center gap-2">
+            <Ctrl />
+            <span>+</span>
+            <PlusBtn class="!h-7 !w-7" />
+          </div>
+
+          <span>-</span>
+          <p>Zoom in</p>
+        </div>
+
+        <div class="info-item">
+          <div class="flex items-center gap-2">
+            <Ctrl />
+            <span>+</span>
+            <MinusBtn class="!h-7 !w-7" />
+          </div>
+
+          <span>-</span>
+          <p>Reset zoom</p>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
+
+<style>
+.info-item {
+  @apply flex items-center gap-2 !text-lg;
+}
+</style>
