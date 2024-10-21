@@ -22,7 +22,8 @@ function ire_enqueue_scripts($hook)
     wp_localize_script('vue-js', 'irePlugin', array(
         'nonce' => wp_create_nonce('ire_nonce'),
         'ajax_url' => admin_url('admin-ajax.php'),
-        'plugin_url' => PLUGIN_URL
+        'plugin_url' => PLUGIN_URL,
+        'plugin_assets_path' => plugins_url('assets/', IRE_PLUGIN_FILE)
     ));
 }
 
