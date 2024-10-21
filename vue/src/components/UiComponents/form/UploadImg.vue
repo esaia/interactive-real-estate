@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useSelectImage } from "../../../composables/useSelectImage";
 import Upload from "../icons/Upload.vue";
 import { imageInterface } from "../../../../types/components";
 import Delete from "../icons/Delete.vue";
+import Info from "../icons/Info.vue";
+import Modal from "../Modal.vue";
 
 const emit = defineEmits<{
   (e: "update:modelValue", params: typeof props.modelValue): void;
@@ -15,8 +17,10 @@ const props = defineProps<{
   floorImagePreviews?: string[];
   required?: boolean;
   multiple?: boolean;
+  exampleImage?: string;
 }>();
 
+const showExampleImage = ref(false);
 const { selectedImages, selectImage } = useSelectImage(props.multiple || false);
 
 const images = computed(() => {
@@ -39,9 +43,18 @@ onMounted(() => {
 </script>
 <template>
   <div class="w-full">
-    <p class="!mb-1 text-xs capitalize text-gray-600">
-      {{ title }} <span v-if="required" class="text-red-600">*</span>
-    </p>
+    <div class="!mb-2 flex items-center justify-between">
+      <p class="text-xs capitalize text-gray-600">{{ title }} <span v-if="required" class="text-red-600">*</span></p>
+
+      <div
+        v-if="exampleImage"
+        class="flex cursor-pointer justify-end"
+        @mouseenter="showExampleImage = true"
+        @mouseleave="showExampleImage = false"
+      >
+        <Info />
+      </div>
+    </div>
 
     <div class="flex w-full flex-wrap gap-2">
       <div
@@ -69,5 +82,16 @@ onMounted(() => {
         </div>
       </div>
     </div>
+
+    <teleport to="#ire-vue-app">
+      <Transition name="fade-in-out">
+        <Modal v-if="showExampleImage" :show-close-btn="false">
+          <div>
+            <p class="!mb-2">Example image</p>
+            <img :src="exampleImage" class="max-h-[500px] w-full object-contain" />
+          </div>
+        </Modal>
+      </Transition>
+    </teleport>
   </div>
 </template>

@@ -4,6 +4,7 @@ import ArrowRight from "../icons/ArrowRight.vue";
 import { selectDataItem } from "@/types/components";
 import Close from "../icons/Close.vue";
 import Input from "./Input.vue";
+import Info from "../icons/Info.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -16,6 +17,7 @@ const props = withDefaults(
     clearable?: boolean;
     required?: boolean;
     isSearchable?: boolean;
+    description?: string;
   }>(),
   {
     placeholder: "Choose",
@@ -23,7 +25,8 @@ const props = withDefaults(
     defaultValue: null,
     label: "",
     clearable: false,
-    isSearchable: true
+    isSearchable: true,
+    description: ""
   }
 );
 
@@ -153,8 +156,15 @@ watch(
           </div>
         </div>
 
-        <button v-else class="line-clamp-1 w-full min-w-32 px-[8px] py-[6px] text-start">nothing found</button>
+        <div v-else class="line-clamp-1 w-full min-w-32 cursor-pointer px-[8px] py-[6px] text-start">nothing found</div>
       </div>
+    </div>
+    <div v-if="description" class="label mt-2 flex items-start gap-2">
+      <Info class="min-h-4 min-w-4" />
+
+      <p>
+        {{ description }}
+      </p>
     </div>
   </div>
 </template>

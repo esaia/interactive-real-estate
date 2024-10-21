@@ -6,6 +6,7 @@ declare module "@vue/runtime-core" {
       nonce: string;
       ajax_url: string;
       plugin_url: string;
+      plugin_assets_path: string;
     };
   }
 }

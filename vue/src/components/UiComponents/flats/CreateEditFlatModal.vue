@@ -175,7 +175,7 @@ onMounted(() => {
     </div>
 
     <div class="flex flex-col items-center gap-3 p-3">
-      <Input v-model="obj.flat_number" placeholder="23 - flat" label="Flat number/name" required />
+      <Input v-model="obj.flat_number" placeholder="flat-57" label="Flat number/name" required />
 
       <Select
         v-if="floorsNumberData"
@@ -187,12 +187,18 @@ onMounted(() => {
 
       <Select v-model="obj.block_id" :data="blockSelectData" label="select block" clearable />
 
-      <Select v-model="obj.type_id" :data="typesData" label="Type" required />
+      <Select
+        v-model="obj.type_id"
+        :data="typesData"
+        label="Type"
+        description="For apartments of the same type, (For example, apartments that have the same area M2, number of rooms, arrangement of rooms) you need to add an entry in the types and then select from this list, Because the same records should not be created many times"
+        required
+      />
       <Button v-if="obj.type_id" class="!p-1" title="edit type" outlined @click="showEditTypeModal" />
 
       <Input v-model="obj.price" placeholder="60000" label="Price" required />
       <Input v-model="obj.offer_price" placeholder="58000" label="Offer price" />
-      <Select v-model="obj.conf" :data="confData" label="select conf" clearable />
+      <Select v-model="obj.conf" :data="confData" label="configuration" clearable />
 
       <!-- <Select v-model="obj.block_id" :data="[]" label="Block" clearable /> -->
 

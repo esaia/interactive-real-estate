@@ -221,15 +221,20 @@ onUnmounted(() => {
         </div>
 
         <div class="flex flex-col items-center gap-3 p-3">
-          <Input v-model="title" placeholder="Floor title" label="title" required />
+          <Input v-model="title" placeholder="Block A" label="Block title" required />
 
-          <Select v-model="conf" :data="defaultConf" label="select conf" clearable />
+          <Select v-model="conf" :data="defaultConf" label="configuration" clearable />
 
           <div class="flex w-full items-center justify-between gap-2">
             <Checkbox v-model="img_contain" title="object-fit: contain" />
           </div>
 
-          <UploadImg v-model="block_image" title="Upload floor image" required />
+          <UploadImg
+            v-model="block_image"
+            title="Upload block image"
+            :example-image="irePlugin?.plugin_assets_path + 'exampleImages/block.jpg'"
+            required
+          />
 
           <Button type="submit" :title="activeBlock ? 'Edit block' : 'Add block'" />
         </div>

@@ -3,6 +3,7 @@ declare const irePlugin: {
   ajax_url: string;
   plugin_url: string;
   wp: any;
+  plugin_assets_path: string;
 };
 
 declare const constants: {

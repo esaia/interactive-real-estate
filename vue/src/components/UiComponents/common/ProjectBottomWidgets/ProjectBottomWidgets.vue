@@ -10,7 +10,6 @@ import Input from "../../form/Input.vue";
 import Button from "../../form/Button.vue";
 import ColorVariables from "./ColorVariables.vue";
 import { useMetaStore } from "@/src/stores/useMeta";
-import Checkbox from "../../form/Checkbox.vue";
 
 const projectStore = useProjectStore();
 const metaStore = useMetaStore();
@@ -105,7 +104,12 @@ onMounted(() => {
       </div>
 
       <div class="w-60 rounded-md bg-white p-4">
-        <UploadImg v-model="projectImage" title="Upload project image" required />
+        <UploadImg
+          v-model="projectImage"
+          title="Upload project image"
+          :example-image="irePlugin?.plugin_assets_path + 'exampleImages/mainRender.jpg'"
+          required
+        />
       </div>
 
       <div class="rounded-md bg-white p-4">
