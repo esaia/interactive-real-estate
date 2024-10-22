@@ -92,6 +92,7 @@ watch(
           break;
 
         default:
+          hoveredData.value = null;
           break;
       }
     } else {
@@ -121,8 +122,8 @@ watch(
         class="canvas absolute left-0 top-0 h-full w-full [&_path]:cursor-pointer [&_path]:fill-[var(--path-color)] [&_path]:transition-all"
         :class="[
           {
-            'hover:[&_path]:fill-[var(--reserved-color)]': hoveredData?.conf === 'reserved',
-            'hover:[&_path]:fill-[var(--sold-color)]': hoveredData?.conf === 'sold',
+            'hover:[&_path]:fill-[var(--reserved-color)]': hoveredData && hoveredData?.conf === 'reserved',
+            'hover:[&_path]:fill-[var(--sold-color)]': hoveredData && hoveredData?.conf === 'sold',
             'hover:[&_path]:fill-[var(--path-hover-color)]': !hoveredData?.conf
           }
         ]"

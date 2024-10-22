@@ -385,7 +385,7 @@ const onDocumentKeydown = (event) => {
     }
   }
 
-  if (event.key === " ") {
+  if (event.key === " " && document.activeElement.tagName !== "INPUT") {
     event.preventDefault();
     pan.value = true;
   }

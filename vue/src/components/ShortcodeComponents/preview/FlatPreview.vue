@@ -118,7 +118,7 @@ onMounted(() => {
 
       <div class="flex w-full flex-col items-center gap-2 lg:w-auto">
         <div class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
-          <p class="!text-2xl font-semibold">{{ flat?.flat_number }}</p>
+          <p class="!text-2xl font-semibold capitalize">{{ flat?.flat_number }}</p>
           <p class="!text-xs text-gray-600">Apartment</p>
         </div>
 
@@ -149,7 +149,18 @@ onMounted(() => {
         </div>
 
         <div v-if="flat?.price" class="flex w-fit flex-col items-center border-b border-b-gray-200 py-4">
-          <p class="!text-2xl">{{ Number(flat.price).toLocaleString() }}<sup class="!text-sm">$</sup></p>
+          <div>
+            <p v-if="!flat?.offer_price" class="!text-2xl">
+              {{ Number(flat.price).toLocaleString() }}<sup class="!text-sm">$</sup>
+            </p>
+
+            <div v-else>
+              <p class="!text-xs line-through">
+                {{ Number(flat?.price).toLocaleString() }}
+              </p>
+              <p class="!text-2xl">{{ Number(flat?.offer_price).toLocaleString() }}<sup class="!text-sm">$</sup></p>
+            </div>
+          </div>
           <p class="!text-xs text-gray-600">Price</p>
         </div>
       </div>

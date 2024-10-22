@@ -21,7 +21,7 @@ const selectModel = defineModel();
 </script>
 
 <template>
-  <div class="w-full max-w-[200px] lg:min-w-[250px]">
+  <div class="w-full min-w-[150px] max-w-[200px] lg:min-w-[250px]">
     <p class="label">{{ label }}</p>
     <div class="relative">
       <select
