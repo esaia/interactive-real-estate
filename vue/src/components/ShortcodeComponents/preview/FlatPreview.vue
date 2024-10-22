@@ -57,7 +57,7 @@ onMounted(() => {
       <BackButton @click="goBack" />
     </div>
 
-    <div class="flex flex-col items-start justify-center gap-10 lg:flex-row lg:gap-20">
+    <div class="flex flex-col items-start justify-center gap-5 lg:flex-row lg:gap-20">
       <div class="flex w-full flex-col items-center justify-center lg:w-auto">
         <Transition name="fade-in-out" mode="out-in">
           <img
@@ -76,10 +76,10 @@ onMounted(() => {
         </Transition>
 
         <div class="mt-5 flex flex-col items-center gap-3 lg:flex-row">
-          <div class="flex w-fit items-center border-gray-400 bg-white p-1">
+          <div class="flex w-fit items-center gap-1 border-gray-400 bg-white p-1">
             <div
               v-if="flat?.type?.image_2d?.[0]?.url"
-              class="group flex cursor-pointer items-center gap-2 p-3 !text-xs transition-all hover:bg-primary hover:text-white"
+              class="group flex cursor-pointer items-center gap-2 rounded-lg p-3 !text-xs transition-all hover:bg-primary hover:text-white"
               :class="{ 'bg-primary text-white': show2dImage }"
               @click="show2dImage = true"
             >
@@ -91,7 +91,7 @@ onMounted(() => {
             </div>
             <div
               v-if="flat?.type?.image_3d?.[0]?.url"
-              class="group flex cursor-pointer items-center gap-2 p-3 !text-xs transition-all hover:bg-primary hover:text-white"
+              class="group flex cursor-pointer items-center gap-2 rounded-lg p-3 !text-xs transition-all hover:bg-primary hover:text-white"
               :class="{ 'bg-primary text-white': !show2dImage }"
               @click="show2dImage = false"
             >
@@ -102,11 +102,11 @@ onMounted(() => {
             </div>
           </div>
 
-          <div v-if="floorArray.length > 1" class="ml-4 flex items-center gap-1">
+          <div v-if="floorArray?.length > 1" class="ml-4 flex items-center gap-1">
             <div
               v-for="(item, index) in floorArray"
               :key="item"
-              class="flex h-10 w-10 cursor-pointer items-center justify-center p-2 transition-all hover:bg-black hover:text-white"
+              class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg p-2 transition-all hover:bg-black hover:text-white"
               :class="{ 'bg-black text-white': selectedFloor === index }"
               @click="selectedFloor = index"
             >

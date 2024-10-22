@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { nextTick, ref, watch } from "vue";
 import Collapse from "../icons/Collapse.vue";
 import Edit from "../icons/Edit.vue";
 import { ActionItem, FlatItem, PolygonDataCollection } from "../../../../types/components";
@@ -42,6 +42,7 @@ const blocksStore = useBlocksStore();
 const flatStore = useFlatsStore();
 const actionStore = useActionsStore();
 
+const sidebarRef = ref<HTMLDivElement>();
 const showEditModal = ref<"tooltip" | "flat" | "floor" | "block" | "">("");
 const activeFlat = ref<FlatItem>();
 const activeAction = ref<ActionItem>();
@@ -125,6 +126,27 @@ watch(
     }
   }
 );
+watch(
+  () => props.activeGroup,
+  async (ns) => {
+    await nextTick();
+
+    const activeElement = sidebarRef.value?.querySelector(".active");
+
+    if (activeElement) {
+      activeElement.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "nearest"
+      });
+    }
+
+    // sidebarRef.value?.scrollTo({
+    //   top: 400,
+    //   behavior: "smooth"
+    // });
+  }
+);
 </script>
 
 <template>
@@ -156,14 +178,14 @@ watch(
         </div>
       </div>
 
-      <div class="flex max-h-full flex-col gap-[1px] overflow-y-auto py-2">
+      <div ref="sidebarRef" class="flex max-h-full flex-col gap-[1px] overflow-y-auto py-2">
         <div
           v-if="polygon_data"
           v-for="item in Object.values(polygon_data)"
           :key="item.key"
           class="group flex w-full min-w-60 cursor-pointer items-center justify-between gap-5 px-3 py-3 transition-colors hover:bg-white/90 hover:ring-1 hover:ring-primary"
           :class="{
-            'bg-white/90 ring-1 ring-primary': item.key === activeGroup?.getAttribute('id')
+            'active bg-white/90 ring-1 ring-primary': item.key === activeGroup?.getAttribute('id')
           }"
           @click="setActiveG(item)"
         >

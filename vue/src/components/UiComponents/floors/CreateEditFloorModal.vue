@@ -268,7 +268,7 @@ onUnmounted(() => {
           <UploadImg
             v-model="floor_image"
             title="Upload floor image"
-            :example-image="irePlugin?.plugin_assets_path + 'exampleImages/floor.jpg'"
+            :example-image="irePlugin?.plugin_assets_path + 'exampleImages/floor_3d.jpg'"
             required
           />
 

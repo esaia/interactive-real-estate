@@ -69,16 +69,19 @@ const floorsSelectData = computed<selectDataItem[]>(() => {
     .filter((floor) => {
       if (activeBlock.value) {
         return activeBlock.value.id?.toString() === floor.block_id?.toString();
-      } else {
-        return !floor.block_id;
       }
+      //  else {
+      //   return !floor.block_id;
+      // }
+      return floor;
     })
     ?.sort((a, b) => a.floor_number - b.floor_number)
     ?.map((item) => {
       const isLinked = props.polygon_data?.some((polygon) => polygon.id == item.id && polygon.type === "floor");
+      const block = projectBlocks.value?.find((block) => block.id === item?.block_id?.toString());
 
       return {
-        title: `id: ${item.id} | floor #${item.floor_number.toString()} ${item.conf ? " | " + item.conf : ""}`,
+        title: `id: ${item.id} | floor #${item.floor_number.toString()} ${block ? " | " + block?.title : ""} ${item.conf ? " | " + item.conf : ""}`,
         value: item.id.toString(),
         isLinked,
         type: "floor"

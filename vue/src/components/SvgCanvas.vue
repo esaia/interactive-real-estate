@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch, watchEffect } from "vue";
 import { generateUniqueId } from "../composables/helpers";
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "../stores/useProject";
@@ -40,7 +40,7 @@ const isDragging = ref(false);
 const zoomLevel = ref(1);
 const lastCursorX = ref(0);
 const lastCursorY = ref(0);
-
+const pan = ref(false);
 // Setup functions
 const throttle = (fn, delay) => {
   let lastCall = 0;
@@ -129,7 +129,10 @@ const circleMouseMove = (event) => {
 
 const onCanvasMouseMove = throttle((event) => {
   setCursorValues(event);
-  applyZoom(lastCursorX.value, lastCursorY.value);
+
+  if (pan.value) {
+    applyZoom(lastCursorX.value, lastCursorY.value);
+  }
 
   if (updateMode.value) {
     circleMouseMove(event);
@@ -381,6 +384,17 @@ const onDocumentKeydown = (event) => {
       resetZoom();
     }
   }
+
+  if (event.key === " ") {
+    event.preventDefault();
+    pan.value = true;
+  }
+};
+
+const onDocumentKeyUp = (event) => {
+  if (event.key === " ") {
+    pan.value = false;
+  }
 };
 
 const applyZoom = (cursorX, cursorY) => {
@@ -432,6 +446,7 @@ onMounted(() => {
   svgCanvas.value.addEventListener("mousemove", throttle(onCanvasMouseMove, 10));
   svgCanvas.value.addEventListener("contextmenu", onPathContextMenu);
   document.addEventListener("keydown", onDocumentKeydown);
+  document.addEventListener("keyup", onDocumentKeyUp);
 });
 
 onBeforeUnmount(() => {
@@ -439,6 +454,7 @@ onBeforeUnmount(() => {
   svgCanvas.value.removeEventListener("mousemove", throttle(onCanvasMouseMove, 10));
   svgCanvas.value.removeEventListener("contextmenu", onPathContextMenu);
   document.removeEventListener("keydown", onDocumentKeydown);
+  document.removeEventListener("keyup", onDocumentKeyUp);
 });
 
 defineExpose({
@@ -453,7 +469,7 @@ defineExpose({
 
   <div v-else v-html="svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
 
-  <div v-if="zoomLevel > 1" class="absolute bottom-0 right-0 z-[999] bg-white px-4 py-1">
+  <div v-if="zoomLevel > 1" class="pointer-events-none absolute bottom-0 right-0 z-[999] bg-white px-4 py-1">
     Ctrl/Control + - for reset zoom
   </div>
 </template>

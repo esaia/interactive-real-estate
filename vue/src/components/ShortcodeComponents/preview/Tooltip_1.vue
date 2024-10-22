@@ -11,7 +11,7 @@ defineProps<{
   <Transition name="fade-in-out">
     <div
       v-if="type && hoveredData && type !== 'tooltip'"
-      class="pointer-events-none absolute !bottom-10 !right-10 w-fit select-none border bg-white p-4"
+      class="pointer-events-none absolute !bottom-10 !right-10 w-fit select-none rounded-lg border bg-white p-4"
     >
       <div v-if="type === 'floor'" class="flex items-center gap-3">
         <div class="flex flex-col items-center">
@@ -20,7 +20,7 @@ defineProps<{
           <p class="!text-sm uppercase">Floor</p>
         </div>
 
-        <div v-if="hoveredData?.conf || hoveredData?.flats?.length" class="bg-gray-100 px-5 py-2">
+        <div v-if="hoveredData?.conf || hoveredData?.flats?.length" class="rounded-lg bg-gray-100 p-6">
           <div v-if="hoveredData?.conf" class="!text-2xl">
             {{ hoveredData.conf }}
           </div>
@@ -59,12 +59,11 @@ defineProps<{
 
       <div v-else-if="type === 'flat'" class="flex w-full flex-col items-center gap-3">
         <div class="flex flex-col items-center">
-          <p class="!text-2xl">{{ hoveredData?.flat_number }}</p>
-
+          <p class="!text-2xl capitalize">{{ hoveredData?.flat_number }}</p>
           <p class="!mt-2 !text-xs uppercase">Apartment</p>
         </div>
 
-        <div class="flex min-w-36 flex-col items-center bg-gray-100 px-7 py-3">
+        <div class="flex min-w-36 flex-col items-center rounded-lg bg-gray-100 px-7 py-3">
           <p v-if="hoveredData?.conf" class="!text-2xl uppercase">{{ hoveredData.conf }}</p>
 
           <template v-else>
