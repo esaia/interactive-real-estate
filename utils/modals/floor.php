@@ -199,6 +199,8 @@ class IreFloor
         }
         $item['img_contain'] =  $item['img_contain'] == 1;
         $item['floor_image'] = [get_image_instance($item['floor_image'])];
+        $item['svg'] =  transformSvgString($item['svg']);
+
         return $item;
     }
 
@@ -209,6 +211,7 @@ class IreFloor
         }
         $floor->img_contain = $floor->img_contain == 1;
         $floor->floor_image = [get_image_instance($floor->floor_image)];
+        $floor->svg =  transformSvgString($floor->svg);
     }
 
     public function check_floor_exists_or_not($project_id, $floor_number, $block_id)

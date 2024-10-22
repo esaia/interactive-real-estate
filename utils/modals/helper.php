@@ -171,3 +171,11 @@ function check_required_data($data, $required_fields,)
     }
     return $required_data;
 }
+
+function transformSvgString($svgString)
+{
+    $transformedSvg = preg_replace('/\\\\/', '', $svgString); // Remove backslashes
+    $transformedSvg = str_replace('&amp;', '&', $transformedSvg); // Unescape HTML entities
+    $transformedSvg = preg_replace('/(\s)([a-zA-Z0-9-]+)=""/', '$1$2=""', $transformedSvg); // Fix empty attributes if any
+    return $transformedSvg;
+}

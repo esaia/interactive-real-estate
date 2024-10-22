@@ -25,9 +25,19 @@ class IreProject
         if ($project_id) {
             $result = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM {$this->table_name} WHERE id = %d", $project_id));
 
+            // dd(gettype($result->svg));
+
+
+
+
+            // $transformedSvg = preg_replace('/\\\\/', '', $svgString); // Remove backslashes
+            // $transformedSvg = str_replace('&amp;', '&', $transformedSvg); // Unescape HTML entities
+            // $transformedSvg = preg_replace('/(\s)([a-zA-Z0-9-]+)=""/', '$1$2=""', $transformedSvg); // Fix empty attributes if any
+
 
             if ($result) {
                 $result->project_image = [get_image_instance($result->project_image)];
+                $result->svg =  transformSvgString($result->svg);
                 $result->polygon_data = json_decode($result->polygon_data);
             }
         } else {
@@ -37,6 +47,8 @@ class IreProject
                 $result = array_map(function ($item) {
                     $item->polygon_data = json_decode($item->polygon_data);
                     $item->project_image = [get_image_instance($item->project_image)];
+                    $item->svg =  transformSvgString($item->svg);
+
                     return $item;
                 }, $result);
             }

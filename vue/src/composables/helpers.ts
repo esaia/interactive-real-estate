@@ -13,10 +13,10 @@ export const generateUniqueId = (length = 14) => {
 
 export const transformSvgString = (svgString: string) => {
   // Remove backslashes and unescape characters
-  let transformedSvg = svgString
-    .replace(/\\/g, "") // Remove backslashes
-    .replace(/&amp;/g, "&") // Unescape HTML entities
-    .replace(/(\s)([a-zA-Z0-9-]+)=""/g, '$1$2=""'); // Fix empty attributes if any
+  // let transformedSvg = svgString
+  //   .replace(/\\/g, "") // Remove backslashes
+  //   .replace(/&amp;/g, "&") // Unescape HTML entities
+  //   .replace(/(\s)([a-zA-Z0-9-]+)=""/g, '$1$2=""'); // Fix empty attributes if any
 
   // Ensure the SVG element is properly formatted
   // transformedSvg = transformedSvg
@@ -27,7 +27,7 @@ export const transformSvgString = (svgString: string) => {
   //   .replace(/&gt;/g, ">") // Unescape >
   //   .replace(/&quot;/g, '"'); // Unescape "
 
-  return transformedSvg;
+  return svgString;
 };
 
 export const resetCanvasAfterSave = (svgRef: HTMLDivElement) => {

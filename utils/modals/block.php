@@ -179,6 +179,8 @@ class IreBlock
         }
         $item['img_contain'] =  $item['img_contain'] == 1;
         $item['block_image'] = [get_image_instance($item['block_image'])];
+        $item['svg'] =  transformSvgString($item['svg']);
+
         return $item;
     }
 
