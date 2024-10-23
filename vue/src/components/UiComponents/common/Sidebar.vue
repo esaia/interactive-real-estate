@@ -22,6 +22,7 @@ import Esc from "../icons/Esc.vue";
 import Ctrl from "../icons/Ctrl.vue";
 import PlusBtn from "../icons/PlusBtn.vue";
 import MinusBtn from "../icons/MinusBtn.vue";
+import Space from "../icons/Space.vue";
 const isClollapsed = ref(false);
 
 const emit = defineEmits<{
@@ -285,6 +286,12 @@ watch(
 
           <span>-</span>
           <p>Reset zoom</p>
+        </div>
+
+        <div class="info-item">
+          <Space class="!h-14 !w-14" />
+          <span>-</span>
+          <p>Panning</p>
         </div>
       </div>
     </Transition>

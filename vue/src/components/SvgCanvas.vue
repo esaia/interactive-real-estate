@@ -3,6 +3,9 @@ import { ref, onMounted, onBeforeUnmount, watch, watchEffect } from "vue";
 import { generateUniqueId } from "../composables/helpers";
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "../stores/useProject";
+import Ctrl from "./UiComponents/icons/Ctrl.vue";
+import MinusBtn from "./UiComponents/icons/MinusBtn.vue";
+import Space from "./UiComponents/icons/Space.vue";
 
 const emit = defineEmits(["setSvgRef", "setActiveG", "addPolygonData"]);
 
@@ -469,7 +472,19 @@ defineExpose({
 
   <div v-else v-html="svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
 
-  <div v-if="zoomLevel > 1" class="pointer-events-none absolute bottom-0 right-0 z-[999] bg-white px-4 py-1">
-    Ctrl/Control + - for reset zoom
+  <div v-if="zoomLevel > 1" class="pointer-events-none absolute bottom-0 right-0 z-[999] bg-white/80 px-4 py-1">
+    <div class="info-item">
+      <div class="flex items-center gap-2">
+        <Ctrl class="h-8 w-8" />
+        <span>+</span>
+        <MinusBtn class="h-6 w-6" />
+      </div>
+      <span>-</span>
+      <p class="!text-sm">Reset zoom</p>
+      <span>|</span>
+      <Space class="h-10 w-10" />
+      <span>-</span>
+      <p class="!text-sm">Panning</p>
+    </div>
   </div>
 </template>
