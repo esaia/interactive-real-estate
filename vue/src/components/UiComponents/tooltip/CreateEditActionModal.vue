@@ -10,6 +10,7 @@ import { ActionItem, ModalObject } from "@/types/components";
 import { showToast } from "@/src/composables/helpers";
 import TextArea from "../form/TextArea.vue";
 import UploadImg from "../form/UploadImg.vue";
+import Checkbox from "../form/Checkbox.vue";
 
 const emits = defineEmits<{
   (e: "setActiveAction", activeType: ActionItem): void;
@@ -21,7 +22,6 @@ const props = defineProps<{
 }>();
 
 const projectStore = useProjectStore();
-const floorStore = useFloorsStore();
 
 const actions = [
   { title: "no action", value: "no-action" },
@@ -133,10 +133,7 @@ onMounted(() => {
         <div v-else-if="action.value === 'url'" class="mt-3 w-full">
           <Input v-model="url" label="url" />
 
-          <label class="mt-3 flex w-fit items-center">
-            <input v-model="targetBlank" type="checkbox" />
-            <p class="label cursor-pointer capitalize">Open in new window</p>
-          </label>
+          <Checkbox v-model="targetBlank" title="Open in new window" class="mt-2" />
         </div>
       </div>
 
