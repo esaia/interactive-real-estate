@@ -155,7 +155,8 @@ onMounted(() => {
         <template #default="action">
           <td>{{ action.slotProps?.id }}</td>
           <td>{{ action.slotProps?.title }}</td>
-          <td>{{ action.slotProps?.data?.actionType === "modal" ? "Modal" : "Url" }}</td>
+
+          <td>{{ action.slotProps?.data?.actionType }}</td>
         </template>
       </Table>
 

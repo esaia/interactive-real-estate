@@ -19,7 +19,18 @@ function send_json_response(bool $success, $message): void
 
 function handle_json_data($data)
 {
-    return is_array($data) ? json_encode($data) : json_decode($data);
+    if (is_array($data)) {
+        return json_encode($data);
+    }
+
+    $decoded = json_decode($data, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log('JSON decode error: ' . json_last_error_msg());
+        return null;
+    }
+
+    return $decoded;
 }
 
 function validate_and_sanitize_input(array $data, array $keys, bool $required = true): ?array

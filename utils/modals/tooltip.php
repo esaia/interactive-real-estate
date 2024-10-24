@@ -49,14 +49,23 @@ class IreTooltip
             function ($result) {
                 $result['data'] = handle_json_data($result['data']);
 
-                if (isset($result['data']->targetBlank)) {
-                    $result['data']->targetBlank = handle_json_data($result['data']->targetBlank);
+                if (isset($result['data']['targetBlank'])) {
+                    $result['data']['targetBlank'] = handle_json_data($result['data']['targetBlank']);
                 }
+
+
+                if (isset($result['data']['script'])) {
+                    $result['data']['script'] = str_replace('\\', '', $result['data']['script']);;
+                }
+
 
                 return $result;
             },
             $results
         );
+
+
+
 
         if ($this->wpdb->last_error) {
             return [false,  'No tooltip found.'];
@@ -112,6 +121,7 @@ class IreTooltip
 
         $where = ['id' => $action_id];
         $this->wpdb->update($this->table_name, $params, $where);
+
 
         if ($this->wpdb->last_error) {
             send_json_response(false, 'Database error');

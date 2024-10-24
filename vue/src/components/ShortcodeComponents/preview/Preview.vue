@@ -159,6 +159,12 @@ const changeRoute = (flowType: string, polygonItem: any) => {
         window.open(actionData.url, actionData.targetBlank ? "_blank" : "_self");
       } else if (actionData.actionType === "modal") {
         showModal.value = true;
+      } else if (actionData.actionType === "script") {
+        try {
+          eval(actionData?.script);
+        } catch (error) {
+          console.error("Error executing script:", error);
+        }
       }
 
       break;

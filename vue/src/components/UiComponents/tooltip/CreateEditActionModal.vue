@@ -26,7 +26,8 @@ const projectStore = useProjectStore();
 const actions = [
   { title: "no action", value: "no-action" },
   { title: "open modal", value: "modal" },
-  { title: "follow link", value: "url" }
+  { title: "follow link", value: "url" },
+  { title: "run script", value: "script" }
 ];
 
 const title = ref("");
@@ -39,6 +40,8 @@ const modalObject = ref<ModalObject>({
 const url = ref("#");
 const targetBlank = ref();
 
+const script = ref("");
+
 const submitForm = async () => {
   const params = {
     nonce: irePlugin.nonce,
@@ -48,7 +51,8 @@ const submitForm = async () => {
       actionType: action.value?.value,
       modalObject: modalObject.value,
       url: url.value,
-      targetBlank: targetBlank.value
+      targetBlank: targetBlank.value,
+      script: script.value
     }
   };
   if (props.activeAction) {
@@ -102,6 +106,7 @@ onMounted(() => {
     modalObject.value = actionInstance?.data?.modalObject;
     url.value = actionInstance?.data?.url;
     targetBlank.value = actionInstance?.data?.targetBlank;
+    script.value = actionInstance?.data?.script;
   }
 });
 </script>
@@ -134,6 +139,10 @@ onMounted(() => {
           <Input v-model="url" label="url" />
 
           <Checkbox v-model="targetBlank" title="Open in new window" class="mt-2" />
+        </div>
+
+        <div v-else-if="action.value === 'script'" class="mt-3 w-full">
+          <TextArea v-model="script" label="Script" placeholder="console.log('hello world')" />
         </div>
       </div>
 

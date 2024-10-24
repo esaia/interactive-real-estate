@@ -128,14 +128,14 @@ export interface BlockItem {
 export interface PolygonDataCollection {
   id: string;
   key: string;
-  type: "flat" | "floor" | "block" | 'tooltip' | "";
+  type: "flat" | "floor" | "block" | "tooltip" | "";
 }
 
 export interface selectDataItem {
   title: string;
   value: string;
   isLinked?: boolean;
-  type?: "" | "flat" | "floor" | "block" | 'tooltip';
+  type?: "" | "flat" | "floor" | "block" | "tooltip";
 }
 
 export interface FlatsInterface {
@@ -212,9 +212,9 @@ export interface ActionItem {
   updated_at: string;
 }
 
-
 export interface ActionData {
   url: string;
+  script: string;
   targetBlank: boolean;
   actionType: string;
   modalObject: ModalObject;
@@ -223,7 +223,7 @@ export interface ActionData {
 export interface ModalObject {
   title: string;
   description: string;
-  modalImage: null | imageInterface[]
+  modalImage: null | imageInterface[];
 }
 
 // export interface PolygonDataCollection {
