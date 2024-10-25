@@ -53,7 +53,8 @@ class ShortcodeApi
 
                     if ($polygon_data) {
                         foreach ($polygon_data as $polygon) {
-                            if (!is_null($polygon) && isset($polygon->type) && $polygon->type === 'flat' && isset($polygon->id) && $polygon->id === $flat['id']) {
+
+                            if (!is_null($polygon) && isset($polygon['type']) && $polygon['type'] === 'flat' && isset($polygon['id']) && $polygon['id'] === $flat['id']) {
                                 if ($floor_block_id) {
                                     return $flat['block_id'] === $floor_block_id;
                                 } else {
@@ -67,11 +68,13 @@ class ShortcodeApi
                 }));
 
 
+
                 $minimum_price = null;
                 $minimum_area = null;
                 $available = 0;
                 $reserved = 0;
                 $sold = 0;
+
 
                 foreach ($matching_flats as $flat) {
 
@@ -98,6 +101,7 @@ class ShortcodeApi
 
                 $counts = [];
 
+
                 if ($minimum_price > 0) {
                     $counts['minimum_price'] = $minimum_price;
                 }
@@ -116,6 +120,7 @@ class ShortcodeApi
                 if ($sold > 0) {
                     $counts['sold'] = $sold;
                 }
+
 
 
                 if (!empty($counts)) {
