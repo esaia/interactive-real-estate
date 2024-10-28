@@ -9,7 +9,8 @@ import "vue-awesome-paginate/dist/style.css";
 import vClickOutside from "click-outside-vue3";
 import Vue3ColorPicker from "vue3-colorpicker";
 import "vue3-colorpicker/style.css";
-import Preview from "./components/ShortcodeComponents/preview/Preview.vue";
+import Shortcode from "./components/ShortcodeComponents/Shortcode.vue";
+import "ire-preview/dist/styles.css";
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -44,7 +45,7 @@ app.mount("#ire-vue-app");
 document.querySelectorAll("[id^='ire-shortcode-']").forEach((shortcodeElement) => {
   const projectId = shortcodeElement.getAttribute("data-project-id");
   const componentId = shortcodeElement.getAttribute("id");
-  const shortcodeApp = createApp(Preview, { projectId, componentId });
+  const shortcodeApp = createApp(Shortcode, { projectId, componentId });
 
   shortcodeApp.use(vClickOutside);
 

@@ -5,7 +5,6 @@ import Project from "./pages/Project.vue";
 import "vue-toast-notification/dist/theme-sugar.css";
 import { useProjectStore } from "./stores/useProject";
 import { storeToRefs } from "pinia";
-
 const projectStore = useProjectStore();
 
 const { projects, project } = storeToRefs(projectStore);
