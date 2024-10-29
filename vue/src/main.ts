@@ -9,7 +9,7 @@ import "vue-awesome-paginate/dist/style.css";
 import vClickOutside from "click-outside-vue3";
 import Vue3ColorPicker from "vue3-colorpicker";
 import "vue3-colorpicker/style.css";
-import Shortcode from "./components/ShortcodeComponents/Shortcode.vue";
+import Shortcode from "@/src/components/ShortcodeComponents/ShortCode.vue";
 import "ire-preview/dist/styles.css";
 
 const pinia = createPinia();
