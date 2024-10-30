@@ -1,6 +1,6 @@
 import { createApp } from "vue";
-import "./style.css";
 import App from "./App.vue";
+import Shortcode from "@/src/components/ShortcodeComponents/ShortCode.vue";
 import { createPinia } from "pinia";
 import ToastPlugin from "vue-toast-notification";
 import VueAwesomePaginate from "vue-awesome-paginate";
@@ -9,8 +9,11 @@ import "vue-awesome-paginate/dist/style.css";
 import vClickOutside from "click-outside-vue3";
 import Vue3ColorPicker from "vue3-colorpicker";
 import "vue3-colorpicker/style.css";
-import Shortcode from "@/src/components/ShortcodeComponents/ShortCode.vue";
 import "ire-preview/dist/styles.css";
+import "./style.css";
+import "highlight.js/styles/stackoverflow-light.css";
+import "highlight.js/lib/common";
+import hljsVuePlugin from "@highlightjs/vue-plugin";
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -20,6 +23,7 @@ app.use(pinia);
 app.use(VueAwesomePaginate);
 app.use(ToastPlugin);
 app.use(Vue3ColorPicker);
+app.use(hljsVuePlugin);
 
 app.config.globalProperties.irePlugin = irePlugin;
 // @ts-ignore

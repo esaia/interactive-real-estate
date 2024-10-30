@@ -10,7 +10,8 @@ import Input from "../../form/Input.vue";
 import Button from "../../form/Button.vue";
 import ColorVariables from "./ColorVariables.vue";
 import { useMetaStore } from "@/src/stores/useMeta";
-
+import Modal from "../../Modal.vue";
+import GenerateObject from "./GenerateObject.vue";
 const projectStore = useProjectStore();
 const metaStore = useMetaStore();
 
@@ -19,6 +20,7 @@ const { isContainImage } = storeToRefs(metaStore);
 
 const projectImage = ref<imageInterface[] | null>(null);
 const colorsRef = ref();
+const showGenerateObject = ref(false);
 
 const containImageCheckbox = () => {
   const imgContainMeta = metaStore.getMeta("project_img_contain");
@@ -101,6 +103,10 @@ onMounted(() => {
           <div class="font-semibold">Shortcode:</div>
           <p>[ire_project id="{{ projectStore?.id }}"]</p>
         </div>
+
+        <div class="cursor-pointer hover:underline" @click="showGenerateObject = true">
+          Generate data for standalone version
+        </div>
       </div>
 
       <div class="w-60 rounded-md bg-white p-4">
@@ -122,4 +128,12 @@ onMounted(() => {
       <Button title="Update" outlined @click="updateProject" />
     </div>
   </div>
+
+  <teleport to="#ire-vue-app">
+    <Transition name="fade">
+      <Modal v-if="showGenerateObject" type="2" @close="showGenerateObject = false">
+        <GenerateObject />
+      </Modal>
+    </Transition>
+  </teleport>
 </template>

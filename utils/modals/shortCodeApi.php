@@ -131,7 +131,7 @@ class ShortcodeApi
 
 
 
-                $floor['flats'] = $matching_flats;
+                // $floor['flats'] = $matching_flats;
             }
         }
 
