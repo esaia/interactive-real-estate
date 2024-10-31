@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { useProjectStore } from "@/src/stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import Input from "../../form/Input.vue";
 
 const projectStore = useProjectStore();
 
 const shortcodeData = ref();
 const imgPathsData = ref<any>({});
+
+const actionModals = computed(() => {
+  return shortcodeData.value.actions.filter((item: any) => item.data.actionType === "modal");
+});
 
 const fetchData = async () => {
   const { data } = await ajaxAxios.post("", {
@@ -24,20 +28,16 @@ const fetchData = async () => {
 
 const saveLocalStorage = (e: Event, key: string) => {
   const value = (e.target as HTMLInputElement).value;
-
-  // const data = localStorage.getItem("imagePaths");
-  // const imgPaths = data ? JSON.parse(data) : {};
-
   imgPathsData.value[key] = value;
 
-  localStorage.setItem("imagePaths", JSON.stringify(imgPathsData.value));
+  localStorage.setItem("imagePaths-" + projectStore.id, JSON.stringify(imgPathsData.value));
   imgPathsData.value = imgPathsData.value;
 };
 
 onMounted(async () => {
   await fetchData();
 
-  const data = localStorage.getItem("imagePaths");
+  const data = localStorage.getItem("imagePaths-" + projectStore.id);
   const imgPaths = data ? JSON.parse(data) : {};
   imgPathsData.value = imgPaths;
 
@@ -47,12 +47,27 @@ onMounted(async () => {
     return { ...item, floor_image: [{ url: imgPathsData.value["floor " + item.floor_number] || "" }] };
   });
 
-  shortcodeData.value.types = shortcodeData.value.types.map((item: any) => {
+  shortcodeData.value.blocks = shortcodeData.value.blocks.map((item: any) => {
+    return { ...item, block_image: [{ url: imgPathsData.value[item.title] || "" }] };
+  });
+
+  shortcodeData.value.types = shortcodeData.value.types.map((type: any) => {
     return {
-      ...item,
-      image_2d: [{ url: imgPathsData.value[item.title + " 2d"] || "" }],
-      image_3d: [{ url: imgPathsData.value[item.title + " 3d"] || "" }]
+      ...type,
+      image_2d: type.image_2d.map((item: any, i: number) => {
+        return { url: imgPathsData.value[type.title + ` - 2d - ${i + 1}`] || "" };
+      }),
+      image_3d: type.image_3d.map((item: any, i: number) => {
+        return { url: imgPathsData.value[type.title + ` - 3d - ${i + 1}`] || "" };
+      })
     };
+  });
+
+  shortcodeData.value.actions = shortcodeData.value.actions.map((item: any) => {
+    if (item.data.actionType === "modal") {
+      item.data.modalObject.modalImage = [{ url: imgPathsData.value[`modal ${item.id}`] || "" }];
+    }
+    return item;
   });
 });
 </script>
@@ -60,6 +75,11 @@ onMounted(async () => {
 <template>
   <div v-if="shortcodeData" class="overflow-scroll">
     <div class="flex flex-col gap-4 p-4">
+      <p>
+        Because you are using an standalone environment, you need to specify the image addresses as either relative or
+        absolute.
+      </p>
+
       <Input
         v-model="shortcodeData.project.project_image[0].url"
         label="project image"
@@ -67,7 +87,19 @@ onMounted(async () => {
         @change="(e: Event) => saveLocalStorage(e, 'project image')"
       />
 
-      <div class="h-[1px] w-full bg-gray-100"></div>
+      <div v-if="shortcodeData.blocks?.length" class="h-[1px] w-full bg-gray-100"></div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <Input
+          v-for="item in shortcodeData.blocks"
+          v-model="item.block_image[0].url"
+          :label="item.title"
+          placeholder="https:// or /assets/images/block_1.jpg"
+          @change="(e: Event) => saveLocalStorage(e, item.title)"
+        />
+      </div>
+
+      <div v-if="shortcodeData.floors?.length" class="h-[1px] w-full bg-gray-100"></div>
 
       <div class="grid grid-cols-2 gap-2">
         <Input
@@ -79,20 +111,36 @@ onMounted(async () => {
         />
       </div>
 
-      <div class="h-[1px] w-full bg-gray-100"></div>
+      <div v-if="shortcodeData.types?.length" class="h-[1px] w-full bg-gray-100"></div>
+      <p>label template: <span class="italic text-gray-400">type title | 2d/3d | image index</span></p>
+      <p class="text-gray-400">You can upload multiple images, that's why we use indexes</p>
 
       <div v-for="item in shortcodeData.types" class="grid grid-cols-2 gap-2">
         <Input
-          v-model="item.image_2d[0].url"
-          :label="item.title + ' 2d'"
+          v-for="(image_2d, i) in item.image_2d"
+          v-model="image_2d.url"
+          :label="item.title + ` - 2d - ${i + 1}`"
           placeholder="https:// or /assets/images/image_2d.jpg"
-          @change="(e: Event) => saveLocalStorage(e, item.title + ' 2d')"
+          @change="(e: Event) => saveLocalStorage(e, item.title + ` - 2d - ${i + 1}`)"
         />
         <Input
-          v-model="item.image_3d[0].url"
-          :label="item.title + ' 3d'"
+          v-for="(image_3d, i) in item.image_3d"
+          v-model="image_3d.url"
+          :label="item.title + ` - 3d - ${i + 1}`"
           placeholder="https:// or /assets/images/image_3d.jpg"
-          @change="(e: Event) => saveLocalStorage(e, item.title + ' 3d')"
+          @change="(e: Event) => saveLocalStorage(e, item.title + ` - 3d - ${i + 1}`)"
+        />
+      </div>
+
+      <div class="h-[1px] w-full bg-gray-100"></div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <Input
+          v-for="item in actionModals"
+          v-model="item.data.modalObject.modalImage[0].url"
+          :label="'modal ' + item.id"
+          placeholder="https:// or /assets/images/floor_1.jpg"
+          @change="(e: Event) => saveLocalStorage(e, 'modal ' + item.id)"
         />
       </div>
 
@@ -106,7 +154,7 @@ onMounted(async () => {
           <highlightjs
             language="markdown"
             code="<script src='https://unpkg.com/vue@3.5.12/dist/vue.global.prod.js'></script>;
-<link rel='stylesheet' crossorigin href='/dist/styles.css' />'"
+<link rel='stylesheet' crossorigin href='/dist/styles.css' />;"
           />
         </div>
 
@@ -140,7 +188,16 @@ onMounted(async () => {
       app.mount(selector);
    }
 
-
+    // You can see this variable below, for this project!
+    const data = {
+        project: {},
+        floors: [],
+        blocks: [],
+        flats: [],
+        types: [],
+        meta: [],
+        actions: [],
+    }
 
    addProject('#project-1', data);
    // addProject('#project-2', data); Add as many project as you want
@@ -151,7 +208,7 @@ onMounted(async () => {
 
         <textarea
           v-if="shortcodeData"
-          :value="JSON.stringify(shortcodeData, null, 2)"
+          :value="'const data = ' + JSON.stringify(shortcodeData, null, 2)"
           class="highlight mt-4 min-h-80 w-full border-none outline-none focus:border-none focus:outline-none focus:ring-0"
           readonly
         ></textarea>

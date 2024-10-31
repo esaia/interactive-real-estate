@@ -94,7 +94,6 @@ onMounted(() => {
         <div class="flex w-full items-center justify-between gap-2">
           <div>
             <p class="font-semibold">object-fit: contain</p>
-            <p class="mb-1 text-xs italic text-gray-500">default is cover</p>
           </div>
           <input type="checkbox" v-model="isContainImage" @change="containImageCheckbox" />
         </div>
