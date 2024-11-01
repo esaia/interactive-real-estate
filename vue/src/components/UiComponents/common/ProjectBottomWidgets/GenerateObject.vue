@@ -3,27 +3,31 @@ import { useProjectStore } from "@/src/stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
 import { computed, onMounted, ref } from "vue";
 import Input from "../../form/Input.vue";
+import Loading from "../Loading.vue";
 
 const projectStore = useProjectStore();
 
 const shortcodeData = ref();
 const imgPathsData = ref<any>({});
+const loading = ref(false);
 
 const actionModals = computed(() => {
   return shortcodeData.value.actions.filter((item: any) => item.data.actionType === "modal");
 });
 
 const fetchData = async () => {
+  loading.value = true;
   const { data } = await ajaxAxios.post("", {
     action: "get_shortcode_data",
     nonce: irePlugin.nonce,
-    project_id: projectStore?.id || 83,
+    project_id: projectStore?.id,
     block: "all"
   });
 
   if (data.success) {
     shortcodeData.value = data.data;
   }
+  loading.value = false;
 };
 
 const saveLocalStorage = (e: Event, key: string) => {
@@ -73,7 +77,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="shortcodeData" class="overflow-scroll">
+  <div v-if="loading">
+    <Loading />
+  </div>
+  <div v-else-if="shortcodeData" class="overflow-scroll">
     <div class="flex flex-col gap-4 p-4">
       <p>
         Because you are using an standalone environment, you need to specify the image addresses as either relative or
@@ -153,8 +160,8 @@ onMounted(async () => {
         <div>
           <highlightjs
             language="markdown"
-            code="<script src='https://unpkg.com/vue@3.5.12/dist/vue.global.prod.js'></script>;
-<link rel='stylesheet' crossorigin href='/dist/styles.css' />;"
+            code="<script src='https://unpkg.com/vue@3.5.12/dist/vue.global.prod.js'></script>
+<link rel='stylesheet' crossorigin href='/dist/styles.css' />  <!-- You must download these styles from codecanyon -->"
           />
         </div>
 
@@ -164,13 +171,13 @@ onMounted(async () => {
           <highlightjs language="markdown" code="<div id='project-1'></div>" />
         </div>
 
-        <p class="!py-4">3. Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, dignissimos.</p>
+        <p class="!py-4">3. Paste this script before the closing body tag.</p>
 
         <div>
           <highlightjs
             language="js"
             code="<script type='module'>
-   import { Project } from './dist/lib.es.js';
+   import { Project } from './dist/lib.es.js'; // You must download these script from codecanyon
 
    function addProject(selector, shortcodeData) {
       const app = Vue.createApp({
@@ -188,7 +195,7 @@ onMounted(async () => {
       app.mount(selector);
    }
 
-    // You can see this variable below, for this project!
+    // You can see value of this variable below, for this project!
     const data = {
         project: {},
         floors: [],

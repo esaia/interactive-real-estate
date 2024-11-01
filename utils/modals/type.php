@@ -117,7 +117,7 @@ class IreType
         $keys = ['teaser', 'rooms_count'];
         $params = validate_and_sanitize_input($data, $keys, false);
 
-        $params = [...$required_data, ...$params];
+        $params =  array_merge($required_data, $params);
 
 
         if (!empty($data['image_2d'])) {

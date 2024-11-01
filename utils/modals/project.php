@@ -54,6 +54,7 @@ class IreProject
             }
         }
 
+
         if ($this->wpdb->last_error) {
 
             return [false,  'No projects found.'];

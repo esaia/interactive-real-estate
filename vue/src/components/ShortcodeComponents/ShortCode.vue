@@ -3,24 +3,30 @@ import ajaxAxios from "@/src/utils/axios";
 import { ShortcodeData } from "@/types/components";
 import { Project } from "ire-preview";
 import { onMounted, ref } from "vue";
+import Loading from "../UiComponents/common/Loading.vue";
 
 const props = defineProps<{
   projectId: string;
-  componentId: string;
 }>();
 
 const shortcodeData = ref<ShortcodeData>();
-
+const loading = ref(false);
 const fetchData = async () => {
-  const { data } = await ajaxAxios.post("", {
-    action: "get_shortcode_data",
-    nonce: irePlugin.nonce,
-    project_id: props?.projectId || 83,
-    block: "all"
-  });
+  loading.value = true;
+  try {
+    const { data } = await ajaxAxios.post("", {
+      action: "get_shortcode_data",
+      nonce: irePlugin.nonce,
+      project_id: props?.projectId,
+      block: "all"
+    });
 
-  if (data.success) {
-    shortcodeData.value = data.data;
+    if (data.success) {
+      shortcodeData.value = data.data;
+    }
+  } catch (error) {
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -31,6 +37,12 @@ onMounted(() => {
 
 <template>
   <div>
-    <Project v-if="shortcodeData" :data="shortcodeData" />
+    <div v-if="loading" class="relative h-full overflow-hidden pt-[50%]">
+      <div class="absolute left-0 top-0 flex h-full w-full items-center justify-center">
+        <Loading />
+      </div>
+    </div>
+
+    <Project v-else-if="shortcodeData" :data="shortcodeData" />
   </div>
 </template>

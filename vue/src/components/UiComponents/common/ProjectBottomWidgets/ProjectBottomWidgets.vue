@@ -21,6 +21,8 @@ const { isContainImage } = storeToRefs(metaStore);
 const projectImage = ref<imageInterface[] | null>(null);
 const colorsRef = ref();
 const showGenerateObject = ref(false);
+const showPreview = ref(false);
+const projectUpdateToogle = ref(false);
 
 const containImageCheckbox = () => {
   const imgContainMeta = metaStore.getMeta("project_img_contain");
@@ -60,7 +62,7 @@ const updateProject = async () => {
     });
 
     activeGroup.value = null;
-
+    projectUpdateToogle.value = !projectUpdateToogle.value;
     showToast("success", "Project Updated!");
   } catch (error) {
     showToast("error", "Something went wrong!");
@@ -78,6 +80,11 @@ watch(
 
 onMounted(() => {
   projectImage.value = project_image.value?.id ? [project_image.value] : null;
+});
+
+defineExpose({
+  showPreview,
+  projectUpdateToogle
 });
 </script>
 
@@ -123,8 +130,10 @@ onMounted(() => {
     </div>
 
     <div class="flex flex-col items-end gap-3">
-      <div class="flex"></div>
-      <Button title="Update" outlined @click="updateProject" />
+      <div class="flex items-center gap-4">
+        <Button title="preview" outlined @click="showPreview = !showPreview" class="w-fit" />
+        <Button title="Update" outlined @click="updateProject" />
+      </div>
     </div>
   </div>
 

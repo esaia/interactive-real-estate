@@ -5,6 +5,7 @@ import Project from "./pages/Project.vue";
 import "vue-toast-notification/dist/theme-sugar.css";
 import { useProjectStore } from "./stores/useProject";
 import { storeToRefs } from "pinia";
+import Loading from "./components/UiComponents/common/Loading.vue";
 const projectStore = useProjectStore();
 
 const { projects, project } = storeToRefs(projectStore);
@@ -27,14 +28,16 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="loading" class="p-3">Loading...</div>
+  <div v-if="loading" class="p-3">
+    <Loading />
+  </div>
 
   <div v-else>
     <template v-if="projectID">
       <Project v-if="project" />
       <div v-else>not found</div>
     </template>
-    <Projects v-else-if="projects?.length" :projects="projects" />
-    <div v-else>error</div>
+    <Projects v-else :projects="projects" />
+    <!-- <div v-else>error</div> -->
   </div>
 </template>

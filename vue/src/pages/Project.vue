@@ -4,13 +4,14 @@ import ProjectBottomWidgets from "@/src/components/UiComponents/common/ProjectBo
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "@/src/stores/useProject";
 import ModalBoxes from "@components/UiComponents/projects/ModalBoxes.vue";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useFloorsStore } from "../stores/useFloors";
 import { useTypesStore } from "../stores/useTypes";
 import { useFlatsStore } from "../stores/useFlats";
 import { useBlocksStore } from "../stores/useBlock";
 import { useMetaStore } from "../stores/useMeta";
 import { useActionsStore } from "../stores/useActions";
+import ShortCode from "../components/ShortcodeComponents/ShortCode.vue";
 
 const projectStore = useProjectStore();
 const metaStore = useMetaStore();
@@ -21,6 +22,8 @@ const flatsStore = useFlatsStore();
 const actionsStore = useActionsStore();
 
 const { polygon_data, activeGroup, svgRef, svg, id, project_image } = storeToRefs(projectStore);
+
+const bottomWidgetsRef = ref();
 
 const deleteG = (key: string) => {
   activeGroup.value = null;
@@ -41,9 +44,14 @@ onMounted(() => {
 
 <template>
   <div class="container-fluid">
-    <!-- <Preview /> -->
+    <ShortCode
+      v-if="bottomWidgetsRef?.showPreview"
+      :key="bottomWidgetsRef?.projectUpdateToogle"
+      :project-id="projectStore.id"
+    />
 
     <Canvas
+      v-else
       :projectImage="project_image?.url || ''"
       :polygon_data="polygon_data"
       :svgRef="svgRef"
@@ -58,7 +66,11 @@ onMounted(() => {
       @update-polygon-data="(key, data) => projectStore.editpoligonData(key, data)"
     />
 
-    <ProjectBottomWidgets />
+    <!-- <div>
+      <Button title="preview" outlined @click="showPreview = !showPreview" class="w-fit" />
+    </div> -->
+
+    <ProjectBottomWidgets ref="bottomWidgetsRef" />
 
     <ModalBoxes />
   </div>

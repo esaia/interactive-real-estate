@@ -165,7 +165,7 @@ class IreFlat
         $keys = ['floor_number', 'project_id', 'block_id', 'offer_price', 'conf'];
         $params = validate_and_sanitize_input($data, $keys, false);
 
-        $params = [...$required_data, ...$params];
+        $params =  array_merge($required_data, $params);
         $params['block_id'] ??= null;
 
 
