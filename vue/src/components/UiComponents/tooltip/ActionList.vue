@@ -31,15 +31,15 @@ const duplicatedAction = ref<ActionItem | null>(null);
 const deleteActionId = ref<number | null>(null);
 const showDeleteModal = ref(false);
 
-const editAction = (type: ActionItem | null) => {
-  activeAction.value = type;
+const editAction = (action: ActionItem | null) => {
+  activeAction.value = action;
   showActionModal.value = true;
 };
 
-const duplicateAction = (type: ActionItem | null) => {
-  if (!type) return;
+const duplicateAction = (action: ActionItem | null) => {
+  if (!action) return;
+  duplicatedAction.value = { ...action };
   showActionModal.value = true;
-  duplicatedAction.value = { ...type };
 };
 
 const showDeleteActionModal = (type: ActionItem | null) => {
@@ -99,10 +99,9 @@ watch(
   () => showActionModal.value,
   (ns) => {
     if (!ns) {
-      fetchActions();
-
-      activeAction.value = null;
-      duplicatedAction.value = null;
+      // fetchActions();
+      // activeAction.value = null;
+      // duplicatedAction.value = null;
     }
   }
 );
@@ -127,9 +126,9 @@ onMounted(() => {
     <div v-if="actions?.data?.length" class="relative overflow-x-auto shadow-sm">
       <Table
         :data="actions.data"
-        @edit-action="(flat: ActionItem | null) => editAction(flat)"
-        @duplicate-action="(flat: ActionItem | null) => duplicateAction(flat)"
-        @delete-action="(flat: ActionItem | null) => showDeleteActionModal(flat)"
+        @edit-action="(action: ActionItem | null) => editAction(action)"
+        @duplicate-action="(action: ActionItem | null) => duplicateAction(action)"
+        @delete-action="(action: ActionItem | null) => showDeleteActionModal(action)"
       >
         <template #header>
           <TableTh

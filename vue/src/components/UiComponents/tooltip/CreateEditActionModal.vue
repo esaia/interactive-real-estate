@@ -3,7 +3,6 @@ import { onMounted, ref } from "vue";
 import Button from "../form/Button.vue";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
-import { useFloorsStore } from "@/src/stores/useFloors";
 import ajaxAxios from "@/src/utils/axios";
 import { useProjectStore } from "@/src/stores/useProject";
 import { ActionItem, ModalObject } from "@/types/components";

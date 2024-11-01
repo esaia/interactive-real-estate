@@ -24,7 +24,9 @@ const showExampleImage = ref(false);
 const { selectedImages, selectImage } = useSelectImage(props.multiple || false);
 
 const images = computed(() => {
-  emit("update:modelValue", selectedImages.value || null);
+  if (selectedImages.value) {
+    emit("update:modelValue", selectedImages.value);
+  }
 
   return selectedImages.value;
 });
