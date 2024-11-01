@@ -149,7 +149,7 @@ onMounted(() => {
         :example-image="irePlugin?.plugin_assets_path + 'exampleImages/flat_3d.jpg'"
         multiple
       />
-      <UploadImg v-model="obj.gallery" title="upload gallery" multiple />
+      <!-- <UploadImg v-model="obj.gallery" title="upload gallery" multiple /> -->
 
       <Button type="submit" :title="activeType ? 'Edit type' : 'Add type'" />
     </div>

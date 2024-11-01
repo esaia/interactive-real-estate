@@ -31,7 +31,7 @@ function ire_add_admin_menu()
         'manage_options',               // Capability
         'ire',                          // Menu slug
         'ire_render_page',              // Function to display the page
-        'dashicons-admin-generic',      // Icon
+        'dashicons-building',      // Icon
         100                             // Position
     );
 }
@@ -42,4 +42,18 @@ function ire_render_page()
 
 
     include_once plugin_dir_path(IRE_PLUGIN_FILE) . './templates/index.php';
+}
+
+
+add_filter('admin_footer_text', 'remove_admin_footer_text');
+add_filter('update_footer', 'remove_version_info', 11);
+
+function remove_admin_footer_text()
+{
+    return '';
+}
+
+function remove_version_info()
+{
+    return '';
 }

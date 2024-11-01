@@ -161,7 +161,7 @@ onMounted(async () => {
           <highlightjs
             language="markdown"
             code="<script src='https://unpkg.com/vue@3.5.12/dist/vue.global.prod.js'></script>
-<link rel='stylesheet' crossorigin href='/dist/styles.css' />  <!-- You must download these styles from codecanyon -->"
+<link rel='stylesheet' crossorigin href='/dist/styles.css' />  <!-- Download these styles from codecanyon -->"
           />
         </div>
 
@@ -177,7 +177,7 @@ onMounted(async () => {
           <highlightjs
             language="js"
             code="<script type='module'>
-   import { Project } from './dist/lib.es.js'; // You must download these script from codecanyon
+   import { Project } from './dist/lib.es.js'; // Download these script from codecanyon
 
    function addProject(selector, shortcodeData) {
       const app = Vue.createApp({

@@ -17,8 +17,9 @@ const isModalOpen = ref(false);
     <h2 class="!my-4 !text-2xl">Projects</h2>
     <div class="grid grid-cols-3 gap-6 lg:grid-cols-4">
       <div
-        class="flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-300 transition-all duration-200 hover:bg-gray-200"
-        @click="isModalOpen = true"
+        class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-300 transition-all duration-200 hover:bg-gray-200"
+        :class="{ 'h-60': true }"
+        @click="isModalOpen = projects?.length"
       >
         <Plus />
         <p class="!text-lg">New Project</p>
