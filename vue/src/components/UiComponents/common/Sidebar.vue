@@ -191,7 +191,6 @@ watch(
           @click="setActiveG(item)"
         >
           <div class="flex items-center gap-1 text-sm">
-            <p>shape |</p>
             <span v-if="item.type"> {{ item.type }} id: {{ item.id }} </span>
             <span v-else>#{{ item.key?.slice(0, 6) }}</span>
           </div>

@@ -443,21 +443,35 @@ watch(
   }
 );
 
-onMounted(() => {
-  emit("setSvgRef", svgCanvas.value);
-  svgCanvas.value.addEventListener("click", onCanvasClick);
-  svgCanvas.value.addEventListener("mousemove", throttle(onCanvasMouseMove, 10));
-  svgCanvas.value.addEventListener("contextmenu", onPathContextMenu);
+const addListeners = () => {
+  if (svgCanvas.value) {
+    svgCanvas.value.addEventListener("click", onCanvasClick);
+    svgCanvas.value.addEventListener("mousemove", throttle(onCanvasMouseMove, 10));
+    svgCanvas.value.addEventListener("contextmenu", onPathContextMenu);
+  }
   document.addEventListener("keydown", onDocumentKeydown);
   document.addEventListener("keyup", onDocumentKeyUp);
+};
+
+const removeListeners = () => {
+  if (svgCanvas.value) {
+    svgCanvas.value.removeEventListener("click", onCanvasClick);
+    svgCanvas.value.removeEventListener("mousemove", throttle(onCanvasMouseMove, 10));
+    svgCanvas.value.removeEventListener("contextmenu", onPathContextMenu);
+  }
+  document.removeEventListener("keydown", onDocumentKeydown);
+  document.removeEventListener("keyup", onDocumentKeyUp);
+};
+
+onMounted(() => {
+  setTimeout(() => {
+    emit("setSvgRef", svgCanvas.value);
+    addListeners();
+  }, 500);
 });
 
 onBeforeUnmount(() => {
-  svgCanvas.value.removeEventListener("click", onCanvasClick);
-  svgCanvas.value.removeEventListener("mousemove", throttle(onCanvasMouseMove, 10));
-  svgCanvas.value.removeEventListener("contextmenu", onPathContextMenu);
-  document.removeEventListener("keydown", onDocumentKeydown);
-  document.removeEventListener("keyup", onDocumentKeyUp);
+  removeListeners();
 });
 
 defineExpose({
@@ -467,7 +481,7 @@ defineExpose({
 
 <template>
   <div v-if="!svg" ref="svgCanvas" class="svg-canvas-container">
-    <svg ref="svgCanvas" viewBox="0 0 1720 860"></svg>
+    <svg viewBox="0 0 1720 860"></svg>
   </div>
 
   <div v-else v-html="svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>

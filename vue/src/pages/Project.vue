@@ -4,7 +4,7 @@ import ProjectBottomWidgets from "@/src/components/UiComponents/common/ProjectBo
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "@/src/stores/useProject";
 import ModalBoxes from "@components/UiComponents/projects/ModalBoxes.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useFloorsStore } from "../stores/useFloors";
 import { useTypesStore } from "../stores/useTypes";
 import { useFlatsStore } from "../stores/useFlats";
@@ -44,27 +44,24 @@ onMounted(() => {
 
 <template>
   <div class="container-fluid">
-    <ShortCode
-      v-if="bottomWidgetsRef?.showPreview"
-      :key="bottomWidgetsRef?.projectUpdateToogle"
-      :project-id="projectStore.id"
-    />
+    <ShortCode v-if="bottomWidgetsRef?.showPreview" :project-id="projectStore.id" />
 
-    <Canvas
-      v-else
-      :projectImage="project_image?.url || ''"
-      :polygon_data="polygon_data"
-      :svgRef="svgRef"
-      :svg="svg"
-      :activeGroup="activeGroup"
-      :isFloorsCanvas="false"
-      :isImageContain="metaStore?.isContainImage"
-      @set-svg-ref="(svgContainer) => (svgRef = svgContainer)"
-      @set-active-g="(gTag) => (activeGroup = gTag)"
-      @delete-g="(key) => deleteG(key)"
-      @add-polygon-data="(key) => projectStore.addPolygonData(key)"
-      @update-polygon-data="(key, data) => projectStore.editpoligonData(key, data)"
-    />
+    <div v-else>
+      <Canvas
+        :projectImage="project_image?.url || ''"
+        :polygon_data="polygon_data"
+        :svgRef="svgRef"
+        :svg="svg"
+        :activeGroup="activeGroup"
+        :isFloorsCanvas="false"
+        :isImageContain="metaStore?.isContainImage"
+        @set-svg-ref="(svgContainer) => (svgRef = svgContainer)"
+        @set-active-g="(gTag) => (activeGroup = gTag)"
+        @delete-g="(key) => deleteG(key)"
+        @add-polygon-data="(key) => projectStore.addPolygonData(key)"
+        @update-polygon-data="(key, data) => projectStore.editpoligonData(key, data)"
+      />
+    </div>
 
     <!-- <div>
       <Button title="preview" outlined @click="showPreview = !showPreview" class="w-fit" />

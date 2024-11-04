@@ -70,6 +70,15 @@ const updateProject = async () => {
 };
 
 watch(
+  () => showPreview.value,
+  () => {
+    if (!showPreview.value) {
+      projectStore.fetchProjects(projectStore.id);
+    }
+  }
+);
+
+watch(
   () => projectImage.value,
   (ns) => {
     if (ns) {
