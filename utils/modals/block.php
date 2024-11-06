@@ -184,13 +184,15 @@ class IreBlock
         return $item;
     }
 
-    private function prepare_block_data(&$floor)
+    private function prepare_block_data(&$block)
     {
-        if (isset($floor->polygon_data)) {
-            $floor->polygon_data = handle_json_data($floor->polygon_data);
+        if (isset($block->polygon_data)) {
+            $block->polygon_data = handle_json_data($block->polygon_data);
         }
-        $floor->img_contain = $floor->img_contain == 1;
-        $floor->block_image = [get_image_instance($floor->block_image)];
+        $block->svg =  transformSvgString($block->svg);
+
+        $block->img_contain = $block->img_contain == 1;
+        $block->block_image = [get_image_instance($block->block_image)];
     }
 }
 

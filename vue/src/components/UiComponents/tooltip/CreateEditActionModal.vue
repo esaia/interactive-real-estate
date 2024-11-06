@@ -129,7 +129,11 @@ onMounted(() => {
         <h4 class="font-bold capitalize">{{ action.title }}:</h4>
         <div v-if="action.value === 'modal'" class="mt-3 flex w-full flex-col gap-3">
           <Input v-model="modalObject.title" label="Action title" />
-          <TextArea v-model="modalObject.description" label="Description" />
+          <TextArea
+            v-model="modalObject.description"
+            label="Description"
+            placeholder="<p> you can use <b> html </b> code here </p>"
+          />
 
           <UploadImg v-model="modalObject.modalImage" title="Upload modal image" />
         </div>

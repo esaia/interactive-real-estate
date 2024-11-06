@@ -48,7 +48,16 @@ onMounted(async () => {
   shortcodeData.value.project.project_image[0] = { url: imgPathsData.value["project image"] || "" };
 
   shortcodeData.value.floors = shortcodeData.value.floors.map((item: any) => {
-    return { ...item, floor_image: [{ url: imgPathsData.value["floor " + item.floor_number] || "" }] };
+    return {
+      ...item,
+      floor_image: [
+        {
+          url:
+            imgPathsData.value["floor " + item.floor_number + (item?.block_id ? " block_id: " + item.block_id : "")] ||
+            ""
+        }
+      ]
+    };
   });
 
   shortcodeData.value.blocks = shortcodeData.value.blocks.map((item: any) => {
@@ -81,74 +90,101 @@ onMounted(async () => {
     <Loading />
   </div>
   <div v-else-if="shortcodeData" class="overflow-scroll">
-    <div class="flex flex-col gap-4 p-4">
+    <div class="flex flex-col gap-6 p-4">
       <p>
         Because you are using an standalone environment, you need to specify the image addresses as either relative or
         absolute.
       </p>
 
-      <Input
-        v-model="shortcodeData.project.project_image[0].url"
-        label="project image"
-        placeholder="https:// or /assets/images/project.jpg"
-        @change="(e: Event) => saveLocalStorage(e, 'project image')"
-      />
+      <div>
+        <h4 class="title-sm">Project</h4>
 
-      <div v-if="shortcodeData.blocks?.length" class="h-[1px] w-full bg-gray-100"></div>
-
-      <div class="grid grid-cols-2 gap-2">
         <Input
-          v-for="item in shortcodeData.blocks"
-          v-model="item.block_image[0].url"
-          :label="item.title"
-          placeholder="https:// or /assets/images/block_1.jpg"
-          @change="(e: Event) => saveLocalStorage(e, item.title)"
+          v-model="shortcodeData.project.project_image[0].url"
+          label="project image"
+          placeholder="https:// or /assets/images/project.jpg"
+          @change="(e: Event) => saveLocalStorage(e, 'project image')"
         />
       </div>
 
-      <div v-if="shortcodeData.floors?.length" class="h-[1px] w-full bg-gray-100"></div>
+      <div v-if="shortcodeData.blocks?.length">
+        <div class="mb-4 h-[1px] w-full bg-gray-100"></div>
 
-      <div class="grid grid-cols-2 gap-2">
-        <Input
-          v-for="item in shortcodeData.floors"
-          v-model="item.floor_image[0].url"
-          :label="'floor ' + item.floor_number"
-          placeholder="https:// or /assets/images/floor_1.jpg"
-          @change="(e: Event) => saveLocalStorage(e, 'floor ' + item.floor_number)"
-        />
+        <h4 class="title-sm">Blocks</h4>
+
+        <div class="grid grid-cols-2 gap-4">
+          <Input
+            v-for="item in shortcodeData.blocks"
+            v-model="item.block_image[0].url"
+            :label="item.title"
+            placeholder="https:// or /assets/images/block_1.jpg"
+            @change="(e: Event) => saveLocalStorage(e, item.title)"
+          />
+        </div>
       </div>
 
-      <div v-if="shortcodeData.types?.length" class="h-[1px] w-full bg-gray-100"></div>
-      <p>label template: <span class="italic text-gray-400">type title | 2d/3d | image index</span></p>
-      <p class="text-gray-400">You can upload multiple images, that's why we use indexes</p>
+      <div v-if="shortcodeData.floors?.length">
+        <div class="mb-4 h-[1px] w-full bg-gray-100"></div>
 
-      <div v-for="item in shortcodeData.types" class="grid grid-cols-2 gap-2">
-        <Input
-          v-for="(image_2d, i) in item.image_2d"
-          v-model="image_2d.url"
-          :label="item.title + ` - 2d - ${i + 1}`"
-          placeholder="https:// or /assets/images/image_2d.jpg"
-          @change="(e: Event) => saveLocalStorage(e, item.title + ` - 2d - ${i + 1}`)"
-        />
-        <Input
-          v-for="(image_3d, i) in item.image_3d"
-          v-model="image_3d.url"
-          :label="item.title + ` - 3d - ${i + 1}`"
-          placeholder="https:// or /assets/images/image_3d.jpg"
-          @change="(e: Event) => saveLocalStorage(e, item.title + ` - 3d - ${i + 1}`)"
-        />
+        <h4 class="title-sm">Floors</h4>
+
+        <div class="grid grid-cols-2 gap-4">
+          <Input
+            v-for="item in shortcodeData.floors"
+            v-model="item.floor_image[0].url"
+            :label="'floor ' + item.floor_number + (item?.block_id ? ' block_id: ' + item.block_id : '')"
+            placeholder="https:// or /assets/images/floor_1.jpg"
+            @change="
+              (e: Event) =>
+                saveLocalStorage(
+                  e,
+                  'floor ' + item.floor_number + (item?.block_id ? ' block_id: ' + item.block_id : '')
+                )
+            "
+          />
+        </div>
       </div>
 
-      <div class="h-[1px] w-full bg-gray-100"></div>
+      <div v-if="shortcodeData.types?.length">
+        <div class="mb-4 h-[1px] w-full bg-gray-100"></div>
 
-      <div class="grid grid-cols-2 gap-2">
-        <Input
-          v-for="item in actionModals"
-          v-model="item.data.modalObject.modalImage[0].url"
-          :label="'modal ' + item.id"
-          placeholder="https:// or /assets/images/floor_1.jpg"
-          @change="(e: Event) => saveLocalStorage(e, 'modal ' + item.id)"
-        />
+        <h4 class="title-sm">Types</h4>
+
+        <p>label template: <span class="italic text-gray-400">type title | 2d/3d | image index</span></p>
+        <p class="!mb-4 text-gray-400">You can upload multiple images, that's why we use indexes</p>
+
+        <div v-for="item in shortcodeData.types" class="grid grid-cols-2 gap-4 py-2">
+          <Input
+            v-for="(image_2d, i) in item.image_2d"
+            v-model="image_2d.url"
+            :label="item.title + ` - 2d - ${i + 1}`"
+            placeholder="https:// or /assets/images/image_2d.jpg"
+            @change="(e: Event) => saveLocalStorage(e, item.title + ` - 2d - ${i + 1}`)"
+          />
+          <Input
+            v-for="(image_3d, i) in item.image_3d"
+            v-model="image_3d.url"
+            :label="item.title + ` - 3d - ${i + 1}`"
+            placeholder="https:// or /assets/images/image_3d.jpg"
+            @change="(e: Event) => saveLocalStorage(e, item.title + ` - 3d - ${i + 1}`)"
+          />
+        </div>
+      </div>
+
+      <div v-if="actionModals?.length">
+        <div class="mb-4 h-[1px] w-full bg-gray-100"></div>
+
+        <h4 class="title-sm">Actions</h4>
+
+        <div class="grid grid-cols-2 gap-4">
+          <Input
+            v-for="item in actionModals"
+            v-model="item.data.modalObject.modalImage[0].url"
+            :label="'modal ' + item.id"
+            placeholder="https:// or /assets/images/floor_1.jpg"
+            @change="(e: Event) => saveLocalStorage(e, 'modal ' + item.id)"
+          />
+        </div>
       </div>
 
       <div class="[&_code]:cursor-text [&_code]:!bg-gray-100">
@@ -228,5 +264,9 @@ onMounted(async () => {
 <style scoped>
 .highlight {
   @apply my-2 cursor-text rounded-sm bg-gray-100 p-2 outline-none;
+}
+
+.title-sm {
+  @apply !mb-2 !text-lg font-semibold tracking-tight;
 }
 </style>

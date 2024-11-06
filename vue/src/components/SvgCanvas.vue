@@ -489,14 +489,14 @@ defineExpose({
   <div v-if="zoomLevel > 1" class="pointer-events-none absolute bottom-0 right-0 z-[999] bg-white/80 px-4 py-1">
     <div class="info-item">
       <div class="flex items-center gap-2">
-        <Ctrl class="h-8 w-8" />
+        <Ctrl class="h-6 w-6" />
         <span>+</span>
-        <MinusBtn class="h-6 w-6" />
+        <MinusBtn class="h-5 w-5" />
       </div>
       <span>-</span>
       <p class="!text-sm">Reset zoom</p>
       <span>|</span>
-      <Space class="h-10 w-10" />
+      <Space class="h-7 w-7" />
       <span>-</span>
       <p class="!text-sm">Panning</p>
     </div>
