@@ -50,10 +50,8 @@ class IreType
 
         if (is_wp_error($results)) {
             return [false,  $results->get_error_message()];
-        } else {
-            if ($results) {
-                $results = array_map([$this, 'map_images'], $results);
-            }
+        } else if ($results) {
+            $results = array_map([$this, 'map_images'], $results);
 
             return [true, [
                 'data' => $results,
@@ -187,10 +185,10 @@ class IreType
         }
 
 
-        if ($item['gallery']) {
-            $gallery_ids = handle_json_data($item['gallery']);
-            $item['gallery'] = array_map('get_image_instance', $gallery_ids);
-        }
+        // if ($item['gallery']) {
+        //     $gallery_ids = handle_json_data($item['gallery']);
+        //     $item['gallery'] = array_map('get_image_instance', $gallery_ids);
+        // }
 
         return $item;
     }

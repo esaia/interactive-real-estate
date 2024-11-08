@@ -14,6 +14,8 @@ import Modal from "../Modal.vue";
 import { useBlocksStore } from "@/src/stores/useBlock";
 import { showToast } from "@/src/composables/helpers";
 import { useFlatsStore } from "@/src/stores/useFlats";
+import UploadImg from "../form/UploadImg.vue";
+import Radio from "../form/Radio.vue";
 
 const emits = defineEmits<{
   (e: "setActiveFlat", activeType: FlatItem): void;
@@ -44,9 +46,18 @@ const obj = reactive<any>({
   floor_number: null,
   price: "",
   offer_price: "",
-  block_id: null
+  block_id: null,
+  type: {
+    title: "",
+    teaser: "",
+    area_m2: "",
+    rooms_count: "",
+    image_2d: "",
+    image_3d: ""
+  }
 });
 
+const useType = ref("true");
 const showTypeModal = ref(false);
 const activeType = ref<TypeItem | null>(null);
 
@@ -86,8 +97,18 @@ const submitForm = async () => {
     type_id: (obj.type_id as selectDataItem | null)?.value,
     floor_number: (obj.floor_number as selectDataItem | null)?.value,
     project_id: projectStore?.id,
-    block_id: obj.block_id?.value || null
+    block_id: obj.block_id?.value || null,
+    use_type: useType.value,
+    type: { ...obj.type }
   };
+
+  if (obj.type.image_2d) {
+    params.type.image_2d = obj.type.image_2d.map((i: any) => i.id);
+  }
+
+  if (obj.type.image_3d) {
+    params.type.image_3d = obj.type.image_3d.map((i: any) => i.id);
+  }
 
   if (props.activeFlat) {
     await editFlat(params);
@@ -160,6 +181,11 @@ onMounted(() => {
     obj.type_id = typesData.value.find((type) => type.value === typeInstance.type_id) ?? null;
     obj.floor_number = floorsNumberData.value.find((floor) => floor.value === typeInstance.floor_number) ?? null;
     obj.block_id = blockSelectData.value.find((block) => block.value === typeInstance.block_id) ?? null;
+
+    useType.value = typeInstance.use_type ? "true" : "false";
+    if (typeInstance.type) {
+      obj.type = typeInstance.type;
+    }
   }
 });
 </script>
@@ -187,21 +213,53 @@ onMounted(() => {
 
       <Select v-model="obj.block_id" :data="blockSelectData" label="select block" clearable />
 
-      <Select
-        v-model="obj.type_id"
-        :data="typesData"
-        label="Type"
-        description="For apartments of the same type, (For example, apartments that have the same area M2, number of rooms, arrangement of rooms) you need to add an entry in the types and then select from this list, Because the same records should not be created many times"
-        required
-      />
-      <Button v-if="obj.type_id" class="!p-1" title="edit type" outlined @click="showEditTypeModal" />
-
       <Input v-model="obj.price" placeholder="60000" label="Price" required />
       <Input v-model="obj.offer_price" placeholder="58000" label="Offer price" />
       <Select v-model="obj.conf" :data="confData" label="configuration" clearable />
 
       <!-- <Select v-model="obj.block_id" :data="[]" label="Block" clearable /> -->
 
+      <div class="flex items-center">
+        <Radio v-model="useType" label="Choose type" name="test name" value="true" />
+        <Radio v-model="useType" label="Manually" name="test name" value="false" />
+      </div>
+
+      <div v-if="useType === 'true'">
+        <Select
+          v-model="obj.type_id"
+          :data="typesData"
+          label="Type"
+          description="For apartments of the same type, (For example, apartments that have the same area M2, number of rooms, arrangement of rooms) you need to add an entry in the types and then select from this list, Because the same records should not be created many times"
+          required
+        />
+
+        <Button v-if="obj.type_id" class="!p-1" title="edit type" outlined @click="showEditTypeModal" />
+      </div>
+
+      <div v-else class="flex w-full flex-col gap-4 rounded-md border p-3">
+        <Input v-model="obj.type.title" placeholder="corner apartment" label="Type title" />
+        <Input
+          v-model="obj.type.teaser"
+          placeholder="Experience the perfect blend of comfort, style, and stunning views!"
+          label="Type teaser"
+        />
+
+        <Input v-model="obj.type.area_m2" placeholder="62.5" label="area m²" is-float />
+        <Input v-model="obj.type.rooms_count" placeholder="3" label="Rooms count" type="number" />
+
+        <UploadImg
+          v-model="obj.type.image_2d"
+          title="upload image 2d"
+          :example-image="irePlugin?.plugin_assets_path + 'exampleImages/flat_2d.jpg'"
+          multiple
+        />
+        <UploadImg
+          v-model="obj.type.image_3d"
+          title="upload image 3d"
+          :example-image="irePlugin?.plugin_assets_path + 'exampleImages/flat_3d.jpg'"
+          multiple
+        />
+      </div>
       <Button type="submit" :title="activeFlat ? 'Edit flat' : 'Add flat'" />
     </div>
   </form>

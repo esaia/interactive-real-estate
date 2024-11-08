@@ -102,9 +102,9 @@ class IreFlat
         $total_results = $this->wpdb->get_var($total_query);
 
         if (is_wp_error($results)) {
-
             return [false, $results->get_error_message()];
-        } else {
+        } else if ($results) {
+            $results = array_map([$this, 'map_flats'], $results);
 
             return [
                 true,
@@ -122,24 +122,23 @@ class IreFlat
     {
         check_nonce($data['nonce'], 'ire_nonce');
 
-        $required_fields = ['flat_number', 'price', 'type_id', 'project_id'];
+        $required_fields = ['flat_number', 'price', 'type_id', 'project_id', 'use_type'];
         $required_data = check_required_data($data, $required_fields);
 
 
         $non_required_data = validate_and_sanitize_input($data, ['floor_number', 'offer_price', 'conf', 'block_id'], false);
-        $data = array_merge($required_data, $non_required_data);
+        $params = array_merge($required_data, $non_required_data);
 
-        $this->wpdb->insert($this->table_name, $data);
+        $params['type'] = handle_json_data($data['type']);
+        $params['use_type'] = $params['use_type'] === 'true' ? 1 : 0;
+
+        $this->wpdb->insert($this->table_name, $params);
 
         if ($this->wpdb->last_error) {
             send_json_response(false, 'Database error');
         } else {
             $new_flat_id = $this->wpdb->insert_id;
             $new_flat = get($this->table_name, $new_flat_id);
-
-            if (isset($new_flat->polygon_data)) {
-                $new_flat->polygon_data = handle_json_data($new_flat->polygon_data);
-            }
 
 
             send_json_response(true, $new_flat);
@@ -159,7 +158,12 @@ class IreFlat
             return;
         }
 
-        $required_fields = ['flat_number', 'price', 'type_id'];
+        $required_fields = ['flat_number', 'price', 'use_type'];
+
+        if (isset($data['use_type']) && $data['use_type'] === 'true') {
+            $required_fields[] = 'type_id';
+        }
+
         $required_data = check_required_data($data, $required_fields);
 
         $keys = ['floor_number', 'project_id', 'block_id', 'offer_price', 'conf'];
@@ -167,10 +171,13 @@ class IreFlat
 
         $params =  array_merge($required_data, $params);
         $params['block_id'] ??= null;
+        $params['type'] = handle_json_data($data['type']);
+        $params['use_type'] = $params['use_type'] === 'true' ? 1 : 0;
 
 
         $where = ['id' => $flat_id];
         $this->wpdb->update($this->table_name, $params, $where);
+
 
         if ($this->wpdb->last_error) {
             send_json_response(false, 'Database error');
@@ -197,6 +204,29 @@ class IreFlat
         } else {
             send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
+    }
+
+
+    private function map_flats($item)
+    {
+
+        $item['use_type'] =  $item['use_type'] === '1';
+
+        if ($item['type']) {
+            $item['type'] = handle_json_data($item['type']);
+        }
+
+
+        if (is_array($item['type']) && isset($item['type']['image_2d']) && !empty($item['type']['image_2d'])) {
+            $item['type']['image_2d'] = array_map('get_image_instance', $item['type']['image_2d']);
+        }
+
+        if (is_array($item['type']) && isset($item['type']['image_3d']) && !empty($item['type']['image_3d'])) {
+            $item['type']['image_3d'] = array_map('get_image_instance', $item['type']['image_3d']);
+        }
+
+
+        return $item;
     }
 }
 

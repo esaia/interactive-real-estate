@@ -101,6 +101,8 @@ function ire_create_tables()
         flat_number VARCHAR(255) NOT NULL,
         price DECIMAL(10, 2) NOT NULL,
         offer_price DECIMAL(10, 2),
+        use_type BOOLEAN DEFAULT TRUE,
+        type json,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),

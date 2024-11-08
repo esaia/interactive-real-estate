@@ -156,6 +156,7 @@ export interface FlatItem {
   offer_price: string;
   block_id?: string | null;
   type?: TypeItem;
+  use_type?: boolean;
   created_at: string;
   updated_at: string;
 }
