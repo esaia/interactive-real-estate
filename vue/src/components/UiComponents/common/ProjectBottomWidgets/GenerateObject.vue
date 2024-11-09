@@ -47,7 +47,7 @@ onMounted(async () => {
 
   shortcodeData.value.project.project_image[0] = { url: imgPathsData.value["project image"] || "" };
 
-  shortcodeData.value.floors = shortcodeData.value.floors.map((item: any) => {
+  shortcodeData.value.floors = shortcodeData.value.floors?.map((item: any) => {
     return {
       ...item,
       floor_image: [
@@ -60,32 +60,30 @@ onMounted(async () => {
     };
   });
 
-  shortcodeData.value.blocks = shortcodeData.value.blocks.map((item: any) => {
+  shortcodeData.value.blocks = shortcodeData.value.blocks?.map((item: any) => {
     return { ...item, block_image: [{ url: imgPathsData.value[item.title] || "" }] };
   });
 
-  shortcodeData.value.types = shortcodeData.value.types.map((type: any) => {
+  shortcodeData.value.types = shortcodeData.value.types?.map((type: any) => {
     return {
       ...type,
-      image_2d: type.image_2d.map((item: any, i: number) => {
+      image_2d: type.image_2d?.map((item: any, i: number) => {
         return { url: imgPathsData.value[type.title + ` - 2d - ${i + 1}`] || "" };
       }),
-      image_3d: type.image_3d.map((item: any, i: number) => {
+      image_3d: type.image_3d?.map((item: any, i: number) => {
         return { url: imgPathsData.value[type.title + ` - 3d - ${i + 1}`] || "" };
       })
     };
   });
 
-  shortcodeData.value.actions = shortcodeData.value.actions.map((item: any) => {
+  shortcodeData.value.actions = shortcodeData.value.actions?.map((item: any) => {
     if (item.data.actionType === "modal") {
       item.data.modalObject.modalImage = [{ url: imgPathsData.value[`modal ${item.id}`] || "" }];
     }
     return item;
   });
 });
-
 </script>
-
 
 <template>
   <div v-if="loading">
@@ -233,7 +231,7 @@ onMounted(async () => {
       app.mount(selector);
    }
 
-    // You can see value of this variable below, for this project!
+    // You can see value of this variable below. This data is only for this project!
     const data = {
         project: {},
         floors: [],

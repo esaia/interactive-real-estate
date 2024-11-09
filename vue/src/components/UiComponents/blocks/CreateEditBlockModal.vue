@@ -100,8 +100,8 @@ const updateBlcok = async () => {
 const createBlock = async () => {
   const params: any = {
     title: title.value,
-    block_image: block_image.value?.[0]?.id || props.duplicatedBlock?.block_image?.[0]?.id,
-    conf: conf.value.value,
+    block_image: block_image?.value?.[0]?.id || props.duplicatedBlock?.block_image?.[0]?.id,
+    conf: conf.value?.value,
     project_id: id.value,
     img_contain: img_contain.value
   };
@@ -185,11 +185,11 @@ onUnmounted(() => {
         :isFloorsCanvas="false"
         isBlockCanvas
         :isImageContain="img_contain"
-        @set-svg-ref="(svgContainer) => (blockSvgRef = svgContainer)"
-        @set-active-g="(gTag) => (activeBlockGroup = gTag)"
-        @delete-g="(key) => deleteG(key)"
-        @add-polygon-data="(key) => blockStore.addPolygonData(key)"
-        @update-polygon-data="(key, data) => blockStore.editpoligonData(key, data)"
+        @set-svg-ref="(svgContainer: any) => (blockSvgRef = svgContainer)"
+        @set-active-g="(gTag: any) => (activeBlockGroup = gTag)"
+        @delete-g="(key: any) => deleteG(key)"
+        @add-polygon-data="(key: any) => blockStore.addPolygonData(key)"
+        @update-polygon-data="(key: any, data: any) => blockStore.editpoligonData(key, data)"
       />
       <Canvas
         v-else-if="duplicatedBlock"
@@ -201,10 +201,10 @@ onUnmounted(() => {
         :isFloorsCanvas="false"
         isBlockCanvas
         :isImageContain="img_contain"
-        @set-svg-ref="(svgContainer) => (blockSvgRef = svgContainer)"
-        @set-active-g="(gTag) => (activeBlockGroup = gTag)"
-        @delete-g="(key) => deleteG(key)"
-        @add-polygon-data="(key) => duplicatedFloorPolygonData?.push({ id: '', key, type: '' })"
+        @set-svg-ref="(svgContainer: any) => (blockSvgRef = svgContainer)"
+        @set-active-g="(gTag: any) => (activeBlockGroup = gTag)"
+        @delete-g="(key: any) => deleteG(key)"
+        @add-polygon-data="(key: any) => duplicatedFloorPolygonData?.push({ id: '', key, type: '' })"
       />
 
       <FloorsList v-if="activeBlock" :default-block-id="defaultBlockId" />

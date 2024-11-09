@@ -122,11 +122,19 @@ class IreFlat
     {
         check_nonce($data['nonce'], 'ire_nonce');
 
-        $required_fields = ['flat_number', 'price', 'type_id', 'project_id', 'use_type'];
+        $required_fields = ['flat_number', 'price', 'use_type', 'project_id'];
+        $non_required_fields =  ['floor_number', 'offer_price', 'conf', 'block_id'];
+
+        if (isset($data['use_type']) && $data['use_type'] === 'true') {
+            $required_fields[] = 'type_id';
+        } else {
+            $non_required_fields[] = 'type_id';
+        }
+
+
         $required_data = check_required_data($data, $required_fields);
+        $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
 
-
-        $non_required_data = validate_and_sanitize_input($data, ['floor_number', 'offer_price', 'conf', 'block_id'], false);
         $params = array_merge($required_data, $non_required_data);
 
         $params['type'] = handle_json_data($data['type']);
@@ -237,14 +245,24 @@ $flats_manager = new IreFlat();
 function ire_get_flats()
 {
     global $flats_manager;
+
+    // Get the results (ensure this is an array or empty array)
     $results = $flats_manager->get_flats($_POST);
 
-    if (!$results[0]) {
-        send_json_response(false, $results[1]);
+    // Check if $results is an array and has at least 2 elements
+    if (is_array($results) && isset($results[0], $results[1])) {
+        // If the first element is falsy, return a false response with the second element's value
+        if (!$results[0]) {
+            send_json_response(false, $results[1]);
+        } else {
+            send_json_response(true, $results[1]);
+        }
     } else {
-        send_json_response(true, $results[1]);
+        // If $results is not an array or doesn't have the expected elements, handle the case
+        send_json_response(false, 'No flats found or invalid response format');
     }
 }
+
 
 function ire_create_flat()
 {

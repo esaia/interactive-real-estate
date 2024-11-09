@@ -94,7 +94,7 @@ function ire_create_tables()
     $flats_sql = "CREATE TABLE $flats_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         block_id mediumint(9),
-        type_id mediumint(9) NOT NULL,
+        type_id mediumint(9),
         project_id mediumint(9) NOT NULL,
         floor_number mediumint(9),
         conf ENUM('reserved', 'sold'),

@@ -96,6 +96,7 @@ const fetchFlats = async () => {
   });
 
   if (!data.success) {
+    flats.value = { data: [] } as any;
     return;
   }
 
@@ -149,7 +150,7 @@ onMounted(() => {
       </div>
     </form>
 
-    <div v-if="flats?.data.length" class="relative overflow-x-auto shadow-sm">
+    <div v-if="flats?.data?.length" class="relative overflow-x-auto shadow-sm">
       <Table
         :data="flats?.data"
         @edit-action="(flat: FlatItem | null) => editFlat(flat)"

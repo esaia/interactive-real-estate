@@ -219,11 +219,11 @@ onUnmounted(() => {
         :activeGroup="activeGroup"
         :isFloorsCanvas="true"
         :isImageContain="img_contain"
-        @set-svg-ref="(svgContainer) => (floorSvgRef = svgContainer)"
-        @set-active-g="(gTag) => (activeGroup = gTag)"
-        @delete-g="(key) => deleteG(key)"
-        @add-polygon-data="(key) => floorStore.addPolygonData(key)"
-        @update-polygon-data="(key, data) => floorStore.editpoligonData(key, data)"
+        @set-svg-ref="(svgContainer: any) => (floorSvgRef = svgContainer)"
+        @set-active-g="(gTag: any) => (activeGroup = gTag)"
+        @delete-g="(key: any) => deleteG(key)"
+        @add-polygon-data="(key: any) => floorStore.addPolygonData(key)"
+        @update-polygon-data="(key: any, data: any) => floorStore.editpoligonData(key, data)"
       />
       <Canvas
         v-else-if="duplicatedFloor"
@@ -234,10 +234,10 @@ onUnmounted(() => {
         :activeGroup="activeGroup"
         :isFloorsCanvas="true"
         :isImageContain="img_contain"
-        @set-svg-ref="(svgContainer) => (floorSvgRef = svgContainer)"
-        @set-active-g="(gTag) => (activeGroup = gTag)"
-        @delete-g="(key) => deleteG(key)"
-        @add-polygon-data="(key) => duplicatedFloorPolygonData?.push({ id: '', key, type: '' })"
+        @set-svg-ref="(svgContainer: any) => (floorSvgRef = svgContainer)"
+        @set-active-g="(gTag: any) => (activeGroup = gTag)"
+        @delete-g="(key: any) => deleteG(key)"
+        @add-polygon-data="(key: any) => duplicatedFloorPolygonData?.push({ id: '', key, type: '' })"
       />
 
       <FlatsList v-if="activeFloor" :default-floor="defaultFloorId" :default-block="defaultBlockId" />

@@ -52,9 +52,9 @@ const canvasRef = ref();
       :active-group="activeGroup"
       :polygon_data="polygon_data"
       :svgRef="svgRef"
-      @set-active-g="(gTag) => $emit('setActiveG', gTag)"
-      @delete-g="(key) => $emit('deleteG', key)"
-      @update-polygon-data="(key, data) => $emit('updatePolygonData', key, data)"
+      @set-active-g="(gTag: any) => $emit('setActiveG', gTag)"
+      @delete-g="(key: any) => $emit('deleteG', key)"
+      @update-polygon-data="(key: any, data: any) => $emit('updatePolygonData', key, data)"
     />
 
     <Transition name="fade-in-out">

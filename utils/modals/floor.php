@@ -245,16 +245,20 @@ $floor = new IreFloor();
 function ire_get_floors()
 {
     global $floor;
+
     $results = $floor->get_floors($_POST);
 
-
-    if (!$results[0]) {
-
-        send_json_response(false, $results[1]);
+    if (is_array($results) && isset($results[0], $results[1])) {
+        if (!$results[0]) {
+            send_json_response(false, $results[1]);
+        } else {
+            send_json_response(true, $results[1]);
+        }
     } else {
-        send_json_response(true, $results[1]);
+        send_json_response(false, 'No floors found or invalid response format');
     }
 }
+
 
 function ire_create_floor()
 {
