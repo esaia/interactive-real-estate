@@ -53,7 +53,7 @@ watch(
       <FlagIcon />
       <div>
         <h4 class="font-semibold">Action</h4>
-        <p>{{ actionsStore.projectActions?.length }} actions</p>
+        <p>{{ actionsStore.projectActions?.length || 0 }} actions</p>
       </div>
     </div>
 
@@ -61,7 +61,7 @@ watch(
       <Building />
       <div>
         <h4 class="font-semibold">Blocks</h4>
-        <p>{{ blocksStore.projectBlocks?.length }} block</p>
+        <p>{{ blocksStore.projectBlocks?.length || 0 }} block</p>
       </div>
     </div>
 
@@ -69,7 +69,7 @@ watch(
       <Floor />
       <div>
         <h4 class="font-semibold">Floors</h4>
-        <p>{{ floorStore.projectFloors?.length }} floor</p>
+        <p>{{ floorStore.projectFloors?.length || 0 }} floor</p>
       </div>
     </div>
 
@@ -77,7 +77,7 @@ watch(
       <Flat />
       <div>
         <h4 class="font-semibold">Flats</h4>
-        <p>{{ flatStore.projectFlats?.length }} flat</p>
+        <p>{{ flatStore.projectFlats?.length || 0 }} flat</p>
       </div>
     </div>
 
@@ -85,7 +85,7 @@ watch(
       <Stack />
       <div>
         <h4 class="font-semibold">Types</h4>
-        <p>{{ typesStore.projectTypes?.length }} type</p>
+        <p>{{ typesStore.projectTypes?.length || 0 }} type</p>
       </div>
     </div>
 

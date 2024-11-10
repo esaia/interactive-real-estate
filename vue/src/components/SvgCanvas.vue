@@ -395,11 +395,16 @@ const onDocumentKeydown = (event) => {
       zoomLevel.value += 0.4;
       applyZoom(lastCursorX.value, lastCursorY.value);
     } else if (event.key === "-") {
+      event.preventDefault();
       resetZoom();
     }
   }
 
-  if (event.key === " " && document.activeElement.tagName !== "INPUT") {
+  if (
+    event.key === " " &&
+    document.activeElement.tagName !== "INPUT" &&
+    document.activeElement.tagName !== "TEXTAREA"
+  ) {
     event.preventDefault();
     pan.value = true;
   }

@@ -4,7 +4,7 @@ import ProjectBottomWidgets from "@/src/components/UiComponents/common/ProjectBo
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "@/src/stores/useProject";
 import ModalBoxes from "@components/UiComponents/projects/ModalBoxes.vue";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { useFloorsStore } from "../stores/useFloors";
 import { useTypesStore } from "../stores/useTypes";
 import { useFlatsStore } from "../stores/useFlats";
@@ -55,17 +55,13 @@ onMounted(() => {
         :activeGroup="activeGroup"
         :isFloorsCanvas="false"
         :isImageContain="metaStore?.isContainImage"
-        @set-svg-ref="(svgContainer) => (svgRef = svgContainer)"
-        @set-active-g="(gTag) => (activeGroup = gTag)"
-        @delete-g="(key) => deleteG(key)"
-        @add-polygon-data="(key) => projectStore.addPolygonData(key)"
-        @update-polygon-data="(key, data) => projectStore.editpoligonData(key, data)"
+        @set-svg-ref="(svgContainer: any) => (svgRef = svgContainer)"
+        @set-active-g="(gTag: any) => (activeGroup = gTag)"
+        @delete-g="(key: any) => deleteG(key)"
+        @add-polygon-data="(key: any) => projectStore.addPolygonData(key)"
+        @update-polygon-data="(key: any, data: any) => projectStore.editpoligonData(key, data)"
       />
     </div>
-
-    <!-- <div>
-      <Button title="preview" outlined @click="showPreview = !showPreview" class="w-fit" />
-    </div> -->
 
     <ProjectBottomWidgets ref="bottomWidgetsRef" />
 
