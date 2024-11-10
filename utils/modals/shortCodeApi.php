@@ -22,13 +22,26 @@ class ShortcodeApi
         $data['per_page'] = 9999;
 
         // Fetch project data
-        $projects = $project->get_projects($data)[1];
-        $floors = $floor->get_floors($data)[1]['data'];
-        $blocks = $block->get_block($data)[1]['data'];
-        $flats = $flat->get_flats($data)[1]['data'];
-        $types = $type->get_types($data)[1]['data'];
-        $meta = $meta->get_meta($data)[1];
-        $tooltips = $tooltip->get_tooltip($data)[1];
+        $projects = $project->get_projects($data);
+        $projects = ($projects !== null && isset($projects[1])) ? $projects[1] : [];
+        
+        $floors = $floor->get_floors($data);
+        $floors = ($floors !== null && isset($floors[1]['data'])) ? $floors[1]['data'] : [];
+        
+        $blocks = $block->get_block($data);
+        $blocks = ($blocks !== null && isset($blocks[1]['data'])) ? $blocks[1]['data'] : [];
+        
+        $flats = $flat->get_flats($data);
+        $flats = ($flats !== null && isset($flats[1]['data'])) ? $flats[1]['data'] : [];
+        
+        $types = $type->get_types($data);
+        $types = ($types !== null && isset($types[1]['data'])) ? $types[1]['data'] : [];
+        
+        $meta = $meta->get_meta($data);
+        $meta = ($meta !== null && isset($meta[1])) ? $meta[1] : [];
+        
+        $tooltips = $tooltip->get_tooltip($data);
+        $tooltips = ($tooltips !== null && isset($tooltips[1])) ? $tooltips[1] : [];
 
         $types_lookup = [];
 
@@ -44,6 +57,7 @@ class ShortcodeApi
                 $polygon_data = $floor['polygon_data'];
                 $floor_block_id = $floor['block_id'];
 
+                if(isset($flats)){
 
 
                 $matching_flats = array_values(array_filter($flats, function ($flat) use ($floor_number, $polygon_data, $floor_block_id) {
@@ -67,6 +81,7 @@ class ShortcodeApi
                     return false;
                 }));
 
+            }
 
 
                 $minimum_price = null;

@@ -205,6 +205,10 @@ function ire_get_types()
 
     $results =  $type->get_types($_POST);
 
+    if($results === null){
+        send_json_response(false, 'something went wrong!');
+    }
+
     if (!$results[0]) {
         send_json_response(false, $results[1]);
     } else {
