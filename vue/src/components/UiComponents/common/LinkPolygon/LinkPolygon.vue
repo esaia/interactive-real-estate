@@ -185,11 +185,7 @@ onMounted(() => {
     }
   }
 
-  if (props.isFloorsCanvas) {
-    activeTab.value = "flat";
-  } else {
-    activeTab.value = polygonType || "";
-  }
+  activeTab.value = polygonType || "";
 });
 </script>
 
@@ -202,7 +198,7 @@ onMounted(() => {
 
       <h4 class="text-lg text-gray-900">Link Polygon To Related Data</h4>
 
-      <div v-if="!isFloorsCanvas" class="mt-2 flex [&_div]:px-3">
+      <div class="mt-2 flex [&_div]:px-3">
         <div
           class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
           :class="{ '!bg-black text-white': activeTab === 'tooltip' }"
@@ -211,21 +207,23 @@ onMounted(() => {
           Action
         </div>
 
-        <div
-          v-if="!isBlockCanvas"
-          class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
-          :class="{ '!bg-black text-white': activeTab === 'block' }"
-          @click="activeTab = 'block'"
-        >
-          Block
-        </div>
-        <div
-          class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
-          :class="{ '!bg-black text-white': activeTab === 'floor' }"
-          @click="activeTab = 'floor'"
-        >
-          Floor
-        </div>
+        <template v-if="!isFloorsCanvas">
+          <div
+            v-if="!isBlockCanvas"
+            class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
+            :class="{ '!bg-black text-white': activeTab === 'block' }"
+            @click="activeTab = 'block'"
+          >
+            Block
+          </div>
+          <div
+            class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
+            :class="{ '!bg-black text-white': activeTab === 'floor' }"
+            @click="activeTab = 'floor'"
+          >
+            Floor
+          </div>
+        </template>
 
         <div
           class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"

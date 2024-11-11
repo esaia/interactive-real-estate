@@ -130,9 +130,17 @@ class IreType
             $params['gallery'] = handle_json_data($data['gallery']);
         }
 
-        $params['image_2d'] ??= null;
-        $params['image_3d'] ??= null;
-        $params['gallery'] ??= null;
+        if (!isset($params['image_2d'])) {
+            $params['image_2d'] = null;
+        }
+
+        if (!isset($params['image_3d'])) {
+            $params['image_3d'] = null;
+        }
+
+        if (!isset($params['gallery'])) {
+            $params['gallery'] = null;
+        }
 
         $where = ['id' => $type_id];
         $this->wpdb->update($this->table_name, $params, $where);
@@ -205,7 +213,7 @@ function ire_get_types()
 
     $results =  $type->get_types($_POST);
 
-    if($results === null){
+    if ($results === null) {
         send_json_response(false, 'something went wrong!');
     }
 

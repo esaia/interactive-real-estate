@@ -19,7 +19,7 @@ const isModalOpen = ref(false);
       <div
         class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-300 transition-all duration-200 hover:bg-gray-200"
         :class="{ 'h-60': true }"
-        @click="isModalOpen = projects?.length"
+        @click="isModalOpen = true"
       >
         <Plus />
         <p class="!text-lg">New Project</p>

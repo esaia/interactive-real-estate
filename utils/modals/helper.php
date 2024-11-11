@@ -173,7 +173,7 @@ function database_duplicate_error($wpdb, $duplicateMessage, $defaultErrorMessage
 }
 
 
-function check_required_data($data, $required_fields,)
+function check_required_data($data, $required_fields)
 {
     $required_data = validate_and_sanitize_input($data, $required_fields);
     if (!$required_data) {

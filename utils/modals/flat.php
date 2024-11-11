@@ -178,7 +178,11 @@ class IreFlat
         $params = validate_and_sanitize_input($data, $keys, false);
 
         $params =  array_merge($required_data, $params);
-        $params['block_id'] ??= null;
+
+        if (!isset($params['block_id'])) {
+            $params['block_id'] = null;
+        }
+
         $params['type'] = handle_json_data($data['type']);
         $params['use_type'] = $params['use_type'] === 'true' ? 1 : 0;
 
