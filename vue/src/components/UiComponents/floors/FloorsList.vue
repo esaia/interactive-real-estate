@@ -161,7 +161,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
 
           <TableTh fieldTitle="title" field="title" />
@@ -172,7 +172,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
 
           <TableTh
@@ -181,7 +181,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
           <TableTh
             fieldTitle="Conf"
@@ -189,7 +189,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
         </template>
 

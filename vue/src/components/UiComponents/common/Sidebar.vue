@@ -227,7 +227,7 @@ watch(
         </Transition>
 
         <Transition name="fade">
-          <Modal v-if="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[400px]">
+          <Modal v-if="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[500px]">
             <CreateEditFlatModal :activeFlat="activeFlat" />
           </Modal>
         </Transition>

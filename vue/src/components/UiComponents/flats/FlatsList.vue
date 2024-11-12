@@ -164,7 +164,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
 
           <TableTh
@@ -173,7 +173,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
 
           <TableTh
@@ -182,7 +182,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
 
           <TableTh
@@ -191,7 +191,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
 
           <TableTh
@@ -200,7 +200,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
           <TableTh
             fieldTitle="Offer price"
@@ -208,7 +208,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
           <TableTh
             fieldTitle="Conf"
@@ -216,7 +216,7 @@ onMounted(() => {
             :sortable="true"
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
         </template>
 
@@ -239,11 +239,11 @@ onMounted(() => {
 
   <teleport to="#ire-vue-app">
     <Transition name="fade">
-      <Modal v-if="showEditFlatModal" @close="showEditFlatModal = false" type="2" width="w-[400px]">
+      <Modal v-if="showEditFlatModal" @close="showEditFlatModal = false" type="2" width="w-[500px]">
         <CreateEditFlatModal
           :activeFlat="activeFlat"
           :duplicatedFlat="duplicatedFlat"
-          @set-active-flat="(flat) => (activeFlat = flat)"
+          @set-active-flat="(flat: any) => (activeFlat = flat)"
         />
       </Modal>
     </Transition>

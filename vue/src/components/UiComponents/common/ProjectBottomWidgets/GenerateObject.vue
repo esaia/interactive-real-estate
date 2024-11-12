@@ -83,12 +83,12 @@ onMounted(async () => {
           ? image_2d.map((item: any, i: number) => ({
               url: imgPathsData.value[`flat: ${flat.id} | 2d | ${i + 1}`] || ""
             }))
-          : [],
+          : [{ url: "" }],
         image_3d: Array.isArray(image_3d)
           ? image_3d.map((item: any, i: number) => ({
               url: imgPathsData.value[`flat: ${flat.id} | 3d | ${i + 1}`] || ""
             }))
-          : []
+          : [{ url: "" }]
       }
     };
   });
@@ -98,10 +98,10 @@ onMounted(async () => {
       ...type,
       image_2d: type.image_2d?.map((item: any, i: number) => {
         return { url: imgPathsData.value[`${type.title} | 2d | ${i + 1}`] || "" };
-      }),
+      }) || [{ url: "" }],
       image_3d: type.image_3d?.map((item: any, i: number) => {
         return { url: imgPathsData.value[`${type.title} | 3d | ${i + 1}`] || "" };
-      })
+      }) || [{ url: "" }]
     };
   });
 

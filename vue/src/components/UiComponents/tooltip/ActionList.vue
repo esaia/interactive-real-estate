@@ -137,7 +137,7 @@ onMounted(() => {
             sortable
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
           <TableTh
             fieldTitle="Title"
@@ -145,7 +145,7 @@ onMounted(() => {
             sortable
             :sortField="sortField"
             :sortOrder="sortOrder"
-            @sort="(field, sortOrder) => sort(field, sortOrder)"
+            @sort="(field: any, sortOrder: any) => sort(field, sortOrder)"
           />
 
           <TableTh fieldTitle="Action" field="action" />
@@ -171,7 +171,7 @@ onMounted(() => {
         <CreateEditActionModal
           :duplicatedAction="duplicatedAction"
           :activeAction="activeAction"
-          @set-active-action="(type) => (activeAction = type)"
+          @set-active-action="(type: any) => (activeAction = type)"
         />
       </Modal>
     </Transition>
