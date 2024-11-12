@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import { useProjectStore } from "@/src/stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
-import { computed, onMounted, ref } from "vue";
 import Input from "../../form/Input.vue";
 import Loading from "../Loading.vue";
 
@@ -12,7 +12,11 @@ const imgPathsData = ref<any>({});
 const loading = ref(false);
 
 const actionModals = computed(() => {
-  return shortcodeData.value.actions.filter((item: any) => item.data.actionType === "modal");
+  return shortcodeData.value.actions.filter((item: any) => item.data?.actionType === "modal");
+});
+
+const isSomeFlatManualType = computed(() => {
+  return shortcodeData.value?.flats?.some((item: any) => !item?.use_type);
 });
 
 const fetchData = async () => {
@@ -64,14 +68,39 @@ onMounted(async () => {
     return { ...item, block_image: [{ url: imgPathsData.value[item.title] || "" }] };
   });
 
+  shortcodeData.value.flats = shortcodeData.value.flats?.map((flat: any) => {
+    if (flat?.use_type) {
+      return { ...flat, type: null };
+    }
+
+    const { image_2d, image_3d } = flat?.type || {};
+
+    return {
+      ...flat,
+      type: {
+        ...flat?.type,
+        image_2d: Array.isArray(image_2d)
+          ? image_2d.map((item: any, i: number) => ({
+              url: imgPathsData.value[`flat: ${flat.id} | 2d | ${i + 1}`] || ""
+            }))
+          : [],
+        image_3d: Array.isArray(image_3d)
+          ? image_3d.map((item: any, i: number) => ({
+              url: imgPathsData.value[`flat: ${flat.id} | 3d | ${i + 1}`] || ""
+            }))
+          : []
+      }
+    };
+  });
+
   shortcodeData.value.types = shortcodeData.value.types?.map((type: any) => {
     return {
       ...type,
       image_2d: type.image_2d?.map((item: any, i: number) => {
-        return { url: imgPathsData.value[type.title + ` - 2d - ${i + 1}`] || "" };
+        return { url: imgPathsData.value[`${type.title} | 2d | ${i + 1}`] || "" };
       }),
       image_3d: type.image_3d?.map((item: any, i: number) => {
-        return { url: imgPathsData.value[type.title + ` - 3d - ${i + 1}`] || "" };
+        return { url: imgPathsData.value[`${type.title} | 3d | ${i + 1}`] || "" };
       })
     };
   });
@@ -89,7 +118,7 @@ onMounted(async () => {
   <div v-if="loading">
     <Loading />
   </div>
-  <div v-else-if="shortcodeData" class="overflow-scroll">
+  <div v-else-if="shortcodeData">
     <div class="flex flex-col gap-6 p-4">
       <p>
         Because you are using an standalone environment, you need to specify the image addresses as either relative or
@@ -145,29 +174,87 @@ onMounted(async () => {
         </div>
       </div>
 
+      <div v-if="shortcodeData.flats?.length && isSomeFlatManualType">
+        <div class="mb-4 h-[1px] w-full bg-gray-100"></div>
+
+        <h4 class="title-sm">Flats</h4>
+
+        <p>label template: <span class="text-gray-400">Flat: {id} | {2d/3d} | {index}</span></p>
+        <p class="!mb-4 text-gray-400">You can upload multiple images, that's why we use indexes</p>
+
+        <div class="flex items-center text-center font-semibold">
+          <div class="flex-1">
+            <p>2d</p>
+          </div>
+          <div class="flex-1">
+            <p>3d</p>
+          </div>
+        </div>
+
+        <div v-for="item in shortcodeData.flats" class="[&_div]:last:border-none">
+          <template v-if="!item.use_type">
+            <div class="flex items-start gap-4 border-b-2 border-dashed border-b-gray-200 py-4">
+              <div class="flex flex-1 flex-col gap-3">
+                <Input
+                  v-for="(image_2d, i) in item.type.image_2d"
+                  v-model="image_2d.url"
+                  :label="`flat: ${item.id} | 2d | ${i + 1}`"
+                  placeholder="https:// or /assets/images/image_2d.jpg"
+                  @change="(e: Event) => saveLocalStorage(e, `flat: ${item.id} | 2d | ${i + 1}`)"
+                />
+              </div>
+              <div class="flex flex-1 flex-col gap-3">
+                <Input
+                  v-for="(image_3d, i) in item.type.image_3d"
+                  v-model="image_3d.url"
+                  :label="`flat: ${item.id} | 3d | ${i + 1}`"
+                  placeholder="https:// or /assets/images/image_3d.jpg"
+                  @change="(e: Event) => saveLocalStorage(e, `flat: ${item.id} | 3d | ${i + 1}`)"
+                />
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
       <div v-if="shortcodeData.types?.length">
         <div class="mb-4 h-[1px] w-full bg-gray-100"></div>
 
         <h4 class="title-sm">Types</h4>
 
-        <p>label template: <span class="italic text-gray-400">type title | 2d/3d | image index</span></p>
+        <p>label template: <span class="text-gray-400">${type title} | {2d/3d} | {index}</span></p>
         <p class="!mb-4 text-gray-400">You can upload multiple images, that's why we use indexes</p>
+        <div class="flex items-center text-center font-semibold">
+          <div class="flex-1">
+            <p>2d</p>
+          </div>
+          <div class="flex-1">
+            <p>3d</p>
+          </div>
+        </div>
+        <div
+          v-for="item in shortcodeData.types"
+          class="flex items-start gap-4 border-b-2 border-dashed border-b-gray-200 py-4 last:border-none"
+        >
+          <div class="flex flex-1 flex-col gap-3">
+            <Input
+              v-for="(image_2d, i) in item.image_2d"
+              v-model="image_2d.url"
+              :label="`${item.title} | 2d | ${i + 1}`"
+              placeholder="https:// or /assets/images/image_2d.jpg"
+              @change="(e: Event) => saveLocalStorage(e, `${item.title} | 2d | ${i + 1}`)"
+            />
+          </div>
 
-        <div v-for="item in shortcodeData.types" class="grid grid-cols-2 gap-4 py-2">
-          <Input
-            v-for="(image_2d, i) in item.image_2d"
-            v-model="image_2d.url"
-            :label="item.title + ` - 2d - ${i + 1}`"
-            placeholder="https:// or /assets/images/image_2d.jpg"
-            @change="(e: Event) => saveLocalStorage(e, item.title + ` - 2d - ${i + 1}`)"
-          />
-          <Input
-            v-for="(image_3d, i) in item.image_3d"
-            v-model="image_3d.url"
-            :label="item.title + ` - 3d - ${i + 1}`"
-            placeholder="https:// or /assets/images/image_3d.jpg"
-            @change="(e: Event) => saveLocalStorage(e, item.title + ` - 3d - ${i + 1}`)"
-          />
+          <div class="flex flex-1 flex-col gap-3">
+            <Input
+              v-for="(image_3d, i) in item.image_3d"
+              v-model="image_3d.url"
+              :label="`${item.title} | 3d | ${i + 1}`"
+              placeholder="https:// or /assets/images/image_3d.jpg"
+              @change="(e: Event) => saveLocalStorage(e, `${item.title} | 3d | ${i + 1}`)"
+            />
+          </div>
         </div>
       </div>
 
