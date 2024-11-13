@@ -149,7 +149,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <Button type="submit" :title="activeAction ? 'Edit flat' : 'Add flat'" />
+      <Button type="submit" :title="activeAction ? 'Edit action' : 'Add action'" />
     </div>
   </form>
 </template>

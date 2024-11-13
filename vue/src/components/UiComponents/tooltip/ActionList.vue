@@ -99,9 +99,9 @@ watch(
   () => showActionModal.value,
   (ns) => {
     if (!ns) {
-      // fetchActions();
-      // activeAction.value = null;
-      // duplicatedAction.value = null;
+      fetchActions();
+      activeAction.value = null;
+      duplicatedAction.value = null;
     }
   }
 );
@@ -116,7 +116,7 @@ onMounted(() => {
     <form @submit.prevent="submitForm" class="mb-3 flex items-center justify-between gap-4 border-b pb-3 shadow-sm">
       <h3 class="!text-lg font-semibold capitalize">Actions</h3>
 
-      <Input v-model="searchAction" placeholder="Filter flats list..." />
+      <Input v-model="searchAction" placeholder="Filter actions list..." />
 
       <div class="min-w-max">
         <Button title="Add Action" outlined @click="showActionModal = true" />
