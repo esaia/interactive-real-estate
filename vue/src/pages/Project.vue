@@ -65,6 +65,6 @@ onMounted(() => {
 
     <ProjectBottomWidgets ref="bottomWidgetsRef" />
 
-    <ModalBoxes />
+    <ModalBoxes v-if="!bottomWidgetsRef?.showPreview" />
   </div>
 </template>

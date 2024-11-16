@@ -99,7 +99,7 @@ defineExpose({
 
 <template>
   <div class="my-7 flex items-start justify-between">
-    <div class="flex gap-5">
+    <div v-if="!showPreview" class="flex gap-5">
       <div class="flex flex-col items-start gap-5 rounded-md bg-white p-4">
         <div class="flex flex-col gap-2">
           <label for="" class="font-semibold">Project Title:</label>
@@ -138,7 +138,7 @@ defineExpose({
       </div>
     </div>
 
-    <div class="flex flex-col items-end gap-3">
+    <div class="flex flex-1 flex-col items-end gap-3">
       <div class="flex items-center gap-4">
         <Button title="preview" outlined @click="showPreview = !showPreview" class="w-fit" />
         <Button title="Update" outlined @click="updateProject" />

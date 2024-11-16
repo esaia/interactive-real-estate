@@ -56,6 +56,11 @@ class IreFlat
             $params[] = $searchTerm;
         }
 
+
+        $total_query = $this->wpdb->prepare($query, ...$params);
+        $total_results = $this->wpdb->get_results($total_query, ARRAY_A);
+        $total_results = count($total_results);
+
         // Add pagination
         $query .= " ORDER BY " . esc_sql($data['sort_field']) . " " . esc_sql($data['sort_order']) . " LIMIT %d OFFSET %d";
         $params[] = $data['per_page'];
@@ -65,41 +70,6 @@ class IreFlat
         $query = $this->wpdb->prepare($query, ...$params);
         $results = $this->wpdb->get_results($query, ARRAY_A);
 
-        // Create a total count query
-        $total_query = "SELECT COUNT(*) FROM $this->table_name WHERE project_id = %d";
-        $total_params = [$data['project_id']];
-
-
-        if (!empty($data['block']) && $data['block'] != 'null') {
-            if ($data['block'] !== 'all') {
-                $total_query .= " AND block_id = %d";
-                $total_params[] = $data['block'];
-            }
-        } else {
-            $total_query .=
-                " AND block_id IS NULL";
-        }
-
-
-
-        if (!empty($data['floor'])) {
-            $total_query .= " AND floor_number = %d";
-            $total_params[] = $data['floor'];
-        }
-
-
-
-        if (!empty($data['search'])) {
-            $total_query .= " AND (flat_number LIKE %s OR id LIKE %s OR price LIKE %s OR offer_price LIKE %s)";
-            $total_params[] = $searchTerm;
-            $total_params[] = $searchTerm;
-            $total_params[] = $searchTerm;
-            $total_params[] = $searchTerm;
-        }
-
-        // Prepare and execute the total count query
-        $total_query = $this->wpdb->prepare($total_query, ...$total_params);
-        $total_results = $this->wpdb->get_var($total_query);
 
         if (is_wp_error($results)) {
             return [false, $results->get_error_message()];

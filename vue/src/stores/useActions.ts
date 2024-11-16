@@ -4,7 +4,6 @@ import { ActionItem, TypeItem } from "../../types/components";
 import ajaxAxios from "../utils/axios";
 
 export const useActionsStore = defineStore("actions", () => {
-
   const projectActions = ref<ActionItem[]>();
 
   const fetchProjectActions = async (id: number) => {
@@ -15,12 +14,11 @@ export const useActionsStore = defineStore("actions", () => {
       per_page: 99999
     });
 
-
     if (!data.success) {
       return;
     }
 
-    projectActions.value = data?.data;
+    projectActions.value = data?.data?.data;
   };
 
   return {

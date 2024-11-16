@@ -81,7 +81,7 @@ const fetchActions = async () => {
     return;
   }
 
-  actions.value = data;
+  actions.value = data.data;
 };
 
 const submitForm = () => {

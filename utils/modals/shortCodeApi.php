@@ -24,24 +24,24 @@ class ShortcodeApi
         // Fetch project data
         $projects = $project->get_projects($data);
         $projects = ($projects !== null && isset($projects[1])) ? $projects[1] : [];
-        
+
         $floors = $floor->get_floors($data);
         $floors = ($floors !== null && isset($floors[1]['data'])) ? $floors[1]['data'] : [];
-        
+
         $blocks = $block->get_block($data);
         $blocks = ($blocks !== null && isset($blocks[1]['data'])) ? $blocks[1]['data'] : [];
-        
+
         $flats = $flat->get_flats($data);
         $flats = ($flats !== null && isset($flats[1]['data'])) ? $flats[1]['data'] : [];
-        
+
         $types = $type->get_types($data);
         $types = ($types !== null && isset($types[1]['data'])) ? $types[1]['data'] : [];
-        
+
         $meta = $meta->get_meta($data);
         $meta = ($meta !== null && isset($meta[1])) ? $meta[1] : [];
-        
+
         $tooltips = $tooltip->get_tooltip($data);
-        $tooltips = ($tooltips !== null && isset($tooltips[1])) ? $tooltips[1] : [];
+        $tooltips = ($tooltips !== null && isset($tooltips[1])) ? $tooltips[1]['data'] : [];
 
         $types_lookup = [];
 
@@ -57,31 +57,30 @@ class ShortcodeApi
                 $polygon_data = $floor['polygon_data'];
                 $floor_block_id = $floor['block_id'];
 
-                if(isset($flats)){
+                if (isset($flats)) {
 
 
-                $matching_flats = array_values(array_filter($flats, function ($flat) use ($floor_number, $polygon_data, $floor_block_id) {
-                    if ($flat['floor_number'] !== $floor_number) {
-                        return false;
-                    }
+                    $matching_flats = array_values(array_filter($flats, function ($flat) use ($floor_number, $polygon_data, $floor_block_id) {
+                        if ($flat['floor_number'] !== $floor_number) {
+                            return false;
+                        }
 
-                    if ($polygon_data) {
-                        foreach ($polygon_data as $polygon) {
+                        if ($polygon_data) {
+                            foreach ($polygon_data as $polygon) {
 
-                            if (!is_null($polygon) && isset($polygon['type']) && $polygon['type'] === 'flat' && isset($polygon['id']) && $polygon['id'] === $flat['id']) {
-                                if ($floor_block_id) {
-                                    return $flat['block_id'] === $floor_block_id;
-                                } else {
-                                    return !$flat['block_id'];
+                                if (!is_null($polygon) && isset($polygon['type']) && $polygon['type'] === 'flat' && isset($polygon['id']) && $polygon['id'] === $flat['id']) {
+                                    if ($floor_block_id) {
+                                        return $flat['block_id'] === $floor_block_id;
+                                    } else {
+                                        return !$flat['block_id'];
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    return false;
-                }));
-
-            }
+                        return false;
+                    }));
+                }
 
 
                 $minimum_price = null;
@@ -179,4 +178,4 @@ function ire_get_shortcode_data()
 }
 
 add_action('wp_ajax_nopriv_get_shortcode_data', 'ire_get_shortcode_data');
-add_action('wp_ajax_get_shortcode_data', 'ire_get_shortcode_data'); // remove after production
+add_action('wp_ajax_get_shortcode_data', 'ire_get_shortcode_data');

@@ -36,6 +36,10 @@ class IreType
             $params[] = $searchTerm;
         }
 
+        $total_query = $this->wpdb->prepare($query, ...$params);
+        $total_results =  $this->wpdb->get_results($total_query, ARRAY_A);
+        $total_results = count($total_results);
+
         $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
         $params[] = $data['per_page'];
         $params[] = $data['offset'];
@@ -46,7 +50,6 @@ class IreType
         );
 
         $results = $this->wpdb->get_results($query, ARRAY_A);
-        $total_results = $this->wpdb->get_var($this->wpdb->prepare("SELECT COUNT(*) FROM {$this->table_name} WHERE project_id = %d", $data['project_id']));
 
         if (is_wp_error($results)) {
             return [false,  $results->get_error_message()];

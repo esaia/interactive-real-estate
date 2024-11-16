@@ -43,6 +43,10 @@ class IreFloor
         }
 
 
+        $total_query = $this->wpdb->prepare($query, ...$params);
+        $total_results =  $this->wpdb->get_results($total_query, ARRAY_A);
+        $total_results = count($total_results);
+
         $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
         $params[] = $data['per_page'];
         $params[] = $data['offset'];
@@ -50,29 +54,6 @@ class IreFloor
         $query = $this->wpdb->prepare($query, ...$params);
         $results = $this->wpdb->get_results($query, ARRAY_A);
 
-        $total_query = "SELECT COUNT(*) FROM {$this->table_name} WHERE project_id = %d";
-        $total_params = [$data['project_id']];
-
-        if (!empty($data['search'])) {
-            $total_query .= " AND (title LIKE %s OR id LIKE %s OR floor_number LIKE %s)";
-            $total_params[] = $searchTerm;
-            $total_params[] = $searchTerm;
-            $total_params[] = $searchTerm;
-        }
-
-
-        if (!empty($data['block']) && $data['block'] != 'null') {
-            if ($data['block'] !== 'all') {
-                $total_query  .= " AND block_id = %d";
-                $total_params[] = $data['block'];
-            }
-        } else {
-            $total_query .=
-                " AND block_id IS NULL";
-        }
-
-        $total_query = $this->wpdb->prepare($total_query, ...$total_params);
-        $total_results = $this->wpdb->get_var($total_query);
 
         if (is_wp_error($results)) {
             return [false,  $results->get_error_message()];

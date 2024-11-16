@@ -179,7 +179,7 @@ watch(
         </div>
       </div>
 
-      <div ref="sidebarRef" class="flex max-h-full flex-col gap-[1px] overflow-y-auto py-2">
+      <div ref="sidebarRef" class="flex max-h-full flex-col gap-[1px] overflow-y-auto overscroll-contain py-2">
         <div
           v-if="polygon_data"
           v-for="item in Object.values(polygon_data)"

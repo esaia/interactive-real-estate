@@ -28,20 +28,23 @@ class IreTooltip
 
 
         if (!empty($data['search'])) {
-            $query .= " AND (title LIKE %s)";
+            $query .= " AND (title LIKE %s or id LIKE %s)";
             $searchTerm = '%' . $data['search'] . '%';
             $params[] = $searchTerm;
+            $params[] = $searchTerm;
         }
+
+
+        $total_query = $this->wpdb->prepare($query, ...$params);
+        $total_results =  $this->wpdb->get_results($total_query, ARRAY_A);
+        $total_results = count($total_results);
+
 
         $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
         $params[] =  $data['per_page'];
         $params[] =   $offset;
 
-        $query = $this->wpdb->prepare(
-            $query,
-            ...$params
-        );
-
+        $query = $this->wpdb->prepare($query, ...$params);
         $results = $this->wpdb->get_results($query, ARRAY_A);
 
 
@@ -67,10 +70,16 @@ class IreTooltip
 
 
 
+
         if ($this->wpdb->last_error) {
             return [false,  'No tooltip found.'];
         } else {
-            return [true,  $results];
+            return [true,    [
+                'data' => $results,
+                'total' => $total_results,
+                'page' => $data['page'],
+                'per_page' => $data['per_page']
+            ]];
         }
     }
 
