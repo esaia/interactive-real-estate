@@ -173,7 +173,7 @@ const onCanvasMouseMove = throttle((event) => {
   if (points.value.length > 1 && isCloseToFirstPoint(x, y, points.value[0])) {
     animateRadius(firstCircle.value, HOVER_CIRCLE_RADIUS, "orange");
   } else {
-    animateRadius(firstCircle.value, CIRCLE_RADIUS, "red");
+    animateRadius(firstCircle.value, CIRCLE_RADIUS, "#e74c3c");
   }
 }, 10);
 

@@ -144,11 +144,10 @@ function ire_create_tables()
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($projects_sql);
-    dbDelta($floors_sql);
     dbDelta($blocks_sql);
-    dbDelta($flats_sql);
+    dbDelta($floors_sql);
     dbDelta($types_sql);
-    dbDelta($meta_sql);
+    dbDelta($flats_sql);
     dbDelta($meta_sql);
     dbDelta($tooltip_sql);
 }

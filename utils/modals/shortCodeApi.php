@@ -96,9 +96,17 @@ class ShortcodeApi
                         $minimum_price = $flat['price'];
                     }
 
-                    if ($minimum_area === null || $types_lookup[$flat['type_id']] < $minimum_area) {
-                        $minimum_area = $types_lookup[$flat['type_id']];
+                    // if ($minimum_area === null || $types_lookup[$flat['type_id']] < $minimum_area) {
+                    //     $minimum_area = $types_lookup[$flat['type_id']];
+                    // }
+
+                    if (!empty($flat['type_id']) && isset($types_lookup[$flat['type_id']])) {
+                        if ($minimum_area === null || $types_lookup[$flat['type_id']] < $minimum_area) {
+                            $minimum_area = $types_lookup[$flat['type_id']];
+                        }
                     }
+
+
 
                     switch ($flat['conf']) {
                         case '':

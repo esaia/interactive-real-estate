@@ -1,9 +1,10 @@
 <?php
 /*
-Plugin Name: interactive real estate
-Description: This is interactive real estate plugin
+Plugin Name: Interactive Real Estate
+Description: The most innovative WordPress plugin for creating interactive buildings.
 Version: 1.0
-Author: Esaia
+Author: Interactive Real Estate
+Plugin URI: https://google.com/
 */
 
 
@@ -26,13 +27,13 @@ add_action('admin_menu', 'ire_add_admin_menu');
 function ire_add_admin_menu()
 {
     add_menu_page(
-        'interactive real estate',      // Page title
-        'interactive real estate',      // Menu title
-        'manage_options',               // Capability
-        'ire',                          // Menu slug
-        'ire_render_page',              // Function to display the page
-        'dashicons-building',      // Icon
-        100                             // Position
+        'interactive real estate',
+        'interactive real estate',
+        'manage_options',
+        'ire',
+        'ire_render_page',
+        'dashicons-building',
+        100
     );
 }
 
