@@ -18,6 +18,7 @@ const props = defineProps<{
   required?: boolean;
   multiple?: boolean;
   exampleImage?: string;
+  resolution?: string;
 }>();
 
 const showExampleImage = ref(false);
@@ -46,7 +47,10 @@ onMounted(() => {
 <template>
   <div class="w-full">
     <div class="!mb-2 flex items-center justify-between">
-      <p class="text-xs capitalize text-gray-600">{{ title }} <span v-if="required" class="text-red-600">*</span></p>
+      <p class="text-xs capitalize text-gray-600">
+        {{ title }} <span v-if="required" class="text-red-600">*</span>
+        <span v-if="resolution" class="text-gray-400"> - {{ resolution }}</span>
+      </p>
 
       <div
         v-if="exampleImage"

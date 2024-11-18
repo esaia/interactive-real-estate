@@ -4,7 +4,7 @@ Plugin Name: Interactive Real Estate
 Description: The most innovative WordPress plugin for creating interactive buildings.
 Version: 1.0
 Author: Interactive Real Estate
-Plugin URI: https://google.com/
+Plugin URI: https://interactive-real-estate.vercel.app/
 */
 
 

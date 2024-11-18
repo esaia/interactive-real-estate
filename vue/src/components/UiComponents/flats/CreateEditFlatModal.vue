@@ -250,12 +250,14 @@ onMounted(() => {
         <UploadImg
           v-model="obj.type.image_2d"
           title="upload image 2d"
+          resolution="400 x 400"
           :example-image="irePlugin?.plugin_assets_path + 'exampleImages/flat_2d.jpg'"
           multiple
         />
         <UploadImg
           v-model="obj.type.image_3d"
           title="upload image 3d"
+          resolution="400 x 400"
           :example-image="irePlugin?.plugin_assets_path + 'exampleImages/flat_3d.jpg'"
           multiple
         />
