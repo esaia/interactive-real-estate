@@ -19,7 +19,6 @@ class IreFloor
         ire_has_project_id($data);
 
         $data = ire_sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf', 'block_id']);
-        // $offset = ($data['page'] - 1) * $data['per_page'];
 
         $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d";
         $params = [$data['project_id']];
