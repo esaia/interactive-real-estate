@@ -17,10 +17,10 @@ class IreTooltip
 
     public function get_tooltip(array $data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
-        has_project_id($data);
+        ire_check_nonce($data['nonce'], 'ire_nonce');
+        ire_has_project_id($data);
 
-        $data = sanitize_sorting_parameters($data, ['id', 'title']);
+        $data = ire_sanitize_sorting_parameters($data, ['id', 'title']);
         $offset = ($data['page'] - 1) * $data['per_page'];
 
         $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d ";
@@ -50,10 +50,10 @@ class IreTooltip
 
         $results = array_map(
             function ($result) {
-                $result['data'] = handle_json_data($result['data']);
+                $result['data'] = ire_handle_json_data($result['data']);
 
                 if (isset($result['data']['targetBlank'])) {
-                    $result['data']['targetBlank'] = handle_json_data($result['data']['targetBlank']);
+                    $result['data']['targetBlank'] = ire_handle_json_data($result['data']['targetBlank']);
                 }
 
 
@@ -86,75 +86,75 @@ class IreTooltip
 
     public function create_tooltip($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $required_fields = ['project_id', 'title'];
-        $required_data = validate_and_sanitize_input($data, $required_fields);
+        $required_data = ire_validate_and_sanitize_input($data, $required_fields);
 
 
         if (!$required_data) {
-            send_json_response(false, 'Required fields are missing.');
+            ire_send_json_response(false, 'Required fields are missing.');
             return;
         }
 
-        $data = array_merge($required_data,  ['data' => handle_json_data($data['data'])]);
+        $data = array_merge($required_data,  ['data' => ire_handle_json_data($data['data'])]);
 
         $this->wpdb->insert($this->table_name, $data);
 
         if ($this->wpdb->last_error) {
-            send_json_response(false, 'Database error');
+            ire_send_json_response(false, 'Database error');
         } else {
             $new_tooltip_id = $this->wpdb->insert_id;
-            $new_tooltip =  get($this->table_name, $new_tooltip_id);
+            $new_tooltip =  ire_get($this->table_name, $new_tooltip_id);
 
             if (isset($new_tooltip->data)) {
-                $new_tooltip->data = handle_json_data($new_tooltip->data);
+                $new_tooltip->data = ire_handle_json_data($new_tooltip->data);
             }
 
-            send_json_response(true, $new_tooltip);
+            ire_send_json_response(true, $new_tooltip);
         }
     }
 
 
     public function update_tooltip($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $action_id = isset($data['action_id']) ? intval($data['action_id']) : null;
         if (!$action_id) {
-            send_json_response(false, 'action_id is required');
+            ire_send_json_response(false, 'action_id is required');
             return;
         }
 
-        $params = ['title' =>  $data['title'], 'data' => handle_json_data($data['data'])];
+        $params = ['title' =>  $data['title'], 'data' => ire_handle_json_data($data['data'])];
 
         $where = ['id' => $action_id];
         $this->wpdb->update($this->table_name, $params, $where);
 
 
         if ($this->wpdb->last_error) {
-            send_json_response(false, 'Database error');
+            ire_send_json_response(false, 'Database error');
         } else {
-            send_json_response(true, 'Tooltip updated successfully');
+            ire_send_json_response(true, 'Tooltip updated successfully');
         }
     }
 
     public function delete_tooltip($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $action_id = isset($data['action_id']) ? intval($data['action_id']) : null;
         if (!$action_id) {
-            send_json_response(false, 'action_id is required');
+            ire_send_json_response(false, 'action_id is required');
             return;
         }
 
         $delete_result = $this->wpdb->delete($this->table_name, ['id' => $action_id]);
 
         if ($delete_result) {
-            send_json_response(true, 'Action deleted successfully');
+            ire_send_json_response(true, 'Action deleted successfully');
         } else {
-            send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            ire_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 }
@@ -172,9 +172,9 @@ function ire_get_tooltip()
     $results = $tooltip->get_tooltip($_POST);
 
     if (!$results[0]) {
-        send_json_response(false, $results[1]);
+        ire_send_json_response(false, $results[1]);
     } else {
-        send_json_response(true, $results[1]);
+        ire_send_json_response(true, $results[1]);
     }
 }
 

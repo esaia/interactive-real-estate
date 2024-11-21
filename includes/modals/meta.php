@@ -17,8 +17,8 @@ class IreMetaProject
 
     public function get_meta(array $data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
-        has_project_id($data);
+        ire_check_nonce($data['nonce'], 'ire_nonce');
+        ire_has_project_id($data);
 
 
 
@@ -40,19 +40,19 @@ class IreMetaProject
 
     public function create_or_update_meta($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
-        has_project_id($data);
+        ire_check_nonce($data['nonce'], 'ire_nonce');
+        ire_has_project_id($data);
 
         // Ensure 'meta_data' is present in the request
         if (!isset($data['meta_data']) || !is_array($data['meta_data'])) {
-            send_json_response(false, 'Required fields are missing.');
+            ire_send_json_response(false, 'Required fields are missing.');
             return;
         }
 
         foreach ($data['meta_data'] as $meta) {
             // Validate each key-value pair
             if (empty($meta['key']) || !isset($meta['value'])) {
-                send_json_response(false, 'Meta key or value is missing.');
+                ire_send_json_response(false, 'Meta key or value is missing.');
                 return;
             }
 
@@ -78,7 +78,7 @@ class IreMetaProject
 
 
                 if ($update_result === false) {
-                    send_json_response(false, 'Database error during update');
+                    ire_send_json_response(false, 'Database error during update');
                     return;
                 }
             } else {
@@ -93,13 +93,13 @@ class IreMetaProject
                 );
 
                 if ($insert_result === false) {
-                    send_json_response(false, 'Database error during insert');
+                    ire_send_json_response(false, 'Database error during insert');
                     return;
                 }
             }
         }
 
-        send_json_response(true, 'Meta added or updated successfully');
+        ire_send_json_response(true, 'Meta added or updated successfully');
     }
 }
 
@@ -115,9 +115,9 @@ function ire_get_meta()
     $results = $ire_meta->get_meta($_POST);
 
     if (!$results[0]) {
-        send_json_response(false, $results[1]);
+        ire_send_json_response(false, $results[1]);
     } else {
-        send_json_response(true, $results[1]);
+        ire_send_json_response(true, $results[1]);
     }
 }
 

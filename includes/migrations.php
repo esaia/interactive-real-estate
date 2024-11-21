@@ -1,11 +1,13 @@
 <?php
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 register_activation_hook(IRE_PLUGIN_FILE, 'ire_create_tables');
 
 
-/**
- * Create tables in DB
- */
+// Define a function to create tables if they don't already exist
 function ire_create_tables()
 {
     global $wpdb;
@@ -24,9 +26,13 @@ function ire_create_tables()
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
-        ) $charset_collate;";
+    ) $charset_collate;";
 
-
+    // Check if projects table exists, if not, create it
+    if (!$wpdb->get_var("SHOW TABLES LIKE '$projects_table_name'")) {
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        dbDelta($projects_sql);
+    }
 
     // Table for blocks
     $blocks_table_name = $wpdb->prefix . 'ire_blocks';
@@ -43,8 +49,12 @@ function ire_create_tables()
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
-        ) $charset_collate;";
+    ) $charset_collate;";
 
+    // Check if blocks table exists, if not, create it
+    if (!$wpdb->get_var("SHOW TABLES LIKE '$blocks_table_name'")) {
+        dbDelta($blocks_sql);
+    }
 
     // Table for floors
     $floors_table_name = $wpdb->prefix . 'ire_floors';
@@ -65,10 +75,12 @@ function ire_create_tables()
         PRIMARY KEY (id),
         FOREIGN KEY (block_id) REFERENCES $blocks_table_name(id) ON DELETE CASCADE,
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
-        ) $charset_collate;";
+    ) $charset_collate;";
 
-
-
+    // Check if floors table exists, if not, create it
+    if (!$wpdb->get_var("SHOW TABLES LIKE '$floors_table_name'")) {
+        dbDelta($floors_sql);
+    }
 
     // Table for types
     $types_table_name = $wpdb->prefix . 'ire_types';
@@ -86,10 +98,14 @@ function ire_create_tables()
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
-        ) $charset_collate;";
+    ) $charset_collate;";
 
+    // Check if types table exists, if not, create it
+    if (!$wpdb->get_var("SHOW TABLES LIKE '$types_table_name'")) {
+        dbDelta($types_sql);
+    }
 
-    // Table for Flats
+    // Table for flats
     $flats_table_name = $wpdb->prefix . 'ire_flats';
     $flats_sql = "CREATE TABLE $flats_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -109,10 +125,14 @@ function ire_create_tables()
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE,
         FOREIGN KEY (block_id) REFERENCES $blocks_table_name(id) ON DELETE CASCADE,
         FOREIGN KEY (type_id) REFERENCES $types_table_name(id) ON DELETE CASCADE
-        ) $charset_collate;";
+    ) $charset_collate;";
 
+    // Check if flats table exists, if not, create it
+    if (!$wpdb->get_var("SHOW TABLES LIKE '$flats_table_name'")) {
+        dbDelta($flats_sql);
+    }
 
-    // Table for Project Metadata
+    // Table for project metadata
     $meta_table_name = $wpdb->prefix . 'ire_project_meta';
     $meta_sql = "CREATE TABLE $meta_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -123,11 +143,14 @@ function ire_create_tables()
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
-        ) $charset_collate;";
+    ) $charset_collate;";
 
+    // Check if meta table exists, if not, create it
+    if (!$wpdb->get_var("SHOW TABLES LIKE '$meta_table_name'")) {
+        dbDelta($meta_sql);
+    }
 
-
-    // Table for Flats
+    // Table for tooltips
     $tooltip_table_name = $wpdb->prefix . 'ire_tooltip';
     $tooltip_sql = "CREATE TABLE $tooltip_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -138,16 +161,10 @@ function ire_create_tables()
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         FOREIGN KEY (project_id) REFERENCES $projects_table_name(id) ON DELETE CASCADE
-        ) $charset_collate;";
+    ) $charset_collate;";
 
-
-
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($projects_sql);
-    dbDelta($blocks_sql);
-    dbDelta($floors_sql);
-    dbDelta($types_sql);
-    dbDelta($flats_sql);
-    dbDelta($meta_sql);
-    dbDelta($tooltip_sql);
+    // Check if tooltip table exists, if not, create it
+    if (!$wpdb->get_var("SHOW TABLES LIKE '$tooltip_table_name'")) {
+        dbDelta($tooltip_sql);
+    }
 }

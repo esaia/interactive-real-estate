@@ -1,6 +1,14 @@
 <?php
 
-function check_nonce(?string $nonce, string $action): void
+/** 
+ * Checks the nonce for security and validates the action.
+ * 
+ * @param string|null $nonce The nonce to verify.
+ * @param string $action The action name to verify against the nonce.
+ * 
+ * @return void Exits and sends an error if the nonce is invalid.
+ */
+function ire_check_nonce(?string $nonce, string $action): void
 {
     if (!(isset($nonce) && wp_verify_nonce($nonce, $action))) {
         wp_send_json_error('Invalid nonce');
@@ -8,7 +16,15 @@ function check_nonce(?string $nonce, string $action): void
     }
 }
 
-function send_json_response(bool $success, $message): void
+/** 
+ * Sends a JSON response based on success or failure.
+ * 
+ * @param bool $success Indicates whether the operation was successful.
+ * @param mixed $message The message to return in the response.
+ * 
+ * @return void Sends a JSON success or error response.
+ */
+function ire_send_json_response(bool $success, $message): void
 {
     if ($success) {
         wp_send_json_success($message);
@@ -17,7 +33,14 @@ function send_json_response(bool $success, $message): void
     }
 }
 
-function handle_json_data($data)
+/** 
+ * Handles JSON data by encoding or decoding it.
+ * 
+ * @param mixed $data The data to be handled, either JSON string or an array.
+ * 
+ * @return mixed|null The decoded data if valid JSON, or null if there is a decoding error.
+ */
+function ire_handle_json_data($data)
 {
     if (is_array($data)) {
         return json_encode($data);
@@ -33,7 +56,16 @@ function handle_json_data($data)
     return $decoded;
 }
 
-function validate_and_sanitize_input(array $data, array $keys, bool $required = true): ?array
+/** 
+ * Validates and sanitizes input data by checking for required fields and sanitizing their values.
+ * 
+ * @param array $data The input data to be validated and sanitized.
+ * @param array $keys The keys to check in the data array.
+ * @param bool $required Indicates whether the fields are mandatory.
+ * 
+ * @return array|null The sanitized data or null if required fields are missing or invalid.
+ */
+function ire_validate_and_sanitize_input(array $data, array $keys, bool $required = true): ?array
 {
     $sanitized_data = [];
     foreach ($keys as $key) {
@@ -53,13 +85,27 @@ function validate_and_sanitize_input(array $data, array $keys, bool $required = 
     return $sanitized_data;
 }
 
-function dd($data): void
+/** 
+ * Dumps data to the error log and stops execution.
+ * 
+ * @param mixed $data The data to log.
+ * 
+ * @return void Stops execution after logging the data.
+ */
+function ire_dd($data): void
 {
     error_log(print_r($data, true));
     die();
 }
 
-function get_image_instance(int $image_id): ?array
+/** 
+ * Retrieves detailed information about an image by its ID.
+ * 
+ * @param int $image_id The ID of the image.
+ * 
+ * @return array|null An array with image data or null if no image is found.
+ */
+function ire_get_image_instance(int $image_id): ?array
 {
     $image_post = get_post($image_id);
     if (!$image_post) {
@@ -121,7 +167,15 @@ function get_image_instance(int $image_id): ?array
     ];
 }
 
-function sanitize_sorting_parameters(array $data, array $allowedSortFields)
+/** 
+ * Sanitizes sorting parameters for queries.
+ * 
+ * @param array $data The data containing sorting parameters.
+ * @param array $allowedSortFields The list of allowed sort fields.
+ * 
+ * @return array The sanitized and formatted sorting parameters.
+ */
+function ire_sanitize_sorting_parameters(array $data, array $allowedSortFields)
 {
     $allowedSortOrders = ['ASC', 'DESC'];
 
@@ -137,11 +191,18 @@ function sanitize_sorting_parameters(array $data, array $allowedSortFields)
     $data['per_page'] = isset($data['per_page']) ? intval($data['per_page']) : 8;
     $data['offset'] = ($data['page'] - 1) * $data['per_page'];
 
-
     return $data;
 }
 
-function get($table_name, $id)
+/** 
+ * Retrieves a row from the database table.
+ * 
+ * @param string $table_name The name of the table.
+ * @param int $id The ID of the row to retrieve.
+ * 
+ * @return object|null The row as an object, or null if no row is found.
+ */
+function ire_get($table_name, $id)
 {
     global $wpdb;
 
@@ -152,38 +213,67 @@ function get($table_name, $id)
     return $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table_name} WHERE id = %d", intval($id)));
 }
 
-function has_project_id(array $data)
+/** 
+ * Checks if a project ID is present and valid.
+ * 
+ * @param array $data The input data.
+ * 
+ * @return void Sends a response if project_id is missing or invalid.
+ */
+function ire_has_project_id(array $data)
 {
-    $data = validate_and_sanitize_input($data, ['project_id']);
+    $data = ire_validate_and_sanitize_input($data, ['project_id']);
 
     if (!$data || $data['project_id'] < 0) {
-        send_json_response(false, 'project_id is Required!');
+        ire_send_json_response(false, 'project_id is Required!');
         return;
     }
 }
 
-
-function database_duplicate_error($wpdb, $duplicateMessage, $defaultErrorMessage = 'Database error')
+/** 
+ * Handles database duplicate errors and sends an appropriate response.
+ * 
+ * @param object $wpdb The WordPress database object.
+ * @param string $duplicateMessage The message to send in case of a duplicate entry.
+ * @param string $defaultErrorMessage The default error message if no specific error is found.
+ * 
+ * @return void Sends a JSON response indicating the error.
+ */
+function ire_database_duplicate_error($wpdb, $duplicateMessage, $defaultErrorMessage = 'Database error')
 {
     if ($wpdb->last_error && strpos($wpdb->last_error, 'Duplicate entry') !== false) {
-        send_json_response(false, $duplicateMessage);
+        ire_send_json_response(false, $duplicateMessage);
     } else {
-        send_json_response(false, $defaultErrorMessage . ': ' . $wpdb->last_error);
+        ire_send_json_response(false, $defaultErrorMessage . ': ' . $wpdb->last_error);
     }
 }
 
-
-function check_required_data($data, $required_fields)
+/** 
+ * Checks if required data fields are present and valid.
+ * 
+ * @param mixed $data The input data.
+ * @param array $required_fields The list of required fields.
+ * 
+ * @return array|null The sanitized data if valid, or null if fields are missing.
+ */
+function ire_check_required_data($data, $required_fields)
 {
-    $required_data = validate_and_sanitize_input($data, $required_fields);
+    $required_data = ire_validate_and_sanitize_input($data, $required_fields);
     if (!$required_data) {
-        send_json_response(false, 'Required fields are missing.');
+        ire_send_json_response(false, 'Required fields are missing.');
         return;
     }
     return $required_data;
 }
 
-function transformSvgString($svgString)
+/** 
+ * Transforms an SVG string by cleaning and unescaping certain parts.
+ * 
+ * @param string $svgString The SVG content as a string.
+ * 
+ * @return string The transformed SVG string.
+ */
+function ire_transformSvgString($svgString)
 {
     $transformedSvg = preg_replace('/\\\\/', '', $svgString); // Remove backslashes
     $transformedSvg = str_replace('&amp;', '&', $transformedSvg); // Unescape HTML entities

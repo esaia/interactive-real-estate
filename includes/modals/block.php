@@ -16,10 +16,10 @@ class IreBlock
     public function get_block($data)
     {
 
-        check_nonce($data['nonce'], 'ire_nonce');
-        has_project_id($data);
+        ire_check_nonce($data['nonce'], 'ire_nonce');
+        ire_has_project_id($data);
 
-        $data = sanitize_sorting_parameters($data, ['id', 'title', 'conf']);
+        $data = ire_sanitize_sorting_parameters($data, ['id', 'title', 'conf']);
 
         // Base query for fetching blocks
         $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d";
@@ -66,15 +66,15 @@ class IreBlock
 
     public function create_block($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
-        has_project_id($data);
+        ire_check_nonce($data['nonce'], 'ire_nonce');
+        ire_has_project_id($data);
 
 
         $required_fields = ['title', 'block_image', 'project_id'];
-        $required_data = check_required_data($data, $required_fields);
+        $required_data = ire_check_required_data($data, $required_fields);
 
         $non_required_fields = ['conf', 'polygon_data', 'svg', 'img_contain'];
-        $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
+        $non_required_data = ire_validate_and_sanitize_input($data, $non_required_fields, false);
 
         $non_required_data['polygon_data'] = $data['polygon_data'] ?? null;
         $non_required_data['svg'] = !empty($data['svg']) ? $data['svg'] : '';
@@ -84,38 +84,38 @@ class IreBlock
 
 
         if (isset($data['polygon_data'])) {
-            $data['polygon_data'] = handle_json_data($data['polygon_data']);
+            $data['polygon_data'] = ire_handle_json_data($data['polygon_data']);
         }
 
         $this->wpdb->insert($this->table_name, $data);
 
         if ($this->wpdb->last_error) {
-            database_duplicate_error($this->wpdb, 'Block number already exists for this project.');
+            ire_database_duplicate_error($this->wpdb, 'Block number already exists for this project.');
         } else {
             $new_block_id = $this->wpdb->insert_id;
 
-            $new_block =  get($this->table_name, $new_block_id);
+            $new_block =  ire_get($this->table_name, $new_block_id);
             $this->prepare_block_data($new_block);
-            send_json_response(true, $new_block);
+            ire_send_json_response(true, $new_block);
         }
     }
 
     public function update_block($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $block_id = isset($data['block_id']) ? intval($data['block_id']) : null;
 
         if (!$block_id) {
-            send_json_response(false, 'block_id is required');
+            ire_send_json_response(false, 'block_id is required');
             return;
         }
 
         $required_fields = ['title', 'block_image'];
-        $required_data = check_required_data($data, $required_fields);
+        $required_data = ire_check_required_data($data, $required_fields);
 
         $non_required_fields = ['conf', 'polygon_data', 'svg', 'img_contain'];
-        $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
+        $non_required_data = ire_validate_and_sanitize_input($data, $non_required_fields, false);
 
         $params  = array_merge($non_required_data, $required_data);
 
@@ -127,7 +127,7 @@ class IreBlock
             $params['conf'] = null;
         }
 
-        $params['polygon_data'] = handle_json_data($data['polygon_data'] ?? '');
+        $params['polygon_data'] = ire_handle_json_data($data['polygon_data'] ?? '');
         $params['img_contain'] = $data['img_contain'] === 'true' ? 1 : 0;
 
 
@@ -135,40 +135,40 @@ class IreBlock
         $this->wpdb->update($this->table_name, $params, $where);
 
         if ($this->wpdb->last_error) {
-            database_duplicate_error($this->wpdb, 'Block number already exists for this project.');
+            ire_database_duplicate_error($this->wpdb, 'Block number already exists for this project.');
         } else {
-            send_json_response(true, 'Floor updated successfully');
+            ire_send_json_response(true, 'Floor updated successfully');
         }
     }
 
     public function delete_block($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $block_id = isset($data['block_id']) ? intval($data['block_id']) : null;
 
         if (!$block_id) {
-            send_json_response(false, 'block_ic is required');
+            ire_send_json_response(false, 'block_ic is required');
             return;
         }
 
         $delete_result = $this->wpdb->delete($this->table_name, ['id' => $block_id]);
 
         if ($delete_result) {
-            send_json_response(true, 'Floor deleted successfully');
+            ire_send_json_response(true, 'Floor deleted successfully');
         } else {
-            send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            ire_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 
     private function map_block_data($item)
     {
         if ($item['polygon_data']) {
-            $item['polygon_data'] = handle_json_data($item['polygon_data']);
+            $item['polygon_data'] = ire_handle_json_data($item['polygon_data']);
         }
         $item['img_contain'] =  $item['img_contain'] == 1;
-        $item['block_image'] = [get_image_instance($item['block_image'])];
-        $item['svg'] =  transformSvgString($item['svg']);
+        $item['block_image'] = [ire_get_image_instance($item['block_image'])];
+        $item['svg'] =  ire_transformSvgString($item['svg']);
 
         return $item;
     }
@@ -176,12 +176,12 @@ class IreBlock
     private function prepare_block_data(&$block)
     {
         if (isset($block->polygon_data)) {
-            $block->polygon_data = handle_json_data($block->polygon_data);
+            $block->polygon_data = ire_handle_json_data($block->polygon_data);
         }
-        $block->svg =  transformSvgString($block->svg);
+        $block->svg =  ire_transformSvgString($block->svg);
 
         $block->img_contain = $block->img_contain == 1;
-        $block->block_image = [get_image_instance($block->block_image)];
+        $block->block_image = [ire_get_image_instance($block->block_image)];
     }
 }
 
@@ -198,9 +198,9 @@ function ire_get_blocks()
 
     if (!$results[0]) {
 
-        send_json_response(false, $results[1]);
+        ire_send_json_response(false, $results[1]);
     } else {
-        send_json_response(true, $results[1]);
+        ire_send_json_response(true, $results[1]);
     }
 }
 

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { imageInterface, PolygonDataCollection, ProjectInterface } from "../../types/components";
-import { transformSvgString } from "../composables/helpers";
+import { ire_transformSvgString } from "../composables/helpers";
 import { useMetaStore } from "./useMeta";
 import ajaxAxios from "../utils/axios";
 
@@ -44,7 +44,7 @@ export const useProjectStore = defineStore("project", () => {
   };
 
   const transformedTitle = computed(() => {
-    return transformSvgString(svg.value);
+    return ire_transformSvgString(svg.value);
   });
 
   const fetchProjects = async (projectID: string | null) => {

@@ -18,26 +18,17 @@ class IreProject
     public function get_projects(array $data)
     {
 
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
         $project_id = isset($data['project_id']) ? intval($data['project_id']) : null;
 
 
         if ($project_id) {
             $result = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM {$this->table_name} WHERE id = %d", $project_id));
 
-            // dd(gettype($result->svg));
-
-
-
-
-            // $transformedSvg = preg_replace('/\\\\/', '', $svgString); // Remove backslashes
-            // $transformedSvg = str_replace('&amp;', '&', $transformedSvg); // Unescape HTML entities
-            // $transformedSvg = preg_replace('/(\s)([a-zA-Z0-9-]+)=""/', '$1$2=""', $transformedSvg); // Fix empty attributes if any
-
 
             if ($result) {
-                $result->project_image = [get_image_instance($result->project_image)];
-                $result->svg =  transformSvgString($result->svg);
+                $result->project_image = [ire_get_image_instance($result->project_image)];
+                $result->svg =  ire_transformSvgString($result->svg);
                 $result->polygon_data = json_decode($result->polygon_data);
             }
         } else {
@@ -46,8 +37,8 @@ class IreProject
             if ($result) {
                 $result = array_map(function ($item) {
                     $item->polygon_data = json_decode($item->polygon_data);
-                    $item->project_image = [get_image_instance($item->project_image)];
-                    $item->svg =  transformSvgString($item->svg);
+                    $item->project_image = [ire_get_image_instance($item->project_image)];
+                    $item->svg =  ire_transformSvgString($item->svg);
 
                     return $item;
                 }, $result);
@@ -65,7 +56,7 @@ class IreProject
 
     public function create_project($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $title = isset($data['title']) ? sanitize_text_field($data['title']) : '';
         $project_image = isset($data['project_image']) ? sanitize_text_field($data['project_image']) : '';
@@ -82,15 +73,15 @@ class IreProject
         );
 
         if ($this->wpdb->last_error) {
-            send_json_response(false, 'Database error');
+            ire_send_json_response(false, 'Database error');
         } else {
-            send_json_response(true, 'Project added');
+            ire_send_json_response(true, 'Project added');
         }
     }
 
     public function update_project($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $project_id = isset($data['projectId']) ? intval($data['projectId']) : null;
         $keys = ['svg', 'title', 'polygon_data', 'project_image'];
@@ -105,28 +96,28 @@ class IreProject
         $this->wpdb->update($this->table_name, $params, $where);
 
         if ($this->wpdb->last_error) {
-            send_json_response(false, 'No projects found.');
+            ire_send_json_response(false, 'No projects found.');
         } else {
-            send_json_response(true, 'Project updated');
+            ire_send_json_response(true, 'Project updated');
         }
     }
 
     public function delete_project($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $project_id = isset($data['project_id']) ? intval($data['project_id']) : null;
         if (!$project_id) {
-            send_json_response(false, 'project_id is required');
+            ire_send_json_response(false, 'project_id is required');
             return;
         }
 
         $delete_result = $this->wpdb->delete($this->table_name, ['id' => $project_id]);
 
         if ($delete_result) {
-            send_json_response(true, 'Project deleted successfully');
+            ire_send_json_response(true, 'Project deleted successfully');
         } else {
-            send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            ire_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 }
@@ -143,9 +134,9 @@ function ire_get_projects()
     $results = $project->get_projects($_POST);
 
     if (!$results[0]) {
-        send_json_response(false, $results[1]);
+        ire_send_json_response(false, $results[1]);
     } else {
-        send_json_response(true, $results[1]);
+        ire_send_json_response(true, $results[1]);
     }
 }
 

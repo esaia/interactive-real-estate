@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import { BlockItem, PolygonDataCollection } from "../../types/components";
-import { transformSvgString } from "../composables/helpers";
+import { ire_transformSvgString } from "../composables/helpers";
 import ajaxAxios from "../utils/axios";
 
 export const useBlocksStore = defineStore("blocks", () => {
@@ -86,8 +86,8 @@ export const useBlocksStore = defineStore("blocks", () => {
         return;
       }
 
-      activeBlock.value.svg = transformSvgString(activeBlock.value.svg);
-      //  transformSvgString(active);
+      activeBlock.value.svg = ire_transformSvgString(activeBlock.value.svg);
+      //  ire_transformSvgString(active);
     },
     { immediate: true }
   );

@@ -7,7 +7,7 @@ import UploadImg from "../form/UploadImg.vue";
 import { FloorItem, imageInterface, PolygonDataCollection } from "@/types/components";
 import { useFloorsStore } from "@/src/stores/useFloors";
 import Canvas from "../../Canvas.vue";
-import { resetCanvasAfterSave, showToast, transformSvgString } from "@/src/composables/helpers";
+import { resetCanvasAfterSave, showToast, ire_transformSvgString } from "@/src/composables/helpers";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
@@ -230,7 +230,7 @@ onUnmounted(() => {
         :projectImage="duplicatedFloor?.floor_image?.[0].url"
         :polygon_data="duplicatedFloorPolygonData"
         :svgRef="floorSvgRef"
-        :svg="transformSvgString(duplicatedFloor.svg)"
+        :svg="ire_transformSvgString(duplicatedFloor.svg)"
         :activeGroup="activeGroup"
         :isFloorsCanvas="true"
         :isImageContain="img_contain"

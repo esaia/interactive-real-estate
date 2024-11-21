@@ -19,10 +19,10 @@ class IreFlat
 
     public function get_flats($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
-        has_project_id($data);
-        $data = sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf', 'block_id']);
+        ire_has_project_id($data);
+        $data = ire_sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf', 'block_id']);
 
         // Base query for fetching flats
         $query = "SELECT * FROM $this->table_name WHERE project_id = %d";
@@ -90,7 +90,7 @@ class IreFlat
 
     public function create_flat($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $required_fields = ['flat_number', 'price', 'use_type', 'project_id'];
         $non_required_fields =  ['floor_number', 'offer_price', 'conf', 'block_id'];
@@ -102,24 +102,24 @@ class IreFlat
         }
 
 
-        $required_data = check_required_data($data, $required_fields);
-        $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
+        $required_data = ire_check_required_data($data, $required_fields);
+        $non_required_data = ire_validate_and_sanitize_input($data, $non_required_fields, false);
 
         $params = array_merge($required_data, $non_required_data);
 
-        $params['type'] = handle_json_data($data['type']);
+        $params['type'] = ire_handle_json_data($data['type']);
         $params['use_type'] = $params['use_type'] === 'true' ? 1 : 0;
 
         $this->wpdb->insert($this->table_name, $params);
 
         if ($this->wpdb->last_error) {
-            send_json_response(false, 'Database error');
+            ire_send_json_response(false, 'Database error');
         } else {
             $new_flat_id = $this->wpdb->insert_id;
-            $new_flat = get($this->table_name, $new_flat_id);
+            $new_flat = ire_get($this->table_name, $new_flat_id);
 
 
-            send_json_response(true, $new_flat);
+            ire_send_json_response(true, $new_flat);
         }
     }
 
@@ -127,12 +127,12 @@ class IreFlat
     {
 
 
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $flat_id = isset($data['flat_id']) ? intval($data['flat_id']) : null;
 
         if (!$flat_id) {
-            send_json_response(false, 'flat_id is required');
+            ire_send_json_response(false, 'flat_id is required');
             return;
         }
 
@@ -142,10 +142,10 @@ class IreFlat
             $required_fields[] = 'type_id';
         }
 
-        $required_data = check_required_data($data, $required_fields);
+        $required_data = ire_check_required_data($data, $required_fields);
 
         $keys = ['floor_number', 'project_id', 'block_id', 'offer_price', 'conf'];
-        $params = validate_and_sanitize_input($data, $keys, false);
+        $params = ire_validate_and_sanitize_input($data, $keys, false);
 
         $params =  array_merge($required_data, $params);
 
@@ -153,7 +153,7 @@ class IreFlat
             $params['block_id'] = null;
         }
 
-        $params['type'] = handle_json_data($data['type']);
+        $params['type'] = ire_handle_json_data($data['type']);
         $params['use_type'] = $params['use_type'] === 'true' ? 1 : 0;
 
 
@@ -162,29 +162,29 @@ class IreFlat
 
 
         if ($this->wpdb->last_error) {
-            send_json_response(false, 'Database error');
+            ire_send_json_response(false, 'Database error');
         } else {
-            send_json_response(true, 'Flat updated successfully');
+            ire_send_json_response(true, 'Flat updated successfully');
         }
     }
 
     public function delete_flat($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $flat_id = isset($data['flat_id']) ? intval($data['flat_id']) : null;
 
         if (!$flat_id) {
-            send_json_response(false, 'flat_id is required');
+            ire_send_json_response(false, 'flat_id is required');
             return;
         }
 
         $delete_result = $this->wpdb->delete($this->table_name, ['id' => $flat_id]);
 
         if ($delete_result) {
-            send_json_response(true, 'Flat deleted successfully');
+            ire_send_json_response(true, 'Flat deleted successfully');
         } else {
-            send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            ire_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 
@@ -195,16 +195,16 @@ class IreFlat
         $item['use_type'] =  $item['use_type'] === '1';
 
         if ($item['type']) {
-            $item['type'] = handle_json_data($item['type']);
+            $item['type'] = ire_handle_json_data($item['type']);
         }
 
 
         if (is_array($item['type']) && isset($item['type']['image_2d']) && !empty($item['type']['image_2d'])) {
-            $item['type']['image_2d'] = array_map('get_image_instance', $item['type']['image_2d']);
+            $item['type']['image_2d'] = array_map('ire_get_image_instance', $item['type']['image_2d']);
         }
 
         if (is_array($item['type']) && isset($item['type']['image_3d']) && !empty($item['type']['image_3d'])) {
-            $item['type']['image_3d'] = array_map('get_image_instance', $item['type']['image_3d']);
+            $item['type']['image_3d'] = array_map('ire_get_image_instance', $item['type']['image_3d']);
         }
 
 
@@ -227,13 +227,13 @@ function ire_get_flats()
     if (is_array($results) && isset($results[0], $results[1])) {
         // If the first element is falsy, return a false response with the second element's value
         if (!$results[0]) {
-            send_json_response(false, $results[1]);
+            ire_send_json_response(false, $results[1]);
         } else {
-            send_json_response(true, $results[1]);
+            ire_send_json_response(true, $results[1]);
         }
     } else {
         // If $results is not an array or doesn't have the expected elements, handle the case
-        send_json_response(false, 'No flats found or invalid response format');
+        ire_send_json_response(false, 'No flats found or invalid response format');
     }
 }
 

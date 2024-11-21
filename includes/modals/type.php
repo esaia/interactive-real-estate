@@ -17,9 +17,9 @@ class IreType
 
     public function get_types($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
-        has_project_id($data);
-        $data = sanitize_sorting_parameters($data, ['id', 'title', 'area_m2']);
+        ire_check_nonce($data['nonce'], 'ire_nonce');
+        ire_has_project_id($data);
+        $data = ire_sanitize_sorting_parameters($data, ['id', 'title', 'area_m2']);
 
 
         $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d ";
@@ -67,26 +67,26 @@ class IreType
 
     public function create_type($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
-        has_project_id($data);
+        ire_check_nonce($data['nonce'], 'ire_nonce');
+        ire_has_project_id($data);
 
 
-        $required_data = check_required_data($data, ['title', 'project_id', 'area_m2']);
+        $required_data = ire_check_required_data($data, ['title', 'project_id', 'area_m2']);
 
 
         $non_required_fields = ['teaser', 'rooms_count'];
-        $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
+        $non_required_data = ire_validate_and_sanitize_input($data, $non_required_fields, false);
 
         if (!empty($data['image_2d'])) {
-            $non_required_data['image_2d'] = handle_json_data($data['image_2d']);
+            $non_required_data['image_2d'] = ire_handle_json_data($data['image_2d']);
         }
 
         if (!empty($data['image_3d'])) {
-            $non_required_data['image_3d'] = handle_json_data($data['image_3d']);
+            $non_required_data['image_3d'] = ire_handle_json_data($data['image_3d']);
         }
 
         if (!empty($data['gallery'])) {
-            $non_required_data['gallery'] = handle_json_data($data['gallery']);
+            $non_required_data['gallery'] = ire_handle_json_data($data['gallery']);
         }
 
         $data = array_merge($required_data, $non_required_data);
@@ -94,43 +94,43 @@ class IreType
         $this->wpdb->insert($this->table_name, $data);
 
         if ($this->wpdb->last_error) {
-            send_json_response(false, 'Database error');
+            ire_send_json_response(false, 'Database error');
         } else {
             $new_type_id = $this->wpdb->insert_id;
-            $new_type =  get($this->table_name, $new_type_id);
+            $new_type =  ire_get($this->table_name, $new_type_id);
 
-            send_json_response(true, $new_type);
+            ire_send_json_response(true, $new_type);
         }
     }
 
     public function update_type($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $type_id = isset($data['type_id']) ? intval($data['type_id']) : null;
         if (!$type_id) {
-            send_json_response(false, 'type_id is required');
+            ire_send_json_response(false, 'type_id is required');
             return;
         }
 
-        $required_data = check_required_data($data, ['title', 'area_m2']);
+        $required_data = ire_check_required_data($data, ['title', 'area_m2']);
 
         $keys = ['teaser', 'rooms_count'];
-        $params = validate_and_sanitize_input($data, $keys, false);
+        $params = ire_validate_and_sanitize_input($data, $keys, false);
 
         $params =  array_merge($required_data, $params);
 
 
         if (!empty($data['image_2d'])) {
-            $params['image_2d'] = handle_json_data($data['image_2d']);
+            $params['image_2d'] = ire_handle_json_data($data['image_2d']);
         }
 
         if (!empty($data['image_3d'])) {
-            $params['image_3d'] = handle_json_data($data['image_3d']);
+            $params['image_3d'] = ire_handle_json_data($data['image_3d']);
         }
 
         if (!empty($data['gallery'])) {
-            $params['gallery'] = handle_json_data($data['gallery']);
+            $params['gallery'] = ire_handle_json_data($data['gallery']);
         }
 
         if (!isset($params['image_2d'])) {
@@ -149,56 +149,56 @@ class IreType
         $this->wpdb->update($this->table_name, $params, $where);
 
         if ($this->wpdb->last_error) {
-            send_json_response(false, 'Database error');
+            ire_send_json_response(false, 'Database error');
         } else {
-            send_json_response(true, 'Type updated successfully');
+            ire_send_json_response(true, 'Type updated successfully');
         }
     }
 
     public function delete_type($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $type_id = isset($data['type_id']) ? intval($data['type_id']) : null;
         if (!$type_id) {
-            send_json_response(false, 'type_id is required');
+            ire_send_json_response(false, 'type_id is required');
             return;
         }
 
         $delete_result = $this->wpdb->delete($this->table_name, ['id' => $type_id]);
 
         if ($delete_result) {
-            send_json_response(true, 'Type deleted successfully');
+            ire_send_json_response(true, 'Type deleted successfully');
         } else {
-            send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            ire_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 
     private function map_images($item)
     {
         // if ($item['image_2d']) {
-        //     $item['image_2d'] = [get_image_instance($item['image_2d'])];
+        //     $item['image_2d'] = [ire_get_image_instance($item['image_2d'])];
         // }
 
         // if ($item['image_3d']) {
-        //     $item['image_3d'] = [get_image_instance($item['image_3d'])];
+        //     $item['image_3d'] = [ire_get_image_instance($item['image_3d'])];
         // }
 
         if ($item['image_2d']) {
-            $image_2d_ids = handle_json_data($item['image_2d']);
-            $item['image_2d'] = array_map('get_image_instance', $image_2d_ids);
+            $image_2d_ids = ire_handle_json_data($item['image_2d']);
+            $item['image_2d'] = array_map('ire_get_image_instance', $image_2d_ids);
         }
 
 
         if ($item['image_3d']) {
-            $image_3d_ids = handle_json_data($item['image_3d']);
-            $item['image_3d'] = array_map('get_image_instance', $image_3d_ids);
+            $image_3d_ids = ire_handle_json_data($item['image_3d']);
+            $item['image_3d'] = array_map('ire_get_image_instance', $image_3d_ids);
         }
 
 
         // if ($item['gallery']) {
-        //     $gallery_ids = handle_json_data($item['gallery']);
-        //     $item['gallery'] = array_map('get_image_instance', $gallery_ids);
+        //     $gallery_ids = ire_handle_json_data($item['gallery']);
+        //     $item['gallery'] = array_map('ire_get_image_instance', $gallery_ids);
         // }
 
         return $item;
@@ -217,13 +217,13 @@ function ire_get_types()
     $results =  $type->get_types($_POST);
 
     if ($results === null) {
-        send_json_response(false, 'something went wrong!');
+        ire_send_json_response(false, 'something went wrong!');
     }
 
     if (!$results[0]) {
-        send_json_response(false, $results[1]);
+        ire_send_json_response(false, $results[1]);
     } else {
-        send_json_response(true, $results[1]);
+        ire_send_json_response(true, $results[1]);
     }
 }
 

@@ -15,10 +15,10 @@ class IreFloor
 
     public function get_floors($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
-        has_project_id($data);
+        ire_check_nonce($data['nonce'], 'ire_nonce');
+        ire_has_project_id($data);
 
-        $data = sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf', 'block_id']);
+        $data = ire_sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf', 'block_id']);
         // $offset = ($data['page'] - 1) * $data['per_page'];
 
         $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d";
@@ -75,13 +75,13 @@ class IreFloor
 
     public function create_floor($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $required_fields = ['floor_number', 'floor_image', 'project_id'];
-        $required_data = check_required_data($data, $required_fields);
+        $required_data = ire_check_required_data($data, $required_fields);
 
         $non_required_fields = ['title', 'conf', 'img_contain', 'svg', 'block_id'];
-        $non_required_data = validate_and_sanitize_input($data, $non_required_fields, false);
+        $non_required_data = ire_validate_and_sanitize_input($data, $non_required_fields, false);
 
         $non_required_data['polygon_data'] = $data['polygon_data'] ?? null;
         $non_required_data['svg'] = !empty($data['svg']) ? $data['svg'] : '';
@@ -90,7 +90,7 @@ class IreFloor
         $data['img_contain'] = isset($data['img_contain']) &&  $data['img_contain'] === 'true' ? 1 : 0;
 
         if (isset($data['polygon_data'])) {
-            $data['polygon_data'] = handle_json_data($data['polygon_data']);
+            $data['polygon_data'] = ire_handle_json_data($data['polygon_data']);
         }
 
         $data['block_id'] = $data['block_id'] ??  null;
@@ -100,24 +100,24 @@ class IreFloor
 
         if ($this->wpdb->last_error) {
 
-            database_duplicate_error($this->wpdb, 'Floor number already exists for this project.');
+            ire_database_duplicate_error($this->wpdb, 'Floor number already exists for this project.');
         } else {
             $new_floor_id = $this->wpdb->insert_id;
 
-            $new_floor =  get($this->table_name, $new_floor_id);
+            $new_floor =  ire_get($this->table_name, $new_floor_id);
             $this->prepare_floor_data($new_floor);
-            send_json_response(true, $new_floor);
+            ire_send_json_response(true, $new_floor);
         }
     }
 
     public function update_floor($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
 
         if (!$floor_id) {
-            send_json_response(false, 'floor_id is required');
+            ire_send_json_response(false, 'floor_id is required');
             return;
         }
 
@@ -138,7 +138,7 @@ class IreFloor
         }
 
 
-        $params['polygon_data'] = handle_json_data($params['polygon_data'] ?? '');
+        $params['polygon_data'] = ire_handle_json_data($params['polygon_data'] ?? '');
         $params['img_contain'] = isset($params['img_contain']) &&  $params['img_contain'] === 'true' ? 1 : 0;
 
 
@@ -147,40 +147,40 @@ class IreFloor
 
         if ($this->wpdb->last_error) {
 
-            database_duplicate_error($this->wpdb, 'Floor number already exists for this project.');
+            ire_database_duplicate_error($this->wpdb, 'Floor number already exists for this project.');
         } else {
-            send_json_response(true, 'Floor updated successfully');
+            ire_send_json_response(true, 'Floor updated successfully');
         }
     }
 
     public function delete_floor($data)
     {
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
 
         if (!$floor_id) {
-            send_json_response(false, 'floor_id is required');
+            ire_send_json_response(false, 'floor_id is required');
             return;
         }
 
         $delete_result = $this->wpdb->delete($this->table_name, ['id' => $floor_id]);
 
         if ($delete_result) {
-            send_json_response(true, 'Floor deleted successfully');
+            ire_send_json_response(true, 'Floor deleted successfully');
         } else {
-            send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            ire_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 
     private function map_floor_data($item)
     {
         if ($item['polygon_data']) {
-            $item['polygon_data'] = handle_json_data($item['polygon_data']);
+            $item['polygon_data'] = ire_handle_json_data($item['polygon_data']);
         }
         $item['img_contain'] =  $item['img_contain'] == 1;
-        $item['floor_image'] = [get_image_instance($item['floor_image'])];
-        $item['svg'] =  transformSvgString($item['svg']);
+        $item['floor_image'] = [ire_get_image_instance($item['floor_image'])];
+        $item['svg'] =  ire_transformSvgString($item['svg']);
 
         return $item;
     }
@@ -188,11 +188,11 @@ class IreFloor
     private function prepare_floor_data(&$floor)
     {
         if (isset($floor->polygon_data)) {
-            $floor->polygon_data = handle_json_data($floor->polygon_data);
+            $floor->polygon_data = ire_handle_json_data($floor->polygon_data);
         }
         $floor->img_contain = $floor->img_contain == 1;
-        $floor->floor_image = [get_image_instance($floor->floor_image)];
-        $floor->svg =  transformSvgString($floor->svg);
+        $floor->floor_image = [ire_get_image_instance($floor->floor_image)];
+        $floor->svg =  ire_transformSvgString($floor->svg);
     }
 
     public function check_floor_exists_or_not($project_id, $floor_number, $block_id)
@@ -213,7 +213,7 @@ class IreFloor
         $result = $this->wpdb->get_row($query, ARRAY_A);
 
         if (isset($result)) {
-            send_json_response(false, 'Floor number already exists for this project.');
+            ire_send_json_response(false, 'Floor number already exists for this project.');
         }
     }
 }
@@ -231,12 +231,12 @@ function ire_get_floors()
 
     if (is_array($results) && isset($results[0], $results[1])) {
         if (!$results[0]) {
-            send_json_response(false, $results[1]);
+            ire_send_json_response(false, $results[1]);
         } else {
-            send_json_response(true, $results[1]);
+            ire_send_json_response(true, $results[1]);
         }
     } else {
-        send_json_response(false, 'No floors found or invalid response format');
+        ire_send_json_response(false, 'No floors found or invalid response format');
     }
 }
 

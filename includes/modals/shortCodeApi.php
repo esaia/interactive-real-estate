@@ -7,7 +7,7 @@ class ShortcodeApi
     public function fetch_project_data($data)
     {
 
-        check_nonce($data['nonce'], 'ire_nonce');
+        ire_check_nonce($data['nonce'], 'ire_nonce');
 
         $project = new IreProject();
         $floor = new IreFloor();
@@ -17,7 +17,7 @@ class ShortcodeApi
         $meta = new IreMetaProject();
         $tooltip = new IreTooltip();
 
-        has_project_id($data);
+        ire_has_project_id($data);
 
         $data['per_page'] = 9999;
 
@@ -170,14 +170,14 @@ class ShortcodeApi
             'actions' => $tooltips
         ];
 
-        send_json_response(true, $data);
+        ire_send_json_response(true, $data);
     }
 }
 
 function ire_get_shortcode_data()
 {
     if (!isset($_POST) || empty($_POST)) {
-        send_json_response(false, 'Invalid request');
+        ire_send_json_response(false, 'Invalid request');
         return;
     }
 

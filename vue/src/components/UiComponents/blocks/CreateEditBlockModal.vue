@@ -6,7 +6,7 @@ import ajaxAxios from "@/src/utils/axios";
 import UploadImg from "../form/UploadImg.vue";
 import { BlockItem, imageInterface, PolygonDataCollection } from "@/types/components";
 import Canvas from "../../Canvas.vue";
-import { resetCanvasAfterSave, showToast, transformSvgString } from "@/src/composables/helpers";
+import { resetCanvasAfterSave, showToast, ire_transformSvgString } from "@/src/composables/helpers";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
@@ -196,7 +196,7 @@ onUnmounted(() => {
         :projectImage="duplicatedBlock?.block_image?.[0].url"
         :polygon_data="duplicatedFloorPolygonData"
         :svgRef="blockSvgRef"
-        :svg="transformSvgString(duplicatedBlock.svg)"
+        :svg="ire_transformSvgString(duplicatedBlock.svg)"
         :activeGroup="activeBlockGroup"
         :isFloorsCanvas="false"
         isBlockCanvas

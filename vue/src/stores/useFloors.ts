@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import { FloorItem, PolygonDataCollection } from "../../types/components";
-import { transformSvgString } from "../composables/helpers";
+import { ire_transformSvgString } from "../composables/helpers";
 import ajaxAxios from "../utils/axios";
 
 export const useFloorsStore = defineStore("floors", () => {
@@ -87,8 +87,8 @@ export const useFloorsStore = defineStore("floors", () => {
         return;
       }
 
-      activeFloor.value.svg = transformSvgString(activeFloor.value.svg);
-      //  transformSvgString(active);
+      activeFloor.value.svg = ire_transformSvgString(activeFloor.value.svg);
+      //  ire_transformSvgString(active);
     },
     { immediate: true }
   );
