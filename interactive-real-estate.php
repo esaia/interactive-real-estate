@@ -22,5 +22,5 @@ define('IRE_PLUGIN_URL', admin_url('admin.php?page=ire'));
 require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './includes/helper.php';
 require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './includes/init.php';
 require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './includes/migrations.php';
-require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './includes/ajax.php';
+require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './includes/api.php';
 require_once  plugin_dir_path(IRE_PLUGIN_FILE) . './includes/shortcodes.php';

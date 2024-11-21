@@ -1,14 +1,27 @@
 <?php
 
+/**
+ * Class ShortcodeApi
+ *
+ * Handles the fetching of project data, including associated project elements such as floors, blocks, flats, types,
+ * meta, and tooltips. This class consolidates all relevant data for a project and returns it in a structured format.
+ */
 class ShortcodeApi
 {
-
-
+    /**
+     * Fetches all project-related data including floors, blocks, flats, types, meta, and tooltips.
+     *
+     * @param array $data The request data, which includes the project ID and pagination settings.
+     * 
+     * @return void Outputs JSON response with the requested project data.
+     */
     public function fetch_project_data($data)
     {
-
+        // Check nonce for security and validate the presence of a project ID
         ire_check_nonce($data['nonce'], 'ire_nonce');
+        ire_has_project_id($data);
 
+        // Initialize objects for interacting with different project components (floors, blocks, flats, etc.)
         $project = new IreProject();
         $floor = new IreFloor();
         $block = new IreBlock();
@@ -17,11 +30,10 @@ class ShortcodeApi
         $meta = new IreMetaProject();
         $tooltip = new IreTooltip();
 
-        ire_has_project_id($data);
-
+        // Set a high number for 'per_page' to fetch all related data at once
         $data['per_page'] = 9999;
 
-        // Fetch project data
+        // Fetch project data from the respective classes and handle possible null results
         $projects = $project->get_projects($data);
         $projects = ($projects !== null && isset($projects[1])) ? $projects[1] : [];
 
@@ -43,23 +55,23 @@ class ShortcodeApi
         $tooltips = $tooltip->get_tooltip($data);
         $tooltips = ($tooltips !== null && isset($tooltips[1])) ? $tooltips[1]['data'] : [];
 
+        // Prepare a lookup array for types, mapping type ID to its area in square meters
         $types_lookup = [];
-
         foreach ($types as $type) {
             $types_lookup[$type['id']] = $type['area_m2'];
         }
 
-
+        // Process floors if data is available
         if (isset($floors[0]) && $floors[0]) {
 
+            // Loop through each floor and process flats matching each floor
             foreach ($floors as &$floor) {
                 $floor_number = $floor['floor_number'];
                 $polygon_data = $floor['polygon_data'];
                 $floor_block_id = $floor['block_id'];
 
+                // Match flats to the current floor based on floor number and polygon data
                 if (isset($flats)) {
-
-
                     $matching_flats = array_values(array_filter($flats, function ($flat) use ($floor_number, $polygon_data, $floor_block_id) {
                         if ($flat['floor_number'] !== $floor_number) {
                             return false;
@@ -67,47 +79,43 @@ class ShortcodeApi
 
                         if ($polygon_data) {
                             foreach ($polygon_data as $polygon) {
-
                                 if (!is_null($polygon) && isset($polygon['type']) && $polygon['type'] === 'flat' && isset($polygon['id']) && $polygon['id'] === $flat['id']) {
+                                    // Check if the flat belongs to the current block
                                     if ($floor_block_id) {
                                         return $flat['block_id'] === $floor_block_id;
                                     } else {
-                                        return !$flat['block_id'];
+                                        return !$flat['block_id'];  // If no block_id, match any flat without block
                                     }
                                 }
                             }
                         }
 
-                        return false;
+                        return false; // Default return if no match
                     }));
                 }
 
-
+                // Initialize variables to track minimum price, area, and availability
                 $minimum_price = null;
                 $minimum_area = null;
                 $available = 0;
                 $reserved = 0;
                 $sold = 0;
 
-
+                // Loop through the matching flats and calculate statistics (price, area, availability)
                 foreach ($matching_flats as $flat) {
-
+                    // Find the flat with the minimum price
                     if ($minimum_price === null || $flat['price'] < $minimum_price) {
                         $minimum_price = $flat['price'];
                     }
 
-                    // if ($minimum_area === null || $types_lookup[$flat['type_id']] < $minimum_area) {
-                    //     $minimum_area = $types_lookup[$flat['type_id']];
-                    // }
-
+                    // Calculate the minimum area based on flat type ID
                     if (!empty($flat['type_id']) && isset($types_lookup[$flat['type_id']])) {
                         if ($minimum_area === null || $types_lookup[$flat['type_id']] < $minimum_area) {
                             $minimum_area = $types_lookup[$flat['type_id']];
                         }
                     }
 
-
-
+                    // Count the availability status of each flat
                     switch ($flat['conf']) {
                         case '':
                             $available++;
@@ -121,9 +129,8 @@ class ShortcodeApi
                     }
                 }
 
+                // Prepare count data for the current floor
                 $counts = [];
-
-
                 if ($minimum_price > 0) {
                     $counts['minimum_price'] = $minimum_price;
                 }
@@ -131,7 +138,6 @@ class ShortcodeApi
                 if ($minimum_area > 0) {
                     $counts['minimum_area'] = $minimum_area;
                 }
-
 
                 if ($available > 0) {
                     $counts['available'] = $available;
@@ -143,23 +149,19 @@ class ShortcodeApi
                     $counts['sold'] = $sold;
                 }
 
-
-
+                // Add the count data to the floor, if available
                 if (!empty($counts)) {
                     $floor['counts'] = $counts;
                 } else {
                     $floor['counts'] = null;
                 }
-
-
-
-                // $floor['flats'] = $matching_flats;
             }
         }
 
-
+        // Clean up the reference to the floor array after processing
         unset($floor);
 
+        // Prepare the final data array that will be sent in the JSON response
         $data = [
             'project' => $projects,
             'floors' => $floors,
@@ -170,20 +172,28 @@ class ShortcodeApi
             'actions' => $tooltips
         ];
 
+        // Send the response back to the client
         ire_send_json_response(true, $data);
     }
 }
 
+/**
+ * Handles the AJAX request to fetch project data.
+ * This function is hooked to 'wp_ajax_' actions for authenticated and unauthenticated users.
+ */
 function ire_get_shortcode_data()
 {
+    // Check if the request is valid and contains data
     if (!isset($_POST) || empty($_POST)) {
         ire_send_json_response(false, 'Invalid request');
         return;
     }
 
+    // Create an instance of ShortcodeApi and call the fetch_project_data method
     $shortcode = new ShortcodeApi();
     $shortcode->fetch_project_data($_POST);
 }
 
+// Register the AJAX actions for both authenticated and unauthenticated users
 add_action('wp_ajax_nopriv_get_shortcode_data', 'ire_get_shortcode_data');
 add_action('wp_ajax_get_shortcode_data', 'ire_get_shortcode_data');
