@@ -1,12 +1,13 @@
 <?php
 /*
 Plugin Name: Interactive Real Estate
-Description: The most innovative WordPress plugin for creating interactive buildings.
 Version: 1.0
-Author: Interactive Real Estate
+Description: The most innovative WordPress plugin for creating interactive buildings.
 Plugin URI: https://interactive-real-estate.vercel.app/
-Text Domain: ire-plugin
-Domain Path: /languages
+Author URI: https://interactive-real-estate.vercel.app/
+Author: Esaia Gaprindashvili
+License: GPL2
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 

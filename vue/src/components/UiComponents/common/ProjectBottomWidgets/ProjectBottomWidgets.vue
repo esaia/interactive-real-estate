@@ -101,10 +101,10 @@ defineExpose({
   <div class="my-7 flex items-start justify-between">
     <div v-if="!showPreview" class="flex gap-5">
       <div class="flex flex-col items-start gap-5 rounded-md bg-white p-4">
-        <div class="flex flex-col gap-2">
+        <div class="flex w-full flex-col gap-2">
           <label for="" class="font-semibold">Project Title:</label>
 
-          <Input v-model="title" />
+          <Input v-model="title" class="w-full" />
         </div>
 
         <div class="flex w-full items-center justify-between gap-2">

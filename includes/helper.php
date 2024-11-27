@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /** 
  * Checks the nonce for security and validates the action.
  * 
@@ -43,13 +47,12 @@ function ire_send_json_response(bool $success, $message): void
 function ire_handle_json_data($data)
 {
     if (is_array($data)) {
-        return json_encode($data);
+        return wp_json_encode($data);
     }
 
     $decoded = json_decode($data, true);
 
     if (json_last_error() !== JSON_ERROR_NONE) {
-        error_log('JSON decode error: ' . json_last_error_msg());
         return null;
     }
 
@@ -206,11 +209,16 @@ function ire_get($table_name, $id)
 {
     global $wpdb;
 
+    // Ensure table_name only contains valid characters (letters, numbers, and underscores)
     if (!preg_match('/^[a-zA-Z0-9_]+$/', $table_name)) {
-        return null;
+        return null; // Return null if the table name is not valid
     }
 
-    return $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table_name} WHERE id = %d", intval($id)));
+    // Prepare the SQL query with the sanitized table name
+    // $query = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}{$table_name} WHERE id = %d", intval($id));
+
+    // Execute the query
+    return $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}{$table_name} WHERE id = %d", intval($id)));
 }
 
 /** 

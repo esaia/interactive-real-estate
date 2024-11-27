@@ -19,7 +19,7 @@ function ire_add_admin_menu()
     // Add a top-level menu page for the plugin
     add_menu_page(
         'interactive real estate', // The title of the page
-        'interactive real estate', // The text displayed in the menu
+        'Interactive Real Estate', // The text displayed in the menu
         'manage_options',          // The capability required for access (only users with 'manage_options' can see it)
         'ire',                     // The unique slug for the menu page
         'ire_render_page',         // The callback function that renders the page content
@@ -31,7 +31,7 @@ function ire_add_admin_menu()
 /**
  * Renders the content for the plugin's admin page.
  *
- * This function is called when the user clicks on the 'interactive real estate' menu item in the admin sidebar.
+ * This function is called when the user clicks on the 'building svg' menu item in the admin sidebar.
  */
 function ire_render_page()
 {
