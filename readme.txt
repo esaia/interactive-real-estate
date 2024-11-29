@@ -56,8 +56,10 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 1. Banner: [banner-1540x500.jpg]
 2. Plugin icon: [icon-512x512.png]
 3. Main dashboard view: [screenshot-1.jpg]
-4. Settings page: [screenshot-2.png]
-5. Example of the frontend display: [screenshot-3.jpg]
+4. Flats list: [screenshot-2.png]
+5. 3d floor plan: [screenshot-3.jpg]
+6. Edit flat: [screenshot-4.jpg]
+7. Result: [screenshot-5.jpg]
 
 == Changelog ==
 = 1.0 =
