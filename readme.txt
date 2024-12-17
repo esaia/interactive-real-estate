@@ -3,7 +3,7 @@ Contributors: esaia
 Tags: interactive, real estate, property display, SVG, hotspots, floor plan, real estate plugin, property listing, interactive buildings, pins, polygon, svg  
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.1
+Stable tag: 1.2
 Plugin URI: https://interactive-real-estate.vercel.app/
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -73,6 +73,18 @@ To rebuild the minified JavaScript files, follow these steps:
 3. Run `npm run build` to generate the minified files.
 4. The minified files will be located in `dist/assets/index.js`.
 
+== Video Tutorial ==
+
+Using this plugin may be complicated, For a step-by-step walkthrough on how to use the plugin, watch our video tutorial here:
+
+[Watch the Video Tutorial](https://youtu.be/dQmqouszdK0)
+
+This video covers:
+- How to create a new interactive project.
+- How to add pins and polygons to your property images.
+- Add floor, flats, flat types, actions and connect it to polygons.
+- Customize the colors of your SVG paths.
+
 
 == Changelog ==
 = 1.0 =
@@ -80,3 +92,6 @@ To rebuild the minified JavaScript files, follow these steps:
 
 = 1.1 =
 * Fixed all issues that wp reviewer mentioned
+
+= 1.2 =
+* Update readme add Video Tutorial section

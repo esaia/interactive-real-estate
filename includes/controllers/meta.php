@@ -163,7 +163,7 @@ function irep_get_meta()
  * Action function to create or update project metadata via AJAX.
  * This function is hooked to the 'wp_ajax_irep_create_or_update_meta' action.
  */
-function create_or_update_meta()
+function irep_create_or_update_meta()
 {
     global $irep_meta;
 
@@ -173,4 +173,4 @@ function create_or_update_meta()
 
 // Add AJAX action hooks for retrieving and creating/updating project metadata
 add_action('wp_ajax_irep_get_meta', 'irep_get_meta');
-add_action('wp_ajax_irep_create_or_update_meta', 'create_or_update_meta');
+add_action('wp_ajax_irep_create_or_update_meta', 'irep_create_or_update_meta');
