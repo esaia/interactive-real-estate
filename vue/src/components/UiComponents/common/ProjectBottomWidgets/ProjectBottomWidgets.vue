@@ -119,9 +119,9 @@ defineExpose({
           <p>[irep_project id="{{ projectStore?.id }}"]</p>
         </div>
 
-        <div class="cursor-pointer hover:underline" @click="showGenerateObject = true">
+        <!-- <div class="cursor-pointer hover:underline" @click="showGenerateObject = true">
           Generate data for standalone version
-        </div>
+        </div> -->
       </div>
 
       <div class="w-60 rounded-md bg-white p-4">
