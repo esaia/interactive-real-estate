@@ -36,7 +36,7 @@ function ire_add_admin_menu()
 function ire_render_page()
 {
     // Include the template file that will generate the admin page content
-    include_once plugin_dir_path(IRE_PLUGIN_FILE) . './templates/index.php';
+    include_once plugin_dir_path(IREP_PLUGIN_FILE) . './templates/index.php';
 }
 
 
@@ -57,15 +57,15 @@ function ire_enqueue_vue_assets()
     wp_enqueue_media();
 
     // Enqueue Vue.js JavaScript and CSS for the plugin
-    wp_enqueue_script('ire-vue-js', plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
-    wp_enqueue_style('ire-vue-styles', plugin_dir_url(IRE_PLUGIN_FILE) . 'dist/assets/index.css');
+    wp_enqueue_script('ire-vue-js', plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
+    wp_enqueue_style('ire-vue-styles', plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.css');
 
     // Localize the script with necessary PHP variables (nonce, AJAX URL, etc.)
     wp_localize_script('ire-vue-js', 'irePlugin', array(
         'nonce' => wp_create_nonce('ire_nonce'),
         'ajax_url' => admin_url('admin-ajax.php'),
-        'plugin_url' => IRE_PLUGIN_URL,
-        'plugin_assets_path' => plugins_url('assets/', IRE_PLUGIN_FILE)
+        'plugin_url' => IREP_PLUGIN_URL,
+        'plugin_assets_path' => plugins_url('assets/', IREP_PLUGIN_FILE)
     ));
 }
 

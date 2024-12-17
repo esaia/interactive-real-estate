@@ -45,7 +45,7 @@ class IreProject
     public function get_projects(array $data)
     {
         // Verify nonce for security to prevent CSRF attacks.
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Retrieve project ID from request, if available.
         $project_id = isset($data['project_id']) ? intval($data['project_id']) : null;
@@ -94,7 +94,7 @@ class IreProject
     public function create_project($data)
     {
         // Verify nonce for security.
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Sanitize input fields.
         $title = isset($data['title']) ? sanitize_text_field($data['title']) : '';
@@ -130,7 +130,7 @@ class IreProject
     public function update_project($data)
     {
         // Verify nonce for security.
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Retrieve project ID from request.
         $project_id = isset($data['projectId']) ? intval($data['projectId']) : null;
@@ -168,7 +168,7 @@ class IreProject
     public function delete_project($data)
     {
         // Verify nonce for security.
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Retrieve project ID from request.
         $project_id = isset($data['project_id']) ? intval($data['project_id']) : null;

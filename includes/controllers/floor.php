@@ -41,7 +41,7 @@ class IreFloor
     public function get_floors($data)
     {
         // Check nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure the project ID is valid
         ire_has_project_id($data);
@@ -117,7 +117,7 @@ class IreFloor
     public function create_floor($data)
     {
         // Check nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure required fields are present
         $required_fields = ['floor_number', 'floor_image', 'project_id'];
@@ -173,7 +173,7 @@ class IreFloor
     public function update_floor($data)
     {
         // Check nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure the floor_id is present
         $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
@@ -226,7 +226,7 @@ class IreFloor
     public function delete_floor($data)
     {
         // Check nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure the floor_id is provided
         $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;

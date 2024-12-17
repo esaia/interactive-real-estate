@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-register_activation_hook(IRE_PLUGIN_FILE, 'ire_create_tables');
+register_activation_hook(IREP_PLUGIN_FILE, 'ire_create_tables');
 
 
 // Define a function to create tables if they don't already exist

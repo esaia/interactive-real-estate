@@ -42,7 +42,7 @@ class IreTooltip
     public function get_tooltip(array $data)
     {
         // Verify nonce for security and check if project ID is valid
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
         ire_has_project_id($data);
 
         // Sanitize sorting parameters (e.g., for column names like 'id' and 'title')
@@ -118,7 +118,7 @@ class IreTooltip
     public function create_tooltip($data)
     {
         // Verify nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Validate and sanitize input data
         $required_fields = ['project_id', 'title'];
@@ -162,7 +162,7 @@ class IreTooltip
     public function update_tooltip($data)
     {
         // Verify nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure action ID (tooltip ID) is provided
         $action_id = isset($data['action_id']) ? intval($data['action_id']) : null;
@@ -195,7 +195,7 @@ class IreTooltip
     public function delete_tooltip($data)
     {
         // Verify nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure action ID (tooltip ID) is provided
         $action_id = isset($data['action_id']) ? intval($data['action_id']) : null;

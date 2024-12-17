@@ -22,7 +22,7 @@ class ShortcodeApi
     public function fetch_project_data($data)
     {
         // Check nonce for security and validate the presence of a project ID
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
         ire_has_project_id($data);
 
         // Initialize objects for interacting with different project components (floors, blocks, flats, etc.)

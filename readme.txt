@@ -1,5 +1,5 @@
 === Interactive Real Estate ===
-Contributors: Esaia Gaprindashvili
+Contributors: esaia
 Tags: interactive, real estate, property display, SVG, hotspots, floor plan, real estate plugin, property listing, interactive buildings, pins, polygon, svg  
 Requires at least: 5.0
 Tested up to: 6.7
@@ -60,6 +60,19 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 5. 3d floor plan: [screenshot-3.jpg]
 6. Edit flat: [screenshot-4.jpg]
 7. Result: [screenshot-5.jpg]
+
+== Source Code ==
+The source code for the unminified JavaScript and CSS can be found at:
+[link](https://github.com/esaia/interactive-real-estate)
+
+== Build Instructions ==
+To rebuild the minified JavaScript files, follow these steps:
+
+1. Clone or download the repository.
+2. Run `npm install` to install dependencies.
+3. Run `npm run build` to generate the minified files.
+4. The minified files will be located in `dist/assets/index.js`.
+
 
 == Changelog ==
 = 1.0 =

@@ -41,7 +41,7 @@ class IreMetaProject
     public function get_meta(array $data)
     {
         // Verify the nonce for security and check if project ID is valid
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
         ire_has_project_id($data);
 
         // Prepare SQL query to fetch metadata for the given project ID
@@ -71,7 +71,7 @@ class IreMetaProject
     public function create_or_update_meta($data)
     {
         // Verify the nonce for security and check if project ID is valid
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
         ire_has_project_id($data);
 
         // Ensure 'meta_data' is provided and is an array

@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  * 
  * @return void Exits and sends an error if the nonce is invalid.
  */
-function ire_check_nonce(?string $nonce, string $action): void
+function irep_check_nonce(?string $nonce, string $action): void
 {
     if (!(isset($nonce) && wp_verify_nonce($nonce, $action))) {
         wp_send_json_error('Invalid nonce');

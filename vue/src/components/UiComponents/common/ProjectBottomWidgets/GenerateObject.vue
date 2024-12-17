@@ -283,7 +283,7 @@ onMounted(async () => {
         <div>
           <highlightjs
             language="markdown"
-            code="<script src='https://unpkg.com/vue@3.5.12/dist/vue.global.prod.js'></script>
+            code="<script src='/path-to-your-local/vue.global.prod.js'></script>
 <link rel='stylesheet' crossorigin href='/dist/styles.css' />  <!-- Download these styles from codecanyon -->"
           />
         </div>

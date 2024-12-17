@@ -48,7 +48,7 @@ class IreBlock
     public function get_block($data)
     {
         // Check nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
         ire_has_project_id($data);
 
         // Sanitize and filter sorting parameters
@@ -119,7 +119,7 @@ class IreBlock
     public function create_block($data)
     {
         // Check nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
         ire_has_project_id($data);
 
         // Ensure required fields are present
@@ -178,7 +178,7 @@ class IreBlock
     public function update_block($data)
     {
         // Check nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure the block_id is provided
         $block_id = isset($data['block_id']) ? intval($data['block_id']) : null;
@@ -234,7 +234,7 @@ class IreBlock
     public function delete_block($data)
     {
         // Check nonce for security
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure the block_id is provided
         $block_id = isset($data['block_id']) ? intval($data['block_id']) : null;

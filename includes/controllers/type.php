@@ -38,7 +38,7 @@ class IreType
      */
     public function get_types($data)
     {
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
         ire_has_project_id($data);
 
         // Sanitize and filter sorting parameters
@@ -98,7 +98,7 @@ class IreType
      */
     public function create_type($data)
     {
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
         ire_has_project_id($data);
 
         // Sanitize and validate required data
@@ -146,7 +146,7 @@ class IreType
      */
     public function update_type($data)
     {
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure the type ID is provided
         $type_id = isset($data['type_id']) ? intval($data['type_id']) : null;
@@ -211,7 +211,7 @@ class IreType
      */
     public function delete_type($data)
     {
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure the type ID is provided
         $type_id = isset($data['type_id']) ? intval($data['type_id']) : null;

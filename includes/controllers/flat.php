@@ -37,7 +37,7 @@ class IreFlat
      */
     public function get_flats($data)
     {
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
         ire_has_project_id($data);
 
         // Sanitize and filter sorting parameters
@@ -115,7 +115,7 @@ class IreFlat
      */
     public function create_flat($data)
     {
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Define required and non-required fields
         $required_fields = ['flat_number', 'price', 'use_type', 'project_id'];
@@ -161,7 +161,7 @@ class IreFlat
      */
     public function update_flat($data)
     {
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure the flat ID is provided
         $flat_id = isset($data['flat_id']) ? intval($data['flat_id']) : null;
@@ -215,7 +215,7 @@ class IreFlat
      */
     public function delete_flat($data)
     {
-        ire_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'ire_nonce');
 
         // Ensure the flat ID is provided
         $flat_id = isset($data['flat_id']) ? intval($data['flat_id']) : null;
