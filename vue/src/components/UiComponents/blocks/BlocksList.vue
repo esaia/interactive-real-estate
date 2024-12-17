@@ -52,7 +52,7 @@ const showDeleteBlockModal = (floor: BlockItem | null) => {
 
 const deleteFloor = async () => {
   await ajaxAxios.post("", {
-    action: "ire_delete_block",
+    action: "irep_delete_block",
     nonce: irePlugin.nonce,
     block_id: deleteBlockId.value
   });
@@ -72,7 +72,7 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
 
 const fetchFloors = async () => {
   const { data } = await ajaxAxios.post("", {
-    action: "ire_get_blocks",
+    action: "irep_get_blocks",
     nonce: irePlugin.nonce,
     project_id: id.value,
     sort_field: sortField.value,

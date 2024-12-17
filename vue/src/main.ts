@@ -44,9 +44,9 @@ window.constants = {
   PREVIEW_STROKE_WIDTH: 1
 };
 
-app.mount("#ire-vue-app");
+app.mount("#irep-vue-app");
 
-document.querySelectorAll("[id^='ire-shortcode-']").forEach((shortcodeElement) => {
+document.querySelectorAll("[id^='irep-shortcode-']").forEach((shortcodeElement) => {
   const projectId = shortcodeElement.getAttribute("data-project-id");
   const componentId = shortcodeElement.getAttribute("id");
   const shortcodeApp = createApp(Shortcode, { projectId, componentId });

@@ -1,2 +1,2 @@
-<div id="ire-vue-app">
+<div id="irep-vue-app">
 </div>

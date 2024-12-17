@@ -5,12 +5,12 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class IreProject
+ * Class Irep_Project
  * 
  * Handles CRUD operations for the "projects" table in the database.
  * Provides functionality to retrieve, create, update, and delete projects.
  */
-class IreProject
+class Irep_Project
 {
     /**
      * @var wpdb $wpdb WordPress database object.
@@ -23,7 +23,7 @@ class IreProject
     protected $table_name;
 
     /**
-     * IreProject constructor.
+     * Irep_Project constructor.
      *
      * Initializes the project class with the global $wpdb object to interact with the WordPress database.
      */
@@ -31,7 +31,7 @@ class IreProject
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'ire_projects';  // Set the projects table name with WordPress table prefix.
+        $this->table_name = $wpdb->prefix . 'irep_projects';  // Set the projects table name with WordPress table prefix.
     }
 
     /**
@@ -45,7 +45,7 @@ class IreProject
     public function get_projects(array $data)
     {
         // Verify nonce for security to prevent CSRF attacks.
-        irep_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Retrieve project ID from request, if available.
         $project_id = isset($data['project_id']) ? intval($data['project_id']) : null;
@@ -56,8 +56,8 @@ class IreProject
 
             if ($result) {
                 // Process project data (e.g., handle images, SVG, and JSON decoding).
-                $result->project_image = [ire_get_image_instance($result->project_image)];
-                $result->svg = ire_transformSvgString($result->svg);
+                $result->project_image = [irep_get_image_instance($result->project_image)];
+                $result->svg = irep_transformSvgString($result->svg);
                 $result->polygon_data = json_decode($result->polygon_data);
             }
         } else {
@@ -68,8 +68,8 @@ class IreProject
                 // Process each project to decode JSON and format image data.
                 $result = array_map(function ($item) {
                     $item->polygon_data = json_decode($item->polygon_data);
-                    $item->project_image = [ire_get_image_instance($item->project_image)];
-                    $item->svg = ire_transformSvgString($item->svg);
+                    $item->project_image = [irep_get_image_instance($item->project_image)];
+                    $item->svg = irep_transformSvgString($item->svg);
 
                     return $item;
                 }, $result);
@@ -94,7 +94,7 @@ class IreProject
     public function create_project($data)
     {
         // Verify nonce for security.
-        irep_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Sanitize input fields.
         $title = isset($data['title']) ? sanitize_text_field($data['title']) : '';
@@ -114,9 +114,9 @@ class IreProject
 
         // Return a JSON response based on the success of the database operation.
         if ($this->wpdb->last_error) {
-            ire_send_json_response(false, 'Database error');
+            irep_send_json_response(false, 'Database error');
         } else {
-            ire_send_json_response(true, 'Project added');
+            irep_send_json_response(true, 'Project added');
         }
     }
 
@@ -130,7 +130,7 @@ class IreProject
     public function update_project($data)
     {
         // Verify nonce for security.
-        irep_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Retrieve project ID from request.
         $project_id = isset($data['projectId']) ? intval($data['projectId']) : null;
@@ -152,9 +152,9 @@ class IreProject
 
         // Return a JSON response based on the success of the update.
         if ($this->wpdb->last_error) {
-            ire_send_json_response(false, 'No projects found.');
+            irep_send_json_response(false, 'No projects found.');
         } else {
-            ire_send_json_response(true, 'Project updated');
+            irep_send_json_response(true, 'Project updated');
         }
     }
 
@@ -168,14 +168,14 @@ class IreProject
     public function delete_project($data)
     {
         // Verify nonce for security.
-        irep_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Retrieve project ID from request.
         $project_id = isset($data['project_id']) ? intval($data['project_id']) : null;
 
         // Check if the project ID is provided.
         if (!$project_id) {
-            ire_send_json_response(false, 'project_id is required');
+            irep_send_json_response(false, 'project_id is required');
             return;
         }
 
@@ -184,61 +184,62 @@ class IreProject
 
         // Return a JSON response based on the success of the deletion.
         if ($delete_result) {
-            ire_send_json_response(true, 'Project deleted successfully');
+            irep_send_json_response(true, 'Project deleted successfully');
         } else {
-            ire_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            irep_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 }
 
-// Initialize the IreProject class.
-$project = new IreProject();
+// Initialize the Irep_Project class.
+$irep_project = new Irep_Project();
 
 /**
  * AJAX handler function to retrieve all projects.
  */
-function ire_get_projects()
+function irep_get_projects()
 {
-    global $project;
-    $results = $project->get_projects($_POST);
+    global $irep_project;
+    $results = $irep_project->get_projects($_POST);
+
 
     // Send the results or error as a JSON response.
     if (!$results[0]) {
-        ire_send_json_response(false, $results[1]);
+        irep_send_json_response(false, $results[1]);
     } else {
-        ire_send_json_response(true, $results[1]);
+        irep_send_json_response(true, $results[1]);
     }
 }
 
 /**
  * AJAX handler function to create a new project.
  */
-function ire_create_project()
+function irep_create_project()
 {
-    global $project;
-    $project->create_project($_POST);
+    global $irep_project;
+    $irep_project->create_project($_POST);
 }
 
 /**
  * AJAX handler function to update an existing project.
  */
-function ire_update_project()
+function irep_update_project()
 {
-    global $project;
-    $project->update_project($_POST);
+    global $irep_project;
+    $irep_project->update_project($_POST);
 }
 
 /**
  * AJAX handler function to delete a project.
  */
-function ire_delete_project()
+function irep_delete_project()
 {
-    global $project;
-    $project->delete_project($_POST);
+    global $irep_project;
+    $irep_project->delete_project($_POST);
 }
 
 // Register the AJAX actions for WordPress.
-add_action('wp_ajax_ire_get_projects', 'ire_get_projects');
-add_action('wp_ajax_ire_create_project', 'ire_create_project');
-add_action('wp_ajax_ire_update_project', 'ire_update_project');
-add_action('wp_ajax_ire_delete_project', 'ire_delete_project');
+add_action('wp_ajax_irep_get_projects', 'irep_get_projects');
+add_action('wp_ajax_irep_create_project', 'irep_create_project');
+add_action('wp_ajax_irep_update_project', 'irep_update_project');
+add_action('wp_ajax_irep_delete_project', 'irep_delete_project');

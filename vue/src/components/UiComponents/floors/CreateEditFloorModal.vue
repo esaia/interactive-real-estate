@@ -7,7 +7,7 @@ import UploadImg from "../form/UploadImg.vue";
 import { FloorItem, imageInterface, PolygonDataCollection } from "@/types/components";
 import { useFloorsStore } from "@/src/stores/useFloors";
 import Canvas from "../../Canvas.vue";
-import { resetCanvasAfterSave, showToast, ire_transformSvgString } from "@/src/composables/helpers";
+import { resetCanvasAfterSave, showToast, irep_transformSvgString } from "@/src/composables/helpers";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
@@ -107,7 +107,7 @@ const updateFloor = async () => {
   };
 
   const { data } = await ajaxAxios.post("", {
-    action: "ire_update_floor",
+    action: "irep_update_floor",
     nonce: irePlugin.nonce,
     ...params
   });
@@ -147,7 +147,7 @@ const createFloor = async () => {
 
   try {
     const { data } = await ajaxAxios.post("", {
-      action: "ire_create_floor",
+      action: "irep_create_floor",
       nonce: irePlugin.nonce,
       ...params
     });
@@ -230,7 +230,7 @@ onUnmounted(() => {
         :projectImage="duplicatedFloor?.floor_image?.[0].url"
         :polygon_data="duplicatedFloorPolygonData"
         :svgRef="floorSvgRef"
-        :svg="ire_transformSvgString(duplicatedFloor.svg)"
+        :svg="irep_transformSvgString(duplicatedFloor.svg)"
         :activeGroup="activeGroup"
         :isFloorsCanvas="true"
         :isImageContain="img_contain"

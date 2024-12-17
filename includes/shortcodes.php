@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * @return string The HTML markup for the Vue component.
  */
-function ire_render_vue_preview_shortcode($atts)
+function irep_render_vue_preview_shortcode($atts)
 {
     // Set default attribute values for the shortcode
     $atts = shortcode_atts(array(
@@ -21,7 +21,7 @@ function ire_render_vue_preview_shortcode($atts)
     // Get and sanitize the project ID
     $project_id = intval($atts['id']);
     // Generate a unique ID for the div container to prevent conflicts
-    $unique_id = 'ire-shortcode-' . uniqid();
+    $unique_id = 'irep-shortcode-' . uniqid();
 
     ob_start(); // Start output buffering
 ?>
@@ -31,4 +31,4 @@ function ire_render_vue_preview_shortcode($atts)
     return ob_get_clean(); // Return the generated HTML content
 }
 
-add_shortcode('ire_project', 'ire_render_vue_preview_shortcode');
+add_shortcode('irep_project', 'irep_render_vue_preview_shortcode');

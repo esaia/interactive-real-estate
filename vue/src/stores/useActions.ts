@@ -8,7 +8,7 @@ export const useActionsStore = defineStore("actions", () => {
 
   const fetchProjectActions = async (id: number) => {
     const { data } = await ajaxAxios.post("", {
-      action: "ire_get_tooltip",
+      action: "irep_get_tooltip",
       nonce: irePlugin.nonce,
       project_id: id,
       per_page: 99999

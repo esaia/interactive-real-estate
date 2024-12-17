@@ -5,18 +5,18 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class IreType
+ * Class Irep_Type
  *
  * Handles CRUD operations for property types (e.g., residential, commercial) in the project management system.
  * This includes methods to retrieve, create, update, and delete types from the database.
  */
-class IreType
+class Irep_Type
 {
     protected $wpdb;
     protected $table_name;
 
     /**
-     * IreType constructor.
+     * Irep_Type constructor.
      *
      * Initializes the global $wpdb object and sets the table name for property types.
      */
@@ -24,7 +24,7 @@ class IreType
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'ire_types';
+        $this->table_name = $wpdb->prefix . 'irep_types';
     }
 
     /**
@@ -38,11 +38,11 @@ class IreType
      */
     public function get_types($data)
     {
-        irep_check_nonce($data['nonce'], 'ire_nonce');
-        ire_has_project_id($data);
+        irep_check_nonce($data['nonce'], 'irep_nonce');
+        irep_has_project_id($data);
 
         // Sanitize and filter sorting parameters
-        $data = ire_sanitize_sorting_parameters($data, ['id', 'title', 'area_m2']);
+        $data = irep_sanitize_sorting_parameters($data, ['id', 'title', 'area_m2']);
 
         // Base query to fetch types from the database
         $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d ";
@@ -98,27 +98,27 @@ class IreType
      */
     public function create_type($data)
     {
-        irep_check_nonce($data['nonce'], 'ire_nonce');
-        ire_has_project_id($data);
+        irep_check_nonce($data['nonce'], 'irep_nonce');
+        irep_has_project_id($data);
 
         // Sanitize and validate required data
-        $required_data = ire_check_required_data($data, ['title', 'project_id', 'area_m2']);
+        $required_data = irep_check_required_data($data, ['title', 'project_id', 'area_m2']);
 
         // Optional fields
         $non_required_fields = ['teaser', 'rooms_count'];
-        $non_required_data = ire_validate_and_sanitize_input($data, $non_required_fields, false);
+        $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
 
         // Handle image fields (2D, 3D, and gallery) if provided
         if (!empty($data['image_2d'])) {
-            $non_required_data['image_2d'] = ire_handle_json_data($data['image_2d']);
+            $non_required_data['image_2d'] = irep_handle_json_data($data['image_2d']);
         }
 
         if (!empty($data['image_3d'])) {
-            $non_required_data['image_3d'] = ire_handle_json_data($data['image_3d']);
+            $non_required_data['image_3d'] = irep_handle_json_data($data['image_3d']);
         }
 
         if (!empty($data['gallery'])) {
-            $non_required_data['gallery'] = ire_handle_json_data($data['gallery']);
+            $non_required_data['gallery'] = irep_handle_json_data($data['gallery']);
         }
 
         // Merge required and optional data before inserting into the database
@@ -128,12 +128,12 @@ class IreType
         $this->wpdb->insert($this->table_name, $data);
 
         if ($this->wpdb->last_error) {
-            ire_send_json_response(false, 'Database error');
+            irep_send_json_response(false, 'Database error');
         } else {
             // Retrieve the newly inserted type and respond with the data
             $new_type_id = $this->wpdb->insert_id;
-            $new_type = ire_get($this->table_name, $new_type_id);
-            ire_send_json_response(true, $new_type);
+            $new_type = irep_get($this->table_name, $new_type_id);
+            irep_send_json_response(true, $new_type);
         }
     }
 
@@ -146,36 +146,36 @@ class IreType
      */
     public function update_type($data)
     {
-        irep_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the type ID is provided
         $type_id = isset($data['type_id']) ? intval($data['type_id']) : null;
         if (!$type_id) {
-            ire_send_json_response(false, 'type_id is required');
+            irep_send_json_response(false, 'type_id is required');
             return;
         }
 
         // Validate the required fields
-        $required_data = ire_check_required_data($data, ['title', 'area_m2']);
+        $required_data = irep_check_required_data($data, ['title', 'area_m2']);
 
         // Optional fields
         $keys = ['teaser', 'rooms_count'];
-        $params = ire_validate_and_sanitize_input($data, $keys, false);
+        $params = irep_validate_and_sanitize_input($data, $keys, false);
 
         // Merge required and optional fields
         $params = array_merge($required_data, $params);
 
         // Handle image fields if provided
         if (!empty($data['image_2d'])) {
-            $params['image_2d'] = ire_handle_json_data($data['image_2d']);
+            $params['image_2d'] = irep_handle_json_data($data['image_2d']);
         }
 
         if (!empty($data['image_3d'])) {
-            $params['image_3d'] = ire_handle_json_data($data['image_3d']);
+            $params['image_3d'] = irep_handle_json_data($data['image_3d']);
         }
 
         if (!empty($data['gallery'])) {
-            $params['gallery'] = ire_handle_json_data($data['gallery']);
+            $params['gallery'] = irep_handle_json_data($data['gallery']);
         }
 
         // Ensure image fields are null if not provided
@@ -196,9 +196,9 @@ class IreType
         $this->wpdb->update($this->table_name, $params, $where);
 
         if ($this->wpdb->last_error) {
-            ire_send_json_response(false, 'Database error');
+            irep_send_json_response(false, 'Database error');
         } else {
-            ire_send_json_response(true, 'Type updated successfully');
+            irep_send_json_response(true, 'Type updated successfully');
         }
     }
 
@@ -211,12 +211,12 @@ class IreType
      */
     public function delete_type($data)
     {
-        irep_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the type ID is provided
         $type_id = isset($data['type_id']) ? intval($data['type_id']) : null;
         if (!$type_id) {
-            ire_send_json_response(false, 'type_id is required');
+            irep_send_json_response(false, 'type_id is required');
             return;
         }
 
@@ -224,9 +224,9 @@ class IreType
         $delete_result = $this->wpdb->delete($this->table_name, ['id' => $type_id]);
 
         if ($delete_result) {
-            ire_send_json_response(true, 'Type deleted successfully');
+            irep_send_json_response(true, 'Type deleted successfully');
         } else {
-            ire_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            irep_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 
@@ -241,14 +241,14 @@ class IreType
     {
         // Handle 2D images
         if ($item['image_2d']) {
-            $image_2d_ids = ire_handle_json_data($item['image_2d']);
-            $item['image_2d'] = array_map('ire_get_image_instance', $image_2d_ids);
+            $image_2d_ids = irep_handle_json_data($item['image_2d']);
+            $item['image_2d'] = array_map('irep_get_image_instance', $image_2d_ids);
         }
 
         // Handle 3D images
         if ($item['image_3d']) {
-            $image_3d_ids = ire_handle_json_data($item['image_3d']);
-            $item['image_3d'] = array_map('ire_get_image_instance', $image_3d_ids);
+            $image_3d_ids = irep_handle_json_data($item['image_3d']);
+            $item['image_3d'] = array_map('irep_get_image_instance', $image_3d_ids);
         }
 
         // Return the modified item
@@ -257,46 +257,46 @@ class IreType
 }
 
 // Initialize the class
-$type = new IreType();
+$irep_type = new Irep_Type();
 
 // Action functions
-function ire_get_types()
+function irep_get_types()
 {
-    global $type;
+    global $irep_type;
 
-    $results = $type->get_types($_POST);
+    $results = $irep_type->get_types($_POST);
 
     if ($results === null) {
-        ire_send_json_response(false, 'something went wrong!');
+        irep_send_json_response(false, 'something went wrong!');
     }
 
     if (!$results[0]) {
-        ire_send_json_response(false, $results[1]);
+        irep_send_json_response(false, $results[1]);
     } else {
-        ire_send_json_response(true, $results[1]);
+        irep_send_json_response(true, $results[1]);
     }
 }
 
-function ire_create_type()
+function irep_create_type()
 {
-    global $type;
-    $type->create_type($_POST);
+    global $irep_type;
+    $irep_type->create_type($_POST);
 }
 
-function ire_update_type()
+function irep_update_type()
 {
-    global $type;
-    $type->update_type($_POST);
+    global $irep_type;
+    $irep_type->update_type($_POST);
 }
 
-function ire_delete_type()
+function irep_delete_type()
 {
-    global $type;
-    $type->delete_type($_POST);
+    global $irep_type;
+    $irep_type->delete_type($_POST);
 }
 
 // Add action hooks
-add_action('wp_ajax_ire_get_types', 'ire_get_types');
-add_action('wp_ajax_ire_create_type', 'ire_create_type');
-add_action('wp_ajax_ire_update_type', 'ire_update_type');
-add_action('wp_ajax_ire_delete_type', 'ire_delete_type');
+add_action('wp_ajax_irep_get_types', 'irep_get_types');
+add_action('wp_ajax_irep_create_type', 'irep_create_type');
+add_action('wp_ajax_irep_update_type', 'irep_update_type');
+add_action('wp_ajax_irep_delete_type', 'irep_delete_type');

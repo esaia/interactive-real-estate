@@ -62,7 +62,7 @@ const showDeleteFlatModal = (flat: FlatItem | null) => {
 
 const deleteFlat = async () => {
   await ajaxAxios.post("", {
-    action: "ire_delete_flat",
+    action: "irep_delete_flat",
     nonce: irePlugin.nonce,
     flat_id: deleteFlatId.value
   });
@@ -83,7 +83,7 @@ const submitForm = () => {
 
 const fetchFlats = async () => {
   const { data } = await ajaxAxios.post("", {
-    action: "ire_get_flats",
+    action: "irep_get_flats",
     nonce: irePlugin.nonce,
     project_id: id.value,
     sort_field: sortField.value,

@@ -63,7 +63,7 @@ const submitForm = async () => {
 
 const editAction = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
-    action: "ire_update_tooltip",
+    action: "irep_update_tooltip",
     action_id: props.activeAction?.id,
     ...params
   });
@@ -77,7 +77,7 @@ const editAction = async (params: any) => {
 
 const createAction = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
-    action: "ire_create_tooltip",
+    action: "irep_create_tooltip",
 
     ...params
   });

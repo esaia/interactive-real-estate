@@ -5,12 +5,12 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class IreMetaProject
+ * Class Irep_Meta_Project
  *
  * Manages the creation, retrieval, and updating of project metadata in the database.
  * This class provides methods to get project metadata and to either create new metadata or update existing metadata.
  */
-class IreMetaProject
+class Irep_Meta_Project
 {
     // Database connection object
     protected $wpdb;
@@ -26,7 +26,7 @@ class IreMetaProject
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'ire_project_meta';  // Table for project metadata
+        $this->table_name = $wpdb->prefix . 'irep_project_meta';  // Table for project metadata
     }
 
     /**
@@ -41,8 +41,8 @@ class IreMetaProject
     public function get_meta(array $data)
     {
         // Verify the nonce for security and check if project ID is valid
-        irep_check_nonce($data['nonce'], 'ire_nonce');
-        ire_has_project_id($data);
+        irep_check_nonce($data['nonce'], 'irep_nonce');
+        irep_has_project_id($data);
 
         // Prepare SQL query to fetch metadata for the given project ID
         $query = $this->wpdb->prepare(
@@ -71,12 +71,12 @@ class IreMetaProject
     public function create_or_update_meta($data)
     {
         // Verify the nonce for security and check if project ID is valid
-        irep_check_nonce($data['nonce'], 'ire_nonce');
-        ire_has_project_id($data);
+        irep_check_nonce($data['nonce'], 'irep_nonce');
+        irep_has_project_id($data);
 
         // Ensure 'meta_data' is provided and is an array
         if (!isset($data['meta_data']) || !is_array($data['meta_data'])) {
-            ire_send_json_response(false, 'Required fields are missing.');
+            irep_send_json_response(false, 'Required fields are missing.');
             return;
         }
 
@@ -84,7 +84,7 @@ class IreMetaProject
         foreach ($data['meta_data'] as $meta) {
             // Validate each meta key-value pair
             if (empty($meta['key']) || !isset($meta['value'])) {
-                ire_send_json_response(false, 'Meta key or value is missing.');
+                irep_send_json_response(false, 'Meta key or value is missing.');
                 return;
             }
 
@@ -110,7 +110,7 @@ class IreMetaProject
 
                 // If the update fails, send an error response
                 if ($update_result === false) {
-                    ire_send_json_response(false, 'Database error during update');
+                    irep_send_json_response(false, 'Database error during update');
                     return;
                 }
             } else {
@@ -126,51 +126,51 @@ class IreMetaProject
 
                 // If the insert fails, send an error response
                 if ($insert_result === false) {
-                    ire_send_json_response(false, 'Database error during insert');
+                    irep_send_json_response(false, 'Database error during insert');
                     return;
                 }
             }
         }
 
         // Send success response once the metadata has been added or updated
-        ire_send_json_response(true, 'Meta added or updated successfully');
+        irep_send_json_response(true, 'Meta added or updated successfully');
     }
 }
 
-// Initialize the class to create an instance of IreMetaProject
-$ire_meta = new IreMetaProject();
+// Initialize the class to create an instance of Irep_Meta_Project
+$irep_meta = new Irep_Meta_Project();
 
 /**
  * Action function to retrieve project metadata via AJAX.
- * This function is hooked to the 'wp_ajax_ire_get_meta' action.
+ * This function is hooked to the 'wp_ajax_irep_get_meta' action.
  */
-function ire_get_meta()
+function irep_get_meta()
 {
-    global $ire_meta;
+    global $irep_meta;
 
-    // Call the get_meta method of the IreMetaProject class
-    $results = $ire_meta->get_meta($_POST);
+    // Call the get_meta method of the Irep_Meta_Project class
+    $results = $irep_meta->get_meta($_POST);
 
     // Send a JSON response based on the results
     if (!$results[0]) {
-        ire_send_json_response(false, $results[1]);
+        irep_send_json_response(false, $results[1]);
     } else {
-        ire_send_json_response(true, $results[1]);
+        irep_send_json_response(true, $results[1]);
     }
 }
 
 /**
  * Action function to create or update project metadata via AJAX.
- * This function is hooked to the 'wp_ajax_ire_create_or_update_meta' action.
+ * This function is hooked to the 'wp_ajax_irep_create_or_update_meta' action.
  */
 function create_or_update_meta()
 {
-    global $ire_meta;
+    global $irep_meta;
 
-    // Call the create_or_update_meta method of the IreMetaProject class
-    $ire_meta->create_or_update_meta($_POST);
+    // Call the create_or_update_meta method of the Irep_Meta_Project class
+    $irep_meta->create_or_update_meta($_POST);
 }
 
 // Add AJAX action hooks for retrieving and creating/updating project metadata
-add_action('wp_ajax_ire_get_meta', 'ire_get_meta');
-add_action('wp_ajax_ire_create_or_update_meta', 'create_or_update_meta');
+add_action('wp_ajax_irep_get_meta', 'irep_get_meta');
+add_action('wp_ajax_irep_create_or_update_meta', 'create_or_update_meta');

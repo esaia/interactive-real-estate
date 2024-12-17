@@ -56,7 +56,7 @@ const updateProject = async () => {
 
   try {
     await ajaxAxios.post("", {
-      action: "ire_update_project",
+      action: "irep_update_project",
       nonce: irePlugin.nonce,
       ...params
     });
@@ -116,7 +116,7 @@ defineExpose({
 
         <div>
           <div class="font-semibold">Shortcode:</div>
-          <p>[ire_project id="{{ projectStore?.id }}"]</p>
+          <p>[irep_project id="{{ projectStore?.id }}"]</p>
         </div>
 
         <div class="cursor-pointer hover:underline" @click="showGenerateObject = true">

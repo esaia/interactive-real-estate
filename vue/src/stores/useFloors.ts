@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import { FloorItem, PolygonDataCollection } from "../../types/components";
-import { ire_transformSvgString } from "../composables/helpers";
+import { irep_transformSvgString } from "../composables/helpers";
 import ajaxAxios from "../utils/axios";
 
 export const useFloorsStore = defineStore("floors", () => {
@@ -66,7 +66,7 @@ export const useFloorsStore = defineStore("floors", () => {
 
   const fetchProjectFloors = async (id: number) => {
     const { data } = await ajaxAxios.post("", {
-      action: "ire_get_floors",
+      action: "irep_get_floors",
       nonce: irePlugin.nonce,
       project_id: id,
       per_page: 99999,
@@ -87,8 +87,8 @@ export const useFloorsStore = defineStore("floors", () => {
         return;
       }
 
-      activeFloor.value.svg = ire_transformSvgString(activeFloor.value.svg);
-      //  ire_transformSvgString(active);
+      activeFloor.value.svg = irep_transformSvgString(activeFloor.value.svg);
+      //  irep_transformSvgString(active);
     },
     { immediate: true }
   );

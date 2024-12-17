@@ -20,7 +20,7 @@ const showDeleteModal = ref(false);
 const deleteFlat = async () => {
   try {
     const { data } = await ajaxAxios.post("", {
-      action: "ire_delete_project",
+      action: "irep_delete_project",
       nonce: irePlugin.nonce,
       project_id: props.project?.id
     });

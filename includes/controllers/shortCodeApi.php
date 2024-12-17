@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
  * Handles the fetching of project data, including associated project elements such as floors, blocks, flats, types,
  * meta, and tooltips. This class consolidates all relevant data for a project and returns it in a structured format.
  */
-class ShortcodeApi
+class Irep_Shortcode_Api
 {
     /**
      * Fetches all project-related data including floors, blocks, flats, types, meta, and tooltips.
@@ -22,17 +22,17 @@ class ShortcodeApi
     public function fetch_project_data($data)
     {
         // Check nonce for security and validate the presence of a project ID
-        irep_check_nonce($data['nonce'], 'ire_nonce');
-        ire_has_project_id($data);
+        irep_check_nonce($data['nonce'], 'irep_nonce');
+        irep_has_project_id($data);
 
         // Initialize objects for interacting with different project components (floors, blocks, flats, etc.)
-        $project = new IreProject();
-        $floor = new IreFloor();
-        $block = new IreBlock();
-        $flat = new IreFlat();
-        $type = new IreType();
-        $meta = new IreMetaProject();
-        $tooltip = new IreTooltip();
+        $project = new Irep_Project();
+        $floor = new Irep_Floor();
+        $block = new Irep_Block();
+        $flat = new Irep_Flat();
+        $type = new Irep_Type();
+        $meta = new Irep_Meta_Project();
+        $tooltip = new Irep_Tooltip();
 
         // Set a high number for 'per_page' to fetch all related data at once
         $data['per_page'] = 9999;
@@ -177,7 +177,7 @@ class ShortcodeApi
         ];
 
         // Send the response back to the client
-        ire_send_json_response(true, $data);
+        irep_send_json_response(true, $data);
     }
 }
 
@@ -185,19 +185,19 @@ class ShortcodeApi
  * Handles the AJAX request to fetch project data.
  * This function is hooked to 'wp_ajax_' actions for authenticated and unauthenticated users.
  */
-function ire_get_shortcode_data()
+function irep_get_shortcode_data()
 {
     // Check if the request is valid and contains data
     if (!isset($_POST) || empty($_POST)) {
-        ire_send_json_response(false, 'Invalid request');
+        irep_send_json_response(false, 'Invalid request');
         return;
     }
 
     // Create an instance of ShortcodeApi and call the fetch_project_data method
-    $shortcode = new ShortcodeApi();
+    $shortcode = new Irep_Shortcode_Api();
     $shortcode->fetch_project_data($_POST);
 }
 
 // Register the AJAX actions for both authenticated and unauthenticated users
-add_action('wp_ajax_nopriv_get_shortcode_data', 'ire_get_shortcode_data');
-add_action('wp_ajax_get_shortcode_data', 'ire_get_shortcode_data');
+add_action('wp_ajax_nopriv_get_shortcode_data', 'irep_get_shortcode_data');
+add_action('wp_ajax_get_shortcode_data', 'irep_get_shortcode_data');

@@ -8,7 +8,7 @@ export const useTypesStore = defineStore("types", () => {
 
   const fetchProjectTypes = async (id: number) => {
     const { data } = await ajaxAxios.post("", {
-      action: "ire_get_types",
+      action: "irep_get_types",
       nonce: irePlugin.nonce,
       project_id: id,
       per_page: 99999

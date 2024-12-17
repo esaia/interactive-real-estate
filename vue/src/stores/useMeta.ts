@@ -25,7 +25,7 @@ export const useMetaStore = defineStore("meta", () => {
 
   const getProjectMeta = async () => {
     const { data } = await ajaxAxios.post("", {
-      action: "ire_get_meta",
+      action: "irep_get_meta",
       nonce: irePlugin.nonce,
       project_id: projectStore.id
     });
@@ -41,7 +41,7 @@ export const useMetaStore = defineStore("meta", () => {
 
   const setProjectMeta = async (metaArr: { key: string; value: any }[]) => {
     await ajaxAxios.post("", {
-      action: "ire_create_or_update_meta",
+      action: "irep_create_or_update_meta",
       nonce: irePlugin.nonce,
       project_id: projectStore.id,
       meta_data: metaArr

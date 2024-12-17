@@ -50,7 +50,7 @@ const showDeleteActionModal = (type: ActionItem | null) => {
 
 const deleteType = async () => {
   await ajaxAxios.post("", {
-    action: "ire_delete_tooltip",
+    action: "irep_delete_tooltip",
     nonce: irePlugin.nonce,
     action_id: deleteActionId.value
   });
@@ -67,7 +67,7 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
 
 const fetchActions = async () => {
   const { data } = await ajaxAxios.post("", {
-    action: "ire_get_tooltip",
+    action: "irep_get_tooltip",
     nonce: irePlugin.nonce,
     project_id: id.value,
     sort_field: sortField.value,

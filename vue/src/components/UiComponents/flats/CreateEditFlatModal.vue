@@ -121,7 +121,7 @@ const submitForm = async () => {
 
 const editFlat = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
-    action: "ire_update_flat",
+    action: "irep_update_flat",
     nonce: irePlugin.nonce,
     flat_id: props.activeFlat?.id,
     ...params
@@ -136,7 +136,7 @@ const editFlat = async (params: any) => {
 
 const createFlat = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
-    action: "ire_create_flat",
+    action: "irep_create_flat",
     nonce: irePlugin.nonce,
     ...params
   });

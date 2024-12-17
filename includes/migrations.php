@@ -4,18 +4,18 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-register_activation_hook(IREP_PLUGIN_FILE, 'ire_create_tables');
+register_activation_hook(IREP_PLUGIN_FILE, 'irep_create_tables');
 
 
 // Define a function to create tables if they don't already exist
-function ire_create_tables()
+function irep_create_tables()
 {
     global $wpdb;
 
     $charset_collate = $wpdb->get_charset_collate();
 
     // Table for projects
-    $projects_table_name = $wpdb->prefix . 'ire_projects';
+    $projects_table_name = $wpdb->prefix . 'irep_projects';
     $projects_sql = "CREATE TABLE $projects_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         title VARCHAR(255) NOT NULL,
@@ -35,7 +35,7 @@ function ire_create_tables()
     }
 
     // Table for blocks
-    $blocks_table_name = $wpdb->prefix . 'ire_blocks';
+    $blocks_table_name = $wpdb->prefix . 'irep_blocks';
     $blocks_sql = "CREATE TABLE $blocks_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         title VARCHAR(255) NOT NULL,
@@ -57,7 +57,7 @@ function ire_create_tables()
     }
 
     // Table for floors
-    $floors_table_name = $wpdb->prefix . 'ire_floors';
+    $floors_table_name = $wpdb->prefix . 'irep_floors';
     $floors_sql = "CREATE TABLE $floors_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         floor_number INT NOT NULL,
@@ -83,7 +83,7 @@ function ire_create_tables()
     }
 
     // Table for types
-    $types_table_name = $wpdb->prefix . 'ire_types';
+    $types_table_name = $wpdb->prefix . 'irep_types';
     $types_sql = "CREATE TABLE $types_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         title VARCHAR(255) NOT NULL,
@@ -106,7 +106,7 @@ function ire_create_tables()
     }
 
     // Table for flats
-    $flats_table_name = $wpdb->prefix . 'ire_flats';
+    $flats_table_name = $wpdb->prefix . 'irep_flats';
     $flats_sql = "CREATE TABLE $flats_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         block_id mediumint(9),
@@ -133,7 +133,7 @@ function ire_create_tables()
     }
 
     // Table for project metadata
-    $meta_table_name = $wpdb->prefix . 'ire_project_meta';
+    $meta_table_name = $wpdb->prefix . 'irep_project_meta';
     $meta_sql = "CREATE TABLE $meta_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         project_id mediumint(9) NOT NULL,
@@ -151,7 +151,7 @@ function ire_create_tables()
     }
 
     // Table for tooltips
-    $tooltip_table_name = $wpdb->prefix . 'ire_tooltip';
+    $tooltip_table_name = $wpdb->prefix . 'irep_tooltip';
     $tooltip_sql = "CREATE TABLE $tooltip_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         project_id mediumint(9) NOT NULL,

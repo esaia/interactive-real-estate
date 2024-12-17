@@ -5,20 +5,20 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class IreBlock
+ * Class Irep_Block
  *
  * Handles block-related operations in the project management system.
  * Provides methods to create, update, retrieve, and delete blocks from the database.
  *
- * @package IreBlock
+ * @package Irep_Block
  */
-class IreBlock
+class Irep_Block
 {
     protected $wpdb;
     protected $table_name;
 
     /**
-     * IreBlock constructor.
+     * Irep_Block constructor.
      *
      * Initializes the global $wpdb object and sets the table name.
      */
@@ -26,7 +26,7 @@ class IreBlock
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'ire_blocks';
+        $this->table_name = $wpdb->prefix . 'irep_blocks';
     }
 
     /**
@@ -48,11 +48,11 @@ class IreBlock
     public function get_block($data)
     {
         // Check nonce for security
-        irep_check_nonce($data['nonce'], 'ire_nonce');
-        ire_has_project_id($data);
+        irep_check_nonce($data['nonce'], 'irep_nonce');
+        irep_has_project_id($data);
 
         // Sanitize and filter sorting parameters
-        $data = ire_sanitize_sorting_parameters($data, ['id', 'title', 'conf']);
+        $data = irep_sanitize_sorting_parameters($data, ['id', 'title', 'conf']);
 
         // Base query for fetching blocks
         $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d";
@@ -119,16 +119,16 @@ class IreBlock
     public function create_block($data)
     {
         // Check nonce for security
-        irep_check_nonce($data['nonce'], 'ire_nonce');
-        ire_has_project_id($data);
+        irep_check_nonce($data['nonce'], 'irep_nonce');
+        irep_has_project_id($data);
 
         // Ensure required fields are present
         $required_fields = ['title', 'block_image', 'project_id'];
-        $required_data = ire_check_required_data($data, $required_fields);
+        $required_data = irep_check_required_data($data, $required_fields);
 
         // Sanitize and validate non-required fields
         $non_required_fields = ['conf', 'polygon_data', 'svg', 'img_contain'];
-        $non_required_data = ire_validate_and_sanitize_input($data, $non_required_fields, false);
+        $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
 
         // Merge required and non-required data
         $non_required_data['polygon_data'] = $data['polygon_data'] ?? null;
@@ -140,7 +140,7 @@ class IreBlock
 
         // Handle polygon data if provided
         if (isset($data['polygon_data'])) {
-            $data['polygon_data'] = ire_handle_json_data($data['polygon_data']);
+            $data['polygon_data'] = irep_handle_json_data($data['polygon_data']);
         }
 
         // Insert the new block data into the database
@@ -148,13 +148,14 @@ class IreBlock
 
         // Handle database insert errors
         if ($this->wpdb->last_error) {
-            ire_database_duplicate_error($this->wpdb, 'Block number already exists for this project.');
+            irep_database_duplicate_error($this->wpdb, 'Block number already exists for this project.');
         } else {
             // Get the inserted block ID and prepare the response
             $new_block_id = $this->wpdb->insert_id;
-            $new_block = ire_get($this->table_name, $new_block_id);
+            $new_block = irep_get($this->table_name, $new_block_id);
+
             $this->prepare_block_data($new_block);
-            ire_send_json_response(true, $new_block);
+            irep_send_json_response(true, $new_block);
         }
     }
 
@@ -178,21 +179,21 @@ class IreBlock
     public function update_block($data)
     {
         // Check nonce for security
-        irep_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the block_id is provided
         $block_id = isset($data['block_id']) ? intval($data['block_id']) : null;
         if (!$block_id) {
-            ire_send_json_response(false, 'block_id is required');
+            irep_send_json_response(false, 'block_id is required');
             return;
         }
 
         // Prepare the keys to be updated
         $required_fields = ['title', 'block_image'];
-        $required_data = ire_check_required_data($data, $required_fields);
+        $required_data = irep_check_required_data($data, $required_fields);
 
         $non_required_fields = ['conf', 'polygon_data', 'svg', 'img_contain'];
-        $non_required_data = ire_validate_and_sanitize_input($data, $non_required_fields, false);
+        $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
 
         // Merge required and non-required data
         $params  = array_merge($non_required_data, $required_data);
@@ -207,7 +208,7 @@ class IreBlock
         }
 
         // Handle polygon data and image containment
-        $params['polygon_data'] = ire_handle_json_data($data['polygon_data'] ?? '');
+        $params['polygon_data'] = irep_handle_json_data($data['polygon_data'] ?? '');
         $params['img_contain'] = $data['img_contain'] === 'true' ? 1 : 0;
 
         // Update the block in the database
@@ -216,9 +217,9 @@ class IreBlock
 
         // Handle database update errors
         if ($this->wpdb->last_error) {
-            ire_database_duplicate_error($this->wpdb, 'Block number already exists for this project.');
+            irep_database_duplicate_error($this->wpdb, 'Block number already exists for this project.');
         } else {
-            ire_send_json_response(true, 'Block updated successfully');
+            irep_send_json_response(true, 'Block updated successfully');
         }
     }
 
@@ -234,12 +235,12 @@ class IreBlock
     public function delete_block($data)
     {
         // Check nonce for security
-        irep_check_nonce($data['nonce'], 'ire_nonce');
+        irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the block_id is provided
         $block_id = isset($data['block_id']) ? intval($data['block_id']) : null;
         if (!$block_id) {
-            ire_send_json_response(false, 'block_id is required');
+            irep_send_json_response(false, 'block_id is required');
             return;
         }
 
@@ -248,9 +249,9 @@ class IreBlock
 
         // Handle delete result
         if ($delete_result) {
-            ire_send_json_response(true, 'Block deleted successfully');
+            irep_send_json_response(true, 'Block deleted successfully');
         } else {
-            ire_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            irep_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
     }
 
@@ -265,15 +266,15 @@ class IreBlock
     {
         // Process polygon data if available
         if ($item['polygon_data']) {
-            $item['polygon_data'] = ire_handle_json_data($item['polygon_data']);
+            $item['polygon_data'] = irep_handle_json_data($item['polygon_data']);
         }
 
         // Convert boolean-like fields
         $item['img_contain'] = $item['img_contain'] == 1;
 
         // Process block image and SVG
-        $item['block_image'] = [ire_get_image_instance($item['block_image'])];
-        $item['svg'] = ire_transformSvgString($item['svg']);
+        $item['block_image'] = [irep_get_image_instance($item['block_image'])];
+        $item['svg'] = irep_transformSvgString($item['svg']);
 
         return $item;
     }
@@ -289,77 +290,77 @@ class IreBlock
     {
         // Process polygon data if available
         if (isset($block->polygon_data)) {
-            $block->polygon_data = ire_handle_json_data($block->polygon_data);
+            $block->polygon_data = irep_handle_json_data($block->polygon_data);
         }
 
         // Process SVG data
-        $block->svg = ire_transformSvgString($block->svg);
+        $block->svg = irep_transformSvgString($block->svg);
 
         // Convert boolean-like fields
         $block->img_contain = $block->img_contain == 1;
 
         // Process block image
-        $block->block_image = [ire_get_image_instance($block->block_image)];
+        $block->block_image = [irep_get_image_instance($block->block_image)];
     }
 }
 
 // Initialize the class
-$block = new IreBlock();
+$irep_block = new Irep_Block();
 
 // Action functions
 
 /**
  * Retrieves blocks based on the current request and sends the response.
  *
- * Handles the `wp_ajax_ire_get_blocks` AJAX request.
+ * Handles the `wp_ajax_irep_get_blocks` AJAX request.
  */
-function ire_get_blocks()
+function irep_get_blocks()
 {
-    global $block;
-    $results = $block->get_block($_POST);
+    global $irep_block;
+    $results = $irep_block->get_block($_POST);
 
     if (!$results[0]) {
-        ire_send_json_response(false, $results[1]);
+        irep_send_json_response(false, $results[1]);
     } else {
-        ire_send_json_response(true, $results[1]);
+        irep_send_json_response(true, $results[1]);
     }
 }
 
 /**
  * Creates a new block based on the current request and sends the response.
  *
- * Handles the `wp_ajax_ire_create_block` AJAX request.
+ * Handles the `wp_ajax_irep_create_block` AJAX request.
  */
-function ire_create_block()
+function irep_create_block()
 {
-    global $block;
-    $block->create_block($_POST);
+    global $irep_block;
+    $irep_block->create_block($_POST);
 }
 
 /**
  * Updates an existing block based on the current request and sends the response.
  *
- * Handles the `wp_ajax_ire_update_block` AJAX request.
+ * Handles the `wp_ajax_irep_update_block` AJAX request.
  */
-function ire_update_block()
+function irep_update_block()
 {
-    global $block;
-    $block->update_block($_POST);
+    global $irep_block;
+    $irep_block->update_block($_POST);
 }
 
 /**
  * Deletes a block based on the current request and sends the response.
  *
- * Handles the `wp_ajax_ire_delete_block` AJAX request.
+ * Handles the `wp_ajax_irep_delete_block` AJAX request.
  */
-function ire_delete_block()
+function irep_delete_block()
 {
-    global $block;
-    $block->delete_block($_POST);
+    global $irep_block;
+    $irep_block->delete_block($_POST);
 }
 
 // Add action hooks
-add_action('wp_ajax_ire_get_blocks', 'ire_get_blocks');
-add_action('wp_ajax_ire_create_block', 'ire_create_block');
-add_action('wp_ajax_ire_update_block', 'ire_update_block');
-add_action('wp_ajax_ire_delete_block', 'ire_delete_block');
+add_action('wp_ajax_irep_get_blocks', 'irep_get_blocks');
+add_action('wp_ajax_irep_create_block', 'irep_create_block');
+add_action('wp_ajax_irep_update_block', 'irep_update_block');
+add_action('wp_ajax_irep_delete_block', 'irep_delete_block');

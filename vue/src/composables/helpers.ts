@@ -11,7 +11,7 @@ export const generateUniqueId = (length = 14) => {
   return "ui" + uniqueId;
 };
 
-export const ire_transformSvgString = (svgString: string) => {
+export const irep_transformSvgString = (svgString: string) => {
   // Remove backslashes and unescape characters
   // let transformedSvg = svgString
   //   .replace(/\\/g, "") // Remove backslashes

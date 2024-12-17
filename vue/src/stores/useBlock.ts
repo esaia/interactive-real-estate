@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import { BlockItem, PolygonDataCollection } from "../../types/components";
-import { ire_transformSvgString } from "../composables/helpers";
+import { irep_transformSvgString } from "../composables/helpers";
 import ajaxAxios from "../utils/axios";
 
 export const useBlocksStore = defineStore("blocks", () => {
@@ -66,7 +66,7 @@ export const useBlocksStore = defineStore("blocks", () => {
 
   const fetchProjectBLocks = async (id: number) => {
     const { data } = await ajaxAxios.post("", {
-      action: "ire_get_blocks",
+      action: "irep_get_blocks",
       nonce: irePlugin.nonce,
       project_id: id,
       per_page: 99999
@@ -86,8 +86,8 @@ export const useBlocksStore = defineStore("blocks", () => {
         return;
       }
 
-      activeBlock.value.svg = ire_transformSvgString(activeBlock.value.svg);
-      //  ire_transformSvgString(active);
+      activeBlock.value.svg = irep_transformSvgString(activeBlock.value.svg);
+      //  irep_transformSvgString(active);
     },
     { immediate: true }
   );

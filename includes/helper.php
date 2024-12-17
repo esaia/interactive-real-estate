@@ -28,7 +28,7 @@ function irep_check_nonce(?string $nonce, string $action): void
  * 
  * @return void Sends a JSON success or error response.
  */
-function ire_send_json_response(bool $success, $message): void
+function irep_send_json_response(bool $success, $message): void
 {
     if ($success) {
         wp_send_json_success($message);
@@ -44,7 +44,7 @@ function ire_send_json_response(bool $success, $message): void
  * 
  * @return mixed|null The decoded data if valid JSON, or null if there is a decoding error.
  */
-function ire_handle_json_data($data)
+function irep_handle_json_data($data)
 {
     if (is_array($data)) {
         return wp_json_encode($data);
@@ -68,7 +68,7 @@ function ire_handle_json_data($data)
  * 
  * @return array|null The sanitized data or null if required fields are missing or invalid.
  */
-function ire_validate_and_sanitize_input(array $data, array $keys, bool $required = true): ?array
+function irep_validate_and_sanitize_input(array $data, array $keys, bool $required = true): ?array
 {
     $sanitized_data = [];
     foreach ($keys as $key) {
@@ -95,7 +95,7 @@ function ire_validate_and_sanitize_input(array $data, array $keys, bool $require
  * 
  * @return void Stops execution after logging the data.
  */
-function ire_dd($data): void
+function irep_dd($data): void
 {
     error_log(print_r($data, true));
     die();
@@ -108,7 +108,7 @@ function ire_dd($data): void
  * 
  * @return array|null An array with image data or null if no image is found.
  */
-function ire_get_image_instance(int $image_id): ?array
+function irep_get_image_instance(int $image_id): ?array
 {
     $image_post = get_post($image_id);
     if (!$image_post) {
@@ -178,7 +178,7 @@ function ire_get_image_instance(int $image_id): ?array
  * 
  * @return array The sanitized and formatted sorting parameters.
  */
-function ire_sanitize_sorting_parameters(array $data, array $allowedSortFields)
+function irep_sanitize_sorting_parameters(array $data, array $allowedSortFields)
 {
     $allowedSortOrders = ['ASC', 'DESC'];
 
@@ -205,7 +205,7 @@ function ire_sanitize_sorting_parameters(array $data, array $allowedSortFields)
  * 
  * @return object|null The row as an object, or null if no row is found.
  */
-function ire_get($table_name, $id)
+function irep_get($table_name, $id)
 {
     global $wpdb;
 
@@ -215,10 +215,10 @@ function ire_get($table_name, $id)
     }
 
     // Prepare the SQL query with the sanitized table name
-    // $query = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}{$table_name} WHERE id = %d", intval($id));
+    // $query = $wpdb->prepare("SELECT * FROM {$table_name} WHERE id = %d", intval($id));
 
     // Execute the query
-    return $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}{$table_name} WHERE id = %d", intval($id)));
+    return $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table_name} WHERE id = %d", intval($id)));
 }
 
 /** 
@@ -228,12 +228,12 @@ function ire_get($table_name, $id)
  * 
  * @return void Sends a response if project_id is missing or invalid.
  */
-function ire_has_project_id(array $data)
+function irep_has_project_id(array $data)
 {
-    $data = ire_validate_and_sanitize_input($data, ['project_id']);
+    $data = irep_validate_and_sanitize_input($data, ['project_id']);
 
     if (!$data || $data['project_id'] < 0) {
-        ire_send_json_response(false, 'project_id is Required!');
+        irep_send_json_response(false, 'project_id is Required!');
         return;
     }
 }
@@ -247,12 +247,12 @@ function ire_has_project_id(array $data)
  * 
  * @return void Sends a JSON response indicating the error.
  */
-function ire_database_duplicate_error($wpdb, $duplicateMessage, $defaultErrorMessage = 'Database error')
+function irep_database_duplicate_error($wpdb, $duplicateMessage, $defaultErrorMessage = 'Database error')
 {
     if ($wpdb->last_error && strpos($wpdb->last_error, 'Duplicate entry') !== false) {
-        ire_send_json_response(false, $duplicateMessage);
+        irep_send_json_response(false, $duplicateMessage);
     } else {
-        ire_send_json_response(false, $defaultErrorMessage . ': ' . $wpdb->last_error);
+        irep_send_json_response(false, $defaultErrorMessage . ': ' . $wpdb->last_error);
     }
 }
 
@@ -264,11 +264,11 @@ function ire_database_duplicate_error($wpdb, $duplicateMessage, $defaultErrorMes
  * 
  * @return array|null The sanitized data if valid, or null if fields are missing.
  */
-function ire_check_required_data($data, $required_fields)
+function irep_check_required_data($data, $required_fields)
 {
-    $required_data = ire_validate_and_sanitize_input($data, $required_fields);
+    $required_data = irep_validate_and_sanitize_input($data, $required_fields);
     if (!$required_data) {
-        ire_send_json_response(false, 'Required fields are missing.');
+        irep_send_json_response(false, 'Required fields are missing.');
         return;
     }
     return $required_data;
@@ -281,7 +281,7 @@ function ire_check_required_data($data, $required_fields)
  * 
  * @return string The transformed SVG string.
  */
-function ire_transformSvgString($svgString)
+function irep_transformSvgString($svgString)
 {
     $transformedSvg = preg_replace('/\\\\/', '', $svgString); // Remove backslashes
     $transformedSvg = str_replace('&amp;', '&', $transformedSvg); // Unescape HTML entities

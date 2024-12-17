@@ -67,7 +67,7 @@ const submitForm = async () => {
 
 const editType = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
-    action: "ire_update_type",
+    action: "irep_update_type",
     nonce: irePlugin.nonce,
     type_id: props.activeType?.id,
     ...params
@@ -82,7 +82,7 @@ const editType = async (params: any) => {
 
 const createType = async (params: any) => {
   const { data } = await ajaxAxios.post("", {
-    action: "ire_create_type",
+    action: "irep_create_type",
     nonce: irePlugin.nonce,
     ...params
   });
