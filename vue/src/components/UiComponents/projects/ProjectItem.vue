@@ -61,7 +61,7 @@ const deleteFlat = async () => {
     </div>
   </div>
 
-  <Teleport to="#ire-vue-app">
+  <Teleport to="#irep-vue-app">
     <Transition name="fade">
       <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal

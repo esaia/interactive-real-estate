@@ -266,7 +266,7 @@ onMounted(() => {
     </div>
   </form>
 
-  <teleport to="#ire-vue-app">
+  <teleport to="#irep-vue-app">
     <Transition name="fade">
       <Modal v-if="showTypeModal" @close="closeTypeModal" type="2" width="w-[500px]">
         <CreateEditTypeModal :activeType="activeType" />

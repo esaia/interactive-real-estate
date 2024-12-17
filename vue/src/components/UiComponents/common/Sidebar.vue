@@ -213,7 +213,7 @@ watch(
         </div>
       </div>
 
-      <teleport to="#ire-vue-app">
+      <teleport to="#irep-vue-app">
         <Transition name="fade">
           <Modal v-if="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
             <CreateEditFloorModal />
@@ -233,7 +233,7 @@ watch(
         </Transition>
       </teleport>
 
-      <teleport to="#ire-vue-app">
+      <teleport to="#irep-vue-app">
         <Transition name="fade">
           <Modal v-if="showEditModal === 'tooltip'" @close="showEditModal = ''" type="2" width="w-[500px]">
             <CreateEditActionModal :activeAction="activeAction || null" />

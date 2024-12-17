@@ -165,7 +165,7 @@ onMounted(() => {
     <EmptyState v-else />
   </div>
 
-  <teleport to="#ire-vue-app">
+  <teleport to="#irep-vue-app">
     <Transition name="fade">
       <Modal v-if="showActionModal" @close="showActionModal = false" type="2" width="w-[500px]">
         <CreateEditActionModal
@@ -177,7 +177,7 @@ onMounted(() => {
     </Transition>
   </teleport>
 
-  <teleport to="#ire-vue-app">
+  <teleport to="#irep-vue-app">
     <Transition name="fade">
       <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal

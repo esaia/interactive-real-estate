@@ -89,7 +89,7 @@ watch(
       </div>
     </div>
 
-    <teleport to="#ire-vue-app">
+    <teleport to="#irep-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'tooltip'" type="2" width="w-11/12" @close="showModal = ''">
           <ActionList />
@@ -97,7 +97,7 @@ watch(
       </Transition>
     </teleport>
 
-    <teleport to="#ire-vue-app">
+    <teleport to="#irep-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'floor'" type="2" width="w-11/12" @close="showModal = ''">
           <FloorsList />
@@ -105,7 +105,7 @@ watch(
       </Transition>
     </teleport>
 
-    <teleport to="#ire-vue-app">
+    <teleport to="#irep-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'block'" type="2" width="w-11/12" @close="showModal = ''">
           <BlocksList />
@@ -113,7 +113,7 @@ watch(
       </Transition>
     </teleport>
 
-    <teleport to="#ire-vue-app">
+    <teleport to="#irep-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'flat'" type="2" width="w-11/12" @close="showModal = ''">
           <FlatsList />
@@ -121,7 +121,7 @@ watch(
       </Transition>
     </teleport>
 
-    <teleport to="#ire-vue-app">
+    <teleport to="#irep-vue-app">
       <Transition name="fade">
         <Modal v-if="showModal === 'type'" type="2" width="w-11/12" @close="showModal = ''">
           <TypesList />

@@ -89,7 +89,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <teleport to="#ire-vue-app">
+    <teleport to="#irep-vue-app">
       <Transition name="fade-in-out">
         <Modal v-if="showExampleImage" :show-close-btn="false">
           <div>

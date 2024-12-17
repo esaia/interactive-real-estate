@@ -177,7 +177,7 @@ onMounted(() => {
     <EmptyState v-else />
   </div>
 
-  <teleport to="#ire-vue-app">
+  <teleport to="#irep-vue-app">
     <Transition name="fade">
       <Modal v-if="showBlockModal" @close="showBlockModal = false" type="2">
         <CreateEditBlockModal :duplicatedBlock="duplicatedBlock" />
@@ -185,7 +185,7 @@ onMounted(() => {
     </Transition>
   </teleport>
 
-  <teleport to="#ire-vue-app">
+  <teleport to="#irep-vue-app">
     <Transition name="fade">
       <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal

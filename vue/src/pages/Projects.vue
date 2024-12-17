@@ -29,7 +29,7 @@ const isModalOpen = ref(false);
     </div>
   </div>
 
-  <teleport to="#ire-vue-app">
+  <teleport to="#irep-vue-app">
     <transition name="fade-in-out">
       <Modal v-if="isModalOpen" @close="isModalOpen = false">
         <AddProjectModal @close="isModalOpen = false" />

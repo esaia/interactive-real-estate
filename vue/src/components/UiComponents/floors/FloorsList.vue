@@ -208,7 +208,7 @@ onMounted(() => {
     <EmptyState v-else />
   </div>
 
-  <teleport to="#ire-vue-app">
+  <teleport to="#irep-vue-app">
     <Transition name="fade">
       <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2">
         <CreateEditFloorModal :duplicatedFloor="duplicatedFloor" />
@@ -216,7 +216,7 @@ onMounted(() => {
     </Transition>
   </teleport>
 
-  <teleport to="#ire-vue-app">
+  <teleport to="#irep-vue-app">
     <Transition name="fade">
       <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal
