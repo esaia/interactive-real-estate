@@ -77,3 +77,6 @@ To rebuild the minified JavaScript files, follow these steps:
 == Changelog ==
 = 1.0 =
 * Initial release of the Interactive Real Estate plugin.
+
+= 1.1 =
+* Fixed all issues that wp reviewer mentioned
