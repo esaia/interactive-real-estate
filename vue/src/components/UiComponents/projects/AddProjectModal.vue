@@ -23,17 +23,21 @@ const onFormSubmits = async () => {
   }
 
   try {
-    await ajaxAxios.post("", {
+    const { data } = await ajaxAxios.post("", {
       action: "irep_create_project",
       nonce: irePlugin.nonce,
       title: title.value,
       project_image: selectedImage.value?.[0]?.id,
       svg: ""
     });
-    emit("close");
-    showToast("success", "Project created successfully!");
 
-    projectStore.fetchProjects(null);
+    if (data.success) {
+      emit("close");
+      showToast("success", "Project created successfully!");
+      projectStore.fetchProjects(null);
+    } else {
+      showToast("error", "Something went wrong!");
+    }
   } catch (error) {
     showToast("error", "Something went wrong!");
   }
