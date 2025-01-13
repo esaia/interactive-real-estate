@@ -119,6 +119,10 @@ defineExpose({
           <p>[irep_project id="{{ projectStore?.id }}"]</p>
         </div>
 
+        <a href="https://youtu.be/dQmqouszdK0" target="_blank" class="animate-pulse underline">
+          Watch video tutorial
+        </a>
+
         <!-- <div class="cursor-pointer hover:underline" @click="showGenerateObject = true">
           Generate data for standalone version
         </div> -->

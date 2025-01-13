@@ -212,7 +212,7 @@ onUnmounted(() => {
     <div class="h-fit flex-1">
       <Canvas
         v-if="activeFloor"
-        :projectImage="activeFloor?.floor_image?.[0].url"
+        :projectImage="activeFloor?.floor_image?.[0]?.url"
         :polygon_data="activeFloor?.polygon_data"
         :svgRef="floorSvgRef"
         :svg="activeFloor.svg"
@@ -227,7 +227,7 @@ onUnmounted(() => {
       />
       <Canvas
         v-else-if="duplicatedFloor"
-        :projectImage="duplicatedFloor?.floor_image?.[0].url"
+        :projectImage="duplicatedFloor?.floor_image?.[0]?.url"
         :polygon_data="duplicatedFloorPolygonData"
         :svgRef="floorSvgRef"
         :svg="irep_transformSvgString(duplicatedFloor.svg)"

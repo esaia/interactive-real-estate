@@ -17,8 +17,8 @@ const fetchData = async () => {
     const { data } = await ajaxAxios.post("", {
       action: "get_shortcode_data",
       nonce: irePlugin.nonce,
-      project_id: props?.projectId,
-      block: "all"
+      project_id: props?.projectId
+      // block: "all"
     });
 
     if (data.success) {
