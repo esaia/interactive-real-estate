@@ -74,17 +74,25 @@ function irep_validate_and_sanitize_input(array $data, array $keys, bool $requir
     foreach ($keys as $key) {
         if (array_key_exists($key, $data)) {
 
-            $sanitized_data[$key] = isset($data[$key]) && is_string($data[$key]) && !empty(($data[$key]))
-                ? sanitize_text_field($data[$key])
-                : null;
+            // Handle different types of inputs
+            if (is_string($data[$key]) && is_email($data[$key])) {
+                $sanitized_data[$key] = sanitize_email($data[$key]);
+            } elseif (is_string($data[$key]) && isset($data[$key]) && $data[$key] !== '') {
+                $sanitized_data[$key] = sanitize_text_field($data[$key]);
+            } elseif (is_numeric($data[$key]) && isset($data[$key]) && $data[$key] > 0) {
+                $sanitized_data[$key] = intval($data[$key]);
+            }
 
-            if (!$sanitized_data[$key] && $required) {
-                return null;
+
+            if ((!isset($sanitized_data[$key]) || !$sanitized_data[$key]) && $required) {
+                return null;  // Return null if data is required and sanitization fails
             }
         } elseif ($required) {
-            return null;
+            return null;  // Return null if a required field is missing
         }
     }
+
+
     return $sanitized_data;
 }
 
@@ -266,7 +274,9 @@ function irep_database_duplicate_error($wpdb, $duplicateMessage, $defaultErrorMe
  */
 function irep_check_required_data($data, $required_fields)
 {
-    $required_data = irep_validate_and_sanitize_input($data, $required_fields);
+    $required_data = irep_validate_and_sanitize_input($data, $required_fields, true);
+
+
     if (!$required_data) {
         irep_send_json_response(false, 'Required fields are missing.');
         return;

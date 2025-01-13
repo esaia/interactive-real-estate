@@ -38,6 +38,17 @@ class Irep_Type
      */
     public function get_types($data)
     {
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'sort_field'   => isset($data['sort_field']) ? sanitize_text_field($data['sort_field']) : '',
+            'sort_order'   => isset($data['sort_order']) ? sanitize_text_field($data['sort_order']) : '',
+            'page'         => isset($data['page']) ? absint($data['page']) : 1,
+            'per_page'     => isset($data['per_page']) ? absint($data['per_page']) : 8,
+            'search'       => isset($data['search']) ? sanitize_text_field($data['search']) : '',
+        ];
+
+
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);
 
@@ -98,6 +109,21 @@ class Irep_Type
      */
     public function create_type($data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'type_id'      => isset($data['type_id']) ? absint($data['type_id']) : 0,
+            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'teaser'  => isset($data['teaser']) ? sanitize_text_field($data['teaser']) : '',
+            'area_m2' => isset($data['area_m2']) ? absint($data['area_m2']) : 0,
+            'rooms_count' => isset($data['rooms_count']) ? absint($data['rooms_count']) : 0,
+            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'image_2d' => $data['image_2d'],
+            'image_3d' => $data['image_3d'],
+        ];
+
+
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);
 
@@ -146,6 +172,20 @@ class Irep_Type
      */
     public function update_type($data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'type_id'      => isset($data['type_id']) ? absint($data['type_id']) : 0,
+            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'teaser'  => isset($data['teaser']) ? sanitize_text_field($data['teaser']) : '',
+            'area_m2' => isset($data['area_m2']) ? absint($data['area_m2']) : 0,
+            'rooms_count' => isset($data['rooms_count']) ? absint($data['rooms_count']) : 0,
+            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'image_2d' => $data['image_2d'],
+            'image_3d' => $data['image_3d'],
+        ];
+
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the type ID is provided

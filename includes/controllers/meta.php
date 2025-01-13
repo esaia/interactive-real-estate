@@ -40,6 +40,12 @@ class Irep_Meta_Project
      */
     public function get_meta(array $data)
     {
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+        ];
+
         // Verify the nonce for security and check if project ID is valid
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);
@@ -70,6 +76,14 @@ class Irep_Meta_Project
      */
     public function create_or_update_meta($data)
     {
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'meta_data' => $data['meta_data']
+        ];
+
+
         // Verify the nonce for security and check if project ID is valid
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);

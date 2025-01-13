@@ -3,7 +3,7 @@ Contributors: esaia
 Tags: interactive, real estate, property display, SVG, hotspots, floor plan, real estate plugin, property listing, interactive buildings, pins, polygon, svg  
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.3
+Stable tag: 1.6
 Plugin URI: https://interactive-real-estate.vercel.app/
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -91,10 +91,20 @@ This video covers:
 * Initial release of the Interactive Real Estate plugin.
 
 = 1.1 =
-* Fixed all issues that wp reviewer mentioned
+* fix: all issues that wp reviewer mentioned
 
 = 1.2 =
 * Update readme add Video Tutorial section
 
 = 1.3 =
 * fix: sqlite problem on db table migrations on plugin activation
+
+= 1.4 =
+* fix: databas table migrations problem
+
+= 1.5 =
+* refactor: sanitize data
+
+= 1.6 =
+* refactor: sanitize data in every controller method
+

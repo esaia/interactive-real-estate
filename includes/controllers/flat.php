@@ -37,8 +37,26 @@ class Irep_Flat
      */
     public function get_flats($data)
     {
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'sort_field'   => isset($data['sort_field']) ? sanitize_text_field($data['sort_field']) : '',
+            'sort_order'   => isset($data['sort_order']) ? sanitize_text_field($data['sort_order']) : '',
+            'block'        => isset($data['block']) && $data['block'] !== 'null' ? sanitize_text_field($data['block']) : 'null',
+            'floor'        => isset($data['floor']) ? absint($data['floor']) : 0,
+            'search'       => isset($data['search']) ? sanitize_text_field($data['search']) : '',
+            'page'         => isset($data['page']) ? absint($data['page']) : 1,
+            'per_page'     => isset($data['per_page']) ? absint($data['per_page']) : 8,
+            'offset'       => isset($data['page']) ? (absint($data['page']) - 1) * absint($data['per_page']) : 0,
+        ];
+
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);
+
+        if (empty($data['project_id']) || $data['project_id'] <= 0) {
+            irep_send_json_response(false, 'Invalid project_id provided!');
+            return;
+        }
 
         // Sanitize and filter sorting parameters
         $data = irep_sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf', 'block_id']);
@@ -115,14 +133,42 @@ class Irep_Flat
      */
     public function create_flat($data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'flat_id'      => isset($data['flat_id']) ? absint($data['flat_id']) : 0,
+            'flat_number'  => isset($data['flat_number']) ? sanitize_text_field($data['flat_number']) : '',
+            'conf'         => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
+            'type_id'      => isset($data['type_id']) ? absint($data['type_id']) : 0,
+            'floor_number' => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
+            'price'        => isset($data['price']) ? floatval($data['price']) : 0.0,
+            'offer_price'  => isset($data['offer_price']) ? floatval($data['offer_price']) : 0.0,
+            'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
+            'type' => [
+                'title'       => isset($data['type']['title']) ? sanitize_text_field($data['type']['title']) : '',
+                'teaser'      => isset($data['type']['teaser']) ? sanitize_textarea_field($data['type']['teaser']) : '',
+                'area_m2'     => isset($data['type']['area_m2']) ? floatval($data['type']['area_m2']) : 0.0,
+                'image_2d'    => isset($data['type']['image_2d']) && is_array($data['type']['image_2d'])
+                    ? array_map('absint', $data['type']['image_2d'])
+                    : [],
+                'image_3d'    => isset($data['type']['image_3d']) && is_array($data['type']['image_3d'])
+                    ? array_map('absint', $data['type']['image_3d'])
+                    : [],
+                'rooms_count' => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
+            ],
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'use_type'     => isset($data['use_type']) && rest_sanitize_boolean($data['use_type'])
+        ];
+
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Define required and non-required fields
-        $required_fields = ['flat_number', 'price', 'use_type', 'project_id'];
-        $non_required_fields = ['floor_number', 'offer_price', 'conf', 'block_id'];
+        $required_fields = ['flat_number', 'price', 'project_id'];
+        $non_required_fields = ['floor_number', 'offer_price', 'conf', 'block_id', 'use_type'];
 
         // Adjust required fields based on use type
-        if (isset($data['use_type']) && $data['use_type'] === 'true') {
+        if ($data['use_type']) {
             $required_fields[] = 'type_id';
         } else {
             $non_required_fields[] = 'type_id';
@@ -161,6 +207,34 @@ class Irep_Flat
      */
     public function update_flat($data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'flat_id'      => isset($data['flat_id']) ? absint($data['flat_id']) : 0,
+            'flat_number'  => isset($data['flat_number']) ? sanitize_text_field($data['flat_number']) : '',
+            'conf'         => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
+            'type_id'      => isset($data['type_id']) ? absint($data['type_id']) : 0,
+            'floor_number' => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
+            'price'        => isset($data['price']) ? floatval($data['price']) : 0.0,
+            'offer_price'  => isset($data['offer_price']) ? floatval($data['offer_price']) : 0.0,
+            'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
+            'type' => [
+                'title'       => isset($data['type']['title']) ? sanitize_text_field($data['type']['title']) : '',
+                'teaser'      => isset($data['type']['teaser']) ? sanitize_textarea_field($data['type']['teaser']) : '',
+                'area_m2'     => isset($data['type']['area_m2']) ? floatval($data['type']['area_m2']) : 0.0,
+                'image_2d'    => isset($data['type']['image_2d']) && is_array($data['type']['image_2d'])
+                    ? array_map('absint', $data['type']['image_2d'])
+                    : [],
+                'image_3d'    => isset($data['type']['image_3d']) && is_array($data['type']['image_3d'])
+                    ? array_map('absint', $data['type']['image_3d'])
+                    : [],
+                'rooms_count' => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
+            ],
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'use_type'     => isset($data['use_type']) && $data['use_type'] === 'true'  ? 'true' : 'false'
+        ];
+
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the flat ID is provided

@@ -44,6 +44,13 @@ class Irep_Project
      */
     public function get_projects(array $data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+        ];
+
         // Verify nonce for security to prevent CSRF attacks.
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
@@ -93,6 +100,16 @@ class Irep_Project
      */
     public function create_project($data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'project_image' => isset($data['project_image']) ? absint($data['project_image']) : 0,
+            'svg' =>  isset($data['svg']) ? sanitize_text_field($data['svg']) : '',
+        ];
+
+
         // Verify nonce for security.
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
@@ -108,7 +125,8 @@ class Irep_Project
                 'title' => $title,
                 'project_image' => $project_image,
                 'svg' => '',
-                'slug' => $slug
+                'slug' => $slug,
+                'polygon_data' => '{}',
             ]
         );
 
@@ -129,6 +147,19 @@ class Irep_Project
      */
     public function update_project($data)
     {
+
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'projectId' => isset($data['projectId']) ? absint($data['projectId']) : 0,
+            'slug'  => isset($data['slug']) ? sanitize_text_field($data['slug']) : '',
+            'project_image' => isset($data['project_image']) ? absint($data['project_image']) : 0,
+            'svg' =>  $data['svg'],
+            'polygon_data' => $data['polygon_data']
+        ];
+
         // Verify nonce for security.
         irep_check_nonce($data['nonce'], 'irep_nonce');
 

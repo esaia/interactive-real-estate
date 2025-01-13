@@ -40,6 +40,17 @@ class Irep_Floor
      */
     public function get_floors($data)
     {
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'sort_field'   => isset($data['sort_field']) ? sanitize_text_field($data['sort_field']) : '',
+            'sort_order'   => isset($data['sort_order']) ? sanitize_text_field($data['sort_order']) : '',
+            'page'         => isset($data['page']) ? absint($data['page']) : 1,
+            'per_page'     => isset($data['per_page']) ? absint($data['per_page']) : 8,
+            'search'       => isset($data['search']) ? sanitize_text_field($data['search']) : '',
+            'block'        => isset($data['block']) && $data['block'] !== 'null' ? sanitize_text_field($data['block']) : 'null',
+        ];
+
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
@@ -116,6 +127,22 @@ class Irep_Floor
      */
     public function create_floor($data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'floor_number'      => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
+            'floor_id'      => isset($data['floor_id']) ? absint($data['floor_id']) : 0,
+            'conf'  => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
+            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'block_id' => isset($data['block_id']) ? absint($data['block_id']) : 0,
+            'floor_image' => $data['floor_image'],
+            'svg'  => $data['svg'],
+            'polygon_data' => $data['polygon_data'],
+            'img_contain'     =>  $data['img_contain'],
+        ];
+
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
@@ -172,6 +199,21 @@ class Irep_Floor
      */
     public function update_floor($data)
     {
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'floor_number'      => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
+            'floor_id'      => isset($data['floor_id']) ? absint($data['floor_id']) : 0,
+            'conf'  => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
+            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'block_id' => isset($data['block_id']) ? absint($data['block_id']) : 0,
+            'floor_image' => $data['floor_image'] ?? 0,
+            'svg'  => $data['svg'],
+            'polygon_data' => $data['polygon_data'],
+            'img_contain'     =>  $data['img_contain'],
+        ];
+
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
@@ -184,9 +226,10 @@ class Irep_Floor
 
         // Prepare the keys to be updated
         $keys = ['floor_number', 'title', 'conf', 'floor_image', 'polygon_data', 'svg', 'img_contain', 'block_id'];
-        $params = array_filter($data, function ($key) use ($keys) {
-            return in_array($key, $keys);
-        }, ARRAY_FILTER_USE_KEY);
+        $params = array_filter($data, function ($value, $key) use ($keys) {
+            return in_array($key, $keys) && $value;
+        }, ARRAY_FILTER_USE_BOTH);
+
 
         // Handle optional fields
         if (empty($params['block_id'])) {
@@ -225,6 +268,12 @@ class Irep_Floor
      */
     public function delete_floor($data)
     {
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'floor_id'      => isset($data['floor_id']) ? absint($data['floor_id']) : 0,
+        ];
+
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 

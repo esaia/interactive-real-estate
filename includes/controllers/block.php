@@ -47,6 +47,17 @@ class Irep_Block
      */
     public function get_block($data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'sort_field'   => isset($data['sort_field']) ? sanitize_text_field($data['sort_field']) : '',
+            'sort_order'   => isset($data['sort_order']) ? sanitize_text_field($data['sort_order']) : '',
+            'page'         => isset($data['page']) ? absint($data['page']) : 1,
+            'per_page'     => isset($data['per_page']) ? absint($data['per_page']) : 8,
+            'search'       => isset($data['search']) ? sanitize_text_field($data['search']) : '',
+        ];
+
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);
@@ -118,6 +129,19 @@ class Irep_Block
      */
     public function create_block($data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'conf'  => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
+            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'block_image' => $data['block_image'],
+            'svg'  => $data['svg'],
+            'polygon_data' => $data['polygon_data'],
+            'img_contain'     =>  $data['img_contain'],
+        ];
+
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);
@@ -178,6 +202,21 @@ class Irep_Block
      */
     public function update_block($data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'block_id'      => isset($data['block_id']) ? absint($data['block_id']) : 0,
+            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'conf'  => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
+            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'block_image' => $data['block_image'],
+            'svg'  => $data['svg'],
+            'polygon_data' => $data['polygon_data'],
+            'img_contain'     =>  $data['img_contain'],
+        ];
+
+
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
@@ -234,6 +273,12 @@ class Irep_Block
      */
     public function delete_block($data)
     {
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'block_id'      => isset($data['block_id']) ? absint($data['block_id']) : 0,
+        ];
+
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 

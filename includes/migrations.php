@@ -22,10 +22,10 @@ function irep_create_tables()
     CREATE TABLE $projects_table_name (
         id mediumint(9) NOT NULL " . ($isSQLite ? "INTEGER PRIMARY KEY AUTOINCREMENT" : "AUTO_INCREMENT") . ",
         title VARCHAR(255) NOT NULL,
-        svg LONGTEXT NOT NULL,
+        svg LONGTEXT,
         project_image INT NOT NULL,
-        slug VARCHAR(255) NOT NULL,
-        polygon_data " . ($isSQLite ? "TEXT" : "JSON") . " NOT NULL,
+        slug VARCHAR(255),
+        polygon_data " . ($isSQLite ? "TEXT" : "JSON") . ",
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
@@ -33,7 +33,6 @@ function irep_create_tables()
 
     // Check if projects table exists, if not, create it
     if (!$wpdb->get_var("SHOW TABLES LIKE '$projects_table_name'")) {
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($projects_sql);
     }
 

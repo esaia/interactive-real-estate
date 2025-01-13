@@ -41,6 +41,17 @@ class Irep_Tooltip
      */
     public function get_tooltip(array $data)
     {
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'sort_field'   => isset($data['sort_field']) ? sanitize_text_field($data['sort_field']) : '',
+            'sort_order'   => isset($data['sort_order']) ? sanitize_text_field($data['sort_order']) : '',
+            'page'         => isset($data['page']) ? absint($data['page']) : 1,
+            'per_page'     => isset($data['per_page']) ? absint($data['per_page']) : 8,
+            'search'       => isset($data['search']) ? sanitize_text_field($data['search']) : '',
+        ];
+
+
         // Verify nonce for security and check if project ID is valid
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);
@@ -161,6 +172,17 @@ class Irep_Tooltip
      */
     public function update_tooltip($data)
     {
+
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'action_id' => isset($data['action_id']) ? absint($data['action_id']) : 0,
+            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'data'     =>  $data['data'],
+        ];
+
+
         // Verify nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
@@ -194,6 +216,12 @@ class Irep_Tooltip
      */
     public function delete_tooltip($data)
     {
+        $data = [
+            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'action_id' => isset($data['action_id']) ? absint($data['action_id']) : 0,
+        ];
+
         // Verify nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 

@@ -24,6 +24,7 @@ class Irep_Shortcode_Api
         // Check nonce for security and validate the presence of a project ID
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);
+        $data['block'] = 'all';
 
         // Initialize objects for interacting with different project components (floors, blocks, flats, etc.)
         $project = new Irep_Project();
