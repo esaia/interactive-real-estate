@@ -3,7 +3,7 @@ Contributors: esaia
 Tags: interactive, real estate, property display, SVG, hotspots, floor plan, real estate plugin, property listing, interactive buildings, pins, polygon, svg  
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.6
+Stable tag: 1.7
 Plugin URI: https://interactive-real-estate.vercel.app/
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -107,4 +107,8 @@ This video covers:
 
 = 1.6 =
 * refactor: sanitize data in every controller method
+
+= 1.7 =
+* fix: Bugs when creating the first polygons in a newly created project. 
+
 
