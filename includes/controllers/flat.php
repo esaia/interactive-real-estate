@@ -183,7 +183,6 @@ class Irep_Flat
 
         // Handle the type data as JSON
         $params['type'] = irep_handle_json_data($data['type']);
-        $params['use_type'] = $params['use_type'] === 'true' ? 1 : 0;
 
         // Insert the new flat into the database
         $this->wpdb->insert($this->table_name, $params);
@@ -232,8 +231,9 @@ class Irep_Flat
                 'rooms_count' => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
             ],
             'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
-            'use_type'     => isset($data['use_type']) && $data['use_type'] === 'true'  ? 'true' : 'false'
+            'use_type'     => isset($data['use_type']) && rest_sanitize_boolean($data['use_type'])
         ];
+
 
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
@@ -245,8 +245,8 @@ class Irep_Flat
         }
 
         // Define required fields
-        $required_fields = ['flat_number', 'price', 'use_type'];
-        if (isset($data['use_type']) && $data['use_type'] === 'true') {
+        $required_fields = ['flat_number', 'price'];
+        if (isset($data['use_type']) && $data['use_type']) {
             $required_fields[] = 'type_id';
         }
 
@@ -254,7 +254,7 @@ class Irep_Flat
         $required_data = irep_check_required_data($data, $required_fields);
 
         // Define and validate optional fields
-        $keys = ['floor_number', 'project_id', 'block_id', 'offer_price', 'conf'];
+        $keys = ['floor_number', 'project_id', 'block_id', 'offer_price', 'conf', 'use_type'];
         $params = irep_validate_and_sanitize_input($data, $keys, false);
 
         // Merge required and optional fields
@@ -265,7 +265,6 @@ class Irep_Flat
             $params['block_id'] = null;
         }
         $params['type'] = irep_handle_json_data($data['type']);
-        $params['use_type'] = $params['use_type'] === 'true' ? 1 : 0;
 
         // Update the flat record in the database
         $where = ['id' => $flat_id];
