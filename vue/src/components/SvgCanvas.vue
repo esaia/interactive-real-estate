@@ -336,6 +336,7 @@ const closeShape = () => {
   svgCanvas.value.removeEventListener("mousemove", onCanvasMouseMove);
 
   const generatedKey = generateUniqueId();
+
   group.value.setAttribute("id", generatedKey);
 
   emit("addPolygonData", generatedKey);

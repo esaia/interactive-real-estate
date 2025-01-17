@@ -24,16 +24,20 @@ export const useProjectStore = defineStore("project", () => {
   const activeGroup = ref<SVGGElement | null>(null);
 
   const addPolygonData = (key: string) => {
+    if (!polygon_data.value.length) {
+      polygon_data.value = [];
+    }
+
     polygon_data.value = [...polygon_data.value, { id: "", key, type: "" }];
   };
 
   const editpoligonData = (key: string, updatedData: PolygonDataCollection) => {
-    const index = polygon_data.value.findIndex((polygon) => polygon.key === key);
-
+    const index = polygon_data.value?.findIndex((polygon) => polygon.key === key);
+    console.log(index);
     if (index !== -1) {
       polygon_data.value[index] = { ...polygon_data.value[index], ...updatedData };
     } else {
-      console.error(`Polygon with id ${id} not found.`);
+      console.error(`Polygon with id ${id.value} not found.`);
     }
   };
 
