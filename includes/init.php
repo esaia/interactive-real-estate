@@ -26,6 +26,15 @@ function irep_add_admin_menu()
         'dashicons-building',      // The icon for the menu item (a building icon)
         100                        // The position of the menu item in the admin menu (higher numbers push it lower)
     );
+
+    add_submenu_page(
+        'ire',                     // The slug of the parent menu
+        'Submenu Title',           // The title of the submenu page
+        'Submenu',                 // The text displayed in the submenu
+        'manage_options',          // The capability required for access
+        'ire-submenu',             // The unique slug for the submenu page
+        'irep_render_submenu_page' // The callback function that renders the submenu content
+    );
 }
 
 /**
@@ -37,6 +46,11 @@ function irep_render_page()
 {
     // Include the template file that will generate the admin page content
     include_once plugin_dir_path(IREP_PLUGIN_FILE) . './templates/index.php';
+}
+
+function irep_render_submenu_page()
+{
+    include_once plugin_dir_path(IREP_PLUGIN_FILE) . './templates/submenu.php';
 }
 
 
