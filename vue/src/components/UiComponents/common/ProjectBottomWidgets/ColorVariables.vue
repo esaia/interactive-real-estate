@@ -46,18 +46,25 @@ defineExpose({
 
 <template>
   <div class="grid grid-cols-2 flex-col gap-4">
-    <ColorPicker label="path" v-model="colors.path" />
-    <ColorPicker label="path hover" v-model="colors.path_hover" />
-    <ColorPicker label="reserved path" v-model="colors.reserved" />
-    <ColorPicker label="sold path" v-model="colors.sold" />
-    <ColorPicker label="stroke" v-model="colors.stroke" />
+    <ColorPicker label="path" v-model="colors.path" :disabled="!irePlugin?.is_premium" />
+    <ColorPicker label="path hover" v-model="colors.path_hover" :disabled="!irePlugin?.is_premium" />
+    <ColorPicker label="reserved path" v-model="colors.reserved" :disabled="!irePlugin?.is_premium" />
+    <ColorPicker label="sold path" v-model="colors.sold" :disabled="!irePlugin?.is_premium" />
+    <ColorPicker label="stroke" v-model="colors.stroke" :disabled="!irePlugin?.is_premium" />
 
     <div>
       <label>
         <p class="label">Stroke width</p>
 
         <div class="flex flex-col">
-          <input type="range" v-model="colors.stroke_width" min="0" max="20" step="0.1" />
+          <input
+            type="range"
+            v-model="colors.stroke_width"
+            min="0"
+            max="20"
+            step="0.1"
+            :disabled="!irePlugin?.is_premium"
+          />
         </div>
       </label>
       <p>

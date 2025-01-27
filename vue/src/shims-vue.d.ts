@@ -7,6 +7,7 @@ declare module "@vue/runtime-core" {
       ajax_url: string;
       plugin_url: string;
       plugin_assets_path: string;
+      is_premium: boolean;
     };
   }
 }

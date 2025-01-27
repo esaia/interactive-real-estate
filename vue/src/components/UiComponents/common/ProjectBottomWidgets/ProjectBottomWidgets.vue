@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "../../../../stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
-import { resetCanvasAfterSave, showToast } from "@/src/composables/helpers";
+import { pushToPlansPage, resetCanvasAfterSave, showToast } from "@/src/composables/helpers";
 import { onMounted, ref, watch } from "vue";
 import { imageInterface } from "@/types/components";
 import UploadImg from "../../form/UploadImg.vue";
@@ -137,8 +137,15 @@ defineExpose({
         />
       </div>
 
-      <div class="rounded-md bg-white p-4">
+      <div class="relative overflow-hidden rounded-md bg-white p-4">
         <ColorVariables ref="colorsRef" />
+        <div
+          v-if="!irePlugin?.is_premium"
+          class="absolute left-0 top-0 flex h-full w-full cursor-pointer items-center justify-center bg-gray-500/50"
+          @click="pushToPlansPage()"
+        >
+          <p class="-rotate-12 text-center text-xl font-bold text-red-800">Upgrade to change path colors</p>
+        </div>
       </div>
     </div>
 

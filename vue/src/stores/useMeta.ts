@@ -39,11 +39,11 @@ export const useMetaStore = defineStore("meta", () => {
     return projectMeta.value.find((item) => item.meta_key === metaKey);
   };
 
-  const setProjectMeta = async (metaArr: { key: string; value: any }[]) => {
+  const setProjectMeta = async (metaArr: { key: string; value: any }[], projectId?: number) => {
     await ajaxAxios.post("", {
       action: "irep_create_or_update_meta",
       nonce: irePlugin.nonce,
-      project_id: projectStore.id,
+      project_id: projectId || projectStore.id,
       meta_data: metaArr
     });
 
@@ -51,100 +51,29 @@ export const useMetaStore = defineStore("meta", () => {
   };
 
   const setColorsMeta = () => {
-    const path_color = getMeta("path_color");
-    const path_hover_color = getMeta("path_hover_color");
-    const reserved_color = getMeta("reserved_color");
-    const sold_color = getMeta("sold_color");
-    const stroke_color = getMeta("stroke_color");
-    const stroke_width = getMeta("stroke_width");
+    const path_color = getMeta("path_color")?.meta_value || PREVIEW_PATH_COLOR;
+    const path_hover_color = getMeta("path_hover_color")?.meta_value || PREVIEW_PATH_HOVER_COLOR;
+    const reserved_color = getMeta("reserved_color")?.meta_value || PREVIEW_RESERVED_COLOR;
+    const sold_color = getMeta("sold_color")?.meta_value || PREVIEW_SOLD_COLOR;
+    const stroke_color = getMeta("stroke_color")?.meta_value || PREVIEW_STROKE_COLOR;
+    const stroke_width = getMeta("stroke_width")?.meta_value || PREVIEW_STROKE_WIDTH;
 
-    const arr: ProjectMeta[] = [];
+    const colors: any = {
+      path_color,
+      path_hover_color,
+      reserved_color,
+      sold_color,
+      stroke_color,
+      stroke_width
+    };
 
-    if (path_color) {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "path_color",
-        meta_value: path_color.toString()
-      });
-    } else {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "path_color",
-        meta_value: PREVIEW_PATH_COLOR
-      });
-    }
-
-    if (path_hover_color) {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "path_hover",
-        meta_value: path_hover_color.toString()
-      });
-    } else {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "path_hover",
-        meta_value: PREVIEW_PATH_HOVER_COLOR
-      });
-    }
-
-    if (reserved_color) {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "reserved_color",
-        meta_value: reserved_color.toString()
-      });
-    } else {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "reserved_color",
-        meta_value: PREVIEW_RESERVED_COLOR
-      });
-    }
-
-    if (sold_color) {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "sold_color",
-        meta_value: sold_color.toString()
-      });
-    } else {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "sold_color",
-        meta_value: PREVIEW_SOLD_COLOR
-      });
-    }
-
-    if (stroke_color) {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "stroke_color",
-        meta_value: stroke_color.toString()
-      });
-    } else {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "stroke_color",
-        meta_value: PREVIEW_STROKE_COLOR
-      });
-    }
-
-    if (stroke_width) {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "stroke_width",
-        meta_value: Number(stroke_width)
-      });
-    } else {
-      arr.push({
-        project_id: projectStore.id,
-        meta_key: "stroke_width",
-        meta_value: PREVIEW_STROKE_WIDTH
-      });
-    }
-
-    projectMeta.value = [...projectMeta.value, ...arr];
+    projectMeta.value = projectMeta.value.map((item) => {
+      if (Object.keys(colors).includes(item.meta_key) && !item.meta_value) {
+        return { ...item, meta_value: colors[item.meta_key] };
+      } else {
+        return item;
+      }
+    });
   };
 
   return {

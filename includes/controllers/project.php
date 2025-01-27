@@ -129,12 +129,13 @@ class Irep_Project
                 'polygon_data' => '{}',
             ]
         );
+        $project_id = $this->wpdb->insert_id;
 
         // Return a JSON response based on the success of the database operation.
         if ($this->wpdb->last_error) {
             irep_send_json_response(false, 'Database error');
         } else {
-            irep_send_json_response(true, 'Project added');
+            irep_send_json_response(true,  ['msg' => 'Project added', 'project_id' => $project_id]);
         }
     }
 

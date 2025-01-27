@@ -12,7 +12,7 @@ import { FlatItem, selectDataItem, TypeItem } from "@/types/components";
 import CreateEditTypeModal from "../types/CreateEditTypeModal.vue";
 import Modal from "../Modal.vue";
 import { useBlocksStore } from "@/src/stores/useBlock";
-import { showToast } from "@/src/composables/helpers";
+import { pushToPlansPage, showToast } from "@/src/composables/helpers";
 import { useFlatsStore } from "@/src/stores/useFlats";
 import UploadImg from "../form/UploadImg.vue";
 import Radio from "../form/Radio.vue";
@@ -262,7 +262,20 @@ onMounted(() => {
           multiple
         />
       </div>
-      <Button type="submit" :title="activeFlat ? 'Edit flat' : 'Add flat'" />
+
+      <Button v-if="activeFlat" type="submit" title="Edit flat" />
+
+      <div
+        v-else-if="!irePlugin.is_premium && flatStore.projectFlats && flatStore.projectFlats?.length >= 25"
+        class="w-full"
+      >
+        <div @click="pushToPlansPage()">
+          <Button type="submit" title="Upgrade to add more flats" :disabled="true" />
+        </div>
+        <p class="mt-2">You can add max 25 flat with free plan</p>
+      </div>
+
+      <Button v-else type="submit" :title="activeFlat ? 'Edit flat' : 'Add flat'" />
     </div>
   </form>
 

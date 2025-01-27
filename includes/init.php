@@ -79,7 +79,8 @@ function irep_enqueue_vue_assets()
         'nonce' => wp_create_nonce('irep_nonce'),
         'ajax_url' => admin_url('admin-ajax.php'),
         'plugin_url' => IREP_PLUGIN_URL,
-        'plugin_assets_path' => plugins_url('assets/', IREP_PLUGIN_FILE)
+        'plugin_assets_path' => plugins_url('assets/', IREP_PLUGIN_FILE),
+        'is_premium' => ire_fs()->can_use_premium_code(),
     ));
 }
 

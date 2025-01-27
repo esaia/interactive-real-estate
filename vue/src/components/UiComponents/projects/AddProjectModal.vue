@@ -7,11 +7,13 @@ import UploadImg from "@components/UiComponents/form/UploadImg.vue";
 import Input from "../form/Input.vue";
 import { useProjectStore } from "@/src/stores/useProject";
 import { showToast } from "@/src/composables/helpers";
+import { useMetaStore } from "@/src/stores/useMeta";
 
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
 const projectStore = useProjectStore();
+const metaStore = useMetaStore();
 
 const title = ref("");
 const selectedImage = ref<imageInterface[] | null>(null);
@@ -35,6 +37,35 @@ const onFormSubmits = async () => {
       emit("close");
       showToast("success", "Project created successfully!");
       projectStore.fetchProjects(null);
+
+      const colors = [
+        {
+          key: "path_color",
+          value: ""
+        },
+        {
+          key: "path_hover_color",
+          value: ""
+        },
+        {
+          key: "reserved_color",
+          value: ""
+        },
+        {
+          key: "sold_color",
+          value: ""
+        },
+        {
+          key: "stroke_color",
+          value: ""
+        },
+        {
+          key: "stroke_width",
+          value: 0
+        }
+      ];
+
+      metaStore.setProjectMeta([{ key: "project_img_contain", value: "false" }, ...colors], data?.data?.project_id);
     } else {
       showToast("error", "Something went wrong!");
     }

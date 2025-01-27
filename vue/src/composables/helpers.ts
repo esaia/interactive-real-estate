@@ -84,3 +84,9 @@ export function showToast(type: "success" | "error", message: string) {
     $toast.error(message, options);
   }
 }
+
+export const pushToPlansPage = () => {
+  const adminUrl = new URL(window.location.href);
+  adminUrl.searchParams.set("page", "ire-pricing");
+  window.location.href = adminUrl.toString();
+};

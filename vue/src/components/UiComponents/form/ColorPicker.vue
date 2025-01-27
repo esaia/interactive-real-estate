@@ -10,6 +10,7 @@ const props = defineProps<{
   modelValue: string;
   label?: string;
   required?: boolean;
+  disabled?: boolean;
 }>();
 
 const inputModel = computed({
@@ -24,6 +25,7 @@ const inputModel = computed({
 <template>
   <div>
     <p v-if="label" class="label">{{ label }} <span v-if="required" class="text-red-600">*</span></p>
-    <ColorPicker v-model:pureColor="inputModel" picker-type="chrome" />
+    <div v-if="disabled" class="h-8 w-12" :style="{ backgroundColor: props.modelValue }"></div>
+    <ColorPicker v-else v-model:pureColor="inputModel" picker-type="chrome" />
   </div>
 </template>
