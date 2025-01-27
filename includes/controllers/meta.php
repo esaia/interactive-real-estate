@@ -83,6 +83,11 @@ class Irep_Meta_Project
             'meta_data' => $data['meta_data']
         ];
 
+        if (!ire_fs()->can_use_premium_code()) {
+            irep_send_json_response(false, 'Upgrade plan');
+        }
+
+
 
         // Verify the nonce for security and check if project ID is valid
         irep_check_nonce($data['nonce'], 'irep_nonce');

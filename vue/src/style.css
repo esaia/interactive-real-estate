@@ -14,11 +14,11 @@
   @apply transition-all hover:bg-primary/80 [&_path]:hover:fill-white;
 }
 
-.icon-hover-text {
+.svgicon-hover-text {
   @apply transition-all hover:bg-primary/80 [&_path]:hover:fill-white [&_path]:hover:text-white;
 }
 
-.sidebar-item-icon {
+.sidebar-item-svgicon {
   @apply h-fit cursor-pointer !border !border-r-0 !border-solid !border-primary p-1 !transition-all first:rounded-l-sm last-of-type:rounded-r-sm last-of-type:!border-r hover:text-white [&_svg]:h-3 [&_svg]:w-3;
 }
 

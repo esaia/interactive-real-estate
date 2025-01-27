@@ -17,7 +17,9 @@ if (!defined('ABSPATH')) {
 define('WP_FS__DEV_MODE', true);
 define('WP_FS__SKIP_EMAIL_ACTIVATION', true);
 define('WP_FS__ire_SECRET_KEY', 'sk_AGWm9VWW^&*kLl]e[7ajqMd1@=wG4');
-
+// define('WP_DEBUG', true);
+// define('WP_DEBUG_DISPLAY', false);
+// define('WP_DEBUG_LOG', true);
 
 
 if (! function_exists('ire_fs')) {

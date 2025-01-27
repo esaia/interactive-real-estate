@@ -67,9 +67,10 @@ const onFormSubmits = async () => {
 
       metaStore.setProjectMeta([{ key: "project_img_contain", value: "false" }, ...colors], data?.data?.project_id);
     } else {
-      showToast("error", "Something went wrong!");
+      showToast("error", data?.data || "Something went wrong!");
     }
   } catch (error) {
+    console.log("errorrr", error);
     showToast("error", "Something went wrong!");
   }
 };

@@ -161,6 +161,8 @@ class Irep_Flat
             'use_type'     => isset($data['use_type']) && rest_sanitize_boolean($data['use_type'])
         ];
 
+        $this->canUserAddFlat($data);
+
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Define required and non-required fields
@@ -333,6 +335,18 @@ class Irep_Flat
         }
 
         return $item;
+    }
+
+
+    public function canUserAddFlat($data)
+    {
+        $flats = $this->get_flats($data)[1]['total'];
+
+        $check = !ire_fs()->can_use_premium_code() && $flats >= 25;
+
+        if ($check) {
+            irep_send_json_response(false, 'Upgrade plan');
+        }
     }
 }
 

@@ -109,6 +109,7 @@ class Irep_Project
             'svg' =>  isset($data['svg']) ? sanitize_text_field($data['svg']) : '',
         ];
 
+        $this->canUserAddProject($data);
 
         // Verify nonce for security.
         irep_check_nonce($data['nonce'], 'irep_nonce');
@@ -219,6 +220,17 @@ class Irep_Project
             irep_send_json_response(true, 'Project deleted successfully');
         } else {
             irep_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+        }
+    }
+
+
+    public function canUserAddProject($data)
+    {
+        $projects = $this->get_projects($data)[1];
+        $check = !ire_fs()->can_use_premium_code() && count($projects) >= 1;
+
+        if ($check) {
+            irep_send_json_response(false, 'Upgrade plan');
         }
     }
 }

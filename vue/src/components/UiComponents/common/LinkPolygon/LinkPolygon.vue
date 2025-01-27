@@ -200,7 +200,7 @@ onMounted(() => {
 
       <div class="mt-2 flex [&_div]:px-3">
         <div
-          class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
+          class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
           :class="{ '!bg-black text-white': activeTab === 'tooltip' }"
           @click="activeTab = 'tooltip'"
         >
@@ -210,14 +210,14 @@ onMounted(() => {
         <template v-if="!isFloorsCanvas">
           <div
             v-if="!isBlockCanvas"
-            class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
+            class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
             :class="{ '!bg-black text-white': activeTab === 'block' }"
             @click="activeTab = 'block'"
           >
             Block
           </div>
           <div
-            class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
+            class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
             :class="{ '!bg-black text-white': activeTab === 'floor' }"
             @click="activeTab = 'floor'"
           >
@@ -226,7 +226,7 @@ onMounted(() => {
         </template>
 
         <div
-          class="sidebar-item-icon icon-hover-text bg-gray-100 !px-4"
+          class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
           :class="{ '!bg-black text-white': activeTab === 'flat' }"
           @click="activeTab = 'flat'"
         >
