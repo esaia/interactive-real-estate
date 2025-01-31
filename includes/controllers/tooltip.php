@@ -131,9 +131,15 @@ class Irep_Tooltip
         // Verify nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
+        if ($data['data']['actionType'] === 'script') {
+            irep_upgrade_plan();
+            return;
+        }
+
         // Validate and sanitize input data
         $required_fields = ['project_id', 'title'];
         $required_data = irep_validate_and_sanitize_input($data, $required_fields);
+
 
         if (!$required_data) {
             irep_send_json_response(false, 'Required fields are missing.');

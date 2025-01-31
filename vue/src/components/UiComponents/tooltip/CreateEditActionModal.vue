@@ -26,7 +26,7 @@ const actions = [
   { title: "no action", value: "no-action" },
   { title: "open modal", value: "modal" },
   { title: "follow link", value: "url" },
-  { title: "run script", value: "script" }
+  { title: "run script", value: "script", isDisabled: true }
 ];
 
 const title = ref("");

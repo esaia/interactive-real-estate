@@ -300,3 +300,9 @@ function irep_transformSvgString($svgString)
     $transformedSvg = preg_replace('/(\s)([a-zA-Z0-9-]+)=""/', '$1$2=""', $transformedSvg); // Fix empty attributes if any
     return $transformedSvg;
 }
+
+
+function irep_upgrade_plan()
+{
+    irep_send_json_response(false, 'Upgrade plan.');
+}

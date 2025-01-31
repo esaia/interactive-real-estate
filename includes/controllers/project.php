@@ -230,7 +230,7 @@ class Irep_Project
         $check = !ire_fs()->can_use_premium_code() && count($projects) >= 1;
 
         if ($check) {
-            irep_send_json_response(false, 'Upgrade plan');
+            irep_upgrade_plan();
         }
     }
 }

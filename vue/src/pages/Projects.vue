@@ -26,7 +26,7 @@ const isModalOpen = ref(false);
       >
         <div class="flex -rotate-12 items-center justify-center gap-2">
           <Block />
-          <p class="!text-lg font-bold text-red-800">Upgrade to add new project</p>
+          <p class="!text-lg font-bold text-red-700">Upgrade to add new project</p>
         </div>
       </div>
 

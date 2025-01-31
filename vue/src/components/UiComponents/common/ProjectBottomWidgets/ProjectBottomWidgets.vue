@@ -141,10 +141,10 @@ defineExpose({
         <ColorVariables ref="colorsRef" />
         <div
           v-if="!irePlugin?.is_premium"
-          class="absolute left-0 top-0 flex h-full w-full cursor-pointer items-center justify-center bg-gray-500/50"
+          class="absolute left-0 top-0 flex h-full w-full cursor-pointer items-center justify-center bg-gray-100/80"
           @click="pushToPlansPage()"
         >
-          <p class="-rotate-12 text-center text-xl font-bold text-red-800">Upgrade to change path colors</p>
+          <p class="-rotate-12 text-center text-xl font-bold text-red-700">Upgrade to change path colors</p>
         </div>
       </div>
     </div>

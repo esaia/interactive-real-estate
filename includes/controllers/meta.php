@@ -84,7 +84,7 @@ class Irep_Meta_Project
         ];
 
         if (!ire_fs()->can_use_premium_code()) {
-            irep_send_json_response(false, 'Upgrade plan');
+            irep_upgrade_plan();
         }
 
 

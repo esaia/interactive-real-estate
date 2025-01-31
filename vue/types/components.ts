@@ -135,6 +135,7 @@ export interface selectDataItem {
   title: string;
   value: string;
   isLinked?: boolean;
+  isDisabled?: boolean;
   type?: "" | "flat" | "floor" | "block" | "tooltip";
 }
 

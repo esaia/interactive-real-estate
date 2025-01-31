@@ -5,6 +5,7 @@ import { selectDataItem } from "@/types/components";
 import Close from "../icons/Close.vue";
 import Input from "./Input.vue";
 import Info from "../icons/Info.vue";
+import { pushToPlansPage } from "@/src/composables/helpers";
 
 const props = withDefaults(
   defineProps<{
@@ -54,6 +55,10 @@ const inputPlaceholder = computed(() => {
 
 const selectItem = (item: selectDataItem) => {
   if (item.isLinked) return;
+
+  if (item.isDisabled) {
+    pushToPlansPage();
+  }
 
   selectModelValue.value = item;
 
@@ -146,13 +151,15 @@ watch(
             :key="item.value"
             type="button"
             class="line-clamp-2 w-full cursor-pointer rounded-sm px-[8px] py-[6px] text-start transition-all hover:bg-gray-100"
-            :class="`${item.value === selectModelValue?.value && item.type === selectModelValue.type ? '!bg-primary text-white' : item?.isLinked ? '!cursor-not-allowed text-gray-400 hover:bg-white' : ''} `"
+            :class="`${item.value === selectModelValue?.value && item.type === selectModelValue.type ? '!bg-primary text-white' : item?.isLinked || item?.isDisabled ? '!cursor-not-allowed text-gray-400 hover:bg-white' : ''} `"
             @click="selectItem(item)"
           >
             {{ item.title }}
             <span class="text-xs text-red-600">
               {{ item.isLinked && item.value !== selectModelValue?.value ? " - linked" : "" }}
             </span>
+
+            <span v-if="item.isDisabled" class="text-xs text-red-600"> - upgrade plan </span>
           </div>
         </div>
 

@@ -345,7 +345,7 @@ class Irep_Flat
         $check = !ire_fs()->can_use_premium_code() && $flats >= 25;
 
         if ($check) {
-            irep_send_json_response(false, 'Upgrade plan');
+            irep_upgrade_plan();
         }
     }
 }
