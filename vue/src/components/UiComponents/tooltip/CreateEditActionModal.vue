@@ -26,7 +26,7 @@ const actions = [
   { title: "no action", value: "no-action" },
   { title: "open modal", value: "modal" },
   { title: "follow link", value: "url" },
-  { title: "run script", value: "script", isDisabled: true }
+  { title: "run script", value: "script", isDisabled: !irePlugin.is_premium }
 ];
 
 const title = ref("");
