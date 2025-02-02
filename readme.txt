@@ -1,14 +1,14 @@
 === Interactive Real Estate ===
 Contributors: esaia
-Tags: interactive, real estate, property display, SVG, hotspots, floor plan, real estate plugin, property listing, interactive buildings, pins, polygon, svg  
+Tags: interactive, real estate, property display, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.9
+Stable tag: 2.1.3
 Plugin URI: https://interactive-real-estate.vercel.app/
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Create interactive buildings with clickable hotspots and layers. A great way to display floor plans, property displays like area, price, room count, and 2D/3D plans and more. No coding required.
+Create interactive buildings with clickable hotspots and layers. Display floor plans, property details, and 2D/3D plans—no coding required.
 
 == Description ==
 [Live Demo Front](https://interactive-real-estate.vercel.app/demos) | [Module Demo](https://interactive-real-estate.vercel.app/module) | [Support](https://interactive-real-estate.vercel.app/contact)
@@ -118,3 +118,53 @@ This video covers:
 * fix: bugs when user creates actions on premium plan 2
 
 
+= 1.0.1 =
+* fix: bugs when user creates actions on premium plan 1.0.1
+
+
+= 2.0.0 =
+* change version 2.0.0
+
+
+= 2.0.1 =
+* change version 2.0.1
+
+
+= 2.0.2 =
+* change version 2.0.2
+
+
+= 2.0.3 =
+* change version 2.0.3
+
+= 2.0.4 =
+* change version 2.0.4
+
+= 2.0.5 =
+* change version 2.0.5 change freemius slug
+
+= 2.0.6 =
+* change version 2.0.6 testing updating
+
+
+= 2.0.7 =
+* change version 2.0.7 testing updating
+
+
+= 2.0.8 =
+* change version 2.0.8 testing updating
+
+
+= 2.0.9 =
+* change version 2.0.8 testing updating change freemius config slug matching to wordpress.org
+
+
+= 2.1.1 =
+* change version 2.0.8 testing updating change freemius config slug matching to wordpress.org
+
+
+= 2.1.2 =
+* change version 2.1.2 beta
+
+= 2.1.2 =
+* change version 2.1.3 beta
