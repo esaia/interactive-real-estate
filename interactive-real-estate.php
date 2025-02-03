@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Interactive Real Estate
-Version: 2.1.5
+Version: 2.1.9
 Description: Innovative WordPress plugin for creating interactive buildings. Quickly make your property images interactive with adding pins, creating polygon.
 Plugin URI: https://interactive-real-estate.vercel.app/
 Author: <a href="https://portfolioesaia.netlify.app/" target="_blank">Esaia Gaprindashvili</a>
@@ -27,7 +27,7 @@ if (! function_exists('ire_fs')) {
 
             $ire_fs = fs_dynamic_init(array(
                 'id'                  => '17710',
-                'slug'                => 'ire',
+                'slug'                => 'interactive-real-estate',
                 'premium_slug'        => 'interactive-real-estate-premium',
                 'type'                => 'plugin',
                 'public_key'          => 'pk_28cee94284e5b1a7fc7fcde632e02',
