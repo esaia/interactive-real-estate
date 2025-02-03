@@ -21,7 +21,7 @@ function irep_add_admin_menu()
         'interactive real estate', // The title of the page
         'Interactive Real Estate', // The text displayed in the menu
         'manage_options',          // The capability required for access (only users with 'manage_options' can see it)
-        'ire',                     // The unique slug for the menu page
+        'interactive-real-estate',                     // The unique slug for the menu page
         'irep_render_page',         // The callback function that renders the page content
         'dashicons-building',      // The icon for the menu item (a building icon)
         100                        // The position of the menu item in the admin menu (higher numbers push it lower)
@@ -79,7 +79,7 @@ function irep_enqueue_vue_assets()
 function irep_enqueue_admin_scripts($hook)
 {
     // Only enqueue scripts/styles on the plugin's admin page
-    if ($hook !== 'toplevel_page_ire') {
+    if ($hook !== 'toplevel_page_interactive-real-estate') {
         return;
     }
 

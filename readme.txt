@@ -3,7 +3,7 @@ Contributors: esaia
 Tags: interactive, real estate, property display, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 2.1.3
+Stable tag: 2.1.5
 Plugin URI: https://interactive-real-estate.vercel.app/
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -166,5 +166,14 @@ This video covers:
 = 2.1.2 =
 * change version 2.1.2 beta
 
-= 2.1.2 =
+= 2.1.3 =
 * change version 2.1.3 beta
+
+= 2.1.4 =
+* change version 2.1.4 beta
+
+
+= 2.1.5 =
+* change version 2.1.5 beta change slug
+
+
