@@ -3,7 +3,7 @@ Contributors: esaia
 Tags: interactive, real estate, floor plan, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 2.1.9
+Stable tag: 2.2.0
 Plugin URI: https://interactive-real-estate.vercel.app/
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,22 +23,23 @@ With easy navigation through different building layers, users can get detailed i
 - **Multiple Layers:** Easily navigate between different building layers (e.g., floors, units) with smooth transitions.
 - **Customizable Shortcodes:** Use the `[irep_building]` shortcode to embed your interactive maps and customize them with your specific data.
 - **Easy-to-Use Admin Interface:** Intuitive settings page to upload building images, configure hotspots, and manage map settings.
+- Follow **link** on click of path
+- Open **modal** on click of path
 
 
-[Premium features](https://interactive-real-estate.vercel.app/pricing):
+
+**[Premium features](https://interactive-real-estate.vercel.app/pricing)**:
 - Create **Unlimited** projects (1 in free version)
 - Create **Unlimited** flats (25 in free version)
-- Open modal on click of path
-- Follow link on click of path
-- Run script on click of path
-- 24/7 premum Support
-- Access to updates
-- Customize svg path colors
+- Open **modal** on click of path
+- Run **script** on click of path
+- 24/7 **premum** Support
+- Access to **updates**
+- Customize **svg path** colors
 
 
 With the **Interactive Real Estate** plugin, you'll be able to provide a truly immersive experience for prospective buyers or tenants, setting your property listings apart from traditional static images or floor plans.
 
-[youtube https://www.youtube.com/watch?v=dQmqouszdK0]
 
 [Upgrade to Interactive Real Estate Premium](https://interactive-real-estate.vercel.app/pricing) to get more features and customization options:
 
@@ -50,18 +51,17 @@ With the **Interactive Real Estate** plugin, you'll be able to provide a truly i
 
 == Frequently Asked Questions ==
 
-= What's added in Draw Attention Pro? =
+= What's added in Interactive Real Estate Premium? =
 
-**[The Pro version includes](https://interactive-real-estate.vercel.app/pricing):**
+**[The Premium version includes](https://interactive-real-estate.vercel.app/pricing):**
 
 - Create **Unlimited** projects (1 in free version)
 - Create **Unlimited** flats (25 in free version)
-- Open modal on click of path
-- Follow link on click of path
-- Run script on click of path
-- 24/7 premum Support
-- Access to updates
-- Customize svg path colors
+- Open **modal** on click of path
+- Run **script** on click of path
+- 24/7 **premum** Support
+- Access to **updates**
+- Customize **svg path** colors
 
 
 
@@ -69,7 +69,7 @@ With the **Interactive Real Estate** plugin, you'll be able to provide a truly i
 To create an interactive building, use the `[irep_building]` shortcode. You can customize the building map by uploading images and adding interactive hotspots through the plugin's settings page.
 
 = Can I use this plugin for multiple buildings? =  
-Yes, the plugin supports creating interactive maps for multiple buildings or properties. You can manage each building's settings individually and display them anywhere on your site using shortcodes.
+Yes, the plugin supports creating interactive maps for multiple buildings or properties. You can manage each building's settings individually and display them anywhere on your site using shortcodes. But keep in mind more than 1  premium feature.
 
 = Do I need to know how to code? =  
 No, the plugin is designed to be easy to use, even for non-technical users. The admin interface is simple and intuitive, and you can get started by just uploading your images and using the shortcode.
@@ -112,11 +112,14 @@ Using this plugin may be complicated, For a step-by-step walkthrough on how to u
 
 [Watch the Video Tutorial](https://youtu.be/dQmqouszdK0)
 
-This video covers:
+[youtube https://www.youtube.com/watch?v=dQmqouszdK0]
+
+**This video covers:**
 - How to create a new interactive project.
 - How to add pins and polygons to your property images.
 - Add floor, flats, flat types, actions and connect it to polygons.
 - Customize the colors of your SVG paths.
+
 
 
 == Changelog ==
