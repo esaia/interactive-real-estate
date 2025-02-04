@@ -237,6 +237,8 @@ class Irep_Flat
         ];
 
 
+
+
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the flat ID is provided
@@ -255,6 +257,7 @@ class Irep_Flat
         // Sanitize and validate required fields
         $required_data = irep_check_required_data($data, $required_fields);
 
+
         // Define and validate optional fields
         $keys = ['floor_number', 'project_id', 'block_id', 'offer_price', 'conf', 'use_type'];
         $params = irep_validate_and_sanitize_input($data, $keys, false);
@@ -267,6 +270,7 @@ class Irep_Flat
             $params['block_id'] = null;
         }
         $params['type'] = irep_handle_json_data($data['type']);
+
 
         // Update the flat record in the database
         $where = ['id' => $flat_id];

@@ -83,6 +83,8 @@ function irep_validate_and_sanitize_input(array $data, array $keys, bool $requir
                 $sanitized_data[$key] = intval($data[$key]);
             } else if (is_bool($data[$key])) {
                 $sanitized_data[$key] =  $data[$key];
+            } else {
+                $sanitized_data[$key] =  $data[$key] ?  $data[$key] : null;
             }
 
 
