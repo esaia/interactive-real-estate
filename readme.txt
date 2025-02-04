@@ -1,9 +1,9 @@
-=== Interactive Real Estate ===
+=== Interactive Real Estate (Building Module) ===
 Contributors: esaia
 Tags: interactive, real estate, floor plan, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 2.2.1
+Stable tag: 1.0.0
 Plugin URI: https://interactive-real-estate.vercel.app/
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -11,15 +11,18 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Create interactive buildings with clickable hotspots and layers. Display floor plans, property details, and 2D/3D plans—no coding required.
 
 == Description ==
-[Premium buy here](https://interactive-real-estate.vercel.app/pricing) | [Live Demo Front](https://interactive-real-estate.vercel.app/demos) | [Module Demo](https://interactive-real-estate.vercel.app/module) | [Support](https://interactive-real-estate.vercel.app/contact)
+[Upgrade To Pro!](https://interactive-real-estate.vercel.app/pricing) | [Live Demo Front](https://interactive-real-estate.vercel.app/demos) | [Module Demo](https://interactive-real-estate.vercel.app/module) | [Support](https://interactive-real-estate.vercel.app/contact)
+
+### The Ultimate Building Module Plugin ###
+
 
 Interactive Real Estate is the most innovative WordPress plugin for creating interactive buildings and property displays. Quickly add pins, vector shapes, and create SVG, all without needing to write any code.
 
 With easy navigation through different building layers, users can get detailed information about each unit directly from the visual interface.
 
-**Key Features:**
+### **Key Features:** ###
 - **Interactive Building:** You can easily draw and edit complex shapes on your image right in the editor, without needing any external programs like Illustrator. Simply add pins and create svg on top of building render.
-- **Multiple Layers:** Easily navigate between different building layers (e.g., floors, units) with smooth transitions.
+- **Multiple Layers:** Easily navigate between different building layers (e.g., floors, appartments) with smooth transitions.
 - **Customizable Shortcodes:** Use the `[irep_building]` shortcode to embed your interactive maps and customize them with your specific data.
 - **Easy-to-Use Admin Interface:** Intuitive settings page to upload building images, configure hotspots, and manage map settings.
 - **Follow link** on click of path
@@ -27,7 +30,7 @@ With easy navigation through different building layers, users can get detailed i
 - **Preview** result in one click.
 
 
-**[⭐Premium features](https://interactive-real-estate.vercel.app/pricing)**:
+### **[⭐ Premium features](https://interactive-real-estate.vercel.app/pricing):** ###
 - Create **Unlimited** projects (1 in free version)
 - Create **Unlimited** flats (25 in free version)
 - Run **script** on click of path
@@ -96,7 +99,7 @@ To rebuild the minified JavaScript files, follow these steps:
 To create an interactive building, use the `[irep_building]` shortcode. You can customize the building map by uploading images and adding interactive hotspots through the plugin's settings page.
 
 = Can I use this plugin for multiple buildings? =  
-Yes, the plugin supports creating interactive maps for multiple buildings or properties. You can manage each building's settings individually and display them anywhere on your site using shortcodes. But keep in mind more than 1  premium feature.
+Yes, the plugin supports creating interactive buildings. You can manage each building's settings individually and display them anywhere on your site using shortcodes. But keep in mind you can create 1 project with free plan.
 
 = Do I need to know how to code? =  
 No, the plugin is designed to be easy to use, even for non-technical users. The admin interface is simple and intuitive, and you can get started by just uploading your images and using the shortcode.
@@ -129,98 +132,5 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 
 
 == Changelog ==
-= 1.0 =
+= 1.0.0 =
 * Initial release of the Interactive Real Estate plugin.
-
-= 1.1 =
-* fix: all issues that wp reviewer mentioned
-
-= 1.2 =
-* Update readme add Video Tutorial section
-
-= 1.3 =
-* fix: sqlite problem on db table migrations on plugin activation
-
-= 1.4 =
-* fix: databas table migrations problem
-
-= 1.5 =
-* refactor: sanitize data
-
-= 1.6 =
-* refactor: sanitize data in every controller method
-
-= 1.7 =
-* fix: Bugs when creating the first polygons in a newly created project. 
-
-= 1.8 =
-* fix: bugs when user creates actions on premium plan
-
-= 1.9 =
-* fix: bugs when user creates actions on premium plan 2
-
-
-= 1.0.1 =
-* fix: bugs when user creates actions on premium plan 1.0.1
-
-
-= 2.0.0 =
-* change version 2.0.0
-
-
-= 2.0.1 =
-* change version 2.0.1
-
-
-= 2.0.2 =
-* change version 2.0.2
-
-
-= 2.0.3 =
-* change version 2.0.3
-
-= 2.0.4 =
-* change version 2.0.4
-
-= 2.0.5 =
-* change version 2.0.5 change freemius slug
-
-= 2.0.6 =
-* change version 2.0.6 testing updating
-
-
-= 2.0.7 =
-* change version 2.0.7 testing updating
-
-
-= 2.0.8 =
-* change version 2.0.8 testing updating
-
-
-= 2.0.9 =
-* change version 2.0.8 testing updating change freemius config slug matching to wordpress.org
-
-
-= 2.1.1 =
-* change version 2.0.8 testing updating change freemius config slug matching to wordpress.org
-
-
-= 2.1.2 =
-* change version 2.1.2 beta
-
-= 2.1.3 =
-* change version 2.1.3 beta
-
-= 2.1.4 =
-* change version 2.1.4 beta
-
-
-= 2.1.5 =
-* change version 2.1.5 beta change slug
-
-
-
-= 2.1.6 =
-* change version 2.1.5 beta change slug
-
-
