@@ -87,6 +87,6 @@ export function showToast(type: "success" | "error", message: string) {
 
 export const pushToPlansPage = () => {
   const adminUrl = new URL(window.location.href);
-  adminUrl.searchParams.set("page", "ire-pricing");
+  adminUrl.searchParams.set("page", "interactive-real-estate-pricing");
   window.location.href = adminUrl.toString();
 };
