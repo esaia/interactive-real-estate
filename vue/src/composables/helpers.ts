@@ -33,7 +33,7 @@ export const irep_transformSvgString = (svgString: string) => {
 export const resetCanvasAfterSave = (svgRef: HTMLDivElement) => {
   const { CIRCLE_RADIUS, PATH_COLOR } = constants;
 
-  const imgElement = svgRef?.parentElement?.querySelector("img");
+  const imgElement = svgRef?.parentElement?.parentElement?.querySelector("img");
   const svg = svgRef.querySelector("svg");
 
   if (imgElement) {

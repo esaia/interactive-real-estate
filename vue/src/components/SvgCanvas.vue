@@ -426,13 +426,14 @@ const onDocumentKeyUp = (event) => {
 };
 
 const applyZoom = (cursorX, cursorY) => {
-  const container = props.svgRef.parentElement;
+  const container = props.svgRef?.parentElement?.parentElement;
   const containerOffset = container.getBoundingClientRect();
+
   const containerWidth = container.clientWidth;
   const containerHeight = container.clientHeight;
 
   if (containerWidth === 0 || containerHeight === 0) {
-    console.error("Container dimensions are zero.");
+    console.error("Container dimensions are zero. 123");
     return;
   }
 
@@ -453,7 +454,7 @@ const applyZoom = (cursorX, cursorY) => {
 
 const resetZoom = () => {
   zoomLevel.value = 1;
-  const container = props.svgRef.parentElement;
+  const container = props.svgRef?.parentElement?.parentElement;
 
   container.querySelector("img").style.transform = "scale(1)";
   container.querySelector("svg").style.transform = "scale(1)";
@@ -481,7 +482,7 @@ const removeListeners = () => {
   document.removeEventListener("keyup", onDocumentKeyUp);
 };
 
-const setSvgViewBox = (imgChanged = false) => {
+const setSvgViewBox = () => {
   if (!svgCanvas.value) return;
   const svg = svgCanvas.value.querySelector("svg");
 
@@ -490,7 +491,7 @@ const setSvgViewBox = (imgChanged = false) => {
   const width = svgCanvas.value.clientWidth;
   const height = svgCanvas.value.clientHeight;
 
-  if (imgChanged || !viewBox?.width) {
+  if (!viewBox.width) {
     svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   }
 };
@@ -504,9 +505,9 @@ watch(
 
 watch(
   () => [projectStore.project_image, floorsStore?.activeFloor?.floor_image, blocksStore?.activeBlock?.block_image],
-  () => {
+  (ns) => {
     setTimeout(() => {
-      setSvgViewBox(true);
+      // setSvgViewBox();
     }, 500);
   },
   { deep: true }
