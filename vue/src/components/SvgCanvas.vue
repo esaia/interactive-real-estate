@@ -6,6 +6,8 @@ import { useProjectStore } from "../stores/useProject";
 import Ctrl from "./UiComponents/icons/Ctrl.vue";
 import MinusBtn from "./UiComponents/icons/MinusBtn.vue";
 import Space from "./UiComponents/icons/Space.vue";
+import { useFloorsStore } from "../stores/useFloors";
+import { useBlocksStore } from "../stores/useBlock";
 
 const emit = defineEmits(["setSvgRef", "setActiveG", "addPolygonData"]);
 
@@ -16,6 +18,8 @@ const props = defineProps({
 });
 
 const projectStore = useProjectStore();
+const floorsStore = useFloorsStore();
+const blocksStore = useBlocksStore();
 
 const {
   CIRCLE_COLOR,
@@ -477,7 +481,7 @@ const removeListeners = () => {
   document.removeEventListener("keyup", onDocumentKeyUp);
 };
 
-const setSvgViewBox = () => {
+const setSvgViewBox = (imgChanged = false) => {
   if (!svgCanvas.value) return;
   const svg = svgCanvas.value.querySelector("svg");
 
@@ -486,7 +490,9 @@ const setSvgViewBox = () => {
   const width = svgCanvas.value.clientWidth;
   const height = svgCanvas.value.clientHeight;
 
-  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  if (imgChanged || !viewBox?.width) {
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  }
 };
 
 watch(
@@ -497,12 +503,13 @@ watch(
 );
 
 watch(
-  () => projectStore.project_image,
+  () => [projectStore.project_image, floorsStore?.activeFloor?.floor_image, blocksStore?.activeBlock?.block_image],
   () => {
     setTimeout(() => {
-      setSvgViewBox();
+      setSvgViewBox(true);
     }, 500);
-  }
+  },
+  { deep: true }
 );
 
 onMounted(() => {
