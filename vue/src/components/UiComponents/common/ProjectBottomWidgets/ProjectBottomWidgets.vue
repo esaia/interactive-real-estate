@@ -16,7 +16,6 @@ const projectStore = useProjectStore();
 const metaStore = useMetaStore();
 
 const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = storeToRefs(projectStore);
-const { isContainImage } = storeToRefs(metaStore);
 
 const projectImage = ref<imageInterface[] | null>(null);
 const colorsRef = ref();
@@ -24,19 +23,8 @@ const showGenerateObject = ref(false);
 const showPreview = ref(false);
 const projectUpdateToogle = ref(false);
 
-const containImageCheckbox = () => {
-  const imgContainMeta = metaStore.getMeta("project_img_contain");
-
-  if (imgContainMeta) {
-    imgContainMeta.meta_value = isContainImage.value ? "false" : "true";
-  }
-};
-
 const updateProject = async () => {
-  metaStore.setProjectMeta([
-    { key: "project_img_contain", value: JSON.parse(isContainImage.value || "false") },
-    ...colorsRef.value?.metaColors
-  ]);
+  metaStore.setProjectMeta([...colorsRef.value?.metaColors]);
 
   if (svgRef.value) {
     resetCanvasAfterSave(svgRef.value);
@@ -105,13 +93,6 @@ defineExpose({
           <label for="" class="font-semibold">Project Title:</label>
 
           <Input v-model="title" class="w-full" />
-        </div>
-
-        <div class="flex w-full items-center justify-between gap-2">
-          <div>
-            <p class="font-semibold">object-fit: contain</p>
-          </div>
-          <input type="checkbox" v-model="isContainImage" @change="containImageCheckbox" />
         </div>
 
         <div>

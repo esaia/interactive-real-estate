@@ -121,7 +121,6 @@ class Irep_Block
      *                    - conf (string, optional) Configuration data for the block.
      *                    - polygon_data (string, optional) The polygon data for the block.
      *                    - svg (string, optional) The SVG representation of the block.
-     *                    - img_contain (string, optional) Whether the image should be contained.
      * 
      * @return void
      * 
@@ -139,7 +138,6 @@ class Irep_Block
             'block_image' => $data['block_image'],
             'svg'  => $data['svg'],
             'polygon_data' => $data['polygon_data'],
-            'img_contain'     =>  $data['img_contain'],
         ];
 
         // Check nonce for security
@@ -151,7 +149,7 @@ class Irep_Block
         $required_data = irep_check_required_data($data, $required_fields);
 
         // Sanitize and validate non-required fields
-        $non_required_fields = ['conf', 'polygon_data', 'svg', 'img_contain'];
+        $non_required_fields = ['conf', 'polygon_data', 'svg'];
         $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
 
         // Merge required and non-required data
@@ -159,8 +157,6 @@ class Irep_Block
         $non_required_data['svg'] = !empty($data['svg']) ? $data['svg'] : '';
         $data  = array_merge($non_required_data, $required_data);
 
-        // Convert boolean-like fields
-        $data['img_contain'] = isset($data['img_contain']) && $data['img_contain'] === 'true' ? 1 : 0;
 
         // Handle polygon data if provided
         if (isset($data['polygon_data'])) {
@@ -194,7 +190,6 @@ class Irep_Block
      *                    - conf (string, optional) The new configuration data.
      *                    - polygon_data (string, optional) The new polygon data.
      *                    - svg (string, optional) The new SVG representation.
-     *                    - img_contain (string, optional) Whether the image should be contained.
      * 
      * @return void
      * 
@@ -213,7 +208,6 @@ class Irep_Block
             'block_image' => $data['block_image'],
             'svg'  => $data['svg'],
             'polygon_data' => $data['polygon_data'],
-            'img_contain'     =>  $data['img_contain'],
         ];
 
 
@@ -231,7 +225,7 @@ class Irep_Block
         $required_fields = ['title', 'block_image'];
         $required_data = irep_check_required_data($data, $required_fields);
 
-        $non_required_fields = ['conf', 'polygon_data', 'svg', 'img_contain'];
+        $non_required_fields = ['conf', 'polygon_data', 'svg'];
         $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
 
         // Merge required and non-required data
@@ -248,7 +242,6 @@ class Irep_Block
 
         // Handle polygon data and image containment
         $params['polygon_data'] = irep_handle_json_data($data['polygon_data'] ?? '');
-        $params['img_contain'] = $data['img_contain'] === 'true' ? 1 : 0;
 
         // Update the block in the database
         $where = ['id' => $block_id];
@@ -314,9 +307,6 @@ class Irep_Block
             $item['polygon_data'] = irep_handle_json_data($item['polygon_data']);
         }
 
-        // Convert boolean-like fields
-        $item['img_contain'] = $item['img_contain'] == 1;
-
         // Process block image and SVG
         $item['block_image'] = [irep_get_image_instance($item['block_image'])];
         $item['svg'] = irep_transformSvgString($item['svg']);
@@ -340,9 +330,6 @@ class Irep_Block
 
         // Process SVG data
         $block->svg = irep_transformSvgString($block->svg);
-
-        // Convert boolean-like fields
-        $block->img_contain = $block->img_contain == 1;
 
         // Process block image
         $block->block_image = [irep_get_image_instance($block->block_image)];

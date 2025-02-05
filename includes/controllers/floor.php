@@ -140,7 +140,6 @@ class Irep_Floor
             'floor_image' => $data['floor_image'],
             'svg'  => $data['svg'],
             'polygon_data' => $data['polygon_data'],
-            'img_contain'     =>  $data['img_contain'],
         ];
 
         // Check nonce for security
@@ -151,16 +150,13 @@ class Irep_Floor
         $required_data = irep_check_required_data($data, $required_fields);
 
         // Sanitize and validate non-required fields
-        $non_required_fields = ['title', 'conf', 'img_contain', 'svg', 'block_id'];
+        $non_required_fields = ['title', 'conf', 'svg', 'block_id'];
         $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
 
         // Merge required and non-required data
         $non_required_data['polygon_data'] = $data['polygon_data'] ?? null;
         $non_required_data['svg'] = !empty($data['svg']) ? $data['svg'] : '';
         $data  = array_merge($non_required_data, $required_data);
-
-        // Convert boolean-like fields
-        $data['img_contain'] = isset($data['img_contain']) && $data['img_contain'] === 'true' ? 1 : 0;
 
         // Handle polygon data if available
         if (isset($data['polygon_data'])) {
@@ -211,7 +207,6 @@ class Irep_Floor
             'floor_image' => $data['floor_image'] ?? 0,
             'svg'  => $data['svg'],
             'polygon_data' => $data['polygon_data'],
-            'img_contain'     =>  $data['img_contain'],
         ];
 
         // Check nonce for security
@@ -225,7 +220,7 @@ class Irep_Floor
         }
 
         // Prepare the keys to be updated
-        $keys = ['floor_number', 'title', 'conf', 'floor_image', 'polygon_data', 'svg', 'img_contain', 'block_id'];
+        $keys = ['floor_number', 'title', 'conf', 'floor_image', 'polygon_data', 'svg', 'block_id'];
         $params = array_filter($data, function ($value, $key) use ($keys) {
             return in_array($key, $keys) && $value;
         }, ARRAY_FILTER_USE_BOTH);
@@ -241,7 +236,6 @@ class Irep_Floor
 
         // Handle polygon data and image containment
         $params['polygon_data'] = irep_handle_json_data($params['polygon_data'] ?? '');
-        $params['img_contain'] = isset($params['img_contain']) && $params['img_contain'] === 'true' ? 1 : 0;
 
         // Update the floor in the database
         $where = ['id' => $floor_id];
@@ -309,7 +303,6 @@ class Irep_Floor
         if ($item['polygon_data']) {
             $item['polygon_data'] = irep_handle_json_data($item['polygon_data']);
         }
-        $item['img_contain'] = $item['img_contain'] == 1;
         $item['floor_image'] = [irep_get_image_instance($item['floor_image'])];
         $item['svg'] = irep_transformSvgString($item['svg']);
 
@@ -330,7 +323,6 @@ class Irep_Floor
         if (isset($floor->polygon_data)) {
             $floor->polygon_data = irep_handle_json_data($floor->polygon_data);
         }
-        $floor->img_contain = $floor->img_contain == 1;
         $floor->floor_image = [irep_get_image_instance($floor->floor_image)];
         $floor->svg = irep_transformSvgString($floor->svg);
     }

@@ -89,7 +89,6 @@ export interface FloorItem {
   project_id: number;
   block_id: number;
   polygon_data: PolygonDataCollection[];
-  img_contain: boolean;
   counts?: {
     available?: number;
     reserved?: number;
@@ -115,7 +114,6 @@ export interface BlockItem {
   svg: string;
   project_id: number;
   polygon_data: PolygonDataCollection[];
-  img_contain: boolean;
   counts?: {
     available?: number;
     reserved?: number;

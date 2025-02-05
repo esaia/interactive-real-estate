@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { ProjectMeta } from "../../types/components";
 import ajaxAxios from "@/src/utils/axios";
 import { useProjectStore } from "./useProject";
@@ -17,11 +17,6 @@ export const useMetaStore = defineStore("meta", () => {
   const projectStore = useProjectStore();
 
   const projectMeta = ref<ProjectMeta[]>([]);
-
-  const isContainImage = computed(() => {
-    const findMeta = projectMeta.value?.find((item) => item.meta_key === "project_img_contain")?.meta_value?.toString();
-    return JSON.parse(findMeta || "false");
-  });
 
   const getProjectMeta = async () => {
     const { data } = await ajaxAxios.post("", {
@@ -79,7 +74,6 @@ export const useMetaStore = defineStore("meta", () => {
   return {
     projectMeta,
     getProjectMeta,
-    isContainImage,
     setProjectMeta,
     getMeta
   };

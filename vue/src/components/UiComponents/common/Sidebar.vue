@@ -153,7 +153,7 @@ watch(
 <template>
   <div>
     <div
-      class="custom-scroll absolute left-0 top-0 flex h-full flex-col bg-white/70 transition-all duration-300 ease-out"
+      class="custom-scroll absolute left-0 top-0 flex h-full max-h-[80vh] flex-col bg-white/70 transition-all duration-300 ease-out"
       :class="{
         '-translate-x-full': isClollapsed,
         'translate-x-0': !isClollapsed

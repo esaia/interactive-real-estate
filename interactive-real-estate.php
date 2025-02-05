@@ -65,3 +65,49 @@ require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/init.php';
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/migrations.php';
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/api.php';
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/shortcodes.php';
+
+
+
+// Function to output the widget content
+function my_plugin_dashboard_widget_content()
+{
+    echo "<p><strong>Plugin Name:</strong> My Awesome Plugin</p>";
+    echo "<p><strong>Version:</strong> 1.0.0</p>";
+
+    // Premium features
+    echo "<p><strong>Premium Features:</strong></p>";
+    echo "<ul>
+            <li>Advanced analytics</li>
+            <li>Priority support</li>
+            <li>Custom templates</li>
+            <li>No ads or branding</li>
+          </ul>";
+
+    // CTA
+    echo "<p>Unlock the full potential of the plugin with the premium version!</p>";
+    echo "<a href='https://example.com/go-premium' target='_blank' style='background: #0073aa; color: #fff; padding: 10px 15px; text-decoration: none; border-radius: 5px;'>Upgrade to Premium</a>";
+
+    // Social proof
+    echo "<p><strong>What users are saying:</strong></p>";
+    echo "<blockquote>\"This plugin saved me hours of work. The premium version is worth every penny!\"</blockquote>";
+
+    // Documentation
+    echo "<p><strong>Need help?</strong></p>";
+    echo "<ul>
+            <li><a href='https://example.com/docs' target='_blank'>Documentation</a></li>
+            <li><a href='https://example.com/support' target='_blank'>Support Forum</a></li>
+          </ul>";
+}
+
+// Function to add the widget to the dashboard
+function my_plugin_add_dashboard_widget()
+{
+    wp_add_dashboard_widget(
+        'interactive real estate', // Widget ID
+        'interactive real estate',      // Widget title
+        'my_plugin_dashboard_widget_content' // Callback function to output content
+    );
+}
+
+// Hook the function to the dashboard setup
+add_action('wp_dashboard_setup', 'my_plugin_add_dashboard_widget');

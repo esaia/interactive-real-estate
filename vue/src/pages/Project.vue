@@ -9,12 +9,10 @@ import { useFloorsStore } from "../stores/useFloors";
 import { useTypesStore } from "../stores/useTypes";
 import { useFlatsStore } from "../stores/useFlats";
 import { useBlocksStore } from "../stores/useBlock";
-import { useMetaStore } from "../stores/useMeta";
 import { useActionsStore } from "../stores/useActions";
 import ShortCode from "../components/ShortcodeComponents/ShortCode.vue";
 
 const projectStore = useProjectStore();
-const metaStore = useMetaStore();
 const floorsStore = useFloorsStore();
 const blockStore = useBlocksStore();
 const typesStore = useTypesStore();
@@ -46,7 +44,7 @@ onMounted(() => {
   <div class="container-fluid">
     <ShortCode v-if="bottomWidgetsRef?.showPreview" :project-id="projectStore.id" />
 
-    <div v-else>
+    <div v-else class="max-h-[80vh] overflow-auto">
       <Canvas
         :projectImage="project_image?.url || ''"
         :polygon_data="polygon_data"
@@ -54,7 +52,6 @@ onMounted(() => {
         :svg="svg"
         :activeGroup="activeGroup"
         :isFloorsCanvas="false"
-        :isImageContain="metaStore?.isContainImage"
         @set-svg-ref="(svgContainer: any) => (svgRef = svgContainer)"
         @set-active-g="(gTag: any) => (activeGroup = gTag)"
         @delete-g="(key: any) => deleteG(key)"

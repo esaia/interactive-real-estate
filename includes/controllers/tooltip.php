@@ -131,7 +131,7 @@ class Irep_Tooltip
         // Verify nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
-        if ($data['data']['actionType'] === 'script') {
+        if (!ire_fs()->can_use_premium_code() && $data['data']['actionType'] === 'script') {
             irep_upgrade_plan();
             return;
         }

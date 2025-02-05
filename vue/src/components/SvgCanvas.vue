@@ -65,7 +65,7 @@ const getSVGCoordinates = (event, svgElement) => {
 };
 
 // Event handlers
-const onCanvasClick = (event) => {
+const onCanvasClick = async (event) => {
   if (event.target.nodeName === "path" && points.value?.length === 0) {
     onPathContextMenu(event);
     return;
@@ -457,13 +457,6 @@ const resetZoom = () => {
   container.querySelector("svg").style.transformOrigin = "center center";
 };
 
-watch(
-  () => props.activeGroup,
-  (ns) => {
-    onPathContextMenu(undefined, ns);
-  }
-);
-
 const addListeners = () => {
   if (svgCanvas.value) {
     svgCanvas.value.addEventListener("click", onCanvasClick);
@@ -484,8 +477,37 @@ const removeListeners = () => {
   document.removeEventListener("keyup", onDocumentKeyUp);
 };
 
+const setSvgViewBox = () => {
+  if (!svgCanvas.value) return;
+  const svg = svgCanvas.value.querySelector("svg");
+
+  const viewBox = svg.viewBox?.baseVal;
+
+  const width = svgCanvas.value.clientWidth;
+  const height = svgCanvas.value.clientHeight;
+
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+};
+
+watch(
+  () => props.activeGroup,
+  (ns) => {
+    onPathContextMenu(undefined, ns);
+  }
+);
+
+watch(
+  () => projectStore.project_image,
+  () => {
+    setTimeout(() => {
+      setSvgViewBox();
+    }, 500);
+  }
+);
+
 onMounted(() => {
   setTimeout(() => {
+    setSvgViewBox();
     emit("setSvgRef", svgCanvas.value);
     addListeners();
   }, 500);
@@ -501,25 +523,27 @@ defineExpose({
 </script>
 
 <template>
-  <div v-if="!svg" ref="svgCanvas" class="svg-canvas-container">
-    <svg viewBox="0 0 1720 860"></svg>
-  </div>
+  <div class="[&_svg]:h-full [&_svg]:w-full">
+    <div v-if="!svg" ref="svgCanvas" class="svg-canvas-container">
+      <svg></svg>
+    </div>
 
-  <div v-else v-html="svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
+    <div v-else v-html="svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
 
-  <div v-if="zoomLevel > 1" class="pointer-events-none absolute bottom-0 right-0 z-[999] bg-white/80 px-4 py-1">
-    <div class="info-item">
-      <div class="flex items-center gap-2">
-        <Ctrl class="h-6 w-6" />
-        <span>+</span>
-        <MinusBtn class="h-5 w-5" />
+    <div v-if="zoomLevel > 1" class="pointer-events-none absolute bottom-0 right-0 z-[999] bg-white/80 px-4 py-1">
+      <div class="info-item">
+        <div class="flex items-center gap-2">
+          <Ctrl class="h-6 w-6" />
+          <span>+</span>
+          <MinusBtn class="h-5 w-5" />
+        </div>
+        <span>-</span>
+        <p class="!text-sm">Reset zoom</p>
+        <span>|</span>
+        <Space class="h-7 w-7" />
+        <span>-</span>
+        <p class="!text-sm">Panning</p>
       </div>
-      <span>-</span>
-      <p class="!text-sm">Reset zoom</p>
-      <span>|</span>
-      <Space class="h-7 w-7" />
-      <span>-</span>
-      <p class="!text-sm">Panning</p>
     </div>
   </div>
 </template>

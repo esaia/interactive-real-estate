@@ -33,7 +33,6 @@ export const useProjectStore = defineStore("project", () => {
 
   const editpoligonData = (key: string, updatedData: PolygonDataCollection) => {
     const index = polygon_data.value?.findIndex((polygon) => polygon.key === key);
-    console.log(index);
     if (index !== -1) {
       polygon_data.value[index] = { ...polygon_data.value[index], ...updatedData };
     } else {

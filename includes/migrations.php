@@ -47,7 +47,6 @@ function irep_create_tables()
         polygon_data " . ($isSQLite ? "TEXT" : "JSON") . ",
         svg LONGTEXT,
         project_id mediumint(9) NOT NULL,
-        img_contain BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id)" .
@@ -72,7 +71,6 @@ function irep_create_tables()
         svg LONGTEXT NOT NULL,
         project_id mediumint(9) NOT NULL,
         block_id mediumint(9),
-        img_contain BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         UNIQUE KEY unique_floor (project_id, floor_number, block_id),

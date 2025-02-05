@@ -12,7 +12,6 @@ import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
 import { useBlocksStore } from "@/src/stores/useBlock";
 import FloorsList from "../floors/FloorsList.vue";
-import Checkbox from "../form/Checkbox.vue";
 
 const props = defineProps<{
   duplicatedBlock?: BlockItem | null;
@@ -33,7 +32,6 @@ const title = ref("");
 const block_image = ref<imageInterface[] | null>(null);
 const conf = ref({ title: "Choose", value: "" });
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
-const img_contain = ref(false);
 
 const defaultBlockId = computed(() => {
   if (activeBlock.value) {
@@ -73,8 +71,7 @@ const updateBlcok = async () => {
     block_image: block_image.value?.[0]?.id || activeBlock.value?.block_image[0]?.id,
     conf: conf.value?.value,
     polygon_data: activeBlock.value?.polygon_data,
-    svg: blockSvgRef.value?.querySelector("svg")?.outerHTML || "",
-    img_contain: img_contain.value
+    svg: blockSvgRef.value?.querySelector("svg")?.outerHTML || ""
   };
 
   const { data } = await ajaxAxios.post("", {
@@ -102,8 +99,7 @@ const createBlock = async () => {
     title: title.value,
     block_image: block_image?.value?.[0]?.id || props.duplicatedBlock?.block_image?.[0]?.id,
     conf: conf.value?.value,
-    project_id: id.value,
-    img_contain: img_contain.value
+    project_id: id.value
   };
 
   if (duplicatedFloorPolygonData.value) {
@@ -139,7 +135,6 @@ onMounted(() => {
       value: ""
     };
     block_image.value = activeBlock.value.block_image;
-    img_contain.value = activeBlock.value.img_contain;
   } else if (props.duplicatedBlock) {
     title.value = props.duplicatedBlock.title;
     conf.value = defaultConf.find((item) => item.value === props.duplicatedBlock?.conf) || {
@@ -148,7 +143,6 @@ onMounted(() => {
     };
 
     block_image.value = props.duplicatedBlock.block_image;
-    img_contain.value = props.duplicatedBlock.img_contain;
     const polygonData = props.duplicatedBlock?.polygon_data;
 
     duplicatedFloorPolygonData.value = polygonData
@@ -184,7 +178,6 @@ onUnmounted(() => {
         :activeGroup="activeBlockGroup"
         :isFloorsCanvas="false"
         isBlockCanvas
-        :isImageContain="img_contain"
         @set-svg-ref="(svgContainer: any) => (blockSvgRef = svgContainer)"
         @set-active-g="(gTag: any) => (activeBlockGroup = gTag)"
         @delete-g="(key: any) => deleteG(key)"
@@ -200,7 +193,6 @@ onUnmounted(() => {
         :activeGroup="activeBlockGroup"
         :isFloorsCanvas="false"
         isBlockCanvas
-        :isImageContain="img_contain"
         @set-svg-ref="(svgContainer: any) => (blockSvgRef = svgContainer)"
         @set-active-g="(gTag: any) => (activeBlockGroup = gTag)"
         @delete-g="(key: any) => deleteG(key)"
@@ -224,10 +216,6 @@ onUnmounted(() => {
           <Input v-model="title" placeholder="Block A" label="Block title" required />
 
           <Select v-model="conf" :data="defaultConf" label="configuration" clearable />
-
-          <div class="flex w-full items-center justify-between gap-2">
-            <Checkbox v-model="img_contain" title="object-fit: contain" />
-          </div>
 
           <UploadImg
             v-model="block_image"

@@ -13,7 +13,6 @@ import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
 import { useBlocksStore } from "@/src/stores/useBlock";
 import FlatsList from "../flats/FlatsList.vue";
-import Checkbox from "../form/Checkbox.vue";
 
 const props = defineProps<{
   duplicatedFloor?: FloorItem | null;
@@ -37,7 +36,6 @@ const floor_image = ref<imageInterface[] | null>(null);
 const conf = ref({ title: "Choose", value: "" });
 const block = ref();
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
-const img_contain = ref(false);
 
 const defaultBlockId = computed(() => {
   if (activeBlock.value) {
@@ -102,7 +100,6 @@ const updateFloor = async () => {
     floor_id: activeFloor.value?.id,
     polygon_data: activeFloor.value?.polygon_data,
     svg: floorSvgRef.value?.querySelector("svg")?.outerHTML || "",
-    img_contain: img_contain.value,
     block_id: block.value?.value
   };
 
@@ -132,8 +129,7 @@ const createFloor = async () => {
     floor_number: floor_number.value,
     floor_image: floor_image.value?.[0]?.id || props.duplicatedFloor?.floor_image?.[0]?.id,
     conf: conf.value?.value,
-    project_id: id.value,
-    img_contain: img_contain.value
+    project_id: id.value
   };
 
   if (block.value?.value) {
@@ -174,7 +170,6 @@ const sedDefaultValues = (source: FloorItem) => {
     value: ""
   };
   floor_image.value = source.floor_image;
-  img_contain.value = source.img_contain;
 };
 
 onMounted(() => {
@@ -218,7 +213,6 @@ onUnmounted(() => {
         :svg="activeFloor.svg"
         :activeGroup="activeGroup"
         :isFloorsCanvas="true"
-        :isImageContain="img_contain"
         @set-svg-ref="(svgContainer: any) => (floorSvgRef = svgContainer)"
         @set-active-g="(gTag: any) => (activeGroup = gTag)"
         @delete-g="(key: any) => deleteG(key)"
@@ -233,7 +227,6 @@ onUnmounted(() => {
         :svg="irep_transformSvgString(duplicatedFloor.svg)"
         :activeGroup="activeGroup"
         :isFloorsCanvas="true"
-        :isImageContain="img_contain"
         @set-svg-ref="(svgContainer: any) => (floorSvgRef = svgContainer)"
         @set-active-g="(gTag: any) => (activeGroup = gTag)"
         @delete-g="(key: any) => deleteG(key)"
@@ -260,10 +253,6 @@ onUnmounted(() => {
           <Select v-model="block" :data="blockSelectData" label="select block" clearable />
 
           <Select v-model="conf" :data="defaultConf" label="configuration" clearable />
-
-          <div class="flex w-full items-center justify-between gap-2">
-            <Checkbox v-model="img_contain" title="object-fit: contain" />
-          </div>
 
           <UploadImg
             v-model="floor_image"

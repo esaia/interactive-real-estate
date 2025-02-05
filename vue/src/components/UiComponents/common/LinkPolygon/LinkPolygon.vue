@@ -190,69 +190,67 @@ onMounted(() => {
 </script>
 
 <template>
-  <Transition name="fade-in-out">
-    <div v-if="showModal" class="absolute right-0 top-0 min-w-[300px] rounded-l-sm bg-white p-3 shadow-lg">
-      <div class="absolute right-0 top-0 cursor-pointer p-2" @click="showModal = false">
-        <Close />
+  <div v-if="showModal" class="absolute right-0 top-0 min-w-[300px] rounded-l-sm bg-white p-3 shadow-lg">
+    <div class="absolute right-0 top-0 cursor-pointer p-2" @click="showModal = false">
+      <Close />
+    </div>
+
+    <h4 class="text-lg text-gray-900">Link Polygon To Related Data</h4>
+
+    <div class="mt-2 flex [&_div]:px-3">
+      <div
+        class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
+        :class="{ '!bg-black text-white': activeTab === 'tooltip' }"
+        @click="activeTab = 'tooltip'"
+      >
+        Action
       </div>
 
-      <h4 class="text-lg text-gray-900">Link Polygon To Related Data</h4>
-
-      <div class="mt-2 flex [&_div]:px-3">
+      <template v-if="!isFloorsCanvas">
+        <div
+          v-if="!isBlockCanvas"
+          class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
+          :class="{ '!bg-black text-white': activeTab === 'block' }"
+          @click="activeTab = 'block'"
+        >
+          Block
+        </div>
         <div
           class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
-          :class="{ '!bg-black text-white': activeTab === 'tooltip' }"
-          @click="activeTab = 'tooltip'"
+          :class="{ '!bg-black text-white': activeTab === 'floor' }"
+          @click="activeTab = 'floor'"
         >
-          Action
+          Floor
         </div>
+      </template>
 
-        <template v-if="!isFloorsCanvas">
-          <div
-            v-if="!isBlockCanvas"
-            class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
-            :class="{ '!bg-black text-white': activeTab === 'block' }"
-            @click="activeTab = 'block'"
-          >
-            Block
-          </div>
-          <div
-            class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
-            :class="{ '!bg-black text-white': activeTab === 'floor' }"
-            @click="activeTab = 'floor'"
-          >
-            Floor
-          </div>
-        </template>
-
-        <div
-          class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
-          :class="{ '!bg-black text-white': activeTab === 'flat' }"
-          @click="activeTab = 'flat'"
-        >
-          Flat
-        </div>
-      </div>
-
-      <div v-if="activeTab === 'tooltip'" class="mt-3 flex flex-col items-start">
-        <Select v-model="selectedItem" :data="actionSelectData" label="Select Action:" />
-        <span v-if="!actionSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add Action!</span>
-      </div>
-
-      <div v-if="activeTab === 'block'" class="mt-3 flex flex-col items-start">
-        <Select v-model="selectedItem" :data="blocksSelectData" label="Select block:" />
-        <span v-if="!blocksSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add Block!</span>
-      </div>
-
-      <div v-else-if="activeTab === 'floor'" class="mt-3 flex flex-col items-start">
-        <Select v-model="selectedItem" :data="floorsSelectData" label="Select floor:" />
-        <span v-if="!floorsSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add Floor!</span>
-      </div>
-
-      <div v-else-if="activeTab === 'flat'" class="mt-3 flex flex-col items-start">
-        <Select v-model="selectedItem" :data="flatsSelectData" label="Select flat:" />
-        <span v-if="!flatsSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add flat!</span>
+      <div
+        class="sidebar-item-svgicon svgicon-hover-text bg-gray-100 !px-4"
+        :class="{ '!bg-black text-white': activeTab === 'flat' }"
+        @click="activeTab = 'flat'"
+      >
+        Flat
       </div>
     </div>
-  </Transition>
+
+    <div v-if="activeTab === 'tooltip'" class="mt-3 flex flex-col items-start">
+      <Select v-model="selectedItem" :data="actionSelectData" label="Select Action:" />
+      <span v-if="!actionSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add Action!</span>
+    </div>
+
+    <div v-if="activeTab === 'block'" class="mt-3 flex flex-col items-start">
+      <Select v-model="selectedItem" :data="blocksSelectData" label="Select block:" />
+      <span v-if="!blocksSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add Block!</span>
+    </div>
+
+    <div v-else-if="activeTab === 'floor'" class="mt-3 flex flex-col items-start">
+      <Select v-model="selectedItem" :data="floorsSelectData" label="Select floor:" />
+      <span v-if="!floorsSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add Floor!</span>
+    </div>
+
+    <div v-else-if="activeTab === 'flat'" class="mt-3 flex flex-col items-start">
+      <Select v-model="selectedItem" :data="flatsSelectData" label="Select flat:" />
+      <span v-if="!flatsSelectData.length" class="mt-3 text-lg capitalize text-red-500">Please add flat!</span>
+    </div>
+  </div>
 </template>

@@ -22,22 +22,14 @@ defineProps<{
   activeGroup: SVGGElement | null;
   isFloorsCanvas: boolean;
   isBlockCanvas?: boolean;
-  isImageContain: boolean;
 }>();
 
 const canvasRef = ref();
 </script>
 
 <template>
-  <div class="canvas-container relative h-full select-none overflow-hidden bg-gray-50 pt-[50%]">
-    <img
-      :src="projectImage"
-      class="absolute left-0 top-0 h-full w-full"
-      :class="{
-        'object-contain': isImageContain,
-        'object-cover': !isImageContain
-      }"
-    />
+  <div class="canvas-container relative h-full w-full select-none bg-gray-50">
+    <img :src="projectImage" class="left-0 top-0 h-full w-full" />
     <SvgCanvas
       ref="canvasRef"
       :svgRef="svgRef"
