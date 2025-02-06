@@ -3,7 +3,7 @@ import { storeToRefs } from "pinia";
 import { useProjectStore } from "../../../../stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
 import { pushToPlansPage, resetCanvasAfterSave, showToast } from "@/src/composables/helpers";
-import { onMounted, ref, watch } from "vue";
+import { nextTick, onMounted, ref, watch } from "vue";
 import { imageInterface } from "@/types/components";
 import UploadImg from "../../form/UploadImg.vue";
 import Input from "../../form/Input.vue";
@@ -68,9 +68,16 @@ watch(
 
 watch(
   () => projectImage.value,
-  (ns) => {
+  async (ns) => {
     if (ns) {
       project_image.value = ns[0];
+
+      // if (projectStore.svgRef) {
+      // projectStore.svg = projectStore.svg.replace(/viewBox="\d+ \d+ \d+ \d+"/, 'viewBox="0 0 0 0"');
+      // projectStore.svgRef.innerHTML = projectStore.svg.toString();
+
+      // projectStore.svgRef =
+      // }
     }
   }
 );

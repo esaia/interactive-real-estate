@@ -44,24 +44,23 @@ onMounted(() => {
   <div class="container-fluid">
     <ShortCode v-if="bottomWidgetsRef?.showPreview" :project-id="projectStore.id" />
 
-    <div v-else class="max-h-[80vh] overflow-auto">
-      <Canvas
-        :projectImage="project_image?.url || ''"
-        :polygon_data="polygon_data"
-        :svgRef="svgRef"
-        :svg="svg"
-        :activeGroup="activeGroup"
-        :isFloorsCanvas="false"
-        @set-svg-ref="(svgContainer: any) => (svgRef = svgContainer)"
-        @set-active-g="(gTag: any) => (activeGroup = gTag)"
-        @delete-g="(key: any) => deleteG(key)"
-        @add-polygon-data="(key: any) => projectStore.addPolygonData(key)"
-        @update-polygon-data="(key: any, data: any) => projectStore.editpoligonData(key, data)"
-      />
-    </div>
-
-    <ProjectBottomWidgets ref="bottomWidgetsRef" />
-
-    <ModalBoxes v-if="!bottomWidgetsRef?.showPreview" />
+    <Canvas
+      v-else
+      :projectImage="project_image?.url || ''"
+      :polygon_data="polygon_data"
+      :svgRef="svgRef"
+      :svg="svg"
+      :activeGroup="activeGroup"
+      :isFloorsCanvas="false"
+      @set-svg-ref="(svgContainer: any) => (svgRef = svgContainer)"
+      @set-active-g="(gTag: any) => (activeGroup = gTag)"
+      @delete-g="(key: any) => deleteG(key)"
+      @add-polygon-data="(key: any) => projectStore.addPolygonData(key)"
+      @update-polygon-data="(key: any, data: any) => projectStore.editpoligonData(key, data)"
+    />
   </div>
+
+  <ProjectBottomWidgets ref="bottomWidgetsRef" />
+
+  <ModalBoxes v-if="!bottomWidgetsRef?.showPreview" />
 </template>

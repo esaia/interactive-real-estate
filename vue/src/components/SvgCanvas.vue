@@ -491,7 +491,12 @@ const setSvgViewBox = () => {
   const width = svgCanvas.value.clientWidth;
   const height = svgCanvas.value.clientHeight;
 
-  if (!viewBox.width) {
+  const imgRatio = width / height;
+  const svgRatio = viewBox.width / viewBox.height;
+
+  const areAlmostEqual = Math.abs(imgRatio - svgRatio) < 0.01;
+
+  if (!areAlmostEqual) {
     svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   }
 };
@@ -507,7 +512,7 @@ watch(
   () => [projectStore.project_image, floorsStore?.activeFloor?.floor_image, blocksStore?.activeBlock?.block_image],
   (ns) => {
     setTimeout(() => {
-      // setSvgViewBox();
+      setSvgViewBox();
     }, 500);
   },
   { deep: true }
@@ -526,7 +531,8 @@ onBeforeUnmount(() => {
 });
 
 defineExpose({
-  zoomLevel
+  zoomLevel,
+  setSvgViewBox
 });
 </script>
 
@@ -538,20 +544,24 @@ defineExpose({
 
     <div v-else v-html="svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
 
-    <div v-if="zoomLevel > 1" class="pointer-events-none absolute bottom-0 right-0 z-[999] bg-white/80 px-4 py-1">
-      <div class="info-item">
-        <div class="flex items-center gap-2">
-          <Ctrl class="h-6 w-6" />
-          <span>+</span>
-          <MinusBtn class="h-5 w-5" />
-        </div>
-        <span>-</span>
+    <div v-if="zoomLevel > 1" class="pointer-events-none absolute right-0 top-0 z-[999] bg-white/80 px-4 py-1">
+      <div class="flex items-center gap-3">
+        <span class="shortcode">ctrl</span>
+        <span>+</span>
+        <span class="shortcode">-</span>
         <p class="!text-sm">Reset zoom</p>
         <span>|</span>
-        <Space class="h-7 w-7" />
-        <span>-</span>
+        <span class="shortcode">space</span>
+        <span>+</span>
+        <span class="shortcode">mouse move</span>
         <p class="!text-sm">Panning</p>
       </div>
     </div>
   </div>
 </template>
+
+<style>
+.shortcode {
+  @apply rounded-lg bg-gray-600 px-3 py-1 text-white;
+}
+</style>
