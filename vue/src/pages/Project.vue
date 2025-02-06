@@ -58,9 +58,9 @@ onMounted(() => {
       @add-polygon-data="(key: any) => projectStore.addPolygonData(key)"
       @update-polygon-data="(key: any, data: any) => projectStore.editpoligonData(key, data)"
     />
+
+    <ProjectBottomWidgets ref="bottomWidgetsRef" />
+
+    <ModalBoxes v-if="!bottomWidgetsRef?.showPreview" />
   </div>
-
-  <ProjectBottomWidgets ref="bottomWidgetsRef" />
-
-  <ModalBoxes v-if="!bottomWidgetsRef?.showPreview" />
 </template>
