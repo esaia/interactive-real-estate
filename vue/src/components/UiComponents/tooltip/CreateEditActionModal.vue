@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import Button from "../form/Button.vue";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
@@ -10,6 +10,7 @@ import { showToast } from "@/src/composables/helpers";
 import TextArea from "../form/TextArea.vue";
 import UploadImg from "../form/UploadImg.vue";
 import Checkbox from "../form/Checkbox.vue";
+import { useActionsStore } from "@/src/stores/useActions";
 
 const emits = defineEmits<{
   (e: "setActiveAction", activeType: ActionItem): void;
@@ -21,6 +22,7 @@ const props = defineProps<{
 }>();
 
 const projectStore = useProjectStore();
+const actionsStore = useActionsStore();
 
 const actions = [
   { title: "no action", value: "no-action" },
@@ -107,6 +109,10 @@ onMounted(() => {
     targetBlank.value = actionInstance?.data?.targetBlank;
     script.value = actionInstance?.data?.script;
   }
+});
+
+onUnmounted(() => {
+  actionsStore.fetchProjectActions(projectStore.id);
 });
 </script>
 

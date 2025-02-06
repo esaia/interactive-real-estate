@@ -59,7 +59,7 @@ const deleteFloor = async () => {
 
   showDeleteModal.value = false;
 
-  fetchFloors();
+  fetchBlocks();
   blockStore.fetchProjectBLocks(id.value);
 };
 
@@ -67,10 +67,10 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
   sortField.value = field;
   sortOrder.value = sortOrderString;
 
-  fetchFloors();
+  fetchBlocks();
 };
 
-const fetchFloors = async () => {
+const fetchBlocks = async () => {
   const { data } = await ajaxAxios.post("", {
     action: "irep_get_blocks",
     nonce: irePlugin.nonce,
@@ -90,13 +90,13 @@ const fetchFloors = async () => {
 };
 
 const submitForm = () => {
-  fetchFloors();
+  fetchBlocks();
 };
 
 watch(
   () => currentPage.value,
   () => {
-    fetchFloors();
+    fetchBlocks();
   }
 );
 
@@ -104,7 +104,7 @@ watch(
   () => showBlockModal.value,
   (ns) => {
     if (!ns) {
-      fetchFloors();
+      fetchBlocks();
 
       blockStore.setActiveBlock(null);
       duplicatedBlock.value = null;
@@ -113,7 +113,7 @@ watch(
 );
 
 onMounted(() => {
-  fetchFloors();
+  fetchBlocks();
 });
 </script>
 

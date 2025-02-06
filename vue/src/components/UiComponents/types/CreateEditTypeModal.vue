@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { onMounted, onUnmounted, reactive } from "vue";
 import Button from "../form/Button.vue";
 import Input from "../form/Input.vue";
 import UploadImg from "../form/UploadImg.vue";
@@ -8,6 +8,7 @@ import { useProjectStore } from "@/src/stores/useProject";
 import { storeToRefs } from "pinia";
 import { imageInterface, TypeItem } from "@/types/components";
 import { showToast } from "@/src/composables/helpers";
+import { useTypesStore } from "@/src/stores/useTypes";
 
 interface TypeFormInterface {
   title: string;
@@ -30,6 +31,8 @@ const props = defineProps<{
 }>();
 
 const projectStore = useProjectStore();
+const typesStore = useTypesStore();
+
 const { id } = storeToRefs(projectStore);
 
 const obj = reactive<TypeFormInterface>({
@@ -113,6 +116,10 @@ onMounted(() => {
     obj.image_3d = typeInstance.image_3d ?? null;
     obj.gallery = typeInstance.gallery ?? null;
   }
+});
+
+onUnmounted(() => {
+  typesStore.fetchProjectTypes(projectStore.id);
 });
 </script>
 

@@ -193,6 +193,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  floorStore.fetchProjectFloors(projectStore.id);
+
   activeGroup.value = null;
   activeFloor.value = null;
 

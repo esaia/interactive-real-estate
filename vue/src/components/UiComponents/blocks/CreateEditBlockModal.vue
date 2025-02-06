@@ -158,6 +158,9 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  console.log(projectStore.id);
+  blockStore.fetchProjectBLocks(projectStore.id);
+
   activeBlockGroup.value = null;
   activeBlock.value = null;
   if (svgRef.value) {
