@@ -190,7 +190,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="showModal" class="absolute right-0 top-0 min-w-[300px] rounded-l-sm bg-white p-3 shadow-lg">
+  <div v-if="showModal" class="absolute right-0 top-0 z-[99] min-w-[300px] rounded-l-sm bg-white p-3 shadow-lg">
     <div class="absolute right-0 top-0 cursor-pointer p-2" @click="showModal = false">
       <Close />
     </div>

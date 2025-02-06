@@ -153,7 +153,7 @@ watch(
 <template>
   <div>
     <div
-      class="custom-scroll absolute left-0 top-0 flex h-full max-h-[80vh] flex-col bg-white/70 transition-all duration-300 ease-out"
+      class="custom-scroll absolute left-0 top-0 z-[99] flex h-full max-h-[80vh] flex-col bg-white/70 transition-all duration-300 ease-out"
       :class="{
         '-translate-x-full': isClollapsed,
         'translate-x-0': !isClollapsed
@@ -212,34 +212,6 @@ watch(
           </div>
         </div>
       </div>
-
-      <teleport to="#irep-vue-app">
-        <Transition name="fade">
-          <Modal v-if="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
-            <CreateEditFloorModal />
-          </Modal>
-        </Transition>
-
-        <Transition name="fade">
-          <Modal v-if="showEditModal === 'block'" @close="showEditModal = ''" type="2" width="w-11/12">
-            <CreateEditBlockModal />
-          </Modal>
-        </Transition>
-
-        <Transition name="fade">
-          <Modal v-if="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[500px]">
-            <CreateEditFlatModal :activeFlat="activeFlat" />
-          </Modal>
-        </Transition>
-      </teleport>
-
-      <teleport to="#irep-vue-app">
-        <Transition name="fade">
-          <Modal v-if="showEditModal === 'tooltip'" @close="showEditModal = ''" type="2" width="w-[500px]">
-            <CreateEditActionModal :activeAction="activeAction || null" />
-          </Modal>
-        </Transition>
-      </teleport>
     </div>
 
     <Transition name="fade-in-out">
@@ -294,6 +266,34 @@ watch(
         </div>
       </div>
     </Transition>
+
+    <teleport to="#irep-vue-app">
+      <Transition name="fade">
+        <Modal v-if="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
+          <CreateEditFloorModal />
+        </Modal>
+      </Transition>
+
+      <Transition name="fade">
+        <Modal v-if="showEditModal === 'block'" @close="showEditModal = ''" type="2" width="w-11/12">
+          <CreateEditBlockModal />
+        </Modal>
+      </Transition>
+
+      <Transition name="fade">
+        <Modal v-if="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[500px]">
+          <CreateEditFlatModal :activeFlat="activeFlat" />
+        </Modal>
+      </Transition>
+    </teleport>
+
+    <teleport to="#irep-vue-app">
+      <Transition name="fade">
+        <Modal v-if="showEditModal === 'tooltip'" @close="showEditModal = ''" type="2" width="w-[500px]">
+          <CreateEditActionModal :activeAction="activeAction || null" />
+        </Modal>
+      </Transition>
+    </teleport>
   </div>
 </template>
 

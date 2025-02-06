@@ -544,7 +544,7 @@ defineExpose({
 
     <div v-else v-html="svg" ref="svgCanvas" :key="projectStore.svg" class="svg-canvas-container"></div>
 
-    <div v-if="zoomLevel > 1" class="pointer-events-none absolute right-0 top-0 z-[999] bg-white/80 px-4 py-1">
+    <!-- <div v-if="zoomLevel > 1" class="pointer-events-none absolute right-0 top-0 z-[999] bg-white/80 px-4 py-1">
       <div class="flex items-center gap-3">
         <span class="shortcode">ctrl</span>
         <span>+</span>
@@ -556,7 +556,7 @@ defineExpose({
         <span class="shortcode">mouse move</span>
         <p class="!text-sm">Panning</p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
