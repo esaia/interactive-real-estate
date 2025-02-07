@@ -260,6 +260,9 @@ onUnmounted(() => {
             :example-image="irePlugin?.plugin_assets_path + 'exampleImages/floor_3d.jpg'"
             required
           />
+          <p v-if="activeFloor" class="mt-2 text-red-700">
+            <span class="font-semibold">IMPORTANT:</span> Changing the image may cause svg paths mismatches.
+          </p>
 
           <Button type="submit" :title="activeFloor ? 'Edit floor' : 'Add floor'" />
         </div>

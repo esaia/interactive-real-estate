@@ -224,6 +224,10 @@ onUnmounted(() => {
             required
           />
 
+          <p v-if="activeBlock" class="mt-2 text-red-700">
+            <span class="font-semibold">IMPORTANT:</span> Changing the image may cause svg paths mismatches.
+          </p>
+
           <Button type="submit" :title="activeBlock ? 'Edit block' : 'Add block'" />
         </div>
       </form>

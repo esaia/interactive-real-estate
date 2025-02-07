@@ -116,6 +116,9 @@ defineExpose({
           :example-image="irePlugin?.plugin_assets_path + 'exampleImages/mainRender.jpg'"
           required
         />
+        <p class="mt-2 text-red-700">
+          <span class="font-semibold">IMPORTANT:</span> Changing the image may cause svg paths mismatches.
+        </p>
       </div>
 
       <div class="relative overflow-hidden rounded-md bg-white p-4">
