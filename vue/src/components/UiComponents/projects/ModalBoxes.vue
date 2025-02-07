@@ -21,30 +21,30 @@ import { useActionsStore } from "@/src/stores/useActions";
 const showModal = ref<"tooltip" | "block" | "floor" | "flat" | "type" | "">("");
 
 const actionsStore = useActionsStore();
-// const projectStore = useProjectStore();
+const projectStore = useProjectStore();
 const blocksStore = useBlocksStore();
 const floorStore = useFloorsStore();
 const typesStore = useTypesStore();
 const flatStore = useFlatsStore();
 
-// watch(
-//   () => showModal.value,
-//   (_, os) => {
-//     const id = Number(projectStore?.id);
+watch(
+  () => showModal.value,
+  (_, os) => {
+    const id = Number(projectStore?.id);
 
-//     if (os === "tooltip") {
-//       actionsStore.fetchProjectActions(id);
-//     } else if (os === "block") {
-//       blocksStore.fetchProjectBLocks(id);
-//     } else if (os === "type") {
-//       typesStore.fetchProjectTypes(id);
-//     } else if (os === "floor") {
-//       floorStore.fetchProjectFloors(id);
-//     } else if (os === "flat") {
-//       flatStore.fetchProjectFlats(id);
-//     }
-//   }
-// );
+    if (os === "tooltip") {
+      actionsStore.fetchProjectActions(id);
+    } else if (os === "block") {
+      blocksStore.fetchProjectBLocks(id);
+    } else if (os === "type") {
+      typesStore.fetchProjectTypes(id);
+    } else if (os === "floor") {
+      floorStore.fetchProjectFloors(id);
+    } else if (os === "flat") {
+      flatStore.fetchProjectFlats(id);
+    }
+  }
+);
 </script>
 
 <template>

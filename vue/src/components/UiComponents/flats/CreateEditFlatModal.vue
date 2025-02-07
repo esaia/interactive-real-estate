@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import Button from "../form/Button.vue";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
@@ -187,10 +187,6 @@ onMounted(() => {
       obj.type = typeInstance.type;
     }
   }
-});
-
-onUnmounted(() => {
-  flatStore.fetchProjectFlats(projectStore.id);
 });
 </script>
 

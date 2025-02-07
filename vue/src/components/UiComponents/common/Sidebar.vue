@@ -23,6 +23,7 @@ import Ctrl from "../icons/Ctrl.vue";
 import PlusBtn from "../icons/PlusBtn.vue";
 import MinusBtn from "../icons/MinusBtn.vue";
 import Space from "../icons/Space.vue";
+import { useTypesStore } from "@/src/stores/useTypes";
 const isClollapsed = ref(false);
 
 const emit = defineEmits<{
@@ -42,9 +43,10 @@ const floorsStore = useFloorsStore();
 const blocksStore = useBlocksStore();
 const flatStore = useFlatsStore();
 const actionStore = useActionsStore();
+const typeStore = useTypesStore();
 
 const sidebarRef = ref<HTMLDivElement>();
-const showEditModal = ref<"tooltip" | "flat" | "floor" | "block" | "">("");
+const showEditModal = ref<"tooltip" | "flat" | "floor" | "block" | "type" | "">("");
 const activeFlat = ref<FlatItem>();
 const activeAction = ref<ActionItem>();
 const showInfo = ref(false);
@@ -116,20 +118,8 @@ const editPolygon = (item: PolygonDataCollection) => {
 };
 
 watch(
-  () => showEditModal.value,
-  (_, os) => {
-    const id = Number(projectStore?.id);
-
-    if (os === "floor") {
-      floorsStore.fetchProjectFloors(id);
-    } else if (os === "flat") {
-      flatStore.fetchProjectFlats(id);
-    }
-  }
-);
-watch(
   () => props.activeGroup,
-  async (ns) => {
+  async () => {
     await nextTick();
 
     const activeElement = sidebarRef.value?.querySelector(".active");
@@ -141,11 +131,25 @@ watch(
         inline: "nearest"
       });
     }
+  }
+);
 
-    // sidebarRef.value?.scrollTo({
-    //   top: 400,
-    //   behavior: "smooth"
-    // });
+watch(
+  () => showEditModal.value,
+  (_, os) => {
+    const id = Number(projectStore?.id);
+
+    if (os === "tooltip") {
+      actionStore.fetchProjectActions(id);
+    } else if (os === "block") {
+      blocksStore.fetchProjectBLocks(id);
+    } else if (os === "type") {
+      typeStore.fetchProjectTypes(id);
+    } else if (os === "floor") {
+      floorsStore.fetchProjectFloors(id);
+    } else if (os === "flat") {
+      flatStore.fetchProjectFlats(id);
+    }
   }
 );
 </script>

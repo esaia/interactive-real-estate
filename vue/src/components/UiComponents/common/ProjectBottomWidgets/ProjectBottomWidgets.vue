@@ -71,13 +71,6 @@ watch(
   async (ns) => {
     if (ns) {
       project_image.value = ns[0];
-
-      // if (projectStore.svgRef) {
-      // projectStore.svg = projectStore.svg.replace(/viewBox="\d+ \d+ \d+ \d+"/, 'viewBox="0 0 0 0"');
-      // projectStore.svgRef.innerHTML = projectStore.svg.toString();
-
-      // projectStore.svgRef =
-      // }
     }
   }
 );
