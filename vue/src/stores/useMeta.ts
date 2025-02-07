@@ -51,7 +51,7 @@ export const useMetaStore = defineStore("meta", () => {
     const reserved_color = getMeta("reserved_color")?.meta_value || PREVIEW_RESERVED_COLOR;
     const sold_color = getMeta("sold_color")?.meta_value || PREVIEW_SOLD_COLOR;
     const stroke_color = getMeta("stroke_color")?.meta_value || PREVIEW_STROKE_COLOR;
-    const stroke_width = getMeta("stroke_width")?.meta_value || PREVIEW_STROKE_WIDTH;
+    const stroke_width = !irePlugin.is_premium ? 1 : getMeta("stroke_width")?.meta_value || PREVIEW_STROKE_WIDTH;
 
     const colors: any = {
       path_color,
