@@ -41,7 +41,8 @@ window.constants = {
   PREVIEW_RESERVED_COLOR: "rgba(255, 247, 89, 0.53)",
   PREVIEW_SOLD_COLOR: "rgba(219, 64, 64, 0.45)",
   PREVIEW_STROKE_COLOR: "rgba(0, 0, 0,  1)",
-  PREVIEW_STROKE_WIDTH: 1
+  PREVIEW_STROKE_WIDTH: 1,
+  PREVIEW_BORDER_RADIUS: 0
 };
 
 app.mount("#irep-vue-app");

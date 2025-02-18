@@ -3,7 +3,7 @@ import { storeToRefs } from "pinia";
 import { useProjectStore } from "../../../../stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
 import { pushToPlansPage, resetCanvasAfterSave, showToast } from "@/src/composables/helpers";
-import { nextTick, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { imageInterface } from "@/types/components";
 import UploadImg from "../../form/UploadImg.vue";
 import Input from "../../form/Input.vue";
@@ -24,6 +24,7 @@ const showPreview = ref(false);
 const projectUpdateToogle = ref(false);
 
 const updateProject = async () => {
+  console.log(colorsRef.value?.metaColors);
   metaStore.setProjectMeta([...colorsRef.value?.metaColors]);
 
   if (svgRef.value) {
