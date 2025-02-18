@@ -23,8 +23,8 @@ With easy navigation through different building layers, users can get detailed i
 ### **Key Features:** ###
 - **Interactive Building:** You can easily draw and edit complex shapes on your image right in the editor, without needing any external programs like Illustrator. Simply add pins and create svg on top of building render.
 - **Multiple Layers:** Easily navigate between different building layers (e.g., floors, appartments) with smooth transitions.
-- **Customizable Shortcodes:** Use the `[irep_building]` shortcode to embed your interactive maps and customize them with your specific data.
-- **Easy-to-Use Admin Interface:** Intuitive settings page to upload building images, configure hotspots, and manage map settings.
+- **Customizable Shortcodes:** Use the `[irep_building]` shortcode to embed your interactive buildings and customize them with your specific data.
+- **Easy-to-Use Admin Interface:** Intuitive settings page to upload building images, configure hotspots.
 - **Follow link** on click of path
 - **Open modal** on click of path
 - **Preview** result in one click.
