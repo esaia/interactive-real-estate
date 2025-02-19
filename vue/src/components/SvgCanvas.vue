@@ -523,7 +523,7 @@ watch(
 
 onMounted(() => {
   setTimeout(() => {
-    setSvgViewBox();
+    // setSvgViewBox();
     emit("setSvgRef", svgCanvas.value);
     addListeners();
   }, 500);

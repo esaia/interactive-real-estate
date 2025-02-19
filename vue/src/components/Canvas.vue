@@ -25,6 +25,12 @@ defineProps<{
 }>();
 
 const canvasRef = ref();
+
+const onImgLoad = () => {
+  setTimeout(() => {
+    canvasRef.value.setSvgViewBox();
+  }, 500);
+};
 </script>
 
 <template>
@@ -73,7 +79,7 @@ const canvasRef = ref();
 
     <div class="max-h-[80vh] overflow-x-hidden">
       <div class="canvas-container relative h-full w-full select-none bg-gray-50">
-        <img :src="projectImage" class="left-0 top-0 h-full w-full" />
+        <img :src="projectImage" class="left-0 top-0 h-full w-full" @load="onImgLoad" />
         <SvgCanvas
           ref="canvasRef"
           :svgRef="svgRef"
