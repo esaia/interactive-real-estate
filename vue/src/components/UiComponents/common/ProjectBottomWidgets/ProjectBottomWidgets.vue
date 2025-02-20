@@ -12,6 +12,7 @@ import ColorVariables from "./ColorVariables.vue";
 import { useMetaStore } from "@/src/stores/useMeta";
 import Modal from "../../Modal.vue";
 import GenerateObject from "./GenerateObject.vue";
+import TooltipChoose from "./TooltipChoose.vue";
 const projectStore = useProjectStore();
 const metaStore = useMetaStore();
 
@@ -19,12 +20,16 @@ const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = st
 
 const projectImage = ref<imageInterface[] | null>(null);
 const colorsRef = ref();
+const chosenTooltip = ref("1");
+
 const showGenerateObject = ref(false);
 const showPreview = ref(false);
 const projectUpdateToogle = ref(false);
 
 const updateProject = async () => {
-  metaStore.setProjectMeta([...colorsRef.value?.metaColors]);
+  const tooltipMeta = { key: "tooltip", value: chosenTooltip.value };
+
+  metaStore.setProjectMeta([...colorsRef.value?.metaColors, tooltipMeta]);
 
   if (svgRef.value) {
     resetCanvasAfterSave(svgRef.value);
@@ -75,6 +80,14 @@ watch(
   }
 );
 
+watch(
+  () => metaStore.projectMeta,
+  () => {
+    chosenTooltip.value = metaStore.getMeta("tooltip")?.meta_value.toString() || "1";
+  },
+  { deep: true, immediate: true }
+);
+
 onMounted(() => {
   projectImage.value = project_image.value?.id ? [project_image.value] : null;
 });
@@ -87,7 +100,7 @@ defineExpose({
 
 <template>
   <div class="my-7 flex items-start justify-between">
-    <div v-if="!showPreview" class="flex gap-5">
+    <div v-if="!showPreview" class="flex flex-wrap gap-5">
       <div class="flex flex-col items-start gap-5 rounded-md bg-white p-4">
         <div class="flex w-full flex-col gap-2">
           <label for="" class="font-semibold">Project Title:</label>
@@ -130,6 +143,10 @@ defineExpose({
         >
           <p class="-rotate-12 text-center text-xl font-bold text-red-700">Upgrade to change path colors</p>
         </div>
+      </div>
+
+      <div class="relative overflow-hidden rounded-md bg-white p-4">
+        <TooltipChoose v-model="chosenTooltip" />
       </div>
     </div>
 

@@ -87,7 +87,7 @@ function irep_enqueue_admin_scripts($hook)
     irep_enqueue_vue_assets();
 }
 
-add_action('admin_enqueue_scripts', 'irep_enqueue_admin_scripts');
+add_action('admin_enqueue_scripts', 'irep_enqueue_admin_scripts', 20);
 
 /**
  * Enqueue Vue.js assets only on the front-end of the site.
@@ -98,7 +98,7 @@ function irep_enqueue_frontend_scripts()
     irep_enqueue_vue_assets();
 }
 
-add_action('wp_enqueue_scripts', 'irep_enqueue_frontend_scripts');
+add_action('wp_enqueue_scripts', 'irep_enqueue_frontend_scripts', 20);
 
 
 
@@ -110,19 +110,17 @@ add_action('wp_enqueue_scripts', 'irep_enqueue_frontend_scripts');
  *
  * @return string Modified script tag with 'module' type and 'defer' attribute.
  */
-function irep_add_module_type_attribute($tag, $handle)
+function irep_force_module_type_attribute($tag, $handle)
 {
-    // Check if the script handle matches 'ire-vue-js'
-    if ($handle !== 'ire-vue-js') {
-        return $tag; // If not, return the original tag
+    if ($handle === 'ire-vue-js') {
+        $script_url = plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.js';
+        return '<script type="module" defer src="' . esc_url($script_url) . '"></script>';
     }
-
-    // Modify the script tag to include 'type="module"' and 'defer' attributes
-    return str_replace('src', 'type="module" defer="defer" src', $tag);
+    return $tag;
 }
 
-add_filter('script_loader_tag', 'irep_add_module_type_attribute', 10, 2);
 
+add_filter('script_loader_tag', 'irep_force_module_type_attribute', 10, 2);
 
 
 /**

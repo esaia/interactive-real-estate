@@ -12,7 +12,8 @@ export const useMetaStore = defineStore("meta", () => {
     PREVIEW_SOLD_COLOR,
     PREVIEW_STROKE_COLOR,
     PREVIEW_STROKE_WIDTH,
-    PREVIEW_BORDER_RADIUS
+    PREVIEW_BORDER_RADIUS,
+    TOOLTIP
   } = constants;
 
   const projectStore = useProjectStore();
@@ -54,6 +55,7 @@ export const useMetaStore = defineStore("meta", () => {
     const stroke_color = getMeta("stroke_color")?.meta_value || PREVIEW_STROKE_COLOR;
     const stroke_width = !irePlugin.is_premium ? 1 : getMeta("stroke_width")?.meta_value || PREVIEW_STROKE_WIDTH;
     const border_radius = !irePlugin.is_premium ? 1 : getMeta("border_radius")?.meta_value || PREVIEW_BORDER_RADIUS;
+    const tooltip = !irePlugin.is_premium ? "1" : getMeta("tooltip")?.meta_value || TOOLTIP;
 
     const colors: any = {
       path_color,

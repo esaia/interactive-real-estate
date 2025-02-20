@@ -23,6 +23,7 @@ declare const constants: {
   PREVIEW_STROKE_COLOR: string;
   PREVIEW_STROKE_WIDTH: number;
   PREVIEW_BORDER_RADIUS: number;
+  TOOLTIP: string;
 };
 
 declare const wp: any;

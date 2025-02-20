@@ -83,8 +83,14 @@ class Irep_Meta_Project
             'meta_data' => $data['meta_data']
         ];
 
+
         if (!ire_fs()->can_use_premium_code()) {
-            irep_upgrade_plan();
+            // irep_upgrade_plan();
+            $filtered_keys = ['tooltip'];
+
+            $data['meta_data'] = array_filter($data['meta_data'], function ($item) use ($filtered_keys) {
+                return in_array($item['key'], $filtered_keys);
+            });
         }
 
 
