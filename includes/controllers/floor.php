@@ -26,7 +26,7 @@ class Irep_Floor
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'irep_floors';
+        $this->table_name = 'irep_floors';
     }
 
     /**
@@ -60,59 +60,45 @@ class Irep_Floor
         // Sanitize and filter sorting parameters
         $data = irep_sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf', 'block_id']);
 
-        // Initial query to retrieve floors based on the project ID
-        $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d";
-        $params = [$data['project_id']];
 
-        // Apply search filters if provided
+        $conditions = [];
+        $conditions[] = ['project_id', '=', $data['project_id']];
+
         if (!empty($data['search'])) {
-            $query .= " AND (title LIKE %s OR id LIKE %s OR floor_number LIKE %s)";
             $searchTerm = '%' . $data['search'] . '%';
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
+            $conditions[] = ['title', 'LIKE', $searchTerm];
+            $conditions[] = ['id', 'LIKE', $searchTerm];
+            $conditions[] = ['floor_number', 'LIKE', $searchTerm];
         }
 
-        // Apply block filter if provided
+
         if (!empty($data['block']) && $data['block'] != 'null') {
             if ($data['block'] !== 'all') {
-                $query .= " AND block_id = %d";
-                $params[] = $data['block'];
+                $conditions[] = ['block_id', '=', $data['block']];
             }
         } else {
-            $query .= " AND block_id IS NULL";
+            $conditions[] = ['block_id', 'IS', 'NULL'];
         }
 
-        // Prepare and execute the query to get total results
-        $total_query = $this->wpdb->prepare($query, ...$params);
-        $total_results = $this->wpdb->get_results($total_query, ARRAY_A);
-        $total_results = count($total_results);
+        $query = Irep_DB::table($this->table_name);
 
-        // Apply sorting and pagination
-        $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
-        $params[] = $data['per_page'];
-        $params[] = $data['offset'];
+        foreach ($conditions as $condition) {
+            $query->where($condition[0], $condition[1], $condition[2] ?? null);
+        }
 
-        // Prepare and execute the final query
-        $query = $this->wpdb->prepare($query, ...$params);
-        $results = $this->wpdb->get_results($query, ARRAY_A);
+        $results = $query->orderBy($data['sort_field'], $data['sort_order'])
+            ->paginate($data['page'], $data['per_page']);
 
-        // Handle errors in fetching the results
         if (is_wp_error($results)) {
-            return [false, $results->get_error_message()];
+            return [false, 'something went wrong!'];
         } else {
+
+
             if ($results) {
-                // Map the floor data to the correct format
-                $results = array_map([$this, 'map_floor_data'], $results);
+                $results['data'] = array_map([$this, 'map_floor_data'], $results['data']);
             }
 
-            // Return the results with total count and pagination info
-            return [true, [
-                'data' => $results,
-                'total' => $total_results,
-                'page' => $data['page'],
-                'per_page' => $data['per_page']
-            ]];
+            return [true, $results];
         }
     }
 
@@ -138,9 +124,10 @@ class Irep_Floor
             'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
             'block_id' => isset($data['block_id']) ? absint($data['block_id']) : 0,
             'floor_image' => $data['floor_image'],
-            'svg'  => $data['svg'],
-            'polygon_data' => $data['polygon_data'],
+            'svg'  => isset($data['svg']) ? $data['svg'] : '',
+            'polygon_data' => isset($data['polygon_data']) ? irep_handle_json_data($data['polygon_data']) : null
         ];
+
 
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
@@ -150,37 +137,29 @@ class Irep_Floor
         $required_data = irep_check_required_data($data, $required_fields);
 
         // Sanitize and validate non-required fields
-        $non_required_fields = ['title', 'conf', 'svg', 'block_id'];
+        $non_required_fields = ['title', 'conf', 'svg', 'block_id', 'polygon_data', 'svg'];
         $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
+
 
         // Merge required and non-required data
         $non_required_data['polygon_data'] = $data['polygon_data'] ?? null;
         $non_required_data['svg'] = !empty($data['svg']) ? $data['svg'] : '';
         $data  = array_merge($non_required_data, $required_data);
 
-        // Handle polygon data if available
-        if (isset($data['polygon_data'])) {
-            $data['polygon_data'] = irep_handle_json_data($data['polygon_data']);
-        }
-
-        // Set block_id if available, otherwise null
-        $data['block_id'] = $data['block_id'] ?? null;
-
         // Check if the floor already exists
         $this->check_floor_exists_or_not($data['project_id'], $data['floor_number'], $data['block_id']);
 
-        // Insert the new floor data into the database
-        $this->wpdb->insert($this->table_name, $data);
+
+        $floor_id = Irep_DB::table($this->table_name)->create($data);
 
         // Handle database insert errors
         if ($this->wpdb->last_error) {
             irep_database_duplicate_error($this->wpdb, 'Floor number already exists for this project.');
         } else {
-            // Get the inserted floor ID and prepare the response
-            $new_floor_id = $this->wpdb->insert_id;
-            $new_floor = irep_get($this->table_name, $new_floor_id);
-            $this->prepare_floor_data($new_floor);
-            irep_send_json_response(true, $new_floor);
+            $inserted_floor =  Irep_DB::table($this->table_name)->find($floor_id);
+            $transformed = $this->map_floor_data($inserted_floor);
+
+            return irep_send_json_response(true, $transformed);
         }
     }
 
@@ -206,15 +185,15 @@ class Irep_Floor
             'block_id' => isset($data['block_id']) ? absint($data['block_id']) : 0,
             'floor_image' => $data['floor_image'] ?? 0,
             'svg'  => $data['svg'],
-            'polygon_data' => $data['polygon_data'],
+            'polygon_data' => isset($data['polygon_data']) ? irep_handle_json_data($data['polygon_data']) : null,
         ];
 
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the floor_id is present
-        $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
-        if (!$floor_id) {
+        // $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
+        if (!$data['floor_id']) {
             irep_send_json_response(false, 'floor_id is required');
             return;
         }
@@ -226,23 +205,10 @@ class Irep_Floor
         }, ARRAY_FILTER_USE_BOTH);
 
 
-        // Handle optional fields
-        if (empty($params['block_id'])) {
-            $params['block_id'] = null;
-        }
-        if (empty($params['conf'])) {
-            $params['conf'] = null;
-        }
-
-        // Handle polygon data and image containment
-        $params['polygon_data'] = irep_handle_json_data($params['polygon_data'] ?? '');
-
-        // Update the floor in the database
-        $where = ['id' => $floor_id];
-        $this->wpdb->update($this->table_name, $params, $where);
+        $updated_floor = Irep_DB::table($this->table_name)->where('id', '=',  $data['floor_id'])->update($params);
 
         // Handle database update errors
-        if ($this->wpdb->last_error) {
+        if ($updated_floor->last_error) {
             irep_database_duplicate_error($this->wpdb, 'Floor number already exists for this project.');
         } else {
             irep_send_json_response(true, 'Floor updated successfully');
@@ -272,20 +238,19 @@ class Irep_Floor
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the floor_id is provided
-        $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
-        if (!$floor_id) {
+        if (!$data['floor_id']) {
             irep_send_json_response(false, 'floor_id is required');
             return;
         }
 
-        // Delete the floor from the database
-        $delete_result = $this->wpdb->delete($this->table_name, ['id' => $floor_id]);
+
+        $deleted_floor = Irep_DB::table($this->table_name)->where('id', '=',  $data['floor_id'])->delete();
 
         // Return success or error response
-        if ($delete_result) {
+        if (!$deleted_floor->last_error) {
             irep_send_json_response(true, 'Floor deleted successfully');
         } else {
-            irep_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            irep_send_json_response(false, 'Database error: ' . $deleted_floor->last_error);
         }
     }
 
@@ -300,6 +265,10 @@ class Irep_Floor
      */
     private function map_floor_data($item)
     {
+        if (is_object($item)) {
+            $item = (array) $item;
+        }
+
         if ($item['polygon_data']) {
             $item['polygon_data'] = irep_handle_json_data($item['polygon_data']);
         }
@@ -309,23 +278,6 @@ class Irep_Floor
         return $item;
     }
 
-    /**
-     * Prepares the floor data for output.
-     *
-     * This method processes fields like polygon_data, floor_image, and svg for rendering.
-     *
-     * @param object $floor The floor object to be prepared.
-     * 
-     * @return void
-     */
-    private function prepare_floor_data(&$floor)
-    {
-        if (isset($floor->polygon_data)) {
-            $floor->polygon_data = irep_handle_json_data($floor->polygon_data);
-        }
-        $floor->floor_image = [irep_get_image_instance($floor->floor_image)];
-        $floor->svg = irep_transformSvgString($floor->svg);
-    }
 
     /**
      * Checks if a floor with the given project ID and floor number already exists in the database.
@@ -340,25 +292,30 @@ class Irep_Floor
      */
     public function check_floor_exists_or_not($project_id, $floor_number, $block_id)
     {
-        $params = [];
-        $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d AND floor_number = %d";
-        $params[] = $project_id;
-        $params[] = $floor_number;
+        $conditions = [];
 
-        // Add block ID if provided
+        $conditions[] = ['project_id', '=', $project_id];
+        $conditions[] = ['floor_number', '=', $floor_number];
+
         if ($block_id !== null) {
-            $query .= " AND block_id = %d";
-            $params[] = $block_id;
+            $conditions[] = ['block_id', '=', $block_id];
         } else {
-            $query .= " AND block_id IS NULL";
+            $conditions[] = ['block_id', 'IS', 'NULL'];
         }
 
-        // Prepare and execute the query
-        $query = $this->wpdb->prepare($query, ...$params);
-        $result = $this->wpdb->get_row($query, ARRAY_A);
 
-        // Check if the floor already exists
-        if (isset($result)) {
+        $query = Irep_DB::table($this->table_name);
+
+
+        foreach ($conditions as $condition) {
+            $query->where($condition[0], $condition[1], $condition[2] ?? null);
+        }
+
+
+        $result = $query->get();
+
+
+        if (isset($result) && !empty($result)) {
             irep_send_json_response(false, 'Floor number already exists for this project.');
         }
     }

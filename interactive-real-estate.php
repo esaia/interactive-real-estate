@@ -61,6 +61,7 @@ define('IREP_PLUGIN_URL', admin_url('admin.php?page=interactive-real-estate'));
 
 
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/helper.php';
+require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/Db.php';
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/init.php';
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/migrations.php';
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/api.php';

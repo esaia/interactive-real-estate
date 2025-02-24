@@ -7,18 +7,18 @@ if (!defined('ABSPATH')) {
 
 
 
-include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/project.php';
+include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/Project.php';
 
-include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/floor.php';
+include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/Floor.php';
 
-include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/block.php';
+include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/Block.php';
 
-include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/flat.php';
+include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/Flat.php';
 
-include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/type.php';
+include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/Type.php';
 
-include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/meta.php';
+include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/Meta.php';
 
-include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/tooltip.php';
+include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/Tooltip.php';
 
-include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/shortCodeApi.php';
+include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/ShortCodeApi.php';
