@@ -26,7 +26,7 @@ class Irep_Block
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'irep_blocks';
+        $this->table_name = 'irep_blocks';
     }
 
     /**
@@ -65,48 +65,37 @@ class Irep_Block
         // Sanitize and filter sorting parameters
         $data = irep_sanitize_sorting_parameters($data, ['id', 'title', 'conf']);
 
-        // Base query for fetching blocks
-        $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d";
-        $params = [$data['project_id']];
 
-        // Apply search filter if provided
+        $conditions = [];
+        $conditions[] = ['project_id', '=', $data['project_id']];
+
+
         if (!empty($data['search'])) {
-            $query .= " AND (title LIKE %s OR id LIKE %s)";
             $searchTerm = '%' . $data['search'] . '%';
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
+            $conditions[] = ['title', 'LIKE', $searchTerm];
+            $conditions[] = ['id', 'LIKE', $searchTerm];
+            $conditions[] = ['floor_number', 'LIKE', $searchTerm];
         }
 
-        // Prepare and execute the total count query
-        $total_query = $this->wpdb->prepare($query, ...$params);
-        $total_results =  $this->wpdb->get_results($total_query, ARRAY_A);
-        $total_results = count($total_results);
+        $query = Irep_DB::table($this->table_name);
 
-        // Add ordering and pagination to the query
-        $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
-        $params[] = $data['per_page'];
-        $params[] = $data['offset'];
+        foreach ($conditions as $condition) {
+            $query->where($condition[0], $condition[1], $condition[2] ?? null);
+        }
 
-        // Prepare and execute the main query
-        $query = $this->wpdb->prepare($query, ...$params);
-        $results = $this->wpdb->get_results($query, ARRAY_A);
+        $results = $query->orderBy($data['sort_field'], $data['sort_order'])
+            ->paginate($data['page'], $data['per_page']);
 
-        // Handle errors in fetching results
-        if (is_wp_error($results)) {
-            return [false,  $results->get_error_message()];
+        if (!$results) {
+            return [false,  'something went wrong!'];
         } else {
+
             // Map the block data to a more usable format
-            if ($results) {
-                $results = array_map([$this, 'map_block_data'], $results);
+            if ($results['data']) {
+                $results['data'] = array_map([$this, 'map_block_data'], $results['data']);
             }
 
-            // Return the results with pagination data
-            return [true,  [
-                'data' => $results,
-                'total' => $total_results,
-                'page' => $data['page'],
-                'per_page' => $data['per_page']
-            ]];
+            return [true, $results];
         }
     }
 
@@ -132,12 +121,12 @@ class Irep_Block
         $data = [
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
-            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
-            'conf'  => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
-            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
-            'block_image' => $data['block_image'],
-            'svg'  => $data['svg'],
-            'polygon_data' => $data['polygon_data'],
+            'title'        => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'conf'         => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'block_image'  => $data['block_image'],
+            'svg'          => $data['svg'],
+            'polygon_data' => isset($data['polygon_data']) ? irep_handle_json_data($data['polygon_data']) : null
         ];
 
         // Check nonce for security
@@ -158,24 +147,15 @@ class Irep_Block
         $data  = array_merge($non_required_data, $required_data);
 
 
-        // Handle polygon data if provided
-        if (isset($data['polygon_data'])) {
-            $data['polygon_data'] = irep_handle_json_data($data['polygon_data']);
-        }
+        $block_id = Irep_DB::table($this->table_name)->create($data);
 
-        // Insert the new block data into the database
-        $this->wpdb->insert($this->table_name, $data);
-
-        // Handle database insert errors
-        if ($this->wpdb->last_error) {
-            irep_database_duplicate_error($this->wpdb, 'Block number already exists for this project.');
+        if (!$block_id) {
+            return irep_send_json_response(false, 'something went wrong!');
         } else {
-            // Get the inserted block ID and prepare the response
-            $new_block_id = $this->wpdb->insert_id;
-            $new_block = irep_get($this->table_name, $new_block_id);
+            $block_block =  Irep_DB::table($this->table_name)->find($block_id);
+            $transformed = $this->map_block_data($block_block);
 
-            $this->prepare_block_data($new_block);
-            irep_send_json_response(true, $new_block);
+            return irep_send_json_response(true, $transformed);
         }
     }
 
@@ -201,13 +181,13 @@ class Irep_Block
         $data = [
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
-            'block_id'      => isset($data['block_id']) ? absint($data['block_id']) : 0,
-            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
-            'conf'  => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
-            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
-            'block_image' => $data['block_image'],
-            'svg'  => $data['svg'],
-            'polygon_data' => $data['polygon_data'],
+            'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
+            'title'        => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'conf'         => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'block_image'  => $data['block_image'],
+            'svg'          => $data['svg'],
+            'polygon_data' => isset($data['polygon_data']) ? irep_handle_json_data($data['polygon_data']) : null
         ];
 
 
@@ -221,27 +201,45 @@ class Irep_Block
             return;
         }
 
+
         // Prepare the keys to be updated
-        $required_fields = ['title', 'block_image'];
-        $required_data = irep_check_required_data($data, $required_fields);
+        $keys = ['title', 'block_image', 'conf', 'polygon_data', 'svg'];
+        $params = array_filter($data, function ($value, $key) use ($keys) {
+            return in_array($key, $keys) && $value;
+        }, ARRAY_FILTER_USE_BOTH);
 
-        $non_required_fields = ['conf', 'polygon_data', 'svg'];
-        $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
 
-        // Merge required and non-required data
-        $params  = array_merge($non_required_data, $required_data);
+
+        $updated_block = Irep_DB::table($this->table_name)->where('id', '=',  $data['block_id'])->update($params);
+
+        // Handle database update errors
+        if ($updated_block->last_error) {
+            irep_database_duplicate_error($this->wpdb, 'Something went wrong!');
+        } else {
+            irep_send_json_response(true, 'Block updated successfully');
+        }
+
+        // // Prepare the keys to be updated
+        // $required_fields = ['title', 'block_image'];
+        // $required_data = irep_check_required_data($data, $required_fields);
+
+        // $non_required_fields = ['conf', 'polygon_data', 'svg'];
+        // $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
+
+        // // Merge required and non-required data
+        // $params  = array_merge($non_required_data, $required_data);
 
         // Handle optional fields
-        if (isset($data['svg'])) {
-            $params['svg'] = $data['svg'];
-        }
+        // if (isset($data['svg'])) {
+        //     $params['svg'] = $data['svg'];
+        // }
 
-        if (empty($params['conf'])) {
-            $params['conf'] = null;
-        }
+        // if (empty($params['conf'])) {
+        //     $params['conf'] = null;
+        // }
 
         // Handle polygon data and image containment
-        $params['polygon_data'] = irep_handle_json_data($data['polygon_data'] ?? '');
+        // $params['polygon_data'] = irep_handle_json_data($data['polygon_data'] ?? '');
 
         // Update the block in the database
         $where = ['id' => $block_id];
@@ -302,6 +300,11 @@ class Irep_Block
      */
     private function map_block_data($item)
     {
+        if (is_object($item)) {
+            $item = (array) $item;
+        }
+
+
         // Process polygon data if available
         if ($item['polygon_data']) {
             $item['polygon_data'] = irep_handle_json_data($item['polygon_data']);

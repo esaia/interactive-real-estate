@@ -89,7 +89,7 @@ class Irep_Floor
         $results = $query->orderBy($data['sort_field'], $data['sort_order'])
             ->paginate($data['page'], $data['per_page']);
 
-        if (is_wp_error($results)) {
+        if (!$results) {
             return [false, 'something went wrong!'];
         } else {
 
@@ -117,14 +117,14 @@ class Irep_Floor
         $data = [
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
-            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
-            'floor_number'      => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
-            'floor_id'      => isset($data['floor_id']) ? absint($data['floor_id']) : 0,
-            'conf'  => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
-            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
-            'block_id' => isset($data['block_id']) ? absint($data['block_id']) : 0,
-            'floor_image' => $data['floor_image'],
-            'svg'  => isset($data['svg']) ? $data['svg'] : '',
+            'title'        => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'floor_number' => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
+            'floor_id'     => isset($data['floor_id']) ? absint($data['floor_id']) : 0,
+            'conf'         => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
+            'floor_image'  => $data['floor_image'],
+            'svg'          => isset($data['svg']) ? $data['svg'] : '',
             'polygon_data' => isset($data['polygon_data']) ? irep_handle_json_data($data['polygon_data']) : null
         ];
 
@@ -153,8 +153,8 @@ class Irep_Floor
         $floor_id = Irep_DB::table($this->table_name)->create($data);
 
         // Handle database insert errors
-        if ($this->wpdb->last_error) {
-            irep_database_duplicate_error($this->wpdb, 'Floor number already exists for this project.');
+        if (!$floor_id) {
+            return irep_send_json_response(false, 'something went wrong!');
         } else {
             $inserted_floor =  Irep_DB::table($this->table_name)->find($floor_id);
             $transformed = $this->map_floor_data($inserted_floor);
@@ -177,14 +177,14 @@ class Irep_Floor
         $data = [
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
-            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
-            'floor_number'      => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
-            'floor_id'      => isset($data['floor_id']) ? absint($data['floor_id']) : 0,
-            'conf'  => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
-            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
-            'block_id' => isset($data['block_id']) ? absint($data['block_id']) : 0,
-            'floor_image' => $data['floor_image'] ?? 0,
-            'svg'  => $data['svg'],
+            'title'        => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'floor_number' => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
+            'floor_id'     => isset($data['floor_id']) ? absint($data['floor_id']) : 0,
+            'conf'         => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
+            'floor_image'  => $data['floor_image'] ?? 0,
+            'svg'          => $data['svg'],
             'polygon_data' => isset($data['polygon_data']) ? irep_handle_json_data($data['polygon_data']) : null,
         ];
 
@@ -336,12 +336,9 @@ function irep_get_floors()
 
     $results = $irep_floor->get_floors($_POST);
 
+
     if (is_array($results) && isset($results[0], $results[1])) {
-        if (!$results[0]) {
-            irep_send_json_response(false, $results[1]);
-        } else {
-            irep_send_json_response(true, $results[1]);
-        }
+        irep_send_json_response(true, $results[1]);
     } else {
         irep_send_json_response(false, 'No floors found or invalid response format');
     }
