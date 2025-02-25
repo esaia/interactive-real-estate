@@ -23,7 +23,7 @@ class Irep_Flat
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'irep_flats';
+        $this->table_name =  'irep_flats';
     }
 
     /**
@@ -61,66 +61,31 @@ class Irep_Flat
         // Sanitize and filter sorting parameters
         $data = irep_sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf', 'block_id']);
 
-        // Base query to fetch flats from the database
-        $query = "SELECT * FROM $this->table_name WHERE project_id = %d";
-        $params = [$data['project_id']];
+        $query = Irep_DB::table($this->table_name);
+        $searchTerm = '%' . $data['search'] . '%';
 
-        // Filter by block if provided
-        if (!empty($data['block']) && $data['block'] != 'null') {
-            if ($data['block'] !== 'all') {
-                $query .= " AND block_id = %d";
-                $params[] = $data['block'];
-            }
-        } else {
-            $query .= " AND block_id IS NULL"; // Handle null block filtering
-        }
+        $query->where('project_id', '=', $data['project_id']);
 
-        // Filter by floor if provided
-        if (!empty($data['floor'])) {
-            $query .= " AND floor_number = %d";
-            $params[] = $data['floor'];
-        }
-
-        // Search filter for flat details like flat number, price, etc.
         if (!empty($data['search'])) {
-            $query .= " AND (flat_number LIKE %s OR id LIKE %s OR price LIKE %s OR offer_price LIKE %s)";
-            $searchTerm = '%' . $data['search'] . '%';
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
+            $query->where('flat_number', 'LIKE', $searchTerm)
+                ->orWhere('id', 'LIKE', $searchTerm)
+                ->orWhere('price', 'LIKE', $searchTerm)
+                ->orWhere('offer_price', 'LIKE', $searchTerm);
         }
 
-        // Execute the total count query
-        $total_query = $this->wpdb->prepare($query, ...$params);
-        $total_results = $this->wpdb->get_results($total_query, ARRAY_A);
-        $total_results = count($total_results);
+        $results = $query->orderBy($data['sort_field'], $data['sort_order'])
+            ->paginate($data['page'], $data['per_page']);
 
-        // Add ordering and pagination to the query
-        $query .= " ORDER BY " . esc_sql($data['sort_field']) . " " . esc_sql($data['sort_order']) . " LIMIT %d OFFSET %d";
-        $params[] = $data['per_page'];
-        $params[] = $data['offset'];
 
-        // Prepare and execute the main query
-        $query = $this->wpdb->prepare($query, ...$params);
-        $results = $this->wpdb->get_results($query, ARRAY_A);
+        if (!$results) {
+            return [false,  'something went wrong!'];
+        } else {
+            // Map the block data to a more usable format
+            if ($results['data']) {
+                $results['data'] = array_map([$this, 'map_flats'], $results['data']);
+            }
 
-        if (is_wp_error($results)) {
-            return [false, $results->get_error_message()];
-        } else if ($results) {
-            // Map the flat data to a more usable format
-            $results = array_map([$this, 'map_flats'], $results);
-
-            // Return the results with pagination data
-            return [
-                true,
-                [
-                    'data' => $results,
-                    'total' => $total_results,
-                    'page' => $data['page'],
-                    'per_page' => $data['per_page']
-                ]
-            ];
+            return [true, $results];
         }
     }
 
@@ -186,16 +151,15 @@ class Irep_Flat
         // Handle the type data as JSON
         $params['type'] = irep_handle_json_data($data['type']);
 
-        // Insert the new flat into the database
-        $this->wpdb->insert($this->table_name, $params);
+        $flat_id = Irep_DB::table($this->table_name)->create($params);
 
-        if ($this->wpdb->last_error) {
+        if (!$flat_id) {
             irep_send_json_response(false, 'Database error');
         } else {
-            // Get the newly inserted flat and prepare the response
-            $new_flat_id = $this->wpdb->insert_id;
-            $new_flat = irep_get($this->table_name, $new_flat_id);
-            irep_send_json_response(true, $new_flat);
+            $created_type =  Irep_DB::table($this->table_name)->find($flat_id);
+            $transformed = $this->map_flats($created_type);
+
+            irep_send_json_response(true, $transformed);
         }
     }
 
@@ -236,9 +200,6 @@ class Irep_Flat
             'use_type'     => isset($data['use_type']) && rest_sanitize_boolean($data['use_type'])
         ];
 
-
-
-
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the flat ID is provided
@@ -257,7 +218,6 @@ class Irep_Flat
         // Sanitize and validate required fields
         $required_data = irep_check_required_data($data, $required_fields);
 
-
         // Define and validate optional fields
         $keys = ['floor_number', 'project_id', 'block_id', 'offer_price', 'conf', 'use_type'];
         $params = irep_validate_and_sanitize_input($data, $keys, false);
@@ -269,14 +229,13 @@ class Irep_Flat
         if (!isset($params['block_id'])) {
             $params['block_id'] = null;
         }
+
         $params['type'] = irep_handle_json_data($data['type']);
 
+        $updated_flat = Irep_DB::table($this->table_name)->where('id', '=',  $flat_id)->update($params);
 
-        // Update the flat record in the database
-        $where = ['id' => $flat_id];
-        $this->wpdb->update($this->table_name, $params, $where);
 
-        if ($this->wpdb->last_error) {
+        if ($updated_flat->last_error) {
             irep_send_json_response(false, 'Database error');
         } else {
             irep_send_json_response(true, 'Flat updated successfully');
@@ -303,10 +262,11 @@ class Irep_Flat
             return;
         }
 
-        // Delete the flat from the database
-        $delete_result = $this->wpdb->delete($this->table_name, ['id' => $flat_id]);
 
-        if ($delete_result) {
+        $deleted_flat = Irep_DB::table($this->table_name)->where('id', '=',  $flat_id)->delete();
+
+
+        if ($deleted_flat) {
             irep_send_json_response(true, 'Flat deleted successfully');
         } else {
             irep_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
@@ -322,6 +282,11 @@ class Irep_Flat
      */
     private function map_flats($item)
     {
+        if (is_object($item)) {
+            $item = (array) $item;
+        }
+
+
         // Handle 'use_type' field as a boolean
         $item['use_type'] =  $item['use_type'] === '1';
 
