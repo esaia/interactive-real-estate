@@ -201,13 +201,15 @@ class Irep_Block
             return;
         }
 
-
         // Prepare the keys to be updated
-        $keys = ['title', 'block_image', 'conf', 'polygon_data', 'svg'];
+        $keys = ['title', 'block_image', 'polygon_data', 'svg', 'conf'];
         $params = array_filter($data, function ($value, $key) use ($keys) {
             return in_array($key, $keys) && $value;
         }, ARRAY_FILTER_USE_BOTH);
 
+
+        $params['conf'] = $params['conf'] ?? null;
+        $params['polygon_data'] = $params['polygon_data'] ?? null;
 
 
         $updated_block = Irep_DB::table($this->table_name)->where('id', '=',  $data['block_id'])->update($params);
@@ -215,39 +217,6 @@ class Irep_Block
         // Handle database update errors
         if ($updated_block->last_error) {
             irep_database_duplicate_error($this->wpdb, 'Something went wrong!');
-        } else {
-            irep_send_json_response(true, 'Block updated successfully');
-        }
-
-        // // Prepare the keys to be updated
-        // $required_fields = ['title', 'block_image'];
-        // $required_data = irep_check_required_data($data, $required_fields);
-
-        // $non_required_fields = ['conf', 'polygon_data', 'svg'];
-        // $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
-
-        // // Merge required and non-required data
-        // $params  = array_merge($non_required_data, $required_data);
-
-        // Handle optional fields
-        // if (isset($data['svg'])) {
-        //     $params['svg'] = $data['svg'];
-        // }
-
-        // if (empty($params['conf'])) {
-        //     $params['conf'] = null;
-        // }
-
-        // Handle polygon data and image containment
-        // $params['polygon_data'] = irep_handle_json_data($data['polygon_data'] ?? '');
-
-        // Update the block in the database
-        $where = ['id' => $block_id];
-        $this->wpdb->update($this->table_name, $params, $where);
-
-        // Handle database update errors
-        if ($this->wpdb->last_error) {
-            irep_database_duplicate_error($this->wpdb, 'Block number already exists for this project.');
         } else {
             irep_send_json_response(true, 'Block updated successfully');
         }
@@ -280,14 +249,13 @@ class Irep_Block
             return;
         }
 
-        // Delete the block from the database
-        $delete_result = $this->wpdb->delete($this->table_name, ['id' => $block_id]);
+        $deleted_block = Irep_DB::table($this->table_name)->where('id', '=',  $block_id)->delete();
 
         // Handle delete result
-        if ($delete_result) {
+        if ($deleted_block) {
             irep_send_json_response(true, 'Block deleted successfully');
         } else {
-            irep_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            irep_send_json_response(false, 'Database error: ' . $deleted_block->last_error);
         }
     }
 
@@ -315,27 +283,6 @@ class Irep_Block
         $item['svg'] = irep_transformSvgString($item['svg']);
 
         return $item;
-    }
-
-    /**
-     * Prepares the block data for output.
-     *
-     * @param object $block The block object to be prepared.
-     * 
-     * @return void
-     */
-    private function prepare_block_data(&$block)
-    {
-        // Process polygon data if available
-        if (isset($block->polygon_data)) {
-            $block->polygon_data = irep_handle_json_data($block->polygon_data);
-        }
-
-        // Process SVG data
-        $block->svg = irep_transformSvgString($block->svg);
-
-        // Process block image
-        $block->block_image = [irep_get_image_instance($block->block_image)];
     }
 }
 

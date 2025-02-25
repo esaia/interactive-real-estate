@@ -185,27 +185,35 @@ class Irep_Floor
             'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
             'floor_image'  => $data['floor_image'] ?? 0,
             'svg'          => $data['svg'],
-            'polygon_data' => isset($data['polygon_data']) ? irep_handle_json_data($data['polygon_data']) : null,
+            'polygon_data' => isset($data['polygon_data']) ? irep_handle_json_data($data['polygon_data']) : '',
         ];
+
 
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure the floor_id is present
-        // $floor_id = isset($data['floor_id']) ? intval($data['floor_id']) : null;
         if (!$data['floor_id']) {
             irep_send_json_response(false, 'floor_id is required');
             return;
         }
 
         // Prepare the keys to be updated
-        $keys = ['floor_number', 'title', 'conf', 'floor_image', 'polygon_data', 'svg', 'block_id'];
+        $keys = ['floor_number', 'title', 'floor_image', 'polygon_data', 'svg', 'conf', 'block_id'];
         $params = array_filter($data, function ($value, $key) use ($keys) {
             return in_array($key, $keys) && $value;
         }, ARRAY_FILTER_USE_BOTH);
 
 
+
+        $params['conf'] = $params['conf'] ?? null;
+        $params['block_id'] = $params['block_id'] ?? null;
+        $params['polygon_data'] = $params['polygon_data'] ?? null;
+
+
         $updated_floor = Irep_DB::table($this->table_name)->where('id', '=',  $data['floor_id'])->update($params);
+
+
 
         // Handle database update errors
         if ($updated_floor->last_error) {
