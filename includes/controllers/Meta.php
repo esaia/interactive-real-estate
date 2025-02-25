@@ -26,7 +26,7 @@ class Irep_Meta_Project
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'irep_project_meta';  // Table for project metadata
+        $this->table_name =  'irep_project_meta';  // Table for project metadata
     }
 
     /**
@@ -43,24 +43,22 @@ class Irep_Meta_Project
         $data = [
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
-            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
         ];
 
         // Verify the nonce for security and check if project ID is valid
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);
 
-        // Prepare SQL query to fetch metadata for the given project ID
-        $query = $this->wpdb->prepare(
-            "SELECT * FROM $this->table_name WHERE project_id = %d",
-            $data['project_id']
-        );
+        $query = Irep_DB::table($this->table_name);
 
-        // Execute the query and retrieve results
-        $results = $this->wpdb->get_results($query, ARRAY_A);
+        $query->where('project_id', '=', $data['project_id']);
+
+        $results = $query->get();
+
 
         // Check if there was a database error
-        if ($this->wpdb->last_error) {
+        if (!$results) {
             return [false,  'No meta found.'];  // Return false and error message if no results
         } else {
             return [true,  $results];  // Return true and the results if found
@@ -118,39 +116,38 @@ class Irep_Meta_Project
             $meta_key = sanitize_text_field($meta['key']);
             $meta_value = sanitize_textarea_field($meta['value']);
 
-            // Check if the meta already exists for the given project ID and key
-            $existing_meta = $this->wpdb->get_row($this->wpdb->prepare(
-                "SELECT id FROM $this->table_name WHERE project_id = %d AND meta_key = %s",
-                $project_id,
-                $meta_key
-            ));
+
+            $query = Irep_DB::table($this->table_name);
+
+
+            $existing_meta = $query->where('project_id', '=', $project_id)->where('meta_key', '=', $meta_key)->get();
+
+            $update_query = Irep_DB::table($this->table_name);
+
 
             if ($existing_meta) {
-                // If the meta exists, update the meta value
-                $update_result = $this->wpdb->update(
-                    $this->table_name,
-                    ['meta_value' => $meta_value],  // Update with new value
-                    ['id' => $existing_meta->id]    // Specify the meta ID to update
-                );
+                $params =  ['meta_value' => $meta_value];
+
+
+                $update_result = $update_query->where('id', '=',  $existing_meta[0]->id)->update($params);
+
 
                 // If the update fails, send an error response
-                if ($update_result === false) {
+                if ($update_result->last_error) {
                     irep_send_json_response(false, 'Database error during update');
                     return;
                 }
             } else {
-                // If the meta does not exist, insert a new record
-                $insert_result = $this->wpdb->insert(
-                    $this->table_name,
-                    [
-                        'project_id' => $project_id,
-                        'meta_key' => $meta_key,
-                        'meta_value' => $meta_value,
-                    ]
-                );
+                $data =  [
+                    'project_id' => $project_id,
+                    'meta_key' => $meta_key,
+                    'meta_value' => $meta_value,
+                ];
+
+                $insert_result = Irep_DB::table($this->table_name)->create($data);
 
                 // If the insert fails, send an error response
-                if ($insert_result === false) {
+                if (!$insert_result) {
                     irep_send_json_response(false, 'Database error during insert');
                     return;
                 }
