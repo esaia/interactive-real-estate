@@ -66,22 +66,16 @@ class Irep_Block
         $data = irep_sanitize_sorting_parameters($data, ['id', 'title', 'conf']);
 
 
-        $conditions = [];
-        $conditions[] = ['project_id', '=', $data['project_id']];
+        $query = Irep_DB::table($this->table_name);
+        $query->where('project_id', '=', $data['project_id']);
 
+        $searchTerm = '%' . $data['search'] . '%';
 
         if (!empty($data['search'])) {
-            $searchTerm = '%' . $data['search'] . '%';
-            $conditions[] = ['title', 'LIKE', $searchTerm];
-            $conditions[] = ['id', 'LIKE', $searchTerm];
-            $conditions[] = ['floor_number', 'LIKE', $searchTerm];
+            $query->where('title', 'LIKE', $searchTerm)
+                ->orWhere('id', 'LIKE', $searchTerm);
         }
 
-        $query = Irep_DB::table($this->table_name);
-
-        foreach ($conditions as $condition) {
-            $query->where($condition[0], $condition[1], $condition[2] ?? null);
-        }
 
         $results = $query->orderBy($data['sort_field'], $data['sort_order'])
             ->paginate($data['page'], $data['per_page']);
@@ -152,8 +146,8 @@ class Irep_Block
         if (!$block_id) {
             return irep_send_json_response(false, 'something went wrong!');
         } else {
-            $block_block =  Irep_DB::table($this->table_name)->find($block_id);
-            $transformed = $this->map_block_data($block_block);
+            $created_block =  Irep_DB::table($this->table_name)->find($block_id);
+            $transformed = $this->map_block_data($created_block);
 
             return irep_send_json_response(true, $transformed);
         }
@@ -212,7 +206,7 @@ class Irep_Block
         $params['polygon_data'] = $params['polygon_data'] ?? null;
 
 
-        $updated_block = Irep_DB::table($this->table_name)->where('id', '=',  $data['block_id'])->update($params);
+        $updated_block = Irep_DB::table($this->table_name)->where('id', '=',  $block_id)->update($params);
 
         // Handle database update errors
         if ($updated_block->last_error) {

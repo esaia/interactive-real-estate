@@ -79,7 +79,7 @@ class Irep_DB
         return $this->wpdb;
     }
 
-    public function where($column, $operator = '=', $value = null)
+    public function where($column, $operator = '=', $value = null, $boolean = 'AND')
     {
         if ($value === null) {
             $value = $operator;
@@ -87,6 +87,7 @@ class Irep_DB
         }
 
         $this->where[] = [
+            'boolean' => $boolean, // Track whether it's AND or OR
             'column' => $column,
             'operator' => $operator,
             'value' => $value
@@ -94,38 +95,46 @@ class Irep_DB
         return $this;
     }
 
+    public function orWhere($column, $operator = '=', $value = null)
+    {
+        return $this->where($column, $operator, $value, 'OR');
+    }
+
+
     public function get($columns = '*')
     {
         $whereClause = '';
         $params = [];
 
-
         if (!empty($this->where)) {
             $whereParts = [];
-            foreach ($this->where as $condition) {
+
+            foreach ($this->where as $index => $condition) {
                 if ($condition['value'] === 'NULL') {
-                    $placeholder = 'null';
+                    $placeholder = 'NULL';
                 } else {
                     $placeholder = is_numeric($condition['value']) ? '%d' : '%s';
                 }
 
-                $whereParts[] = "`{$condition['column']}` {$condition['operator']} {$placeholder}";
+                $clause = "`{$condition['column']}` {$condition['operator']} {$placeholder}";
+
+                if ($index === 0) {
+                    $whereParts[] = $clause;
+                } else {
+                    $whereParts[] = "{$condition['boolean']} " . $clause;
+                }
 
                 if ($condition['value'] !== 'NULL') {
                     $params[] = is_numeric($condition['value']) ? (int) $condition['value'] : $condition['value'];
                 }
             }
-            $whereClause = 'WHERE ' . implode(' AND ', $whereParts);
+
+
+            $whereClause = 'WHERE ' . implode(' ', $whereParts);
         }
 
-
-        $orderBy = '';
-        if ($this->orderBy) {
-            $orderBy = $this->orderBy ? "ORDER BY {$this->orderBy}" : "";
-        }
-
-
-        $limitSql = "";
+        $orderBy = $this->orderBy ? "ORDER BY {$this->orderBy}" : "";
+        $limitSql = '';
 
         if ($this->limit) {
             $limitSql = "LIMIT %d";
@@ -139,6 +148,8 @@ class Irep_DB
 
         $sql = "SELECT {$columns} FROM {$this->table} {$whereClause} {$orderBy} {$limitSql}";
 
+        // irep_dd($params); // Debugging SQL query
+        // irep_dd($sql); // Debugging SQL query
         return $this->wpdb->get_results($this->wpdb->prepare($sql, ...$params));
     }
 

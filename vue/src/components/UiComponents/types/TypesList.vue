@@ -81,10 +81,12 @@ const fetchTypes = async () => {
     return;
   }
 
+  perPage.value = data.data.per_page;
   types.value = data.data;
 };
 
 const submitForm = () => {
+  currentPage.value = 1;
   fetchTypes();
 };
 

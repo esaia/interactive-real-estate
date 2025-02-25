@@ -90,6 +90,7 @@ const fetchBlocks = async () => {
 };
 
 const submitForm = () => {
+  currentPage.value = 1;
   fetchBlocks();
 };
 

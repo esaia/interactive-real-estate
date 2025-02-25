@@ -85,6 +85,7 @@ const fetchActions = async () => {
 };
 
 const submitForm = () => {
+  currentPage.value = 1;
   fetchActions();
 };
 

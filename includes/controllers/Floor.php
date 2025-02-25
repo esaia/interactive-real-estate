@@ -61,30 +61,30 @@ class Irep_Floor
         $data = irep_sanitize_sorting_parameters($data, ['id', 'floor_number', 'conf', 'block_id']);
 
 
-        $conditions = [];
-        $conditions[] = ['project_id', '=', $data['project_id']];
+        $query = Irep_DB::table($this->table_name);
 
-        if (!empty($data['search'])) {
-            $searchTerm = '%' . $data['search'] . '%';
-            $conditions[] = ['title', 'LIKE', $searchTerm];
-            $conditions[] = ['id', 'LIKE', $searchTerm];
-            $conditions[] = ['floor_number', 'LIKE', $searchTerm];
-        }
+        $query->where('project_id', '=', $data['project_id']);
+        $searchTerm = '%' . $data['search'] . '%';
+
 
 
         if (!empty($data['block']) && $data['block'] != 'null') {
             if ($data['block'] !== 'all') {
-                $conditions[] = ['block_id', '=', $data['block']];
+                $query->where('block_id', '=', $data['block']);
             }
         } else {
-            $conditions[] = ['block_id', 'IS', 'NULL'];
+            $query->where('block_id', 'IS', 'NULL');
         }
 
-        $query = Irep_DB::table($this->table_name);
 
-        foreach ($conditions as $condition) {
-            $query->where($condition[0], $condition[1], $condition[2] ?? null);
+        if (!empty($data['search'])) {
+            $query->where('title', 'LIKE', $searchTerm)
+                ->orWhere('id', 'LIKE', $searchTerm)
+                ->orWhere('floor_number', 'LIKE', $searchTerm);
         }
+
+
+
 
         $results = $query->orderBy($data['sort_field'], $data['sort_order'])
             ->paginate($data['page'], $data['per_page']);

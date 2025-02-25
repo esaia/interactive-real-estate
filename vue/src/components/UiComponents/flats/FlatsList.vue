@@ -78,6 +78,7 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
 };
 
 const submitForm = () => {
+  currentPage.value = 1;
   fetchFlats();
 };
 

@@ -98,6 +98,7 @@ const fetchFloors = async () => {
 };
 
 const submitForm = () => {
+  currentPage.value = 1;
   fetchFloors();
 };
 
