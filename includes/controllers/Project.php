@@ -31,7 +31,7 @@ class Irep_Project
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'irep_projects';  // Set the projects table name with WordPress table prefix.
+        $this->table_name = 'irep_projects';  // Set the projects table name with WordPress table prefix.
     }
 
     /**
@@ -48,7 +48,7 @@ class Irep_Project
         $data = [
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
-            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
         ];
 
         // Verify nonce for security to prevent CSRF attacks.
@@ -58,33 +58,24 @@ class Irep_Project
         $project_id = isset($data['project_id']) ? intval($data['project_id']) : null;
 
         if ($project_id) {
-            // Retrieve a single project by its ID.
-            $result = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM {$this->table_name} WHERE id = %d", $project_id));
+
+            $result = Irep_DB::table($this->table_name)->find($project_id);
 
             if ($result) {
-                // Process project data (e.g., handle images, SVG, and JSON decoding).
-                $result->project_image = [irep_get_image_instance($result->project_image)];
-                $result->svg = irep_transformSvgString($result->svg);
-                $result->polygon_data = json_decode($result->polygon_data);
+                $result = $this->map_project($result);
             }
         } else {
-            // Retrieve all projects ordered by ID (descending).
-            $result = $this->wpdb->get_results("SELECT * FROM {$this->table_name} ORDER BY id DESC");
+
+            $result = Irep_DB::table($this->table_name)->orderBy('id', 'DESC')->get();
 
             if ($result) {
                 // Process each project to decode JSON and format image data.
-                $result = array_map(function ($item) {
-                    $item->polygon_data = json_decode($item->polygon_data);
-                    $item->project_image = [irep_get_image_instance($item->project_image)];
-                    $item->svg = irep_transformSvgString($item->svg);
-
-                    return $item;
-                }, $result);
+                $result =  array_map([$this, 'map_project'], $result);
             }
         }
 
         // Check for database errors and return the results or error message.
-        if ($this->wpdb->last_error) {
+        if (!$result) {
             return [false, 'No projects found.'];
         } else {
             return [true, $result];
@@ -102,11 +93,11 @@ class Irep_Project
     {
 
         $data = [
-            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
-            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
-            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'nonce'         => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'        => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'title'         => isset($data['title']) ? sanitize_text_field($data['title']) : '',
             'project_image' => isset($data['project_image']) ? absint($data['project_image']) : 0,
-            'svg' =>  isset($data['svg']) ? sanitize_text_field($data['svg']) : '',
+            'svg'           => isset($data['svg']) ? sanitize_text_field($data['svg']) : '',
         ];
 
         $this->canUserAddProject($data);
@@ -119,21 +110,19 @@ class Irep_Project
         $project_image = isset($data['project_image']) ? sanitize_text_field($data['project_image']) : '';
         $slug = sanitize_title($title); // Generate a sanitized slug for the project.
 
-        // Insert the new project into the database.
-        $this->wpdb->insert(
-            $this->table_name,
-            [
-                'title' => $title,
-                'project_image' => $project_image,
-                'svg' => '',
-                'slug' => $slug,
-                'polygon_data' => '{}',
-            ]
-        );
-        $project_id = $this->wpdb->insert_id;
+        $data = [
+            'title' => $title,
+            'project_image' => $project_image,
+            'svg' => '',
+            'slug' => $slug,
+            'polygon_data' => '{}',
+        ];
+
+        $project_id = Irep_DB::table($this->table_name)->create($data);
+
 
         // Return a JSON response based on the success of the database operation.
-        if ($this->wpdb->last_error) {
+        if (!$project_id) {
             irep_send_json_response(false, 'Database error');
         } else {
             irep_send_json_response(true,  ['msg' => 'Project added', 'project_id' => $project_id]);
@@ -150,16 +139,15 @@ class Irep_Project
     public function update_project($data)
     {
 
-
         $data = [
-            'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
-            'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
-            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
-            'projectId' => isset($data['projectId']) ? absint($data['projectId']) : 0,
-            'slug'  => isset($data['slug']) ? sanitize_text_field($data['slug']) : '',
-            'project_image' => isset($data['project_image']) ? absint($data['project_image']) : 0,
-            'svg' =>  $data['svg'],
-            'polygon_data' => $data['polygon_data']
+            'nonce'           => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
+            'action'          => isset($data['action']) ? sanitize_key($data['action']) : '',
+            'title'           => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'projectId'       => isset($data['projectId']) ? absint($data['projectId']) : 0,
+            'slug'            => isset($data['slug']) ? sanitize_text_field($data['slug']) : '',
+            'project_image'   => isset($data['project_image']) ? absint($data['project_image']) : 0,
+            'svg'             =>  $data['svg'],
+            'polygon_data'    => $data['polygon_data']
         ];
 
         // Verify nonce for security.
@@ -179,12 +167,12 @@ class Irep_Project
         // Ensure polygon_data is properly encoded as JSON.
         $params['polygon_data'] = json_encode($params['polygon_data'] ?? '');
 
-        // Update the project in the database.
-        $where = ['id' => $project_id];
-        $this->wpdb->update($this->table_name, $params, $where);
+
+        $updated_project = Irep_DB::table($this->table_name)->where('id', '=', $project_id)->update($params);
+
 
         // Return a JSON response based on the success of the update.
-        if ($this->wpdb->last_error) {
+        if ($updated_project->last_error) {
             irep_send_json_response(false, 'No projects found.');
         } else {
             irep_send_json_response(true, 'Project updated');
@@ -212,17 +200,29 @@ class Irep_Project
             return;
         }
 
-        // Delete the project from the database.
-        $delete_result = $this->wpdb->delete($this->table_name, ['id' => $project_id]);
+        $deleted_project = Irep_DB::table($this->table_name)->where('id', '=',  $project_id)->delete();
+
 
         // Return a JSON response based on the success of the deletion.
-        if ($delete_result) {
+        if ($deleted_project) {
             irep_send_json_response(true, 'Project deleted successfully');
         } else {
-            irep_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
+            irep_send_json_response(false, 'Database error');
         }
     }
 
+    public function map_project($item)
+    {
+        if (is_object($item)) {
+            $item = (array) $item;
+        }
+
+        $item['project_image'] = [irep_get_image_instance($item['project_image'])];
+        $item['svg'] = irep_transformSvgString($item['svg']);
+        $item['polygon_data'] = json_decode($item['polygon_data']);
+
+        return $item;
+    }
 
     public function canUserAddProject($data)
     {

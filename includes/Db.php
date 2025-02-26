@@ -106,6 +106,8 @@ class Irep_DB
         $whereClause = '';
         $params = [];
 
+
+
         if (!empty($this->where)) {
             $whereParts = [];
 
@@ -150,7 +152,11 @@ class Irep_DB
 
         // irep_dd($params); // Debugging SQL query
         // irep_dd($sql); // Debugging SQL query
-        return $this->wpdb->get_results($this->wpdb->prepare($sql, ...$params));
+        if (!empty($params)) {
+            return $this->wpdb->get_results($this->wpdb->prepare($sql, ...$params));
+        } else {
+            return $this->wpdb->get_results($sql);
+        }
     }
 
 
