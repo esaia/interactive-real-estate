@@ -219,7 +219,7 @@ onMounted(() => {
 
       <!-- <Select v-model="obj.block_id" :data="[]" label="Block" clearable /> -->
 
-      <div class="flex items-center">
+      <div class="flex items-center gap-3">
         <Radio v-model="useType" label="Choose type" name="test name" value="true" />
         <Radio v-model="useType" label="Manually" name="test name" value="false" />
       </div>

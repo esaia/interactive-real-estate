@@ -62,10 +62,26 @@ class Irep_Flat
         $data = irep_sanitize_sorting_parameters($data, ['id', 'title', 'floor_number', 'price', 'offer_price', 'conf', 'block_id']);
 
         $query = Irep_DB::table($this->table_name);
-        $searchTerm = '%' . $data['search'] . '%';
 
         $query->where('project_id', '=', $data['project_id']);
 
+        // Filter by block if provided
+        if (!empty($data['block']) && $data['block'] != 'null') {
+            if ($data['block'] !== 'all') {
+
+                $query->where('block_id', '=', $data['block']);
+            }
+        } else {
+            $query->where('block_id', 'IS', 'NULL');
+        }
+
+
+        if (!empty($data['floor'])) {
+            $query->where('floor_number', '=', $data['floor']);
+        }
+
+
+        $searchTerm = '%' . $data['search'] . '%';
         if (!empty($data['search'])) {
             $query->where('flat_number', 'LIKE', $searchTerm)
                 ->orWhere('id', 'LIKE', $searchTerm)

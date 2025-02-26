@@ -76,7 +76,7 @@ class Irep_Project
 
         // Check for database errors and return the results or error message.
         if (!$result) {
-            return [false, 'No projects found.'];
+            return [false, []];
         } else {
             return [true, $result];
         }
@@ -146,7 +146,7 @@ class Irep_Project
             'projectId'       => isset($data['projectId']) ? absint($data['projectId']) : 0,
             'slug'            => isset($data['slug']) ? sanitize_text_field($data['slug']) : '',
             'project_image'   => isset($data['project_image']) ? absint($data['project_image']) : 0,
-            'svg'             =>  $data['svg'],
+            'svg'             => $data['svg'],
             'polygon_data'    => $data['polygon_data']
         ];
 
