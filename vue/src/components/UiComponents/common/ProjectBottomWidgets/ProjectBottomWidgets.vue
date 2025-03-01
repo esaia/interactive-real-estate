@@ -21,7 +21,7 @@ const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = st
 const projectImage = ref<imageInterface[] | null>(null);
 const colorsRef = ref();
 const chosenTooltip = ref("1");
-
+const shortcode = ref(`[irep_project id="${projectStore?.id}"]`);
 const showGenerateObject = ref(false);
 const showPreview = ref(false);
 const projectUpdateToogle = ref(false);
@@ -110,11 +110,16 @@ defineExpose({
 
         <div>
           <div class="font-semibold">Shortcode:</div>
-          <p>[irep_project id="{{ projectStore?.id }}"]</p>
+
+          <Input v-model="shortcode" class="w-full [&_input]:cursor-text disabled:[&_input]:text-black/60" disabled />
         </div>
 
         <a href="https://youtu.be/dQmqouszdK0" target="_blank" class="animate-pulse underline">
           Watch video tutorial
+        </a>
+
+        <a href="https://interactive-real-estate.vercel.app" target="_blank" class="animate-pulse underline">
+          Our website
         </a>
 
         <!-- <div class="cursor-pointer hover:underline" @click="showGenerateObject = true">
