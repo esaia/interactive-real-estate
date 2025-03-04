@@ -38,7 +38,7 @@
 
 .slide-left-enter-active,
 .slide-left-leave-active {
-  transition: all 0.4s ease;
+  transition: all 1s cubic-bezier(0.32, 0.72, 0, 1);
   transform: translateX(0);
 }
 

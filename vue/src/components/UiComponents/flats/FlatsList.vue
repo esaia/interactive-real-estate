@@ -240,7 +240,7 @@ onMounted(() => {
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showEditFlatModal" @close="showEditFlatModal = false" type="2" width="w-[500px]">
+      <Modal :show="showEditFlatModal" @close="showEditFlatModal = false" type="2" width="w-[500px]">
         <CreateEditFlatModal
           :activeFlat="activeFlat"
           :duplicatedFlat="duplicatedFlat"
@@ -252,7 +252,7 @@ onMounted(() => {
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
+      <Modal :show="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal
           :text="`Are you sure you want to delete flat with id ${deleteFlatId || ''}?`"
           @delete-action="deleteFlat()"

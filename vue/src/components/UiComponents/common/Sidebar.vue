@@ -273,19 +273,19 @@ watch(
 
     <teleport to="#irep-vue-app">
       <Transition name="fade">
-        <Modal v-if="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
+        <Modal :show="showEditModal === 'floor'" @close="showEditModal = ''" type="2" width="w-11/12">
           <CreateEditFloorModal />
         </Modal>
       </Transition>
 
       <Transition name="fade">
-        <Modal v-if="showEditModal === 'block'" @close="showEditModal = ''" type="2" width="w-11/12">
+        <Modal :show="showEditModal === 'block'" @close="showEditModal = ''" type="2" width="w-11/12">
           <CreateEditBlockModal />
         </Modal>
       </Transition>
 
       <Transition name="fade">
-        <Modal v-if="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[500px]">
+        <Modal :show="showEditModal === 'flat' && activeFlat" @close="showEditModal = ''" type="2" width="w-[500px]">
           <CreateEditFlatModal :activeFlat="activeFlat" />
         </Modal>
       </Transition>
@@ -293,7 +293,7 @@ watch(
 
     <teleport to="#irep-vue-app">
       <Transition name="fade">
-        <Modal v-if="showEditModal === 'tooltip'" @close="showEditModal = ''" type="2" width="w-[500px]">
+        <Modal :show="showEditModal === 'tooltip'" @close="showEditModal = ''" type="2" width="w-[500px]">
           <CreateEditActionModal :activeAction="activeAction || null" />
         </Modal>
       </Transition>

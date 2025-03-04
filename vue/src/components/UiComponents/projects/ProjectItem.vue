@@ -63,7 +63,7 @@ const deleteFlat = async () => {
 
   <Teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
+      <Modal :show="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal
           :text="`Are you sure you want to delete project with id ${project?.id || ''}?`"
           @delete-action="deleteFlat()"

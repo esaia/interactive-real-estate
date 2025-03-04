@@ -165,7 +165,7 @@ defineExpose({
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showGenerateObject" type="2" @close="showGenerateObject = false">
+      <Modal :show="showGenerateObject" type="2" @close="showGenerateObject = false">
         <GenerateObject />
       </Modal>
     </Transition>

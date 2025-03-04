@@ -91,7 +91,7 @@ onMounted(() => {
 
     <teleport to="#irep-vue-app">
       <Transition name="fade-in-out">
-        <Modal v-if="showExampleImage" :show-close-btn="false">
+        <Modal :show="showExampleImage" :show-close-btn="false">
           <div>
             <p class="!mb-2">Example image</p>
             <img :src="exampleImage" class="max-h-[500px] w-full object-contain" />

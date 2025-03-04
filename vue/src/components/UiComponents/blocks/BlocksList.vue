@@ -180,7 +180,7 @@ onMounted(() => {
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showBlockModal" @close="showBlockModal = false" type="2">
+      <Modal :show="showBlockModal" @close="showBlockModal = false" type="2">
         <CreateEditBlockModal :duplicatedBlock="duplicatedBlock" />
       </Modal>
     </Transition>
@@ -188,7 +188,7 @@ onMounted(() => {
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
+      <Modal :show="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal
           :text="`Are you sure you want to delete floor with id ${deleteBlockId || ''}?`"
           @delete-action="deleteFloor()"
