@@ -38,7 +38,7 @@ const infoMouseLeave = () => {
 
     <teleport to="#irep-vue-app">
       <Transition name="fade-in-out">
-        <Modal v-if="showTooltipImage" :show-close-btn="false">
+        <Modal :show="showTooltipImage" :show-close-btn="false">
           <div>
             <p class="!mb-2">Tooltip {{ activeTooltipindex }}:</p>
             <img

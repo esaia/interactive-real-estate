@@ -27,7 +27,7 @@ class Irep_Tooltip
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'irep_tooltip';  // Table for storing tooltip data
+        $this->table_name =  'irep_tooltip';  // Table for storing tooltip data
     }
 
     /**
@@ -58,64 +58,32 @@ class Irep_Tooltip
 
         // Sanitize sorting parameters (e.g., for column names like 'id' and 'title')
         $data = irep_sanitize_sorting_parameters($data, ['id', 'title']);
-        $offset = ($data['page'] - 1) * $data['per_page'];  // Calculate offset for pagination
 
-        // Initial query to get tooltips for the given project ID
-        $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d ";
-        $params = [$data['project_id']];
 
-        // If a search term is provided, filter results by title or ID
+        $query = Irep_DB::table($this->table_name);
+
+        $searchTerm = '%' . $data['search'] . '%';
+        $query->where('project_id', '=', $data['project_id']);
+
+
         if (!empty($data['search'])) {
-            $query .= " AND (title LIKE %s OR id LIKE %s)";
-            $searchTerm = '%' . $data['search'] . '%';
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
+            $query->where('flat_number', 'LIKE', $searchTerm)
+                ->orWhere('id', 'LIKE', $searchTerm);
         }
 
-        // Prepare query to get the total number of results
-        $total_query = $this->wpdb->prepare($query, ...$params);
-        $total_results = $this->wpdb->get_results($total_query, ARRAY_A);
-        $total_results = count($total_results);  // Count the total number of results
+        $results = $query->orderBy($data['sort_field'], $data['sort_order'])
+            ->paginate($data['page'], $data['per_page']);
 
-        // Add sorting and pagination to the query
-        $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
-        $params[] = $data['per_page'];  // Add per-page value
-        $params[] = $offset;            // Add offset for pagination
 
-        // Prepare and execute the final query
-        $query = $this->wpdb->prepare($query, ...$params);
-        $results = $this->wpdb->get_results($query, ARRAY_A);
-
-        // Process each result to handle JSON-encoded data fields
-        $results = array_map(
-            function ($result) {
-                $result['data'] = irep_handle_json_data($result['data']);
-
-                // Handle potential targetBlank field within the data
-                if (isset($result['data']['targetBlank'])) {
-                    $result['data']['targetBlank'] = irep_handle_json_data($result['data']['targetBlank']);
-                }
-
-                // Handle potential 'script' field and remove escape characters
-                if (isset($result['data']['script'])) {
-                    $result['data']['script'] = str_replace('\\', '', $result['data']['script']);
-                }
-
-                return $result;
-            },
-            $results
-        );
-
-        // Return the results along with pagination details
-        if ($this->wpdb->last_error) {
-            return [false,  'No tooltip found.'];  // Return error if there was an issue with the query
+        if (!$results) {
+            return [false,  'something went wrong!'];
         } else {
-            return [true, [
-                'data' => $results,
-                'total' => $total_results,
-                'page' => $data['page'],
-                'per_page' => $data['per_page']
-            ]];
+            // Map the block data to a more usable format
+            if ($results['data']) {
+                $results['data'] = array_map([$this, 'map_tooltip'], $results['data']);
+            }
+
+            return [true, $results];
         }
     }
 
@@ -149,23 +117,17 @@ class Irep_Tooltip
         // Merge sanitized input with tooltip data
         $data = array_merge($required_data, ['data' => irep_handle_json_data($data['data'])]);
 
-        // Insert the new tooltip into the database
-        $this->wpdb->insert($this->table_name, $data);
 
-        if ($this->wpdb->last_error) {
-            irep_send_json_response(false, 'Database error');  // Send error if database operation fails
+
+        $action_id = Irep_DB::table($this->table_name)->create($data);
+
+        if (!$action_id) {
+            irep_send_json_response(false, 'Database error');
         } else {
-            // Fetch the newly inserted tooltip data
-            $new_tooltip_id = $this->wpdb->insert_id;
-            $new_tooltip = irep_get($this->table_name, $new_tooltip_id);
+            $created_type =  Irep_DB::table($this->table_name)->find($action_id);
+            $transformed = $this->map_tooltip($created_type);
 
-            // Handle JSON data within the newly fetched tooltip
-            if (isset($new_tooltip->data)) {
-                $new_tooltip->data = irep_handle_json_data($new_tooltip->data);
-            }
-
-            // Send success response with the new tooltip data
-            irep_send_json_response(true, $new_tooltip);
+            irep_send_json_response(true, $transformed);
         }
     }
 
@@ -202,14 +164,14 @@ class Irep_Tooltip
         // Prepare the updated data and sanitize JSON data
         $params = ['title' => $data['title'], 'data' => irep_handle_json_data($data['data'])];
 
-        // Specify the tooltip ID to update
-        $where = ['id' => $action_id];
-        $this->wpdb->update($this->table_name, $params, $where);
 
-        if ($this->wpdb->last_error) {
-            irep_send_json_response(false, 'Database error');  // Send error if update fails
+        $updated_flat = Irep_DB::table($this->table_name)->where('id', '=',  $action_id)->update($params);
+
+
+        if ($updated_flat->last_error) {
+            irep_send_json_response(false, 'Database error');
         } else {
-            irep_send_json_response(true, 'Tooltip updated successfully');  // Send success response
+            irep_send_json_response(true, 'Flat updated successfully');
         }
     }
 
@@ -238,15 +200,40 @@ class Irep_Tooltip
             return;
         }
 
-        // Perform the delete operation
-        $delete_result = $this->wpdb->delete($this->table_name, ['id' => $action_id]);
+        $deleted_action = Irep_DB::table($this->table_name)->where('id', '=',  $action_id)->delete();
+
 
         // Return success or error based on the result of the delete operation
-        if ($delete_result) {
+        if ($deleted_action) {
             irep_send_json_response(true, 'Action deleted successfully');
         } else {
             irep_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
         }
+    }
+
+
+
+    private function map_tooltip($item)
+    {
+
+        if (is_object($item)) {
+            $item = (array) $item;
+        }
+
+
+        $item['data'] = irep_handle_json_data($item['data']);
+
+        // Handle potential targetBlank field within the data
+        if (isset($item['data']['targetBlank'])) {
+            $item['data']['targetBlank'] = irep_handle_json_data($item['data']['targetBlank']);
+        }
+
+        // Handle potential 'script' field and remove escape characters
+        if (isset($item['data']['script'])) {
+            $item['data']['script'] = str_replace('\\', '', $item['data']['script']);
+        }
+
+        return $item;
     }
 }
 

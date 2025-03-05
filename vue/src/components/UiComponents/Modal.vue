@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import Close from "./icons/Close.vue";
 
 defineEmits<{
@@ -8,6 +8,7 @@ defineEmits<{
 
 const props = withDefaults(
   defineProps<{
+    show?: boolean;
     type?: "default" | "1" | "2";
     width?: string;
     showCloseBtn?: boolean;
@@ -17,6 +18,9 @@ const props = withDefaults(
     showCloseBtn: true
   }
 );
+
+const showModal = ref(false);
+const showBackdrop = ref(false);
 
 const dynamicClasses = computed(() => {
   switch (props.type) {
@@ -31,17 +35,32 @@ const dynamicClasses = computed(() => {
   }
 });
 
-// onMounted(() => {
-//   document.body.style.overflow = "hidden";
-// });
+watch(
+  () => props.show,
+  () => {
+    if (props.show) {
+      showBackdrop.value = true;
 
-// onUnmounted(() => {
-//   document.body.style.overflow = "visible";
-// });
+      setTimeout(() => {
+        showModal.value = props.show;
+      }, 0);
+    } else {
+      showModal.value = props.show;
+
+      setTimeout(
+        () => {
+          showBackdrop.value = false;
+        },
+        props.type !== "default" ? 650 : 0
+      );
+    }
+  }
+);
 </script>
 
 <template>
   <div
+    v-if="showBackdrop"
     class="fixed left-0 top-0 z-[99999] flex h-full w-full cursor-pointer items-center"
     :class="[
       {
@@ -51,14 +70,17 @@ const dynamicClasses = computed(() => {
       }
     ]"
   >
-    <div
-      class="absolute left-0 top-0 h-full w-full bg-black/40 transition-all"
-      :class="{ 'backdrop-blur-sm': type !== 'default' }"
-      @click="$emit('close')"
-    ></div>
+    <Transition name="fade-in-out">
+      <div
+        v-if="showModal"
+        class="absolute left-0 top-0 h-full w-full bg-black/40 transition-all"
+        :class="{ 'backdrop-blur-sm': type !== 'default' }"
+        @click="$emit('close')"
+      ></div>
+    </Transition>
 
-    <Transition :name="type === 'default' ? '' : 'slide-left'" :appear="type !== 'default'">
-      <div class="relative cursor-default rounded-l-sm bg-white" :class="dynamicClasses">
+    <Transition :name="type === 'default' ? '' : 'slide-left'">
+      <div v-if="showModal" class="relative cursor-default rounded-l-sm bg-white" :class="dynamicClasses">
         <div
           v-if="showCloseBtn"
           class="absolute right-4 top-4 z-[999] w-fit cursor-pointer rounded-md bg-white p-3 shadow-md transition-all hover:bg-gray-100 [&_path]:fill-gray-400"

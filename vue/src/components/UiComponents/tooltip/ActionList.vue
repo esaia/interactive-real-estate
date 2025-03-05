@@ -85,6 +85,7 @@ const fetchActions = async () => {
 };
 
 const submitForm = () => {
+  currentPage.value = 1;
   fetchActions();
 };
 
@@ -167,7 +168,7 @@ onMounted(() => {
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showActionModal" @close="showActionModal = false" type="2" width="w-[500px]">
+      <Modal :show="showActionModal" @close="showActionModal = false" type="2" width="w-[500px]">
         <CreateEditActionModal
           :duplicatedAction="duplicatedAction"
           :activeAction="activeAction"
@@ -179,7 +180,7 @@ onMounted(() => {
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
+      <Modal :show="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal
           :text="`Are you sure you want to delete type with id ${deleteActionId || ''}?`"
           @delete-action="deleteType()"

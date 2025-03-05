@@ -24,7 +24,7 @@ class Irep_Type
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_name = $wpdb->prefix . 'irep_types';
+        $this->table_name = 'irep_types';
     }
 
     /**
@@ -55,48 +55,34 @@ class Irep_Type
         // Sanitize and filter sorting parameters
         $data = irep_sanitize_sorting_parameters($data, ['id', 'title', 'area_m2']);
 
-        // Base query to fetch types from the database
-        $query = "SELECT * FROM {$this->table_name} WHERE project_id = %d ";
-        $params = [$data['project_id']];
+        $query = Irep_DB::table($this->table_name);
+        $searchTerm = '%' . $data['search'] . '%';
 
-        // Apply search filter if provided
+        $query->where('project_id', '=', $data['project_id']);
+
+
         if (!empty($data['search'])) {
-            $query .= " AND (title LIKE %s OR id LIKE %s OR teaser LIKE %s OR area_m2 LIKE %s OR rooms_count LIKE %s)";
-            $searchTerm = '%' . $data['search'] . '%';
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
+            $query->where('title', 'LIKE', $searchTerm)
+                ->orWhere('id', 'LIKE', $searchTerm)
+                ->orWhere('teaser', 'LIKE', $searchTerm)
+                ->orWhere('area_m2', 'LIKE', $searchTerm)
+                ->orWhere('rooms_count', 'LIKE', $searchTerm);
         }
 
-        // Prepare and execute the query to count the total results
-        $total_query = $this->wpdb->prepare($query, ...$params);
-        $total_results = $this->wpdb->get_results($total_query, ARRAY_A);
-        $total_results = count($total_results);
 
-        // Add ordering and pagination to the query
-        $query .= " ORDER BY {$data['sort_field']} {$data['sort_order']} LIMIT %d OFFSET %d";
-        $params[] = $data['per_page'];
-        $params[] = $data['offset'];
+        $results = $query->orderBy($data['sort_field'], $data['sort_order'])
+            ->paginate($data['page'], $data['per_page']);
 
-        // Prepare and execute the query to fetch the actual results
-        $query = $this->wpdb->prepare($query, ...$params);
-        $results = $this->wpdb->get_results($query, ARRAY_A);
 
-        if (is_wp_error($results)) {
-            return [false, $results->get_error_message()];
-        } else if ($results) {
-            // Map the results to handle image data
-            $results = array_map([$this, 'map_images'], $results);
+        if (!$results) {
+            return [false,  'something went wrong!'];
+        } else {
+            // Map the block data to a more usable format
+            if ($results['data']) {
+                $results['data'] = array_map([$this, 'map_images'], $results['data']);
+            }
 
-            // Return the results with pagination information
-            return [true, [
-                'data' => $results,
-                'total' => $total_results,
-                'page' => $data['page'],
-                'per_page' => $data['per_page']
-            ]];
+            return [true, $results];
         }
     }
 
@@ -114,13 +100,13 @@ class Irep_Type
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
             'type_id'      => isset($data['type_id']) ? absint($data['type_id']) : 0,
-            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
-            'teaser'  => isset($data['teaser']) ? sanitize_text_field($data['teaser']) : '',
-            'area_m2' => isset($data['area_m2']) ? absint($data['area_m2']) : 0,
-            'rooms_count' => isset($data['rooms_count']) ? absint($data['rooms_count']) : 0,
-            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
-            'image_2d' => $data['image_2d'],
-            'image_3d' => $data['image_3d'],
+            'title'        => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'teaser'       => isset($data['teaser']) ? sanitize_text_field($data['teaser']) : '',
+            'area_m2'      => isset($data['area_m2']) ? absint($data['area_m2']) : 0,
+            'rooms_count'  => isset($data['rooms_count']) ? absint($data['rooms_count']) : 0,
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'image_2d'     => $data['image_2d'],
+            'image_3d'     => $data['image_3d'],
         ];
 
 
@@ -143,23 +129,20 @@ class Irep_Type
             $non_required_data['image_3d'] = irep_handle_json_data($data['image_3d']);
         }
 
-        if (!empty($data['gallery'])) {
-            $non_required_data['gallery'] = irep_handle_json_data($data['gallery']);
-        }
-
         // Merge required and optional data before inserting into the database
         $data = array_merge($required_data, $non_required_data);
 
-        // Insert the new property type into the database
-        $this->wpdb->insert($this->table_name, $data);
 
-        if ($this->wpdb->last_error) {
+
+        $type_id = Irep_DB::table($this->table_name)->create($data);
+
+        if (!$type_id) {
             irep_send_json_response(false, 'Database error');
         } else {
-            // Retrieve the newly inserted type and respond with the data
-            $new_type_id = $this->wpdb->insert_id;
-            $new_type = irep_get($this->table_name, $new_type_id);
-            irep_send_json_response(true, $new_type);
+            $created_type =  Irep_DB::table($this->table_name)->find($type_id);
+            $transformed = $this->map_images($created_type);
+
+            irep_send_json_response(true, $transformed);
         }
     }
 
@@ -177,16 +160,18 @@ class Irep_Type
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
             'type_id'      => isset($data['type_id']) ? absint($data['type_id']) : 0,
-            'title'  => isset($data['title']) ? sanitize_text_field($data['title']) : '',
-            'teaser'  => isset($data['teaser']) ? sanitize_text_field($data['teaser']) : '',
-            'area_m2' => isset($data['area_m2']) ? absint($data['area_m2']) : 0,
-            'rooms_count' => isset($data['rooms_count']) ? absint($data['rooms_count']) : 0,
-            'project_id' => isset($data['project_id']) ? absint($data['project_id']) : 0,
-            'image_2d' => $data['image_2d'],
-            'image_3d' => $data['image_3d'],
+            'title'        => isset($data['title']) ? sanitize_text_field($data['title']) : '',
+            'teaser'       => isset($data['teaser']) ? sanitize_text_field($data['teaser']) : '',
+            'area_m2'      => isset($data['area_m2']) ? absint($data['area_m2']) : 0,
+            'rooms_count'  => isset($data['rooms_count']) ? absint($data['rooms_count']) : 0,
+            'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
+            'image_2d'     => isset($data['image_2d']) ? $data['image_2d'] : '',
+            'image_3d'     => isset($data['image_3d']) ? $data['image_3d'] : '',
         ];
 
         irep_check_nonce($data['nonce'], 'irep_nonce');
+
+
 
         // Ensure the type ID is provided
         $type_id = isset($data['type_id']) ? intval($data['type_id']) : null;
@@ -205,37 +190,15 @@ class Irep_Type
         // Merge required and optional fields
         $params = array_merge($required_data, $params);
 
-        // Handle image fields if provided
-        if (!empty($data['image_2d'])) {
-            $params['image_2d'] = irep_handle_json_data($data['image_2d']);
-        }
 
-        if (!empty($data['image_3d'])) {
-            $params['image_3d'] = irep_handle_json_data($data['image_3d']);
-        }
+        $params['image_2d'] = irep_handle_json_data($data['image_2d']) ?? null;
+        $params['image_3d'] = irep_handle_json_data($data['image_3d']) ?? null;
 
-        if (!empty($data['gallery'])) {
-            $params['gallery'] = irep_handle_json_data($data['gallery']);
-        }
 
-        // Ensure image fields are null if not provided
-        if (!isset($params['image_2d'])) {
-            $params['image_2d'] = null;
-        }
+        $updated_block = Irep_DB::table($this->table_name)->where('id', '=',  $type_id)->update($params);
 
-        if (!isset($params['image_3d'])) {
-            $params['image_3d'] = null;
-        }
 
-        if (!isset($params['gallery'])) {
-            $params['gallery'] = null;
-        }
-
-        // Update the property type in the database
-        $where = ['id' => $type_id];
-        $this->wpdb->update($this->table_name, $params, $where);
-
-        if ($this->wpdb->last_error) {
+        if ($updated_block->last_error) {
             irep_send_json_response(false, 'Database error');
         } else {
             irep_send_json_response(true, 'Type updated successfully');
@@ -260,10 +223,10 @@ class Irep_Type
             return;
         }
 
-        // Delete the property type from the database
-        $delete_result = $this->wpdb->delete($this->table_name, ['id' => $type_id]);
+        $deleted_type = Irep_DB::table($this->table_name)->where('id', '=',  $type_id)->delete();
 
-        if ($delete_result) {
+
+        if ($deleted_type) {
             irep_send_json_response(true, 'Type deleted successfully');
         } else {
             irep_send_json_response(false, 'Database error: ' . $this->wpdb->last_error);
@@ -279,6 +242,10 @@ class Irep_Type
      */
     private function map_images($item)
     {
+        if (is_object($item)) {
+            $item = (array) $item;
+        }
+
         // Handle 2D images
         if ($item['image_2d']) {
             $image_2d_ids = irep_handle_json_data($item['image_2d']);

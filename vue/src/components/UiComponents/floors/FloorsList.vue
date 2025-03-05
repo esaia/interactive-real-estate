@@ -98,6 +98,7 @@ const fetchFloors = async () => {
 };
 
 const submitForm = () => {
+  currentPage.value = 1;
   fetchFloors();
 };
 
@@ -210,7 +211,7 @@ onMounted(() => {
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showFloorModal" @close="showFloorModal = false" type="2">
+      <Modal :show="showFloorModal" @close="showFloorModal = false" type="2">
         <CreateEditFloorModal :duplicatedFloor="duplicatedFloor" />
       </Modal>
     </Transition>
@@ -218,7 +219,7 @@ onMounted(() => {
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
+      <Modal :show="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal
           :text="`Are you sure you want to delete floor with id ${deleteFloorId || ''}?`"
           @delete-action="deleteFloor()"

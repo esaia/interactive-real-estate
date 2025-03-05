@@ -81,10 +81,12 @@ const fetchTypes = async () => {
     return;
   }
 
+  perPage.value = data.data.per_page;
   types.value = data.data;
 };
 
 const submitForm = () => {
+  currentPage.value = 1;
   fetchTypes();
 };
 
@@ -175,7 +177,7 @@ onMounted(() => {
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showTypeModal" @close="showTypeModal = false" type="2" width="w-[500px]">
+      <Modal :show="showTypeModal" @close="showTypeModal = false" type="2" width="w-[500px]">
         <CreateEditTypeModal
           :duplicatedType="duplicatedType"
           :activeType="activeType"
@@ -187,7 +189,7 @@ onMounted(() => {
 
   <teleport to="#irep-vue-app">
     <Transition name="fade">
-      <Modal v-if="showDeleteModal" @close="showDeleteModal = false">
+      <Modal :show="showDeleteModal" @close="showDeleteModal = false">
         <DeleteModal
           :text="`Are you sure you want to delete type with id ${deleteTypeId || ''}?`"
           @delete-action="deleteType()"
