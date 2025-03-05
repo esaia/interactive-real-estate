@@ -142,6 +142,7 @@ class Irep_Flat
             'use_type'     => isset($data['use_type']) && rest_sanitize_boolean($data['use_type'])
         ];
 
+
         $this->canUserAddFlat($data);
 
         irep_check_nonce($data['nonce'], 'irep_nonce');
@@ -164,8 +165,10 @@ class Irep_Flat
         // Merge the data and prepare it for insertion
         $params = array_merge($required_data, $non_required_data);
 
+
         // Handle the type data as JSON
         $params['type'] = irep_handle_json_data($data['type']);
+
 
         $flat_id = Irep_DB::table($this->table_name)->create($params);
 

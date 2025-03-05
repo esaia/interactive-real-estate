@@ -80,7 +80,7 @@ function irep_validate_and_sanitize_input(array $data, array $keys, bool $requir
             } elseif (is_string($data[$key]) && isset($data[$key]) && $data[$key] !== '') {
                 $sanitized_data[$key] = sanitize_text_field($data[$key]);
             } elseif (is_numeric($data[$key]) && isset($data[$key]) && $data[$key] > 0) {
-                $sanitized_data[$key] = intval($data[$key]);
+                $sanitized_data[$key] = floatval($data[$key]);
             } else if (is_bool($data[$key])) {
                 $sanitized_data[$key] =  $data[$key];
             } else {
