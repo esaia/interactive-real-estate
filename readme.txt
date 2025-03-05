@@ -3,7 +3,7 @@ Contributors: esaia
 Tags: interactive, real estate, floor plan, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 Plugin URI: https://interactive-real-estate.vercel.app/
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -132,15 +132,20 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 
 
 == Changelog ==
-= 1.0.0 =
-* Initial release of the Interactive Real Estate plugin.
 
-= 1.0.1 =
-* Updated Freemius SDK to the latest version.
+= 1.0.4 =
+* Added a new DB class to handle CRUD (Create, Read, Update, Delete) operations for database manipulations in the plugin.
+* Optimization: Improved code structure and performance for better maintainability and efficiency.
+
+= 1.0.3 =
+* feat: Added two new tooltips for improved user guidance. Resolved JavaScript enqueue conflicts, ensuring compatibility across multiple themes.
 
 = 1.0.2 =
 * Add img border radius functionally.
 
+= 1.0.1 =
+* Updated Freemius SDK to the latest version.
 
-= 1.0.3 =
-* feat: Added two new tooltips for improved user guidance. Resolved JavaScript enqueue conflicts, ensuring compatibility across multiple themes.
+= 1.0.0 =
+* Initial release of the Interactive Real Estate plugin.
+
