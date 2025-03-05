@@ -28,7 +28,7 @@ const canvasRef = ref();
 
 const onImgLoad = () => {
   setTimeout(() => {
-    canvasRef.value.setSvgViewBox();
+    canvasRef.value?.setSvgViewBox();
   }, 500);
 };
 </script>
@@ -47,7 +47,7 @@ const onImgLoad = () => {
 
     <Transition name="fade-in-out">
       <LinkPolygon
-        v-if="activeGroup && canvasRef.zoomLevel === 1"
+        v-if="activeGroup && canvasRef?.zoomLevel === 1"
         :key="(activeGroup && activeGroup.getAttribute('id')) || ''"
         :activeGroup="activeGroup"
         :polygon_data="polygon_data"
