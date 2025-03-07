@@ -81,6 +81,8 @@ const editOrDuplicateModal = (item: PolygonDataCollection) => {
 
       break;
     }
+
+    
     case "block": {
       const activeBlock = blocksStore.projectBlocks?.find((block) => block.id === item.id);
 
