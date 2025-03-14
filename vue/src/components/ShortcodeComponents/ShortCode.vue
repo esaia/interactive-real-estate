@@ -11,6 +11,8 @@ const props = defineProps<{
 
 const shortcodeData = ref<ShortcodeData>();
 const loading = ref(false);
+const ire_plugin = ref();
+
 const fetchData = async () => {
   loading.value = true;
   try {
@@ -32,6 +34,7 @@ const fetchData = async () => {
 
 onMounted(() => {
   fetchData();
+  ire_plugin.value = irePlugin;
 });
 </script>
 
@@ -43,6 +46,6 @@ onMounted(() => {
       </div>
     </div>
 
-    <Project v-else-if="shortcodeData" :data="shortcodeData" />
+    <Project v-else-if="shortcodeData" :data="shortcodeData" :translations="ire_plugin?.translations || []" />
   </div>
 </template>

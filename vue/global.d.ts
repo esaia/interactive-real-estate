@@ -5,6 +5,7 @@ declare const irePlugin: {
   wp: any;
   plugin_assets_path: string;
   is_premium: boolean;
+  translations: Array;
 };
 
 declare const constants: {

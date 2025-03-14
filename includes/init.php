@@ -68,6 +68,21 @@ function irep_enqueue_vue_assets()
         'plugin_url' => IREP_PLUGIN_URL,
         'plugin_assets_path' => plugins_url('assets/', IREP_PLUGIN_FILE),
         'is_premium' => ire_fs()->can_use_premium_code(),
+        'translations' => [
+            'floor' => __('floor', 'interactive-real-estate'),
+            'available' => __('available', 'interactive-real-estate'),
+            'reserved' => __('reserved', 'interactive-real-estate'),
+            'sold' => __('sold', 'interactive-real-estate'),
+            'apartment' => __('apartment', 'interactive-real-estate'),
+            'back' => __('back', 'interactive-real-estate'),
+            '2d plan' => __('2d plan', 'interactive-real-estate'),
+            '3d plan' => __('3d plan', 'interactive-real-estate'),
+            'price' => __('price', 'interactive-real-estate'),
+            'area' => __('area', 'interactive-real-estate'),
+            'room' => __('room', 'interactive-real-estate'),
+            '$' => __('$', 'interactive-real-estate'),
+
+        ]
     ));
 }
 

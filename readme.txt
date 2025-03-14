@@ -3,7 +3,7 @@ Contributors: esaia
 Tags: interactive, real estate, floor plan, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 Plugin URI: https://interactive-real-estate.vercel.app/
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -132,6 +132,11 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 
 
 == Changelog ==
+
+= 1.0.4 =
+* Create modal for flat detail view
+* translate plugin
+
 
 = 1.0.4 =
 * Added a new DB class to handle CRUD (Create, Read, Update, Delete) operations for database manipulations in the plugin.
