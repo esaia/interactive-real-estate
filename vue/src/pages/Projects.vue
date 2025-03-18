@@ -5,7 +5,7 @@ import AddProjectModal from "../components/UiComponents/projects/AddProjectModal
 import Modal from "../components/UiComponents/Modal.vue";
 import Plus from "../components/UiComponents/icons/Plus.vue";
 import Block from "../components/UiComponents/icons/Block.vue";
-import { pushToPlansPage } from "../composables/helpers";
+import { pushToPlansPage, showToast } from "../composables/helpers";
 import Import from "../components/UiComponents/icons/Import.vue";
 import ImportModal from "../components/UiComponents/projects/ImportModal.vue";
 
@@ -15,6 +15,14 @@ defineProps<{
 
 const addProjectModal = ref(false);
 const importModal = ref(false);
+
+const handleImportClick = () => {
+  if (irePlugin.is_premium) {
+    importModal.value = true;
+  } else {
+    showToast("error", "Upgrade plan!");
+  }
+};
 </script>
 
 <template>
@@ -25,7 +33,7 @@ const importModal = ref(false);
       <div>
         <button
           class="inline-flex items-center rounded bg-gray-300 px-4 py-2 font-bold text-gray-800 hover:bg-gray-400"
-          @click="importModal = true"
+          @click="handleImportClick"
         >
           <Import class="mr-2 h-4 w-4" />
           <span>import</span>

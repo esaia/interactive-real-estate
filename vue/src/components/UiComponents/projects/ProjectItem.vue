@@ -65,9 +65,16 @@ const exportProject = async (id: number) => {
 
   if (data.success) {
     downloadJson(data?.data, id);
+  } else {
+    showToast("error", data?.data ? data.data : "Upgrade plan!");
   }
+};
 
-  console.log(data);
+const handleExportClick = (e: any) => {
+  if (!irePlugin.is_premium) {
+    showToast("error", "Upgrade plan!");
+    e.stopPropagation();
+  }
 };
 </script>
 <template>
@@ -89,8 +96,13 @@ const exportProject = async (id: number) => {
           <Button title="View Project" />
         </a>
 
-        <div class="w-fit">
-          <Button title="Export" :outlined="true" @click="exportProject(+project?.id || 0)" />
+        <div class="w-fit" @click="handleExportClick">
+          <Button
+            title="Export"
+            :outlined="true"
+            :disabled="!irePlugin?.is_premium"
+            @click="exportProject(+project?.id || 0)"
+          />
         </div>
       </div>
 

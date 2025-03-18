@@ -36,6 +36,8 @@ const importProject = async () => {
     showToast("success", "Project imported successfully!");
     await projectStore.fetchProjects(null);
     emit("close");
+  } else {
+    showToast("error", data?.data ? data?.data : "Upgrade plan!");
   }
 };
 
@@ -80,6 +82,11 @@ const handleFileChange = (event: any) => {
       <p>Import project</p>
       <input ref="fileRef" type="file" name="project" @change="handleFileChange" />
     </label>
+
+    <p class="mt-4 max-w-[300px]">
+      <b> IMPORTANT:</b> This feature is experimental and may cause some bugs. Additionally, if you import it on a
+      different website, there may be image mismatches.
+    </p>
 
     <Button title="Import" :outlined="true" @click="importProject" class="mt-4" />
   </div>

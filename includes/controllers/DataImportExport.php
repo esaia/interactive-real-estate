@@ -11,6 +11,9 @@ class Irep_Import_Export
 
     public function export_data(array $data)
     {
+        if (!$this->can_import_or_export()) {
+            irep_upgrade_plan();
+        }
 
         $data = [
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
@@ -48,6 +51,11 @@ class Irep_Import_Export
 
     public function import_data(array $data)
     {
+
+        if (!$this->can_import_or_export()) {
+            irep_upgrade_plan();
+        }
+
         $data = [
             'nonce'      => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'     => isset($data['action']) ? sanitize_key($data['action']) : '',
@@ -55,9 +63,11 @@ class Irep_Import_Export
         ];
 
 
+
         $data = $data['data'];
 
         $project = $data['irep_project'];
+        $project['title'] = $project['title'] . ' IMPORTED';
 
         $project = $this->prepare_polygon_svg_data($project, ['svg', 'polygon_data']);
 
@@ -213,6 +223,11 @@ class Irep_Import_Export
         }
 
         return $array;
+    }
+
+    private function can_import_or_export()
+    {
+        return ire_fs()->can_use_premium_code();
     }
 }
 
