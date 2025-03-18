@@ -36,6 +36,39 @@ const deleteFlat = async () => {
     showToast("error", "Something went wrong!");
   }
 };
+
+const downloadJson = (data: any, id: number) => {
+  // Convert the data to a Blob and trigger a download
+  const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  // Create an anchor element and trigger a download
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `project_${id}.json`;
+  a.click();
+
+  // Clean up the URL object
+  URL.revokeObjectURL(url);
+};
+
+const exportProject = async (id: number) => {
+  if (!id) {
+    return showToast("error", "Something went wrong!");
+  }
+
+  const { data } = await ajaxAxios.post("", {
+    action: "irep_export",
+    nonce: irePlugin.nonce,
+    project_id: id
+  });
+
+  if (data.success) {
+    downloadJson(data?.data, id);
+  }
+
+  console.log(data);
+};
 </script>
 <template>
   <div class="focus:shadow-none">
@@ -50,10 +83,16 @@ const deleteFlat = async () => {
 
     <div class="line-clamp-1 py-2 text-lg">{{ project.title }}</div>
 
-    <div class="flex items-center justify-between gap-3">
-      <a :href="`${irePlugin.plugin_url}&project=${project?.id}`">
-        <Button title="View Project" />
-      </a>
+    <div class="flex w-full items-center justify-between gap-3">
+      <div class="flex w-full flex-wrap justify-between gap-2">
+        <a :href="`${irePlugin.plugin_url}&project=${project?.id}`">
+          <Button title="View Project" />
+        </a>
+
+        <div class="w-fit">
+          <Button title="Export" :outlined="true" @click="exportProject(+project?.id || 0)" />
+        </div>
+      </div>
 
       <div class="cursor-pointer rounded-md [&_path]:fill-red-600" @click.stop="showDeleteModal = true">
         <Delete />

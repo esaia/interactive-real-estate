@@ -28,16 +28,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="loading" class="p-3">
-    <Loading />
-  </div>
+  <div>
+    <div v-if="loading" class="p-3">
+      <Loading />
+    </div>
 
-  <div v-else>
-    <template v-if="projectID">
-      <Project v-if="project" />
-      <div v-else>not found</div>
-    </template>
-    <Projects v-else :projects="projects" />
-    <!-- <div v-else>error</div> -->
+    <div v-else>
+      <template v-if="projectID">
+        <Project v-if="project" />
+        <div v-else>not found</div>
+      </template>
+      <Projects v-else :projects="projects" />
+    </div>
   </div>
 </template>

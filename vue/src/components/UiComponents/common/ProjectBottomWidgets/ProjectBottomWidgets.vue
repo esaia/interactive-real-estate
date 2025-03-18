@@ -122,6 +122,14 @@ defineExpose({
           Our website
         </a>
 
+        <a
+          href="https://wordpress.org/support/plugin/interactive-real-estate/reviews/#new-post"
+          target="_blank"
+          class="animate-pulse underline"
+        >
+          Give us a review ⭐ 🙏
+        </a>
+
         <!-- <div class="cursor-pointer hover:underline" @click="showGenerateObject = true">
           Generate data for standalone version
         </div> -->
