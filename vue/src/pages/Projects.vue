@@ -6,17 +6,32 @@ import Modal from "../components/UiComponents/Modal.vue";
 import Plus from "../components/UiComponents/icons/Plus.vue";
 import Block from "../components/UiComponents/icons/Block.vue";
 import { pushToPlansPage } from "../composables/helpers";
+import Import from "../components/UiComponents/icons/Import.vue";
+import ImportModal from "../components/UiComponents/projects/ImportModal.vue";
 
 defineProps<{
   projects: any;
 }>();
 
-const isModalOpen = ref(false);
+const addProjectModal = ref(false);
+const importModal = ref(false);
 </script>
 
 <template>
   <div class="container-fluid py-3">
-    <h2 class="!my-4 !text-2xl">Projects</h2>
+    <div class="flex items-center justify-between gap-10">
+      <h2 class="!my-4 !text-2xl">Projects</h2>
+
+      <div>
+        <button
+          class="inline-flex items-center rounded bg-gray-300 px-4 py-2 font-bold text-gray-800 hover:bg-gray-400"
+          @click="importModal = true"
+        >
+          <Import class="mr-2 h-4 w-4" />
+          <span>import</span>
+        </button>
+      </div>
+    </div>
     <div class="grid grid-cols-3 gap-6 lg:grid-cols-4">
       <div
         v-if="!irePlugin.is_premium && projects?.length >= 1"
@@ -34,7 +49,7 @@ const isModalOpen = ref(false);
         v-else
         class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-300 transition-all duration-200 hover:bg-gray-200"
         :class="{ 'h-60': true }"
-        @click="isModalOpen = true"
+        @click="addProjectModal = true"
       >
         <Plus />
         <p class="!text-lg">New Project</p>
@@ -42,13 +57,21 @@ const isModalOpen = ref(false);
 
       <ProjectItem v-for="project in projects" :key="project.id" :project="project"> </ProjectItem>
     </div>
-  </div>
 
-  <teleport to="#irep-vue-app">
-    <transition name="fade-in-out">
-      <Modal :show="isModalOpen" @close="isModalOpen = false">
-        <AddProjectModal @close="isModalOpen = false" />
-      </Modal>
-    </transition>
-  </teleport>
+    <teleport to="#irep-vue-app">
+      <transition name="fade-in-out">
+        <Modal :show="addProjectModal" @close="addProjectModal = false">
+          <AddProjectModal @close="addProjectModal = false" />
+        </Modal>
+      </transition>
+    </teleport>
+
+    <teleport to="#irep-vue-app">
+      <transition name="fade-in-out">
+        <Modal :show="importModal" @close="importModal = false">
+          <ImportModal @close="importModal = false" />
+        </Modal>
+      </transition>
+    </teleport>
+  </div>
 </template>

@@ -22,3 +22,5 @@ include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/Meta.p
 include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/Tooltip.php';
 
 include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/ShortCodeApi.php';
+
+include_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/controllers/DataImportExport.php';
