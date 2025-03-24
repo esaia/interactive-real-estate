@@ -109,7 +109,7 @@ class Irep_Shortcode_Api
                 // Loop through the matching flats and calculate statistics (price, area, availability)
                 foreach ($matching_flats as $flat) {
                     // Find the flat with the minimum price
-                    if ($minimum_price === null || $flat['price'] < $minimum_price) {
+                    if (($minimum_price === null || $flat['price'] < $minimum_price) &&  !isset($flat['conf'])) {
                         $minimum_price = $flat['price'];
                     }
 
@@ -117,6 +117,10 @@ class Irep_Shortcode_Api
                     if (!empty($flat['type_id']) && isset($types_lookup[$flat['type_id']])) {
                         if ($minimum_area === null || $types_lookup[$flat['type_id']] < $minimum_area) {
                             $minimum_area = $types_lookup[$flat['type_id']];
+                        }
+                    } else {
+                        if ($minimum_area === null || $flat['type']['area_m2'] < $minimum_area) {
+                            $minimum_area = $flat['type']['area_m2'];
                         }
                     }
 

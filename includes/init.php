@@ -81,7 +81,7 @@ function irep_enqueue_vue_assets()
             'area' => __('area', 'interactive-real-estate'),
             'room' => __('room', 'interactive-real-estate'),
             '$' => __('$', 'interactive-real-estate'),
-
+            'starting from' => __('starting from', 'interactive-real-estate'),
         ]
     ));
 }

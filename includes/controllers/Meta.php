@@ -87,6 +87,12 @@ class Irep_Meta_Project
             $filtered_keys = ['tooltip'];
 
             $data['meta_data'] = array_filter($data['meta_data'], function ($item) use ($filtered_keys) {
+
+                if ($item['key'] === 'currency') {
+                    $available_currencies = ['usd'];
+                    return in_array($item['value'], $available_currencies);
+                };
+
                 return in_array($item['key'], $filtered_keys);
             });
         }

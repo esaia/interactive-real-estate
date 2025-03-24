@@ -13,6 +13,7 @@ import { useMetaStore } from "@/src/stores/useMeta";
 import Modal from "../../Modal.vue";
 import GenerateObject from "./GenerateObject.vue";
 import TooltipChoose from "./TooltipChoose.vue";
+import CurrencySelect from "../CurrencySelect.vue";
 const projectStore = useProjectStore();
 const metaStore = useMetaStore();
 
@@ -21,6 +22,7 @@ const { id, title, slug, polygon_data, svgRef, activeGroup, project_image } = st
 const projectImage = ref<imageInterface[] | null>(null);
 const colorsRef = ref();
 const chosenTooltip = ref("1");
+const chosenCurrency = ref({ title: "🇺🇸 USD - $", value: "usd" });
 const shortcode = ref(`[irep_project id="${projectStore?.id}"]`);
 const showGenerateObject = ref(false);
 const showPreview = ref(false);
@@ -28,8 +30,9 @@ const projectUpdateToogle = ref(false);
 
 const updateProject = async () => {
   const tooltipMeta = { key: "tooltip", value: chosenTooltip.value };
+  const currencyMeta = { key: "currency", value: chosenCurrency.value.value };
 
-  metaStore.setProjectMeta([...colorsRef.value?.metaColors, tooltipMeta]);
+  metaStore.setProjectMeta([...colorsRef.value?.metaColors, tooltipMeta, currencyMeta]);
 
   if (svgRef.value) {
     resetCanvasAfterSave(svgRef.value);
@@ -84,6 +87,12 @@ watch(
   () => metaStore.projectMeta,
   () => {
     chosenTooltip.value = metaStore.getMeta("tooltip")?.meta_value.toString() || "1";
+
+    const activeCurrency = metaStore.getMeta("currency")?.meta_value.toString() || "usd";
+    const findedCurency = metaStore.currencyData.find((item) => item.value === activeCurrency);
+    if (findedCurency) {
+      chosenCurrency.value = findedCurency;
+    }
   },
   { deep: true, immediate: true }
 );
@@ -103,15 +112,16 @@ defineExpose({
     <div v-if="!showPreview" class="flex flex-wrap gap-5">
       <div class="flex flex-col items-start gap-5 rounded-md bg-white p-4">
         <div class="flex w-full flex-col gap-2">
-          <label for="" class="font-semibold">Project Title:</label>
-
-          <Input v-model="title" class="w-full" />
+          <Input v-model="title" label="Project Title:" class="w-full [&_p]:font-bold" />
         </div>
 
         <div>
-          <div class="font-semibold">Shortcode:</div>
-
-          <Input v-model="shortcode" class="w-full [&_input]:cursor-text disabled:[&_input]:text-black/60" disabled />
+          <Input
+            v-model="shortcode"
+            class="w-full [&_input]:cursor-text disabled:[&_input]:text-black/60 [&_p]:font-semibold"
+            label="Shortcode:"
+            disabled
+          />
         </div>
 
         <a href="https://youtu.be/dQmqouszdK0" target="_blank" class="animate-pulse underline">
@@ -120,6 +130,14 @@ defineExpose({
 
         <a href="https://interactive-real-estate.vercel.app" target="_blank" class="animate-pulse underline">
           Our website
+        </a>
+
+        <a
+          href="https://wordpress.org/support/plugin/interactive-real-estate/reviews/#new-post"
+          target="_blank"
+          class="animate-pulse underline"
+        >
+          Give us a review ⭐ 🙏
         </a>
 
         <!-- <div class="cursor-pointer hover:underline" @click="showGenerateObject = true">
@@ -137,6 +155,10 @@ defineExpose({
         <p class="mt-2 text-red-700">
           <span class="font-semibold">IMPORTANT:</span> Changing the image may cause svg paths mismatches.
         </p>
+
+        <div class="mt-3">
+          <CurrencySelect v-model="chosenCurrency" />
+        </div>
       </div>
 
       <div class="relative overflow-hidden rounded-md bg-white p-4">

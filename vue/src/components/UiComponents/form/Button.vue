@@ -2,7 +2,7 @@
 defineProps<{
   title: string;
   outlined?: boolean;
-  disabled?: true;
+  disabled?: boolean;
 }>();
 </script>
 
