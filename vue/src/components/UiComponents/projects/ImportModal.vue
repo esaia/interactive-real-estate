@@ -48,7 +48,6 @@ const readFile = (file: any) => {
     try {
       const content = JSON.parse(e.target.result); // Parse the JSON content
       fileContent.value = content; // Store the parsed content
-      console.log("File content:", content);
     } catch (error) {
       console.error("Error parsing JSON:", error);
       showToast("error", "Invalid JSON file.");
@@ -84,7 +83,7 @@ const handleFileChange = (event: any) => {
     </label>
 
     <p class="mt-4 max-w-[300px]">
-      <b> IMPORTANT:</b> This feature is experimental and may cause some bugs. Additionally, if you import it on a
+      <b> IMPORTANT:</b> This feature is experimental and may be have bugs. Additionally, if you import it on a
       different website, there may be image mismatches.
     </p>
 

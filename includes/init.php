@@ -81,7 +81,7 @@ function irep_enqueue_vue_assets()
             'area' => __('area', 'interactive-real-estate'),
             'room' => __('room', 'interactive-real-estate'),
             '$' => __('$', 'interactive-real-estate'),
-
+            'starting from' => __('starting from', 'interactive-real-estate'),
         ]
     ));
 }
@@ -162,57 +162,3 @@ function irep_remove_version_info()
 }
 
 add_filter('update_footer', 'irep_remove_version_info', 11);
-
-
-// function export_project_data($project_id)
-// {
-
-
-//     $project = Irep_DB::table("irep_projects")->find($project_id);
-//     $blocks = Irep_DB::table("irep_blocks")->where('project_id', '=', $project_id)->get();
-//     $floors = Irep_DB::table("irep_floors")->where('project_id', '=', $project_id)->get();
-//     $types = Irep_DB::table("irep_types")->where('project_id', '=', $project_id)->get();
-//     $flats = Irep_DB::table("irep_flats")->where('project_id', '=', $project_id)->get();
-//     $meta = Irep_DB::table("irep_project_meta")->where('project_id', '=', $project_id)->get();
-//     $tooltip = Irep_DB::table("irep_tooltip")->where('project_id', '=', $project_id)->get();
-
-//     $export_data = [
-//         'project' => $project,
-//         'blocks' => $blocks,
-//         'floors' => $floors,
-//         'types' => $types,
-//         'flats' => $flats,
-//         'meta' => $meta,
-//         'tooltip' => $tooltip,
-//     ];
-
-
-//     $json_data = json_encode($export_data, JSON_PRETTY_PRINT);
-//     irep_dd($json_data);
-
-//     header('Content-Type: application/json');
-//     header('Content-Disposition: attachment; filename="project_export.json"');
-//     echo $json_data;
-//     exit;
-// }
-
-// // Example usage: Add an admin menu for exporting
-// add_action('admin_menu', function () {
-//     add_submenu_page(
-//         'interactive-real-estate',
-//         'Export Project',
-//         'Export Project',
-//         'manage_options',
-//         'export-project',
-//         function () {
-//             if (isset($_GET['export']) && isset($_GET['project_id'])) {
-//                 export_project_data($_GET['project_id']);
-//             }
-//             echo '<form method="GET">
-//                     <input type="hidden" name="page" value="export-project">
-//                     <input type="text" name="project_id" placeholder="Enter Project ID" required>
-//                     <button type="submit" name="export" value="1">Export</button>
-//                   </form>';
-//         }
-//     );
-// });

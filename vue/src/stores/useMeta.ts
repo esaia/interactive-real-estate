@@ -12,9 +12,44 @@ export const useMetaStore = defineStore("meta", () => {
     PREVIEW_SOLD_COLOR,
     PREVIEW_STROKE_COLOR,
     PREVIEW_STROKE_WIDTH,
-    PREVIEW_BORDER_RADIUS,
-    TOOLTIP
+    PREVIEW_BORDER_RADIUS
   } = constants;
+
+  const currencyData = [
+    { title: "🇺🇸 USD", value: "usd", symbol: "$" }, // United States
+    { title: "🇪🇺 EUR", value: "eur", symbol: "€", isDisabled: !irePlugin.is_premium }, // European Union
+    { title: "🇬🇧 GBP", value: "gbp", symbol: "£", isDisabled: !irePlugin.is_premium }, // United Kingdom
+    { title: "🇬🇪 GEL", value: "gel", symbol: "₾", isDisabled: !irePlugin.is_premium }, // Georgia
+    { title: "🇯🇵 JPY", value: "jpy", symbol: "¥", isDisabled: !irePlugin.is_premium }, // Japan
+    { title: "🇦🇺 AUD", value: "aud", symbol: "A$", isDisabled: !irePlugin.is_premium }, // Australia
+    { title: "🇨🇦 CAD", value: "cad", symbol: "C$", isDisabled: !irePlugin.is_premium }, // Canada
+    { title: "🇨🇭 CHF", value: "chf", symbol: "CHF", isDisabled: !irePlugin.is_premium }, // Switzerland
+    { title: "🇨🇳 CNY", value: "cny", symbol: "¥", isDisabled: !irePlugin.is_premium }, // China
+    { title: "🇮🇳 INR", value: "inr", symbol: "₹", isDisabled: !irePlugin.is_premium }, // India
+    { title: "🇸🇬 SGD", value: "sgd", symbol: "S$", isDisabled: !irePlugin.is_premium }, // Singapore
+    { title: "🇳🇿 NZD", value: "nzd", symbol: "NZ$", isDisabled: !irePlugin.is_premium }, // New Zealand
+    { title: "🇰🇷 KRW", value: "krw", symbol: "₩", isDisabled: !irePlugin.is_premium }, // South Korea
+    { title: "🇧🇷 BRL", value: "brl", symbol: "R$", isDisabled: !irePlugin.is_premium }, // Brazil
+    { title: "🇷🇺 RUB", value: "rub", symbol: "₽", isDisabled: !irePlugin.is_premium }, // Russia
+    { title: "🇿🇦 ZAR", value: "zar", symbol: "R", isDisabled: !irePlugin.is_premium }, // South Africa
+    { title: "🇲🇽 MXN", value: "mxn", symbol: "Mex$", isDisabled: !irePlugin.is_premium }, // Mexico
+    { title: "🇭🇰 HKD", value: "hkd", symbol: "HK$", isDisabled: !irePlugin.is_premium }, // Hong Kong
+    { title: "🇹🇷 TRY", value: "try", symbol: "₺", isDisabled: !irePlugin.is_premium }, // Turkey
+    { title: "🇸🇪 SEK", value: "sek", symbol: "kr", isDisabled: !irePlugin.is_premium }, // Sweden
+    { title: "🇳🇴 NOK", value: "nok", symbol: "kr", isDisabled: !irePlugin.is_premium }, // Norway
+    { title: "🇩🇰 DKK", value: "dkk", symbol: "kr", isDisabled: !irePlugin.is_premium }, // Denmark
+    { title: "🇵🇱 PLN", value: "pln", symbol: "zł", isDisabled: !irePlugin.is_premium }, // Poland
+    { title: "🇹🇭 THB", value: "thb", symbol: "฿", isDisabled: !irePlugin.is_premium }, // Thailand
+    { title: "🇮🇩 IDR", value: "idr", symbol: "Rp", isDisabled: !irePlugin.is_premium }, // Indonesia
+    { title: "🇲🇾 MYR", value: "myr", symbol: "RM", isDisabled: !irePlugin.is_premium }, // Malaysia
+    { title: "🇵🇭 PHP", value: "php", symbol: "₱", isDisabled: !irePlugin.is_premium }, // Philippines
+    { title: "🇦🇪 AED", value: "aed", symbol: "د.إ", isDisabled: !irePlugin.is_premium }, // United Arab Emirates
+    { title: "🇸🇦 SAR", value: "sar", symbol: "﷼", isDisabled: !irePlugin.is_premium }, // Saudi Arabia
+    { title: "🇶🇦 QAR", value: "qar", symbol: "﷼", isDisabled: !irePlugin.is_premium }, // Qatar
+    { title: "🇰🇼 KWD", value: "kwd", symbol: "د.ك", isDisabled: !irePlugin.is_premium }, // Kuwait
+    { title: "🇧🇭 BHD", value: "bhd", symbol: ".د.ب", isDisabled: !irePlugin.is_premium }, // Bahrain
+    { title: "🇴🇲 OMR", value: "omr", symbol: "﷼", isDisabled: !irePlugin.is_premium } // Oman
+  ];
 
   const projectStore = useProjectStore();
 
@@ -55,7 +90,6 @@ export const useMetaStore = defineStore("meta", () => {
     const stroke_color = getMeta("stroke_color")?.meta_value || PREVIEW_STROKE_COLOR;
     const stroke_width = !irePlugin.is_premium ? 1 : getMeta("stroke_width")?.meta_value || PREVIEW_STROKE_WIDTH;
     const border_radius = !irePlugin.is_premium ? 1 : getMeta("border_radius")?.meta_value || PREVIEW_BORDER_RADIUS;
-    const tooltip = !irePlugin.is_premium ? "1" : getMeta("tooltip")?.meta_value || TOOLTIP;
 
     const colors: any = {
       path_color,
@@ -80,6 +114,7 @@ export const useMetaStore = defineStore("meta", () => {
     projectMeta,
     getProjectMeta,
     setProjectMeta,
-    getMeta
+    getMeta,
+    currencyData
   };
 });

@@ -12,6 +12,7 @@ const props = withDefaults(
     type?: "default" | "1" | "2";
     width?: string;
     showCloseBtn?: boolean;
+    isPreview?: boolean;
   }>(),
   {
     type: "default",
@@ -54,19 +55,19 @@ watch(
         props.type !== "default" ? 650 : 0
       );
     }
-  }
+  },
+  { immediate: true }
 );
 </script>
 
 <template>
   <div
-    v-if="showBackdrop"
     class="fixed left-0 top-0 z-[99999] flex h-full w-full cursor-pointer items-center"
     :class="[
       {
         'justify-center': type === '1' || type === 'default',
         'justify-end': type === '2',
-        'pointer-events-none': !showCloseBtn
+        '!pointer-events-none': !show || isPreview
       }
     ]"
   >
