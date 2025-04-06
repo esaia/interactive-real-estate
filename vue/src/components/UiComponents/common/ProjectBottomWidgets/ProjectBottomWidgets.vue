@@ -27,6 +27,7 @@ const shortcode = ref(`[irep_project id="${projectStore?.id}"]`);
 const showGenerateObject = ref(false);
 const showPreview = ref(false);
 const projectUpdateToogle = ref(false);
+const loading = ref(false);
 
 const updateProject = async () => {
   const tooltipMeta = { key: "tooltip", value: chosenTooltip.value };
@@ -50,6 +51,8 @@ const updateProject = async () => {
     params.project_image = project_image.value.id;
   }
 
+  loading.value = true;
+
   try {
     await ajaxAxios.post("", {
       action: "irep_update_project",
@@ -63,6 +66,8 @@ const updateProject = async () => {
   } catch (error) {
     showToast("error", "Something went wrong!");
   }
+
+  loading.value = false;
 };
 
 watch(
@@ -180,7 +185,7 @@ defineExpose({
     <div class="flex flex-1 flex-col items-end gap-3">
       <div class="flex items-center gap-4">
         <Button title="preview" outlined @click="showPreview = !showPreview" class="w-fit" />
-        <Button title="Update" outlined @click="updateProject" />
+        <Button title="Update" outlined @click="updateProject" :loading="loading" />
       </div>
     </div>
   </div>

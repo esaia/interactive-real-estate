@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import Button from "../form/Button.vue";
 import Input from "../form/Input.vue";
 import UploadImg from "../form/UploadImg.vue";
@@ -44,6 +44,8 @@ const obj = reactive<TypeFormInterface>({
   project_id: id.value
 });
 
+const loading = ref(false);
+
 const submitForm = async () => {
   const params: any = { ...obj };
 
@@ -59,11 +61,23 @@ const submitForm = async () => {
     params.gallery = obj.gallery.map((i) => i.id);
   }
 
+  loading.value = true;
+
   if (props.activeType) {
-    editType(params);
+    try {
+      await editType(params);
+    } catch (error) {
+      showToast("error", "Something went wrong!");
+    }
   } else {
-    createType(params);
+    try {
+      await createType(params);
+    } catch (error) {
+      showToast("error", "Something went wrong!");
+    }
   }
+
+  loading.value = false;
 };
 
 const editType = async (params: any) => {
@@ -154,7 +168,7 @@ onMounted(() => {
       />
       <!-- <UploadImg v-model="obj.gallery" title="upload gallery" multiple /> -->
 
-      <Button type="submit" :title="activeType ? 'Edit type' : 'Add type'" />
+      <Button type="submit" :title="activeType ? 'Edit type' : 'Add type'" :loading="loading" />
     </div>
   </form>
 </template>

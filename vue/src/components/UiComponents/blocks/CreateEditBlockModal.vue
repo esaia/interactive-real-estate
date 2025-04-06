@@ -32,6 +32,7 @@ const title = ref("");
 const block_image = ref<imageInterface[] | null>(null);
 const conf = ref({ title: "Choose", value: "" });
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
+const loading = ref(false);
 
 const defaultBlockId = computed(() => {
   if (activeBlock.value) {
@@ -56,12 +57,23 @@ const submitForm = async () => {
   }
 
   activeBlockGroup.value = null;
+  loading.value = true;
 
   if (activeBlock.value) {
-    await updateBlcok();
+    try {
+      await updateBlcok();
+    } catch (error) {
+      showToast("error", "Something went wrong!");
+    }
   } else {
-    createBlock();
+    try {
+      await createBlock();
+    } catch (error) {
+      showToast("error", "Something went wrong!");
+    }
   }
+
+  loading.value = false;
 };
 
 const updateBlcok = async () => {
@@ -228,7 +240,7 @@ onUnmounted(() => {
             <span class="font-semibold">IMPORTANT:</span> Changing the image may cause svg paths mismatches.
           </p>
 
-          <Button type="submit" :title="activeBlock ? 'Edit block' : 'Add block'" />
+          <Button type="submit" :title="activeBlock ? 'Edit block' : 'Add block'" :loading="loading" />
         </div>
       </form>
     </div>

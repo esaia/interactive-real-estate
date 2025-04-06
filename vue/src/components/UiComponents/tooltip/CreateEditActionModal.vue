@@ -40,6 +40,7 @@ const url = ref("#");
 const targetBlank = ref();
 
 const script = ref("");
+const loading = ref(false);
 
 const submitForm = async () => {
   const params = {
@@ -54,11 +55,23 @@ const submitForm = async () => {
       script: script.value
     }
   };
+  loading.value = true;
+
   if (props.activeAction) {
-    editAction(params);
+    try {
+      await editAction(params);
+    } catch (error) {
+      showToast("error", "Something went wrong!");
+    }
   } else {
-    createAction(params);
+    try {
+      await createAction(params);
+    } catch (error) {
+      showToast("error", "Something went wrong!");
+    }
   }
+
+  loading.value = false;
 };
 
 const editAction = async (params: any) => {
@@ -149,7 +162,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <Button type="submit" :title="activeAction ? 'Edit action' : 'Add action'" />
+      <Button type="submit" :title="activeAction ? 'Edit action' : 'Add action'" :loading="loading" />
     </div>
   </form>
 </template>

@@ -60,6 +60,7 @@ const obj = reactive<any>({
 const useType = ref("true");
 const showTypeModal = ref(false);
 const activeType = ref<TypeItem | null>(null);
+const loading = ref(false);
 
 const floorsNumberData = computed(() => {
   if (!projectFloors.value) return [];
@@ -110,11 +111,23 @@ const submitForm = async () => {
     params.type.image_3d = obj.type.image_3d.map((i: any) => i.id);
   }
 
+  loading.value = true;
+
   if (props.activeFlat) {
-    await editFlat(params);
+    try {
+      await editFlat(params);
+    } catch (error) {
+      showToast("error", "Something went wrong!");
+    }
   } else {
-    await createFlat(params);
+    try {
+      await createFlat(params);
+    } catch (error) {
+      showToast("error", "Something went wrong!");
+    }
   }
+
+  loading.value = false;
 
   flatStore.fetchProjectFlats(projectStore.id);
 };
@@ -263,7 +276,7 @@ onMounted(() => {
         />
       </div>
 
-      <Button v-if="activeFlat" type="submit" title="Edit flat" />
+      <Button v-if="activeFlat" type="submit" title="Edit flat" :loading="loading" />
 
       <div
         v-else-if="!irePlugin.is_premium && flatStore.projectFlats && flatStore.projectFlats?.length >= 25"
@@ -275,7 +288,7 @@ onMounted(() => {
         <p class="mt-2">You can add max 25 flat with free plan</p>
       </div>
 
-      <Button v-else type="submit" :title="activeFlat ? 'Edit flat' : 'Add flat'" />
+      <Button v-else type="submit" :title="activeFlat ? 'Edit flat' : 'Add flat'" :loading="loading" />
     </div>
   </form>
 

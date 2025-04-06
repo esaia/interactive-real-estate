@@ -36,6 +36,7 @@ const floor_image = ref<imageInterface[] | null>(null);
 const conf = ref({ title: "Choose", value: "" });
 const block = ref();
 const duplicatedFloorPolygonData = ref<PolygonDataCollection[]>();
+const loading = ref(false);
 
 const defaultBlockId = computed(() => {
   if (activeBlock.value) {
@@ -82,11 +83,23 @@ const submitForm = async () => {
 
   activeGroup.value = null;
 
+  loading.value = true;
+
   if (activeFloor.value) {
-    await updateFloor();
+    try {
+      await updateFloor();
+    } catch (error) {
+      showToast("error", "Something went wrong!");
+    }
   } else {
-    await createFloor();
+    try {
+      await createFloor();
+    } catch (error) {
+      showToast("error", "Something went wrong!");
+    }
   }
+
+  loading.value = false;
 
   floorStore.fetchProjectFloors(id.value);
 };
@@ -268,7 +281,7 @@ onUnmounted(() => {
             <span class="font-semibold">IMPORTANT:</span> Changing the image may cause svg paths mismatches.
           </p>
 
-          <Button type="submit" :title="activeFloor ? 'Edit floor' : 'Add floor'" />
+          <Button type="submit" :title="activeFloor ? 'Edit floor' : 'Add floor'" :loading="loading" />
         </div>
       </form>
     </div>
