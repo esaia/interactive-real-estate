@@ -24,6 +24,7 @@ const sortField = ref("");
 const sortOrder = ref<"ASC" | "DESC" | "">("ASC");
 const currentPage = ref(1);
 const perPage = ref(20);
+const loading = ref(false);
 
 const activeType = ref<TypeItem | null>(null);
 const duplicatedType = ref<TypeItem | null>(null);
@@ -66,23 +67,30 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
 };
 
 const fetchTypes = async () => {
-  const { data } = await ajaxAxios.post("", {
-    action: "irep_get_types",
-    nonce: irePlugin.nonce,
-    project_id: id.value,
-    sort_field: sortField.value,
-    sort_order: sortOrder.value,
-    page: currentPage.value,
-    per_page: perPage.value,
-    search: searchType.value
-  });
+  try {
+    loading.value = true;
 
-  if (!data.success) {
-    return;
+    const { data } = await ajaxAxios.post("", {
+      action: "irep_get_types",
+      nonce: irePlugin.nonce,
+      project_id: id.value,
+      sort_field: sortField.value,
+      sort_order: sortOrder.value,
+      page: currentPage.value,
+      per_page: perPage.value,
+      search: searchType.value
+    });
+
+    if (!data.success) {
+      return;
+    }
+
+    perPage.value = data.data.per_page;
+    types.value = data.data;
+  } catch (error) {
+  } finally {
+    loading.value = false;
   }
-
-  perPage.value = data.data.per_page;
-  types.value = data.data;
 };
 
 const submitForm = () => {
@@ -126,7 +134,9 @@ onMounted(() => {
       </div>
     </form>
 
-    <div v-if="types?.data?.length" class="relative overflow-x-auto shadow-sm">
+    <div v-if="loading">LOADING...</div>
+
+    <div v-else-if="types?.data?.length" class="relative overflow-x-auto shadow-sm">
       <Table
         :data="types.data"
         @edit-action="(flat: TypeItem | null) => editType(flat)"

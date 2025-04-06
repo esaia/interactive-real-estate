@@ -55,6 +55,17 @@ if (! function_exists('ire_fs')) {
 
 
 
+
+if (! function_exists('get_plugin_data')) {
+    require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+}
+
+
+add_action('init', function () {
+    $plugin_data = get_plugin_data(__FILE__);
+    define('IREP_PLUGIN_NAME', $plugin_data['Name'] ?? 'Interactive Real Estate');
+});
+
 define('IREP_PLUGIN_FILE', __FILE__);
 define('IREP_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('IREP_PLUGIN_URL', admin_url('admin.php?page=interactive-real-estate'));

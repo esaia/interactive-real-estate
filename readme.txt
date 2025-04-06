@@ -8,20 +8,21 @@ Plugin URI: https://interactive-real-estate.vercel.app/
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Create interactive buildings with clickable hotspots and layers. Display floor plans, property details, and 2D/3D plans—no coding required.
+⚡ Create interactive buildings images with clickable zones on svg. Display floor plans, property details and 2D/3D photos. No coding required.
 
 == Description ==
 [Upgrade To Pro!](https://interactive-real-estate.vercel.app/pricing) | [Live Demo Front](https://interactive-real-estate.vercel.app/demos) | [Module Demo](https://interactive-real-estate.vercel.app/module) | [Support](https://interactive-real-estate.vercel.app/contact)
 
 ### The Ultimate Building Module Plugin ###
 
-
 Interactive Real Estate is the most innovative WordPress plugin for creating interactive buildings and property displays. Quickly add pins, vector shapes, and create SVG, all without needing to write any code.
+
+Create interactive buildings images with clickable zones on svg. Display floor plans, property details and 2D/3D photos. No coding required.
 
 With easy navigation through different building layers, users can get detailed information about each unit directly from the visual interface.
 
 ### **Key Features:** ###
-- **Interactive Building:** You can easily draw and edit complex shapes on your image right in the editor, without needing any external programs like Illustrator. Simply add pins and create svg on top of building render.
+- **Interactive Building:** You can easily draw and edit complex shapes on your image right in the editor, without needing any external programs like Illustrator. Simply add pins and create svg on top of building render or floor plan.
 - **Multiple Layers:** Easily navigate between different building layers (e.g., floors, appartments) with smooth transitions.
 - **Customizable Shortcodes:** Use the `[irep_building]` shortcode to embed your interactive buildings and customize them with your specific data.
 - **Easy-to-Use Admin Interface:** Intuitive settings page to upload building images, configure hotspots.
@@ -34,16 +35,16 @@ With easy navigation through different building layers, users can get detailed i
 - Create **Unlimited** projects (1 in free version)
 - Create **Unlimited** flats (25 in free version)
 - Run **script** on click of path
+- Customize **svg path** colors
+- Project export/import
+- Currency icon customization
 - 24/7 **premum** Support
 - Access to **updates**
-- Customize **svg path** colors
 
 
-With the **Interactive Real Estate** plugin, you'll be able to provide a truly immersive experience for prospective buyers, setting your property listings apart from traditional static images or floor plans.
-
+With the this plugin, you'll be able to provide a truly immersive experience for prospective buyers, setting your property listings apart from traditional static images or floor plans.
 
 [Upgrade to Interactive Real Estate Premium](https://interactive-real-estate.vercel.app/pricing) to get more features and customization options:
-
 
 == Installation ==
 1. Install using the WordPress built-in Plugin installer or Download zip file from WordPress.org.
@@ -78,9 +79,6 @@ To rebuild the minified JavaScript files, follow these steps:
 3. Run `npm run build` to generate the minified files.
 4. The minified files will be located in `dist/assets/index.js`.
 
-
-
-
 == Frequently Asked Questions ==
 
 = What's added in Interactive Real Estate Premium? =
@@ -90,9 +88,11 @@ To rebuild the minified JavaScript files, follow these steps:
 - Create **Unlimited** projects (1 in free version)
 - Create **Unlimited** flats (25 in free version)
 - Run **script** on click of path
+- Customize **svg path** colors
+- Project export/import
+- Currency icon customization
 - 24/7 **premum** Support
 - Access to **updates**
-- Customize **svg path** colors
 
 
 = How do I use the Interactive Real Estate features? =
@@ -116,8 +116,6 @@ For support, please visit our support page [https://interactive-real-estate.verc
 
 == License ==
 Interactive Real Estate is licensed under the GPL2 license. For more information, refer to the [GPL2 License](http://www.gnu.org/licenses/gpl-2.0.html).
-
-
 
 
 == Screenshots ==

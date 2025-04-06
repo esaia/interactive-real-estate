@@ -118,7 +118,7 @@ class Irep_Floor
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
             'title'        => isset($data['title']) ? sanitize_text_field($data['title']) : '',
-            'floor_number' => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
+            'floor_number' => isset($data['floor_number']) ? intval($data['floor_number']) : 0,
             'floor_id'     => isset($data['floor_id']) ? absint($data['floor_id']) : 0,
             'conf'         => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
             'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,

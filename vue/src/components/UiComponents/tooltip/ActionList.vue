@@ -24,6 +24,7 @@ const sortField = ref("");
 const sortOrder = ref<"ASC" | "DESC" | "">("ASC");
 const currentPage = ref(1);
 const perPage = ref(20);
+const loading = ref(false);
 
 const activeAction = ref<ActionItem | null>(null);
 const duplicatedAction = ref<ActionItem | null>(null);
@@ -66,22 +67,29 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
 };
 
 const fetchActions = async () => {
-  const { data } = await ajaxAxios.post("", {
-    action: "irep_get_tooltip",
-    nonce: irePlugin.nonce,
-    project_id: id.value,
-    sort_field: sortField.value,
-    sort_order: sortOrder.value,
-    page: currentPage.value,
-    per_page: perPage.value,
-    search: searchAction.value
-  });
+  try {
+    loading.value = true;
 
-  if (!data.success) {
-    return;
+    const { data } = await ajaxAxios.post("", {
+      action: "irep_get_tooltip",
+      nonce: irePlugin.nonce,
+      project_id: id.value,
+      sort_field: sortField.value,
+      sort_order: sortOrder.value,
+      page: currentPage.value,
+      per_page: perPage.value,
+      search: searchAction.value
+    });
+
+    if (!data.success) {
+      return;
+    }
+
+    actions.value = data.data;
+  } catch (error) {
+  } finally {
+    loading.value = false;
   }
-
-  actions.value = data.data;
 };
 
 const submitForm = () => {
@@ -124,7 +132,9 @@ onMounted(() => {
       </div>
     </form>
 
-    <div v-if="actions?.data?.length" class="relative overflow-x-auto shadow-sm">
+    <div v-if="loading">LOADING...</div>
+
+    <div v-else-if="actions?.data?.length" class="relative overflow-x-auto shadow-sm">
       <Table
         :data="actions.data"
         @edit-action="(action: ActionItem | null) => editAction(action)"

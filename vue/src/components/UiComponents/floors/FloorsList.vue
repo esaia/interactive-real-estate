@@ -34,6 +34,7 @@ const sortOrder = ref<"ASC" | "DESC" | "">("ASC");
 const currentPage = ref(1);
 const perPage = ref(20);
 const duplicatedFloor = ref<FloorItem | null>(null);
+const loading = ref(false);
 
 const deleteFloorId = ref<number | null>(null);
 const showDeleteModal = ref(false);
@@ -77,24 +78,35 @@ const sort = (field: string, sortOrderString: "ASC" | "DESC" | "") => {
   fetchFloors();
 };
 
+// function sleep(ms: number) {
+//   return new Promise((resolve) => setTimeout(resolve, ms));
+// }
+
 const fetchFloors = async () => {
-  const { data } = await ajaxAxios.post("", {
-    action: "irep_get_floors",
-    nonce: irePlugin.nonce,
-    project_id: id.value,
-    sort_field: sortField.value,
-    sort_order: sortOrder.value,
-    page: currentPage.value,
-    per_page: perPage.value,
-    search: searchFloor.value,
-    block: selectedBlockId.value
-  });
+  loading.value = true;
 
-  if (!data.success) {
-    return;
+  try {
+    const { data } = await ajaxAxios.post("", {
+      action: "irep_get_floors",
+      nonce: irePlugin.nonce,
+      project_id: id.value,
+      sort_field: sortField.value,
+      sort_order: sortOrder.value,
+      page: currentPage.value,
+      per_page: perPage.value,
+      search: searchFloor.value,
+      block: selectedBlockId.value
+    });
+
+    if (!data.success) {
+      return;
+    }
+
+    floors.value = data.data;
+  } catch (error) {
+  } finally {
+    loading.value = false;
   }
-
-  floors.value = data.data;
 };
 
 const submitForm = () => {
@@ -148,7 +160,9 @@ onMounted(() => {
       </div>
     </form>
 
-    <div v-if="floors?.data?.length" class="relative overflow-x-auto shadow-sm">
+    <div v-if="loading">LOADING...</div>
+
+    <div v-else-if="floors?.data?.length" class="relative overflow-x-auto shadow-sm">
       <Table
         :data="floors?.data"
         @edit-action="(floor: FloorItem | null) => editFloor(floor)"

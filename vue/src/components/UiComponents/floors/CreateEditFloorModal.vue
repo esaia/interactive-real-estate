@@ -103,23 +103,27 @@ const updateFloor = async () => {
     block_id: block.value?.value
   };
 
-  const { data } = await ajaxAxios.post("", {
-    action: "irep_update_floor",
-    nonce: irePlugin.nonce,
-    ...params
-  });
+  try {
+    const { data } = await ajaxAxios.post("", {
+      action: "irep_update_floor",
+      nonce: irePlugin.nonce,
+      ...params
+    });
 
-  if (data.success) {
-    showToast("success", "Floor Updated!");
+    if (data.success) {
+      showToast("success", "Floor Updated!");
 
-    activeGroup.value = null;
+      activeGroup.value = null;
 
-    if (floor_image.value?.[0] && activeFloor.value) {
-      activeFloor.value.floor_image = floor_image.value;
-      floor_image.value = null;
+      if (floor_image.value?.[0] && activeFloor.value) {
+        activeFloor.value.floor_image = floor_image.value;
+        floor_image.value = null;
+      }
+    } else {
+      showToast("error", data?.data || "Something went wrong!");
     }
-  } else {
-    showToast("error", data?.data || "Something went wrong!");
+  } catch (error) {
+    showToast("error", "Something went wrong!");
   }
 };
 

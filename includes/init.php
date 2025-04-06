@@ -61,6 +61,37 @@ function irep_enqueue_vue_assets()
     wp_enqueue_script('ire-vue-js', plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
     wp_enqueue_style('ire-vue-styles', plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.css');
 
+    $translations = IREP_PLUGIN_NAME === 'Interactive Real Estate' ?
+        [
+            'floor' => __('floor',  'interactive-real-estate'),
+            'available' => __('available',  'interactive-real-estate'),
+            'reserved' => __('reserved',  'interactive-real-estate'),
+            'sold' => __('sold',  'interactive-real-estate'),
+            'apartment' => __('apartment',  'interactive-real-estate'),
+            'back' => __('back',  'interactive-real-estate'),
+            '2d plan' => __('2d plan',  'interactive-real-estate'),
+            '3d plan' => __('3d plan',  'interactive-real-estate'),
+            'price' => __('price',  'interactive-real-estate'),
+            'area' => __('area',  'interactive-real-estate'),
+            'room' => __('room',  'interactive-real-estate'),
+            'starting from' => __('starting from',  'interactive-real-estate'),
+        ]
+        :
+        [
+            'floor' => __('floor',  'interactive-real-estate-premium'),
+            'available' => __('available',  'interactive-real-estate-premium'),
+            'reserved' => __('reserved',  'interactive-real-estate-premium'),
+            'sold' => __('sold',  'interactive-real-estate-premium'),
+            'apartment' => __('apartment',  'interactive-real-estate-premium'),
+            'back' => __('back',  'interactive-real-estate-premium'),
+            '2d plan' => __('2d plan',  'interactive-real-estate-premium'),
+            '3d plan' => __('3d plan',  'interactive-real-estate-premium'),
+            'price' => __('price',  'interactive-real-estate-premium'),
+            'area' => __('area',  'interactive-real-estate-premium'),
+            'room' => __('room',  'interactive-real-estate-premium'),
+            'starting from' => __('starting from',  'interactive-real-estate-premium'),
+        ];
+
     // Localize the script with necessary PHP variables (nonce, AJAX URL, etc.)
     wp_localize_script('ire-vue-js', 'irePlugin', array(
         'nonce' => wp_create_nonce('irep_nonce'),
@@ -68,21 +99,7 @@ function irep_enqueue_vue_assets()
         'plugin_url' => IREP_PLUGIN_URL,
         'plugin_assets_path' => plugins_url('assets/', IREP_PLUGIN_FILE),
         'is_premium' => ire_fs()->can_use_premium_code(),
-        'translations' => [
-            'floor' => __('floor', 'interactive-real-estate'),
-            'available' => __('available', 'interactive-real-estate'),
-            'reserved' => __('reserved', 'interactive-real-estate'),
-            'sold' => __('sold', 'interactive-real-estate'),
-            'apartment' => __('apartment', 'interactive-real-estate'),
-            'back' => __('back', 'interactive-real-estate'),
-            '2d plan' => __('2d plan', 'interactive-real-estate'),
-            '3d plan' => __('3d plan', 'interactive-real-estate'),
-            'price' => __('price', 'interactive-real-estate'),
-            'area' => __('area', 'interactive-real-estate'),
-            'room' => __('room', 'interactive-real-estate'),
-            '$' => __('$', 'interactive-real-estate'),
-            'starting from' => __('starting from', 'interactive-real-estate'),
-        ]
+        'translations' =>  $translations
     ));
 }
 

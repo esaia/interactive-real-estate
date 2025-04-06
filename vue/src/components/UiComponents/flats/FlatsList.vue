@@ -42,6 +42,7 @@ const duplicatedFlat = ref<FlatItem | null>(null);
 
 const deleteFlatId = ref<number | null>(null);
 const showDeleteModal = ref(false);
+const loading = ref(false);
 
 const editFlat = (flat: FlatItem | null) => {
   showEditFlatModal.value = true;
@@ -83,25 +84,32 @@ const submitForm = () => {
 };
 
 const fetchFlats = async () => {
-  const { data } = await ajaxAxios.post("", {
-    action: "irep_get_flats",
-    nonce: irePlugin.nonce,
-    project_id: id.value,
-    sort_field: sortField.value,
-    sort_order: sortOrder.value,
-    page: currentPage.value,
-    per_page: perPage.value,
-    search: searchFlat.value,
-    block: filterBlockId.value,
-    floor: filterFloorId.value
-  });
+  try {
+    loading.value = true;
 
-  if (!data.success) {
-    flats.value = { data: [] } as any;
-    return;
+    const { data } = await ajaxAxios.post("", {
+      action: "irep_get_flats",
+      nonce: irePlugin.nonce,
+      project_id: id.value,
+      sort_field: sortField.value,
+      sort_order: sortOrder.value,
+      page: currentPage.value,
+      per_page: perPage.value,
+      search: searchFlat.value,
+      block: filterBlockId.value,
+      floor: filterFloorId.value
+    });
+
+    if (!data.success) {
+      flats.value = { data: [] } as any;
+      return;
+    }
+
+    flats.value = data.data;
+  } catch (error) {
+  } finally {
+    loading.value = false;
   }
-
-  flats.value = data.data;
 };
 
 watch(
@@ -151,7 +159,9 @@ onMounted(() => {
       </div>
     </form>
 
-    <div v-if="flats?.data?.length" class="relative overflow-x-auto shadow-sm">
+    <div v-if="loading">LOADING...</div>
+
+    <div v-else-if="flats?.data?.length" class="relative overflow-x-auto shadow-sm">
       <Table
         :data="flats?.data"
         @edit-action="(flat: FlatItem | null) => editFlat(flat)"
