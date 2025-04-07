@@ -204,5 +204,5 @@ function irep_get_shortcode_data()
 }
 
 // Register the AJAX actions for both authenticated and unauthenticated users
-add_action('wp_ajax_nopriv_get_shortcode_data', 'irep_get_shortcode_data');
-add_action('wp_ajax_get_shortcode_data', 'irep_get_shortcode_data');
+add_action('wp_ajax_nopriv_irep_get_shortcode_data', 'irep_get_shortcode_data');
+add_action('wp_ajax_irep_get_shortcode_data', 'irep_get_shortcode_data');

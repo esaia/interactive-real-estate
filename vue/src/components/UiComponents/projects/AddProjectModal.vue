@@ -29,8 +29,7 @@ const onFormSubmits = async () => {
       action: "irep_create_project",
       nonce: irePlugin.nonce,
       title: title.value,
-      project_image: selectedImage.value?.[0]?.id,
-      svg: ""
+      project_image: selectedImage.value?.[0]?.id
     });
 
     if (data.success) {

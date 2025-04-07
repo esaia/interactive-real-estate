@@ -7,7 +7,7 @@ import UploadImg from "../form/UploadImg.vue";
 import { FloorItem, imageInterface, PolygonDataCollection } from "@/types/components";
 import { useFloorsStore } from "@/src/stores/useFloors";
 import Canvas from "../../Canvas.vue";
-import { resetCanvasAfterSave, showToast, irep_transformSvgString } from "@/src/composables/helpers";
+import { resetCanvasAfterSave, showToast, irep_transformSvgString, toBase64 } from "@/src/composables/helpers";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
@@ -105,6 +105,9 @@ const submitForm = async () => {
 };
 
 const updateFloor = async () => {
+  const svgElement = floorSvgRef.value?.querySelector("svg");
+  const svgBase64 = await toBase64(svgElement);
+
   const params: any = {
     title: title.value,
     floor_number: floor_number.value,
@@ -112,7 +115,7 @@ const updateFloor = async () => {
     conf: conf.value?.value,
     floor_id: activeFloor.value?.id,
     polygon_data: activeFloor.value?.polygon_data,
-    svg: floorSvgRef.value?.querySelector("svg")?.outerHTML || "",
+    svg: svgBase64,
     block_id: block.value?.value
   };
 
@@ -155,7 +158,11 @@ const createFloor = async () => {
 
   if (duplicatedFloorPolygonData.value) {
     params.polygon_data = duplicatedFloorPolygonData.value;
-    params.svg = floorSvgRef.value?.querySelector("svg")?.outerHTML || "";
+
+    const svgElement = floorSvgRef.value?.querySelector("svg");
+    const svgBase64 = await toBase64(svgElement);
+
+    params.svg = svgBase64;
   }
 
   try {

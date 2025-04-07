@@ -297,9 +297,22 @@ function irep_check_required_data($data, $required_fields)
  */
 function irep_transformSvgString($svgString)
 {
-    $transformedSvg = preg_replace('/\\\\/', '', $svgString); // Remove backslashes
-    $transformedSvg = str_replace('&amp;', '&', $transformedSvg); // Unescape HTML entities
-    $transformedSvg = preg_replace('/(\s)([a-zA-Z0-9-]+)=""/', '$1$2=""', $transformedSvg); // Fix empty attributes if any
+    // Return empty string if input is null
+    if ($svgString === null) {
+        return '';
+    }
+
+    // Remove backslashes (only if string contains them)
+    $transformedSvg = is_string($svgString) ? str_replace('\\', '', $svgString) : '';
+
+    // Unescape HTML entities (safer approach)
+    $transformedSvg = htmlspecialchars_decode($transformedSvg, ENT_QUOTES | ENT_HTML5);
+
+    // Fix empty attributes - only process if string is not empty
+    if ($transformedSvg !== '') {
+        $transformedSvg = preg_replace('/(\s+[a-zA-Z0-9-]+)=""/', '$1=""', $transformedSvg);
+    }
+
     return $transformedSvg;
 }
 

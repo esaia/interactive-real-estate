@@ -128,6 +128,7 @@ class Irep_Floor
             'polygon_data' => isset($data['polygon_data']) ? irep_handle_json_data($data['polygon_data']) : null
         ];
 
+        $data['svg'] = isset($_POST['svg']) ? base64_decode($_POST['svg']) : '';
 
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
@@ -188,6 +189,7 @@ class Irep_Floor
             'polygon_data' => isset($data['polygon_data']) ? irep_handle_json_data($data['polygon_data']) : '',
         ];
 
+        $data['svg'] = isset($_POST['svg']) ? base64_decode($_POST['svg']) : '';
 
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');

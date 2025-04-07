@@ -6,7 +6,7 @@ import ajaxAxios from "@/src/utils/axios";
 import UploadImg from "../form/UploadImg.vue";
 import { BlockItem, imageInterface, PolygonDataCollection } from "@/types/components";
 import Canvas from "../../Canvas.vue";
-import { resetCanvasAfterSave, showToast, irep_transformSvgString } from "@/src/composables/helpers";
+import { resetCanvasAfterSave, showToast, irep_transformSvgString, toBase64 } from "@/src/composables/helpers";
 import Input from "../form/Input.vue";
 import Select from "../form/Select.vue";
 import Button from "../form/Button.vue";
@@ -61,7 +61,7 @@ const submitForm = async () => {
 
   if (activeBlock.value) {
     try {
-      await updateBlcok();
+      await updateBlock();
     } catch (error) {
       showToast("error", "Something went wrong!");
     }
@@ -76,14 +76,18 @@ const submitForm = async () => {
   loading.value = false;
 };
 
-const updateBlcok = async () => {
+const updateBlock = async () => {
+  const svgElement = blockSvgRef.value?.querySelector("svg");
+
+  const svgBase64 = await toBase64(svgElement);
+
   const params = {
     block_id: activeBlock.value?.id,
     title: title.value,
     block_image: block_image.value?.[0]?.id || activeBlock.value?.block_image[0]?.id,
     conf: conf.value?.value,
     polygon_data: activeBlock.value?.polygon_data,
-    svg: blockSvgRef.value?.querySelector("svg")?.outerHTML || ""
+    svg: svgBase64
   };
 
   const { data } = await ajaxAxios.post("", {
@@ -116,7 +120,10 @@ const createBlock = async () => {
 
   if (duplicatedFloorPolygonData.value) {
     params.polygon_data = duplicatedFloorPolygonData.value;
-    params.svg = blockSvgRef.value?.querySelector("svg")?.outerHTML || "";
+
+    const svgElement = blockSvgRef.value?.querySelector("svg");
+    const svgBase64 = await toBase64(svgElement);
+    params.svg = svgBase64;
   }
 
   try {

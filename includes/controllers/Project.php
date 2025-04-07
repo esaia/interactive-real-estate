@@ -150,6 +150,9 @@ class Irep_Project
             'polygon_data'    => $data['polygon_data']
         ];
 
+        $data['svg'] = isset($_POST['svg']) ? base64_decode($_POST['svg']) : '';
+
+
         // Verify nonce for security.
         irep_check_nonce($data['nonce'], 'irep_nonce');
 

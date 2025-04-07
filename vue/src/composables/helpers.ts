@@ -90,3 +90,11 @@ export const pushToPlansPage = () => {
   adminUrl.searchParams.set("page", "interactive-real-estate-pricing");
   window.location.href = adminUrl.toString();
 };
+
+export const toBase64 = async (svgElement: SVGSVGElement | null | undefined) => {
+  const svgHTML = svgElement ? svgElement.outerHTML : "";
+
+  const encoder = new TextEncoder();
+  const data = encoder.encode(svgHTML);
+  return btoa(String.fromCharCode(...new Uint8Array(data))) || "";
+};

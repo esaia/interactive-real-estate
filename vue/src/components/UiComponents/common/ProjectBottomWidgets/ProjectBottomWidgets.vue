@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useProjectStore } from "../../../../stores/useProject";
 import ajaxAxios from "@/src/utils/axios";
-import { pushToPlansPage, resetCanvasAfterSave, showToast } from "@/src/composables/helpers";
+import { pushToPlansPage, resetCanvasAfterSave, showToast, toBase64 } from "@/src/composables/helpers";
 import { onMounted, ref, watch } from "vue";
 import { imageInterface } from "@/types/components";
 import UploadImg from "../../form/UploadImg.vue";
@@ -39,11 +39,16 @@ const updateProject = async () => {
     resetCanvasAfterSave(svgRef.value);
   }
 
+  const svgElement = svgRef.value?.querySelector("svg");
+
+  const svgBase64 = await toBase64(svgElement);
+
   const params: any = {
     projectId: id.value,
     title: title.value,
     slug: slug.value,
-    svg: svgRef.value?.querySelector("svg")?.outerHTML || "",
+    svg: svgBase64,
+    // svg: svgRef.value?.querySelector("svg")?.outerHTML || "",
     polygon_data: polygon_data.value
   };
 
@@ -54,15 +59,19 @@ const updateProject = async () => {
   loading.value = true;
 
   try {
-    await ajaxAxios.post("", {
+    const { data } = await ajaxAxios.post("", {
       action: "irep_update_project",
       nonce: irePlugin.nonce,
       ...params
     });
 
-    activeGroup.value = null;
-    projectUpdateToogle.value = !projectUpdateToogle.value;
-    showToast("success", "Project Updated!");
+    if (data?.success) {
+      projectUpdateToogle.value = !projectUpdateToogle.value;
+      activeGroup.value = null;
+      showToast("success", "Project Updated!");
+    } else {
+      showToast("error", "Something went wrong!");
+    }
   } catch (error) {
     showToast("error", "Something went wrong!");
   }

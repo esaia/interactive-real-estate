@@ -22,7 +22,7 @@ const isSomeFlatManualType = computed(() => {
 const fetchData = async () => {
   loading.value = true;
   const { data } = await ajaxAxios.post("", {
-    action: "get_shortcode_data",
+    action: "irep_get_shortcode_data",
     nonce: irePlugin.nonce,
     project_id: projectStore?.id,
     block: "all"
