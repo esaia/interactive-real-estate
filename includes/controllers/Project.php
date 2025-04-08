@@ -176,7 +176,7 @@ class Irep_Project
 
         // Return a JSON response based on the success of the update.
         if ($updated_project->last_error) {
-            irep_send_json_response(false, 'No projects found.');
+            irep_send_json_response(false, 'project not updated.');
         } else {
             irep_send_json_response(true, 'Project updated');
         }

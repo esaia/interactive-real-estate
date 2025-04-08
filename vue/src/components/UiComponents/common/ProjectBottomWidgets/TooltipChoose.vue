@@ -5,7 +5,7 @@ const tooltipModel = defineModel();
 </script>
 
 <template>
-  <div class="relative flex w-full max-w-sm flex-col rounded-xl bg-white shadow">
+  <div class="relative flex w-full max-w-sm flex-col rounded-xl bg-white">
     <div class="flex min-w-[240px] flex-col gap-1 p-2">
       <label
         v-for="i in 4"

@@ -1,37 +1,51 @@
 === Interactive Real Estate (Building Module) ===
 Contributors: esaia
-Tags: interactive, real estate, floor plan, SVG, hotspots
+Tags: interactive images, real estate, floor plan, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.7
 Stable tag: 1.0.6
-Plugin URI: https://interactive-real-estate.vercel.app/
+Plugin URI: https://ireplugin.com
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ⚡ Create interactive buildings images with clickable zones on svg. Display floor plans, property details and 2D/3D photos. No coding required.
 
 == Description ==
-[Upgrade To Pro!](https://interactive-real-estate.vercel.app/pricing) | [Live Demo Front](https://interactive-real-estate.vercel.app/demos) | [Module Demo](https://interactive-real-estate.vercel.app/module) | [Support](https://interactive-real-estate.vercel.app/contact)
+[Upgrade To Pro!](https://ireplugin.com/pricing) | [Live Demo](https://ireplugin.com/demos) | [Module Demo](https://ireplugin.com/module) | [Support](https://ireplugin.com/contact)
 
 ### The Ultimate Building Module Plugin ###
-
 Interactive Real Estate is the most innovative WordPress plugin for creating interactive buildings and property displays. Quickly add pins, vector shapes, and create SVG, all without needing to write any code.
 
-Create interactive buildings images with clickable zones on svg. Display floor plans, property details and 2D/3D photos. No coding required.
+Create interactive buildings images with clickable zones on svg. Display floor plans, property details and 2D/3D photos.
 
 With easy navigation through different building layers, users can get detailed information about each unit directly from the visual interface.
+
+### This Interactive Image WordPress Plugin Gives Easy Select Area Option ###
+
+Select area easily, with our WordPress plugin to specific regions of an building image and provide extra details for each one. After you create selection you can edit it at any time. 
+
+
+### Zoom and Pan ###
+Tty the new zoom and pan feature. Use the keyboard shortcut to zoom in on your SVG and create detailed polygons. When you're zoomed in, simply press the spacebar to pan around and explore your design easily.
+
+##Choose svg path colors###
+Easily customize the colors of your SVG paths to match your design aesthetic. With just a few clicks, you can select any color and apply it to paths.
+
 
 ### **Key Features:** ###
 - **Interactive Building:** You can easily draw and edit complex shapes on your image right in the editor, without needing any external programs like Illustrator. Simply add pins and create svg on top of building render or floor plan.
 - **Multiple Layers:** Easily navigate between different building layers (e.g., floors, appartments) with smooth transitions.
 - **Customizable Shortcodes:** Use the `[irep_building]` shortcode to embed your interactive buildings and customize them with your specific data.
 - **Easy-to-Use Admin Interface:** Intuitive settings page to upload building images, configure hotspots.
+- Create **Unlimited** blocks
+- Create **Unlimited** floors
+- Create **25** flats
 - **Follow link** on click of path
 - **Open modal** on click of path
 - **Preview** result in one click.
 
 
-### **[⭐ Premium features](https://interactive-real-estate.vercel.app/pricing):** ###
+### **[⭐ Premium features](https://ireplugin.com/pricing):** ###
 - Create **Unlimited** projects (1 in free version)
 - Create **Unlimited** flats (25 in free version)
 - Run **script** on click of path
@@ -44,7 +58,7 @@ With easy navigation through different building layers, users can get detailed i
 
 With the this plugin, you'll be able to provide a truly immersive experience for prospective buyers, setting your property listings apart from traditional static images or floor plans.
 
-[Upgrade to Interactive Real Estate Premium](https://interactive-real-estate.vercel.app/pricing) to get more features and customization options:
+[Upgrade to Interactive Real Estate Premium](https://ireplugin.com/pricing) to get more features and customization options:
 
 == Installation ==
 1. Install using the WordPress built-in Plugin installer or Download zip file from WordPress.org.
@@ -83,7 +97,7 @@ To rebuild the minified JavaScript files, follow these steps:
 
 = What's added in Interactive Real Estate Premium? =
 
-**[The Premium version includes](https://interactive-real-estate.vercel.app/pricing):**
+**[The Premium version includes](https://ireplugin.com/pricing):**
 
 - Create **Unlimited** projects (1 in free version)
 - Create **Unlimited** flats (25 in free version)
@@ -105,14 +119,18 @@ Yes, the plugin supports creating interactive buildings. You can manage each bui
 No, the plugin is designed to be easy to use, even for non-technical users. The admin interface is simple and intuitive, and you can get started by just uploading your images and using the shortcode.
 
 = Is there a demos available? =
-Yes, visit [https://interactive-real-estate.vercel.app/demos](https://interactive-real-estate.vercel.app/demos) to view a live demo of the plugin in action.
+Yes, visit [https://ireplugin.com/demos](https://ireplugin.com/demos) to view a live demo of the plugin in action.
 
-Have Questions? We've Got Answers in [documentation](https://interactive-real-estate.vercel.app/doc)
+Have Questions? We've Got Answers in [documentation](https://ireplugin.com/doc)
+
+= I have a question or need help with the plugin, how do I contact your support team? =
+To contact our support team, submit your message through our [WordPress support](https://wordpress.org/support/plugin/interactive-real-estate/) forum. Or, visit our website’s [Contact page](https://ireplugin.com/contact).
+
 
 
 
 == Plugin Support ==
-For support, please visit our support page [https://interactive-real-estate.vercel.app/contact](https://interactive-real-estate.vercel.app/contact). If you encounter any issues, feel free to contact us via email at **interactiverealestateplugin@gmail.com**.
+For support, please visit our support page [https://ireplugin.com/contact](https://ireplugin.com/contact). If you encounter any issues, feel free to contact us via email at **interactiverealestateplugin@gmail.com**.
 
 == License ==
 Interactive Real Estate is licensed under the GPL2 license. For more information, refer to the [GPL2 License](http://www.gnu.org/licenses/gpl-2.0.html).
@@ -121,11 +139,12 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 == Screenshots ==
 1. Banner: [banner-1540x500.jpg]
 2. Plugin icon: [icon-512x512.png]
-3. Main dashboard view: [screenshot-1.jpg]
-4. Flats list: [screenshot-2.png]
-5. 3d floor plan: [screenshot-3.jpg]
-6. Edit flat: [screenshot-4.jpg]
-7. Result: [screenshot-5.jpg]
+3. Main dashboard view: [screenshot-6.jpg]
+4. Main dashboard view: [screenshot-1.jpg]
+5. Flats list: [screenshot-2.png]
+6. 3d floor plan: [screenshot-3.jpg]
+7. Edit flat: [screenshot-4.jpg]
+8. Result: [screenshot-5.jpg]
 
 
 
