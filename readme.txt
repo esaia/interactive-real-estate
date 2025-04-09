@@ -1,4 +1,4 @@
-=== Interactive Real Estate (Building Module) ===
+=== Interactive Building Image Plugin - (Interactive Real Estate) ===
 Contributors: esaia
 Tags: interactive images, floor plan, 3d map, SVG, hotspots
 Requires at least: 5.0

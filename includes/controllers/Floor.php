@@ -129,16 +129,17 @@ class Irep_Floor
         ];
 
         $data['svg'] = isset($_POST['svg']) ? base64_decode($_POST['svg']) : '';
+        $data['floor_number'] = strval($data['floor_number']);
 
         // Check nonce for security
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
         // Ensure required fields are present
-        $required_fields = ['floor_number', 'floor_image', 'project_id'];
+        $required_fields = ['floor_image', 'project_id'];
         $required_data = irep_check_required_data($data, $required_fields);
 
         // Sanitize and validate non-required fields
-        $non_required_fields = ['title', 'conf', 'svg', 'block_id', 'polygon_data', 'svg'];
+        $non_required_fields = ['title', 'floor_number', 'conf', 'svg', 'block_id', 'polygon_data', 'svg'];
         $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
 
 

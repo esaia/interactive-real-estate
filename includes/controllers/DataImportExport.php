@@ -66,6 +66,7 @@ class Irep_Import_Export
 
         $data = $data['data'];
 
+
         $project = $data['irep_project'];
         $project['title'] = $project['title'] . ' IMPORTED';
 
@@ -80,12 +81,21 @@ class Irep_Import_Export
             foreach ($data[$table] as $row) {
                 if (!isset($row)) return;
                 $old_id = $row['id'];
+                error_log(print_r($old_id, true));
+
                 $row['project_id'] = $project_id;
+                $row['polygon_data'] = isset($row['polygon_data']) ? $row['polygon_data'] : '[]';
+
+                error_log(print_r($row['polygon_data'], true));
+
+
                 $row = $this->prepare_polygon_svg_data($row, ['svg', 'polygon_data']);
 
                 if (isset($row['block_id'])) {
                     $row['block_id'] = strval($id_mapping['irep_blocks'][$row['block_id']]);
                 }
+
+
 
                 $inserted_id = Irep_DB::table($table)->create($row);
                 $id_mapping[$table][$old_id] = $inserted_id;

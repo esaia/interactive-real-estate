@@ -43,7 +43,7 @@ class Irep_Flat
             'sort_field'   => isset($data['sort_field']) ? sanitize_text_field($data['sort_field']) : '',
             'sort_order'   => isset($data['sort_order']) ? sanitize_text_field($data['sort_order']) : '',
             'block'        => isset($data['block']) && $data['block'] !== 'null' ? sanitize_text_field($data['block']) : 'null',
-            'floor'        => isset($data['floor']) ? absint($data['floor']) : 0,
+            'floor'        => isset($data['floor']) && is_numeric($data['floor']) ? absint($data['floor']) : null,
             'search'       => isset($data['search']) ? sanitize_text_field($data['search']) : '',
             'page'         => isset($data['page']) ? absint($data['page']) : 1,
             'per_page'     => isset($data['per_page']) ? absint($data['per_page']) : 8,
@@ -76,7 +76,7 @@ class Irep_Flat
         }
 
 
-        if (!empty($data['floor'])) {
+        if (!empty($data['floor']) || $data['floor'] === 0) {
             $query->where('floor_number', '=', $data['floor']);
         }
 
@@ -122,7 +122,7 @@ class Irep_Flat
             'flat_number'  => isset($data['flat_number']) ? sanitize_text_field($data['flat_number']) : '',
             'conf'         => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
             'type_id'      => isset($data['type_id']) ? absint($data['type_id']) : 0,
-            'floor_number' => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
+            'floor_number' => isset($data['floor_number']) ? intval($data['floor_number']) : 0,
             'price'        => isset($data['price']) ? floatval($data['price']) : 0.0,
             'offer_price'  => isset($data['offer_price']) ? floatval($data['offer_price']) : 0.0,
             'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
@@ -142,6 +142,7 @@ class Irep_Flat
             'use_type'     => isset($data['use_type']) && rest_sanitize_boolean($data['use_type'])
         ];
 
+        $data['floor_number'] = strval($data['floor_number']);
 
         $this->canUserAddFlat($data);
 
@@ -199,7 +200,7 @@ class Irep_Flat
             'flat_number'  => isset($data['flat_number']) ? sanitize_text_field($data['flat_number']) : '',
             'conf'         => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
             'type_id'      => isset($data['type_id']) ? absint($data['type_id']) : 0,
-            'floor_number' => isset($data['floor_number']) ? absint($data['floor_number']) : 0,
+            'floor_number' => isset($data['floor_number']) ? intval($data['floor_number']) : 0,
             'price'        => isset($data['price']) ? floatval($data['price']) : 0.0,
             'offer_price'  => isset($data['offer_price']) ? floatval($data['offer_price']) : 0.0,
             'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
@@ -218,6 +219,8 @@ class Irep_Flat
             'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
             'use_type'     => isset($data['use_type']) && rest_sanitize_boolean($data['use_type'])
         ];
+
+        $data['floor_number'] = strval($data['floor_number']);
 
         irep_check_nonce($data['nonce'], 'irep_nonce');
 
