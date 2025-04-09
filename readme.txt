@@ -1,9 +1,9 @@
 === Interactive Real Estate (Building Module) ===
 Contributors: esaia
-Tags: interactive images, real estate, floor plan, SVG, hotspots
+Tags: interactive images, floor plan, 3d map, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 Plugin URI: https://ireplugin.com
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,7 +16,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 ### The Ultimate Building Module Plugin ###
 Interactive Real Estate is the most innovative WordPress plugin for creating interactive buildings and property displays. Quickly add pins, vector shapes, and create SVG, all without needing to write any code.
 
-Create interactive buildings images with clickable zones on svg. Display floor plans, property details and 2D/3D photos.
+Boost apartment sales. Create interactive buildings images with clickable zones on svg. Display floor plans, property details and 2D/3D photos.
 
 With easy navigation through different building layers, users can get detailed information about each unit directly from the visual interface.
 
@@ -26,7 +26,7 @@ Select area easily, with our WordPress plugin to specific regions of an building
 
 
 ### Zoom and Pan ###
-Tty the new zoom and pan feature. Use the keyboard shortcut to zoom in on your SVG and create detailed polygons. When you're zoomed in, simply press the spacebar to pan around and explore your design easily.
+Try the new zoom and pan feature. Use the keyboard shortcut to zoom in on your SVG and create detailed polygons. When you're zoomed in, simply press the spacebar to pan around and explore your design easily.
 
 ##Choose svg path colors###
 Easily customize the colors of your SVG paths to match your design aesthetic. With just a few clicks, you can select any color and apply it to paths.
@@ -149,6 +149,9 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 
 
 == Changelog ==
+
+= 1.0.7 =
+* fix: project request blocking issue caused by Wordfence plugin compatibility
 
 = 1.0.6 =
 * feat: export/import project
