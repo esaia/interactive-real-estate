@@ -526,7 +526,7 @@ onMounted(() => {
     // setSvgViewBox();
     emit("setSvgRef", svgCanvas.value);
     addListeners();
-  }, 500);
+  }, 700);
 });
 
 onBeforeUnmount(() => {
