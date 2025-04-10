@@ -88,6 +88,7 @@ const floorsSelectData = computed<selectDataItem[]>(() => {
       };
     });
 });
+
 const flatsSelectData = computed<selectDataItem[]>(() => {
   if (!projectFlats.value) return [];
 
@@ -95,11 +96,23 @@ const flatsSelectData = computed<selectDataItem[]>(() => {
     .filter((flat) => {
       if (activeFloor.value) {
         const isSameFloor = flat.floor_number?.toString() === activeFloor.value.floor_number?.toString();
-        const isSameBlock = activeBlock.value?.id
-          ? flat.block_id === activeBlock.value?.id?.toString()
-          : flat.block_id
-            ? flat.block_id === activeFloor.value.block_id?.toString()
-            : !flat.block_id;
+        // const isSameBlock = activeBlock.value?.id
+        //   ? flat.block_id === activeBlock.value?.id?.toString()
+        //   : flat.block_id
+        //     ? flat.block_id === activeFloor.value.block_id?.toString()
+        //     : activeFloor.value.block_id
+        //       ? false
+        //       : !flat.block_id;
+
+        let isSameBlock = false;
+
+        if (activeBlock.value?.id) {
+          isSameBlock = flat.block_id === activeBlock.value?.id?.toString();
+        } else if (flat.block_id) {
+          isSameBlock = flat.block_id === activeFloor.value.block_id?.toString();
+        } else {
+          isSameBlock = !activeFloor.value.block_id;
+        }
 
         return isSameFloor && isSameBlock;
       } else if (activeBlock.value) {
