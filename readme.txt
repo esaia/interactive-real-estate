@@ -137,14 +137,13 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 
 
 == Screenshots ==
-1. Banner: [banner-1540x500.jpg]
-2. Plugin icon: [icon-512x512.png]
-3. Main dashboard view: [screenshot-6.jpg]
-4. Main dashboard view: [screenshot-1.jpg]
-5. Flats list: [screenshot-2.png]
-6. 3d floor plan: [screenshot-3.jpg]
-7. Edit flat: [screenshot-4.jpg]
-8. Result: [screenshot-5.jpg]
+1. interactive building module
+2. flats list
+3. floor plan
+4. edit flat
+5. interactive real estate demo
+6. blocks example
+
 
 
 
