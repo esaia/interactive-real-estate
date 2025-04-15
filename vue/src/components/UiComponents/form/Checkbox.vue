@@ -16,7 +16,7 @@ const checkboxModel = defineModel<any>();
 </script>
 
 <template>
-  <label class="flex cursor-pointer items-start">
+  <label class="flex cursor-pointer items-center">
     <div>
       <input type="checkbox" v-model="checkboxModel" hidden class="!hidden" />
 

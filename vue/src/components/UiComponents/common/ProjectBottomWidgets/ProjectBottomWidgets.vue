@@ -14,6 +14,7 @@ import Modal from "../../Modal.vue";
 import GenerateObject from "./GenerateObject.vue";
 import TooltipChoose from "./TooltipChoose.vue";
 import CurrencySelect from "../CurrencySelect.vue";
+import Checkbox from "../../form/Checkbox.vue";
 const projectStore = useProjectStore();
 const metaStore = useMetaStore();
 
@@ -23,6 +24,7 @@ const projectImage = ref<imageInterface[] | null>(null);
 const colorsRef = ref();
 const chosenTooltip = ref("1");
 const chosenCurrency = ref({ title: "🇺🇸 USD - $", value: "usd" });
+const isPriceRounded = ref(false);
 const shortcode = ref(`[irep_project id="${projectStore?.id}"]`);
 const showGenerateObject = ref(false);
 const showPreview = ref(false);
@@ -32,8 +34,9 @@ const loading = ref(false);
 const updateProject = async () => {
   const tooltipMeta = { key: "tooltip", value: chosenTooltip.value };
   const currencyMeta = { key: "currency", value: chosenCurrency.value.value };
+  const isRoundedPrice = { key: "price_rounded", value: isPriceRounded.value };
 
-  metaStore.setProjectMeta([...colorsRef.value?.metaColors, tooltipMeta, currencyMeta]);
+  metaStore.setProjectMeta([...colorsRef.value?.metaColors, tooltipMeta, currencyMeta, isRoundedPrice]);
 
   if (svgRef.value) {
     resetCanvasAfterSave(svgRef.value);
@@ -107,6 +110,8 @@ watch(
     if (findedCurency) {
       chosenCurrency.value = findedCurency;
     }
+
+    isPriceRounded.value = metaStore.getMeta("price_rounded")?.meta_value === "true";
   },
   { deep: true, immediate: true }
 );
@@ -172,6 +177,10 @@ defineExpose({
 
         <div class="mt-3">
           <CurrencySelect v-model="chosenCurrency" />
+        </div>
+
+        <div class="mt-3">
+          <Checkbox v-model="isPriceRounded" title="Rounded Price" />
         </div>
       </div>
 

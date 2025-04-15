@@ -83,8 +83,7 @@ class Irep_Meta_Project
 
 
         if (!ire_fs()->can_use_premium_code()) {
-            // irep_upgrade_plan();
-            $filtered_keys = ['tooltip'];
+            $filtered_keys = ['tooltip', 'price_rounded'];
 
             $data['meta_data'] = array_filter($data['meta_data'], function ($item) use ($filtered_keys) {
 
