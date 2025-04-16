@@ -82,8 +82,11 @@ class Irep_Meta_Project
         ];
 
 
+
+
+
         if (!ire_fs()->can_use_premium_code()) {
-            $filtered_keys = ['tooltip', 'price_rounded'];
+            $filtered_keys = ['tooltip', 'price_rounded', 'open_reserved_flat', 'open_sold_flat'];
 
             $data['meta_data'] = array_filter($data['meta_data'], function ($item) use ($filtered_keys) {
 
@@ -95,6 +98,10 @@ class Irep_Meta_Project
                 return in_array($item['key'], $filtered_keys);
             });
         }
+
+
+
+
 
 
 

@@ -25,6 +25,9 @@ const colorsRef = ref();
 const chosenTooltip = ref("1");
 const chosenCurrency = ref({ title: "🇺🇸 USD - $", value: "usd" });
 const isPriceRounded = ref(false);
+const openReservedFlats = ref(false);
+const openSoldFlats = ref(false);
+
 const shortcode = ref(`[irep_project id="${projectStore?.id}"]`);
 const showGenerateObject = ref(false);
 const showPreview = ref(false);
@@ -32,11 +35,21 @@ const projectUpdateToogle = ref(false);
 const loading = ref(false);
 
 const updateProject = async () => {
-  const tooltipMeta = { key: "tooltip", value: chosenTooltip.value };
-  const currencyMeta = { key: "currency", value: chosenCurrency.value.value };
-  const isRoundedPrice = { key: "price_rounded", value: isPriceRounded.value };
+  // const tooltipMeta = { key: "tooltip", value: chosenTooltip.value };
+  // const currencyMeta = { key: "currency", value: chosenCurrency.value.value };
+  // const isRoundedPrice = { key: "price_rounded", value: isPriceRounded.value };
+  // const openReservedFlatMeta = { key: "openReservedFlat", value: openReservedFlats.value };
+  // const openSoldFlatMeta = { key: "openSoldFlat", value: openSoldFlats.value };
 
-  metaStore.setProjectMeta([...colorsRef.value?.metaColors, tooltipMeta, currencyMeta, isRoundedPrice]);
+  const metas = [
+    { key: "tooltip", value: chosenTooltip.value },
+    { key: "currency", value: chosenCurrency.value.value },
+    { key: "price_rounded", value: isPriceRounded.value },
+    { key: "open_reserved_flat", value: openReservedFlats.value },
+    { key: "open_sold_flat", value: openSoldFlats.value }
+  ];
+
+  metaStore.setProjectMeta([...colorsRef.value?.metaColors, ...metas]);
 
   if (svgRef.value) {
     resetCanvasAfterSave(svgRef.value);
@@ -112,6 +125,8 @@ watch(
     }
 
     isPriceRounded.value = metaStore.getMeta("price_rounded")?.meta_value === "true";
+    openReservedFlats.value = metaStore.getMeta("open_reserved_flat")?.meta_value === "true";
+    openSoldFlats.value = metaStore.getMeta("open_sold_flat")?.meta_value === "true";
   },
   { deep: true, immediate: true }
 );
@@ -179,8 +194,10 @@ defineExpose({
           <CurrencySelect v-model="chosenCurrency" />
         </div>
 
-        <div class="mt-3">
+        <div class="mt-3 space-y-2">
           <Checkbox v-model="isPriceRounded" title="Rounded Price" />
+          <Checkbox v-model="openReservedFlats" title="Open reserved flats" />
+          <Checkbox v-model="openSoldFlats" title="Open sold flats" />
         </div>
       </div>
 
