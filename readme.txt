@@ -2,7 +2,7 @@
 Contributors: esaia
 Tags: interactive images, floor plan, 3d map, SVG, hotspots
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: 1.0.8
 Plugin URI: https://ireplugin.com
 License: GPL2
