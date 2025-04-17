@@ -200,7 +200,7 @@ class Irep_Flat
             'flat_number'  => isset($data['flat_number']) ? sanitize_text_field($data['flat_number']) : '',
             'conf'         => isset($data['conf']) ? sanitize_text_field($data['conf']) : '',
             'type_id'      => isset($data['type_id']) ? absint($data['type_id']) : 0,
-            'floor_number' => isset($data['floor_number']) ? intval($data['floor_number']) : 0,
+            'floor_number' => isset($data['floor_number']) ? intval($data['floor_number']) : null,
             'price'        => isset($data['price']) ? floatval($data['price']) : 0.0,
             'offer_price'  => isset($data['offer_price']) ? floatval($data['offer_price']) : 0.0,
             'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
@@ -253,6 +253,8 @@ class Irep_Flat
         }
 
         $params['type'] = irep_handle_json_data($data['type']);
+
+
 
         $updated_flat = Irep_DB::table($this->table_name)->where('id', '=',  $flat_id)->update($params);
 

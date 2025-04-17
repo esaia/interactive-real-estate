@@ -1,14 +1,14 @@
-=== Interactive Building Image Plugin - (Interactive Real Estate) ===
+=== Interactive Building Image – Real Estate Visualizer & Image Map ===
 Contributors: esaia
 Tags: interactive images, floor plan, 3d map, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 Plugin URI: https://ireplugin.com
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-⚡ Create interactive buildings images with clickable zones on svg. Display floor plans, property details and 2D/3D photos. No coding required.
+⚡ Create interactive buildings images with clickable zones on svg. Display floor plans, image maps, property details and 2D/3D photos. No coding required.
 
 == Description ==
 [Upgrade To Pro!](https://ireplugin.com/pricing) | [Live Demo](https://ireplugin.com/demos) | [Module Demo](https://ireplugin.com/module) | [Support](https://ireplugin.com/contact)
@@ -149,16 +149,21 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 
 == Changelog ==
 
+= 1.0.8 =
+* refactor: optimized styling of tooltips and flat preview modal.
+* feat: added 3 config: rounded price, open reserved flats, open sold flats.
+* fix: minor bugs about floor/flat saving.
+
 = 1.0.7 =
-* fix: project request blocking issue caused by Wordfence plugin compatibility
+* fix: project request blocking issue caused by Wordfence plugin compatibility.
 
 = 1.0.6 =
-* feat: export/import project
-* tooltip styles
+* feat: export/import project.
+* tooltip styles.
 
 = 1.0.5 =
-* Create modal for flat detail view
-* translate plugin
+* Create modal for flat detail view.
+* translate plugin.
 
 = 1.0.4 =
 * Added a new DB class to handle CRUD (Create, Read, Update, Delete) operations for database manipulations in the plugin.
