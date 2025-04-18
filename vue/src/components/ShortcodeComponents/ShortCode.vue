@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import ajaxAxios from "@/src/utils/axios";
 import { ShortcodeData } from "@/types/components";
-import { Project } from "ire-preview";
+import { createProjectApp } from "ire-preview";
+
 import { onMounted, ref } from "vue";
 import Loading from "../UiComponents/common/Loading.vue";
 
@@ -9,6 +10,9 @@ const props = defineProps<{
   projectId: string;
 }>();
 
+let app: any = null;
+
+const root = ref();
 const shortcodeData = ref<ShortcodeData>();
 const loading = ref(false);
 const ire_plugin = ref();
@@ -25,6 +29,14 @@ const fetchData = async () => {
 
     if (data.success) {
       shortcodeData.value = data.data;
+
+      if (app) {
+        app.unmount();
+      }
+
+      app = createProjectApp({ data: data.data, translations: ire_plugin.value?.translations || [] });
+
+      app.mount(root.value);
     }
   } catch (error) {
   } finally {
@@ -34,6 +46,7 @@ const fetchData = async () => {
 
 onMounted(() => {
   fetchData();
+
   ire_plugin.value = irePlugin;
 });
 </script>
@@ -45,7 +58,7 @@ onMounted(() => {
         <Loading />
       </div>
     </div>
-
-    <Project v-else-if="shortcodeData" :data="shortcodeData" :translations="ire_plugin?.translations || []" />
+    <div ref="root"></div>
+    <!-- <Project v-else-if="shortcodeData" :data="shortcodeData" :translations="ire_plugin?.translations || []" /> -->
   </div>
 </template>

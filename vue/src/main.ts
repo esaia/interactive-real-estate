@@ -50,8 +50,7 @@ app.mount("#irep-vue-app");
 
 document.querySelectorAll("[id^='irep-shortcode-']").forEach((shortcodeElement) => {
   const projectId = shortcodeElement.getAttribute("data-project-id");
-  const componentId = shortcodeElement.getAttribute("id");
-  const shortcodeApp = createApp(Shortcode, { projectId, componentId });
+  const shortcodeApp = createApp(Shortcode, { projectId });
 
   shortcodeApp.use(vClickOutside);
 
