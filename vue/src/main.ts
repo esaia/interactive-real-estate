@@ -14,6 +14,7 @@ import "./style.css";
 import "highlight.js/styles/stackoverflow-light.css";
 import "highlight.js/lib/common";
 import hljsVuePlugin from "@highlightjs/vue-plugin";
+import IrePreview from "ire-preview";
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -24,6 +25,7 @@ app.use(VueAwesomePaginate);
 app.use(ToastPlugin);
 app.use(Vue3ColorPicker);
 app.use(hljsVuePlugin);
+app.use(IrePreview);
 
 app.config.globalProperties.irePlugin = irePlugin;
 // @ts-ignore
@@ -53,6 +55,7 @@ document.querySelectorAll("[id^='irep-shortcode-']").forEach((shortcodeElement) 
   const shortcodeApp = createApp(Shortcode, { projectId });
 
   shortcodeApp.use(vClickOutside);
+  shortcodeApp.use(IrePreview);
 
   shortcodeApp.mount(shortcodeElement);
 });
