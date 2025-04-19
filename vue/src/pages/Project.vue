@@ -11,6 +11,7 @@ import { useFlatsStore } from "../stores/useFlats";
 import { useBlocksStore } from "../stores/useBlock";
 import { useActionsStore } from "../stores/useActions";
 import ShortCode from "../components/ShortcodeComponents/ShortCode.vue";
+import Loading from "../components/UiComponents/common/Loading.vue";
 
 const projectStore = useProjectStore();
 const floorsStore = useFloorsStore();
@@ -22,6 +23,7 @@ const actionsStore = useActionsStore();
 const { polygon_data, activeGroup, svgRef, svg, id, project_image } = storeToRefs(projectStore);
 
 const bottomWidgetsRef = ref();
+const loading = ref(true);
 
 const deleteG = (key: string) => {
   activeGroup.value = null;
@@ -29,19 +31,28 @@ const deleteG = (key: string) => {
   svgRef.value?.querySelector(`#${key}`)?.remove();
 };
 
-onMounted(() => {
+onMounted(async () => {
   const projectId = Number(id.value);
+  loading.value = true;
 
-  floorsStore.fetchProjectFloors(projectId);
-  blockStore.fetchProjectBLocks(projectId);
-  typesStore.fetchProjectTypes(projectId);
-  flatsStore.fetchProjectFlats(projectId);
-  actionsStore.fetchProjectActions(projectId);
+  await Promise.all([
+    floorsStore.fetchProjectFloors(projectId),
+    blockStore.fetchProjectBLocks(projectId),
+    typesStore.fetchProjectTypes(projectId),
+    flatsStore.fetchProjectFlats(projectId),
+    actionsStore.fetchProjectActions(projectId)
+  ]);
+
+  loading.value = false;
 });
 </script>
 
 <template>
-  <div class="container-fluid">
+  <div v-if="loading" class="p-3">
+    <Loading />
+  </div>
+
+  <div v-else class="container-fluid">
     <ShortCode v-if="bottomWidgetsRef?.showPreview" :project-id="projectStore.id" />
 
     <Canvas
