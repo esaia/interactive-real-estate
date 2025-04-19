@@ -50,7 +50,9 @@ window.constants = {
 
 app.mount("#irep-vue-app");
 
-document.querySelectorAll("[id^='irep-shortcode-']").forEach((shortcodeElement) => {
+document.body.querySelectorAll("[id^='irep-shortcode-']").forEach((shortcodeElement) => {
+  if (shortcodeElement.tagName === "SCRIPT") return;
+
   const projectId = shortcodeElement.getAttribute("data-project-id");
   const shortcodeApp = createApp(Shortcode, { projectId });
 

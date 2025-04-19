@@ -61,38 +61,10 @@ function irep_enqueue_vue_assets()
     wp_enqueue_script('ire-vue-js', plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
     wp_enqueue_style('ire-vue-styles', plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.css');
 
-    $translations = IREP_PLUGIN_NAME === 'Interactive Real Estate' ?
-        [
-            'floor' => __('floor',  'interactive-real-estate'),
-            'available' => __('available',  'interactive-real-estate'),
-            'reserved' => __('reserved',  'interactive-real-estate'),
-            'sold' => __('sold',  'interactive-real-estate'),
-            'apartment' => __('apartment',  'interactive-real-estate'),
-            'back' => __('back',  'interactive-real-estate'),
-            '2d plan' => __('2d plan',  'interactive-real-estate'),
-            '3d plan' => __('3d plan',  'interactive-real-estate'),
-            'price' => __('price',  'interactive-real-estate'),
-            'area' => __('area',  'interactive-real-estate'),
-            'room' => __('room',  'interactive-real-estate'),
-            'starting from' => __('starting from',  'interactive-real-estate'),
-        ]
-        :
-        [
-            'floor' => __('floor',  'interactive-real-estate-premium'),
-            'available' => __('available',  'interactive-real-estate-premium'),
-            'reserved' => __('reserved',  'interactive-real-estate-premium'),
-            'sold' => __('sold',  'interactive-real-estate-premium'),
-            'apartment' => __('apartment',  'interactive-real-estate-premium'),
-            'back' => __('back',  'interactive-real-estate-premium'),
-            '2d plan' => __('2d plan',  'interactive-real-estate-premium'),
-            '3d plan' => __('3d plan',  'interactive-real-estate-premium'),
-            'price' => __('price',  'interactive-real-estate-premium'),
-            'area' => __('area',  'interactive-real-estate-premium'),
-            'room' => __('room',  'interactive-real-estate-premium'),
-            'starting from' => __('starting from',  'interactive-real-estate-premium'),
-        ];
 
-    // Localize the script with necessary PHP variables (nonce, AJAX URL, etc.)
+    $translations = irep_get_translations();
+
+
     wp_localize_script('ire-vue-js', 'irePlugin', array(
         'nonce' => wp_create_nonce('irep_nonce'),
         'ajax_url' => admin_url('admin-ajax.php'),
@@ -121,13 +93,40 @@ function irep_enqueue_admin_scripts($hook)
 
 add_action('admin_enqueue_scripts', 'irep_enqueue_admin_scripts', 20);
 
+
+
 /**
  * Enqueue Vue.js assets only on the front-end of the site.
  */
 function irep_enqueue_frontend_scripts()
 {
-    // Enqueue Vue.js assets (JavaScript, CSS) for frontend
-    irep_enqueue_vue_assets();
+    $debug = false;
+
+    if ($debug) {
+        irep_enqueue_vue_assets();
+    } else {
+
+        wp_enqueue_script('vue-3', 'https://unpkg.com/vue@3/dist/vue.global.prod.js', [], '3.5.13', true);
+
+        wp_enqueue_script(
+            'irep-shortcode',
+            plugin_dir_url(IREP_PLUGIN_FILE) . 'shortcode/shortcode.js',
+            ['vue-3'],
+            true
+        );
+
+
+        wp_enqueue_style('irep-shortcode-style',   plugin_dir_url(IREP_PLUGIN_FILE) . 'shortcode/shortcode.css');
+        wp_enqueue_style('irep-shortcode-lib-style', plugin_dir_url(IREP_PLUGIN_FILE) . 'shortcode/lib/irePreview.css');
+
+        $translations = irep_get_translations();
+
+        wp_localize_script('irep-shortcode', 'irePluginWp', array(
+            'nonce' => wp_create_nonce('irep_nonce'),
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'translations' =>  $translations
+        ));
+    }
 }
 
 add_action('wp_enqueue_scripts', 'irep_enqueue_frontend_scripts', 20);
@@ -147,6 +146,8 @@ function irep_force_module_type_attribute($tag, $handle)
     if ($handle === 'ire-vue-js') {
         $script_url = plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.js';
         return '<script type="module" defer src="' . esc_url($script_url) . '"></script>';
+    } else if ($handle === 'irep-shortcode') {
+        return str_replace('<script ', '<script type="module" ', $tag);
     }
     return $tag;
 }

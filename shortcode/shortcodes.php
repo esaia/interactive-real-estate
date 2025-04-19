@@ -4,6 +4,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+
+
+
 /**
  * Render the shortcode to display a Vue component with dynamic project ID.
  *

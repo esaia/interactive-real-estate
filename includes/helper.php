@@ -321,3 +321,43 @@ function irep_upgrade_plan()
 {
     irep_send_json_response(false, 'Upgrade plan.');
 }
+
+
+function irep_get_translations()
+{
+
+    $translations = IREP_PLUGIN_NAME === 'Interactive Real Estate' ?
+        [
+            'floor' => __('floor',  'interactive-real-estate'),
+            'available' => __('available',  'interactive-real-estate'),
+            'reserved' => __('reserved',  'interactive-real-estate'),
+            'sold' => __('sold',  'interactive-real-estate'),
+            'apartment' => __('apartment',  'interactive-real-estate'),
+            'back' => __('back',  'interactive-real-estate'),
+            '2d plan' => __('2d plan',  'interactive-real-estate'),
+            '3d plan' => __('3d plan',  'interactive-real-estate'),
+            'price' => __('price',  'interactive-real-estate'),
+            'area' => __('area',  'interactive-real-estate'),
+            'room' => __('room',  'interactive-real-estate'),
+            'starting from' => __('starting from',  'interactive-real-estate'),
+            'no data available' => __('No data available',  'interactive-real-estate'),
+        ]
+        :
+        [
+            'floor' => __('floor',  'interactive-real-estate-premium'),
+            'available' => __('available',  'interactive-real-estate-premium'),
+            'reserved' => __('reserved',  'interactive-real-estate-premium'),
+            'sold' => __('sold',  'interactive-real-estate-premium'),
+            'apartment' => __('apartment',  'interactive-real-estate-premium'),
+            'back' => __('back',  'interactive-real-estate-premium'),
+            '2d plan' => __('2d plan',  'interactive-real-estate-premium'),
+            '3d plan' => __('3d plan',  'interactive-real-estate-premium'),
+            'price' => __('price',  'interactive-real-estate-premium'),
+            'area' => __('area',  'interactive-real-estate-premium'),
+            'room' => __('room',  'interactive-real-estate-premium'),
+            'starting from' => __('starting from',  'interactive-real-estate-premium'),
+            'no data available' => __('No data available',  'interactive-real-estate-premium'),
+        ];
+
+    return $translations;
+}

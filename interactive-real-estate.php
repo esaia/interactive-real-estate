@@ -76,5 +76,5 @@ require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/Db.php';
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/init.php';
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/migrations.php';
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/api.php';
-require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/shortcodes.php';
+require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './shortcode/shortcodes.php';
 require_once  plugin_dir_path(IREP_PLUGIN_FILE) . './includes/ajaxWhiteList.php';

@@ -173,8 +173,8 @@ defineExpose({
         >
           Give us a review ⭐ 🙏
         </a>
-
-        <!-- <div class="cursor-pointer hover:underline" @click="showGenerateObject = true">
+        <!-- 
+        <div class="cursor-pointer hover:underline" @click="showGenerateObject = true">
           Generate data for standalone version
         </div> -->
       </div>
