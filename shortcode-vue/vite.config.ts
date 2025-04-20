@@ -10,12 +10,12 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "."),
-      "@components": resolve(__dirname, "./src/components/"),
-    },
+      "@components": resolve(__dirname, "./src/components/")
+    }
   },
 
   build: {
-    outDir: "../shortcodeDist/",
+    outDir: "../dist-shortcode/",
     emptyOutDir: true,
 
     rollupOptions: {
@@ -24,8 +24,8 @@ export default defineConfig({
 
         entryFileNames: `assets/[name].js`,
         chunkFileNames: `assets/[name].js`,
-        assetFileNames: `assets/[name].[ext]`,
-      },
-    },
-  },
+        assetFileNames: `assets/[name].[ext]`
+      }
+    }
+  }
 });

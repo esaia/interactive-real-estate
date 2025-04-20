@@ -14,12 +14,12 @@ function irep_enqueue_frontend_scripts()
 
     wp_enqueue_style(
         'irep-shortcode-style',
-        plugin_dir_url(IREP_PLUGIN_FILE) . 'shortcodeDist/assets/index.css',
+        plugin_dir_url(IREP_PLUGIN_FILE) . 'dist-shortcode/assets/index.css',
         [],
         '1.0.0'
     );
 
-    wp_enqueue_script('irep-shortcode',  plugin_dir_url(IREP_PLUGIN_FILE) . 'shortcodeDist/assets/index.js', null, true);
+    wp_enqueue_script('irep-shortcode',  plugin_dir_url(IREP_PLUGIN_FILE) . 'dist-shortcode/assets/index.js', null, true);
 
     $translations = irep_get_translations();
 

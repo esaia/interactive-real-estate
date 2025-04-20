@@ -13,7 +13,7 @@ export default defineConfig({
   },
 
   build: {
-    outDir: "../dist/",
+    outDir: "../dist-module/",
     emptyOutDir: true,
     chunkSizeWarningLimit: 1600,
 

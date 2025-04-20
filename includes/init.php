@@ -58,8 +58,8 @@ function irep_enqueue_vue_assets()
     wp_enqueue_media();
 
     // Enqueue Vue.js JavaScript and CSS for the plugin
-    wp_enqueue_script('ire-vue-js', plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.js', [], null, true);
-    wp_enqueue_style('ire-vue-styles', plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.css');
+    wp_enqueue_script('ire-vue-js', plugin_dir_url(IREP_PLUGIN_FILE) . 'dist-module/assets/index.js', [], null, true);
+    wp_enqueue_style('ire-vue-styles', plugin_dir_url(IREP_PLUGIN_FILE) . 'dist-module/assets/index.css');
 
 
     $translations = irep_get_translations();
@@ -106,7 +106,7 @@ add_action('admin_enqueue_scripts', 'irep_enqueue_admin_scripts', 20);
 function irep_force_module_type_attribute($tag, $handle)
 {
     if ($handle === 'ire-vue-js') {
-        $script_url = plugin_dir_url(IREP_PLUGIN_FILE) . 'dist/assets/index.js';
+        $script_url = plugin_dir_url(IREP_PLUGIN_FILE) . 'dist-module/assets/index.js';
         return '<script type="module" defer src="' . esc_url($script_url) . '"></script>';
     } else if ($handle === 'irep-shortcode') {
         return str_replace('<script ', '<script type="module" ', $tag);
