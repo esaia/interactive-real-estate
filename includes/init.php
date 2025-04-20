@@ -96,44 +96,6 @@ add_action('admin_enqueue_scripts', 'irep_enqueue_admin_scripts', 20);
 
 
 /**
- * Enqueue Vue.js assets only on the front-end of the site.
- */
-function irep_enqueue_frontend_scripts()
-{
-    $debug = false;
-
-    if ($debug) {
-        irep_enqueue_vue_assets();
-    } else {
-
-        wp_enqueue_script('vue-3', 'https://unpkg.com/vue@3/dist/vue.global.prod.js', [], '3.5.13', true);
-
-        wp_enqueue_script(
-            'irep-shortcode',
-            plugin_dir_url(IREP_PLUGIN_FILE) . 'shortcode/shortcode.js',
-            ['vue-3'],
-            true
-        );
-
-
-        wp_enqueue_style('irep-shortcode-style',   plugin_dir_url(IREP_PLUGIN_FILE) . 'shortcode/shortcode.css');
-        wp_enqueue_style('irep-shortcode-lib-style', plugin_dir_url(IREP_PLUGIN_FILE) . 'shortcode/lib/irePreview.css');
-
-        $translations = irep_get_translations();
-
-        wp_localize_script('irep-shortcode', 'irePluginWp', array(
-            'nonce' => wp_create_nonce('irep_nonce'),
-            'ajax_url' => admin_url('admin-ajax.php'),
-            'translations' =>  $translations
-        ));
-    }
-}
-
-add_action('wp_enqueue_scripts', 'irep_enqueue_frontend_scripts', 20);
-
-
-
-/**
  * Add the 'type="module"' and 'defer' attributes to the Vue.js script tag.
  *
  * @param string $tag The HTML script tag.
