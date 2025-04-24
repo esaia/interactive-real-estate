@@ -1,6 +1,6 @@
 === Interactive Building Image – Real Estate Visualizer & Image Map ===
 Contributors: esaia
-Tags: interactive images, floor plan, 3d map, SVG, hotspots
+Tags: interactive images, floor plan, image map, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.8
 Stable tag: 1.0.8
@@ -13,7 +13,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 == Description ==
 [Upgrade To Pro!](https://ireplugin.com/pricing) | [Live Demo](https://ireplugin.com/demos) | [Module Demo](https://ireplugin.com/module) | [Support](https://ireplugin.com/contact)
 
-### The Ultimate Building Module Plugin ###
+### Interactive Building Module Plugin ###
 Interactive Real Estate is the most innovative WordPress plugin for creating interactive buildings and property displays. Quickly add pins, vector shapes, and create SVG, all without needing to write any code.
 
 Boost apartment sales. Create interactive buildings images with clickable zones on svg. Display floor plans, property details and 2D/3D photos.
@@ -148,6 +148,10 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 
 
 == Changelog ==
+
+= x =
+* refactor: Shortcode code is more lightweight.
+* refactor: Optimized folder structure.
 
 = 1.0.8 =
 * refactor: optimized styling of tooltips and flat preview modal.

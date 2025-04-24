@@ -1,6 +1,5 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import Shortcode from "@/src/components/ShortcodeComponents/ShortCode.vue";
 import { createPinia } from "pinia";
 import ToastPlugin from "vue-toast-notification";
 import VueAwesomePaginate from "vue-awesome-paginate";
@@ -50,14 +49,14 @@ window.constants = {
 
 app.mount("#irep-vue-app");
 
-document.body.querySelectorAll("[id^='irep-shortcode-']").forEach((shortcodeElement) => {
-  if (shortcodeElement.tagName === "SCRIPT") return;
+// document.body.querySelectorAll("[id^='irep-shortcode-']").forEach((shortcodeElement) => {
+//   if (shortcodeElement.tagName === "SCRIPT") return;
 
-  const projectId = shortcodeElement.getAttribute("data-project-id");
-  const shortcodeApp = createApp(Shortcode, { projectId });
+//   const projectId = shortcodeElement.getAttribute("data-project-id");
+//   const shortcodeApp = createApp(Shortcode, { projectId });
 
-  shortcodeApp.use(vClickOutside);
-  shortcodeApp.use(IrePreview);
+//   shortcodeApp.use(vClickOutside);
+//   shortcodeApp.use(IrePreview);
 
-  shortcodeApp.mount(shortcodeElement);
-});
+//   shortcodeApp.mount(shortcodeElement);
+// });
