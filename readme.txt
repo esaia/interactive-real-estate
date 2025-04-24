@@ -1,4 +1,4 @@
-=== Interactive Building Image – Real Estate Visualizer & Image Map ===
+=== Interactive Image – Real Estate Visualizer & Image Map ===
 Contributors: esaia
 Tags: interactive images, floor plan, image map, SVG, hotspots
 Requires at least: 5.0
