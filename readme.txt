@@ -28,15 +28,27 @@ Try the new zoom and pan feature. Use the keyboard shortcut to zoom in on your i
 ### Choose svg path colors ###
 Easily customize the colors of your SVG paths to match your design aesthetic. With just a few clicks, you can select any color and apply it to paths.
 
+### Project Export / Import
+
+The Project Export/Import feature allows users to easily migrate complete projects.
+
+**Key Benefits:**
+- **Time-saving**: Duplicate projects without manual recreation
+- **Backup protection**: Safeguard your project configurations
+
+### Flat types
+
+For apartments of the same type, (For example, apartments that have the same area M2, number of rooms, arrangement of rooms) you need to add an entry in the types and then select from this list, because the same records should not be created many times.
+
 
 ### **Key Features:** ###
 - **Create SVG** on top of building render image
 - **Zoom and Pan** mode to edit polygons easily
 - **Real-Time Preview**: see your changes in real time with the preview feature
 - Create: Block, Floor, Flat, Flat type and connect to polygons
-- Add clickable zones on floor plan
-- Customisable SVG Path color
-- Use shortcode to embed plugin anywhere on your site
+- Add **clickable zones** on floor plan
+- Customisable SVG **Path color**
+- Use **shortcode** to embed plugin anywhere on your site
 - **Follow link** on click of path
 - **Open modal** on click of path
 
@@ -55,6 +67,7 @@ Easily customize the colors of your SVG paths to match your design aesthetic. Wi
 With the this plugin, you'll be able to provide a truly immersive experience for prospective buyers, setting your property listings apart from traditional static images or floor plans.
 
 [Upgrade to Interactive Real Estate Premium](https://www.ireplugin.com/pricing) to get more features and customization options:
+
 
 
 ### Why Choose Interactive Real Estate?
