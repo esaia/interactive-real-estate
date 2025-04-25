@@ -13,13 +13,13 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 == Description ==
 [Upgrade To Pro!](https://www.ireplugin.com/pricing) | [Live Demo](https://www.ireplugin.com/demos) | [Module Demo](https://www.ireplugin.com/module) | [Support](https://www.ireplugin.com/contact)
 
-### Interactive Building Module Plugin ###
+### Interactive Building Module ###
 [Interactive Real Estate](https://www.ireplugin.com/) is the most innovative WordPress plugin for creating **interactive buildings** and **property displays**. Quickly add pins, vector shapes, and create SVG, all without needing to write any code. This plugin makes you possible to **boost apartment sales**. With easy navigation through different building layers, users can get detailed information about each unit directly from the visual interface.
 
 
 ### This Interactive Image Plugin Gives Easy Select Area Option ###
 
-Select area easily, with our WordPress plugin to specific regions of an building image and provide extra details for each one. After you create selection you can edit it at any time. 
+[Select area easily](https://www.ireplugin.com/module), with our WordPress plugin to specific regions of an building image and provide extra details for each one. After you create selection you can edit it at any time. 
 
 
 ### Zoom and Pan ###
@@ -30,9 +30,9 @@ Easily customize the colors of your SVG paths to match your design aesthetic. Wi
 
 
 ### **Key Features:** ###
-- Create SVG on top of building render image
-- Zoom and Pan mode to edit polygons easily
-- Real-Time Preview: see your changes in real time with the preview feature
+- **Create SVG** on top of building render image
+- **Zoom and Pan** mode to edit polygons easily
+- **Real-Time Preview**: see your changes in real time with the preview feature
 - Create: Block, Floor, Flat, Flat type and connect to polygons
 - Add clickable zones on floor plan
 - Customisable SVG Path color
@@ -46,7 +46,7 @@ Easily customize the colors of your SVG paths to match your design aesthetic. Wi
 - Create **Unlimited** flats (25 in free version)
 - Run **script** on click of path
 - Customize **svg path** colors
-- Project export/import
+- Project export / import
 - Currency icon customization
 - 24/7 **premum** Support
 - Access to **updates**
@@ -68,9 +68,9 @@ With the this plugin, you'll be able to provide a truly immersive experience for
 
 Not sure how it works? Check out these resources:
 
-- **Live Demo Front**: See the plugin in action.
-- **Video Tutorial**: A step-by-step guide to using the plugin.
-- **Documentation**: Detailed instructions and FAQs.
+- [**Live Demo**](https://www.ireplugin.com/demos): See the plugin in action.
+- [**Video Tutorial**](https://www.youtube.com/watch?v=dQmqouszdK0): A step-by-step guide to using the plugin.
+- [**Documentation**](https://www.ireplugin.com/doc): Detailed instructions and FAQs.
 
 
 Ready to take your property listings to the next level? The [**Interactive Real Estate Plugin**](https://www.ireplugin.com/pricing) is the perfect tool for building companies who want to create engaging, interactive displays. Whether you’re showcasing a single building or an entire complex, this plugin makes it easy to provide a modern, immersive experience for your clients.
@@ -161,8 +161,6 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 4. Edit flat
 5. Interactive real estate cottages demo
 6. Block buildings example, create hotspots
-
-
 
 
 == Changelog ==
