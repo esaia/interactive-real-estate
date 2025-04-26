@@ -104,6 +104,8 @@ class Irep_Type
             'teaser'       => isset($data['teaser']) ? sanitize_text_field($data['teaser']) : '',
             'area_m2'      => isset($data['area_m2']) ? floatval($data['area_m2']) : 0,
             'rooms_count'  => isset($data['rooms_count']) ? absint($data['rooms_count']) : 0,
+            'click_action' => isset($data['click_action']) ? sanitize_text_field($data['click_action']) : '',
+            'follow_link'  => isset($data['follow_link']) ? sanitize_text_field($data['follow_link']) : '',
             'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
             'image_2d'     => $data['image_2d'],
             'image_3d'     => $data['image_3d'],
@@ -117,7 +119,7 @@ class Irep_Type
         $required_data = irep_check_required_data($data, ['title', 'project_id', 'area_m2']);
 
         // Optional fields
-        $non_required_fields = ['teaser', 'rooms_count'];
+        $non_required_fields = ['teaser', 'rooms_count', 'click_action', 'follow_link'];
         $non_required_data = irep_validate_and_sanitize_input($data, $non_required_fields, false);
 
         // Handle image fields (2D, 3D, and gallery) if provided
@@ -164,12 +166,15 @@ class Irep_Type
             'teaser'       => isset($data['teaser']) ? sanitize_text_field($data['teaser']) : '',
             'area_m2'      => isset($data['area_m2']) ? floatval($data['area_m2']) : 0,
             'rooms_count'  => isset($data['rooms_count']) ? absint($data['rooms_count']) : 0,
+            'click_action' => isset($data['click_action']) ? sanitize_text_field($data['click_action']) : '',
+            'follow_link'  => isset($data['follow_link']) ? sanitize_text_field($data['follow_link']) : '',
             'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
             'image_2d'     => isset($data['image_2d']) ? $data['image_2d'] : '',
             'image_3d'     => isset($data['image_3d']) ? $data['image_3d'] : '',
         ];
 
         irep_check_nonce($data['nonce'], 'irep_nonce');
+        irep_has_project_id($data);
 
 
 
@@ -184,7 +189,7 @@ class Irep_Type
         $required_data = irep_check_required_data($data, ['title', 'area_m2']);
 
         // Optional fields
-        $keys = ['teaser', 'rooms_count'];
+        $keys = ['teaser', 'rooms_count', 'click_action', 'follow_link'];
         $params = irep_validate_and_sanitize_input($data, $keys, false);
 
         // Merge required and optional fields

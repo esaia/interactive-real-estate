@@ -130,13 +130,15 @@ class Irep_Flat
                 'title'       => isset($data['type']['title']) ? sanitize_text_field($data['type']['title']) : '',
                 'teaser'      => isset($data['type']['teaser']) ? sanitize_textarea_field($data['type']['teaser']) : '',
                 'area_m2'     => isset($data['type']['area_m2']) ? floatval($data['type']['area_m2']) : 0.0,
+                'rooms_count' => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
+                'click_action'    => isset($data['type']['click_action']) ? sanitize_text_field($data['type']['click_action']) : '',
+                'follow_link'     => isset($data['type']['follow_link']) ? sanitize_text_field($data['type']['follow_link']) : '',
                 'image_2d'    => isset($data['type']['image_2d']) && is_array($data['type']['image_2d'])
                     ? array_map('absint', $data['type']['image_2d'])
                     : [],
                 'image_3d'    => isset($data['type']['image_3d']) && is_array($data['type']['image_3d'])
                     ? array_map('absint', $data['type']['image_3d'])
                     : [],
-                'rooms_count' => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
             ],
             'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
             'use_type'     => isset($data['use_type']) && rest_sanitize_boolean($data['use_type'])
@@ -205,16 +207,18 @@ class Irep_Flat
             'offer_price'  => isset($data['offer_price']) ? floatval($data['offer_price']) : 0.0,
             'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
             'type' => [
-                'title'       => isset($data['type']['title']) ? sanitize_text_field($data['type']['title']) : '',
-                'teaser'      => isset($data['type']['teaser']) ? sanitize_textarea_field($data['type']['teaser']) : '',
-                'area_m2'     => isset($data['type']['area_m2']) ? floatval($data['type']['area_m2']) : 0.0,
-                'image_2d'    => isset($data['type']['image_2d']) && is_array($data['type']['image_2d'])
+                'title'           => isset($data['type']['title']) ? sanitize_text_field($data['type']['title']) : '',
+                'teaser'          => isset($data['type']['teaser']) ? sanitize_textarea_field($data['type']['teaser']) : '',
+                'area_m2'         => isset($data['type']['area_m2']) ? floatval($data['type']['area_m2']) : 0.0,
+                'rooms_count'     => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
+                'click_action'    => isset($data['type']['click_action']) ? sanitize_text_field($data['type']['click_action']) : '',
+                'follow_link'     => isset($data['type']['follow_link']) ? sanitize_text_field($data['type']['follow_link']) : '',
+                'image_2d'        => isset($data['type']['image_2d']) && is_array($data['type']['image_2d'])
                     ? array_map('absint', $data['type']['image_2d'])
                     : [],
-                'image_3d'    => isset($data['type']['image_3d']) && is_array($data['type']['image_3d'])
+                'image_3d'        => isset($data['type']['image_3d']) && is_array($data['type']['image_3d'])
                     ? array_map('absint', $data['type']['image_3d'])
                     : [],
-                'rooms_count' => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
             ],
             'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
             'use_type'     => isset($data['use_type']) && rest_sanitize_boolean($data['use_type'])

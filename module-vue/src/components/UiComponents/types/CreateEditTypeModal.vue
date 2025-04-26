@@ -8,10 +8,13 @@ import { useProjectStore } from "@/src/stores/useProject";
 import { storeToRefs } from "pinia";
 import { imageInterface, TypeItem } from "@/types/components";
 import { showToast } from "@/src/composables/helpers";
+import Radio from "../form/Radio.vue";
 
 interface TypeFormInterface {
   title: string;
   teaser: string;
+  click_action: string;
+  follow_link: string;
   image_2d: imageInterface[] | null;
   image_3d: imageInterface[] | null;
   gallery: imageInterface[] | null;
@@ -38,6 +41,8 @@ const obj = reactive<TypeFormInterface>({
   teaser: "",
   image_2d: null,
   image_3d: null,
+  click_action: "",
+  follow_link: "",
   gallery: null,
   area_m2: "",
   rooms_count: "",
@@ -124,6 +129,8 @@ onMounted(() => {
     obj.teaser = typeInstance.teaser;
     obj.area_m2 = typeInstance.area_m2;
     obj.rooms_count = typeInstance.rooms_count;
+    obj.click_action = typeInstance.click_action || "";
+    obj.follow_link = typeInstance.follow_link || "";
     obj.image_2d = typeInstance.image_2d ?? null;
     obj.image_3d = typeInstance.image_3d ?? null;
     obj.gallery = typeInstance.gallery ?? null;
@@ -151,6 +158,21 @@ onMounted(() => {
 
       <Input v-model="obj.area_m2" placeholder="62.5" label="area m²" is-float required />
       <Input v-model="obj.rooms_count" placeholder="3" label="Rooms count" type="number" />
+
+      <div class="w-full">
+        <p class="label">Action on click:</p>
+        <div class="flex items-center gap-3">
+          <Radio v-model="obj.click_action" label="Open flat" name="flat_click_action" value="" />
+          <Radio v-model="obj.click_action" label="Follow link" name="flat_click_action" value="follow_link" />
+        </div>
+      </div>
+
+      <Input
+        v-if="obj.click_action === 'follow_link'"
+        v-model="obj.follow_link"
+        placeholder="https://example.com"
+        label="Link"
+      />
 
       <UploadImg
         v-model="obj.image_2d"

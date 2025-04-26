@@ -172,6 +172,8 @@ export interface TypeItem {
   title: string;
   teaser: string;
   project_id: string;
+  click_action: string;
+  follow_link: string;
   image_2d?: imageInterface[] | null;
   image_3d?: imageInterface[] | null;
   gallery?: imageInterface[] | null;

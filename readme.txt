@@ -3,7 +3,7 @@ Contributors: esaia
 Tags: interactive images, floor plan, image map, SVG, hotspots
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 Plugin URI: https://www.ireplugin.com
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -178,9 +178,11 @@ Interactive Real Estate is licensed under the GPL2 license. For more information
 
 == Changelog ==
 
-= x =
+= 1.0.9 =
 * refactor: Shortcode code is more lightweight.
 * refactor: Optimized folder structure.
+* refactor: add follow link feature on flat click
+* style: optimized shortcode component styles 
 
 = 1.0.8 =
 * refactor: optimized styling of tooltips and flat preview modal.

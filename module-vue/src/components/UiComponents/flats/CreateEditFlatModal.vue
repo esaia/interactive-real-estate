@@ -52,6 +52,8 @@ const obj = reactive<any>({
     teaser: "",
     area_m2: "",
     rooms_count: "",
+    click_action: "",
+    follow_link: "",
     image_2d: "",
     image_3d: ""
   }
@@ -259,6 +261,21 @@ onMounted(() => {
 
         <Input v-model="obj.type.area_m2" placeholder="62.5" label="area m²" is-float />
         <Input v-model="obj.type.rooms_count" placeholder="3" label="Rooms count" type="number" />
+
+        <div>
+          <p class="label">Action on click:</p>
+          <div class="flex items-center gap-3">
+            <Radio v-model="obj.type.click_action" label="Open flat" name="flat_click_action" value="" />
+            <Radio v-model="obj.type.click_action" label="Follow link" name="flat_click_action" value="follow_link" />
+          </div>
+        </div>
+
+        <Input
+          v-if="obj.type.click_action === 'follow_link'"
+          v-model="obj.type.follow_link"
+          placeholder="https://example.com"
+          label="Link"
+        />
 
         <UploadImg
           v-model="obj.type.image_2d"

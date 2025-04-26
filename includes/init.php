@@ -5,6 +5,27 @@ if (!defined('ABSPATH')) {
 }
 
 
+add_action('plugins_loaded', 'irep_check_plugin_update');
+
+
+
+function irep_check_plugin_update()
+{
+    $current_version = get_option('irep_plugin_db_version');
+
+    if (!$current_version) {
+        // Assume it's a fresh install or very old install
+        irep_create_tables();
+        update_option('irep_plugin_db_version', IREP_PLUGIN_DB_VERSION);
+    } elseif ($current_version !== IREP_PLUGIN_DB_VERSION) {
+        // Handle actual version updates later if needed
+        irep_create_tables();
+        update_option('irep_plugin_db_version', IREP_PLUGIN_DB_VERSION);
+    }
+}
+
+
+
 
 // Hook the 'irep_add_admin_menu' function to the 'admin_menu' action.
 add_action('admin_menu', 'irep_add_admin_menu');
