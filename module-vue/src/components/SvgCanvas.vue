@@ -251,13 +251,6 @@ const onPathContextMenu = (event, activeGroup) => {
 };
 
 const onCircleMouseDown = (event) => {
-  if (event.target.nodeName === "svg" && updateMode.value) {
-    setTimeout(() => {
-      onPathContextMenu(undefined, undefined);
-    }, 200);
-    return;
-  }
-
   if (!updateMode.value || event.target.tagName !== "circle") return;
 
   const parentG = event.target.parentNode;
@@ -270,6 +263,13 @@ const onCircleMouseDown = (event) => {
 };
 
 const onCircleMouseUp = (event) => {
+  if (event.target.nodeName === "svg" && updateMode.value) {
+    setTimeout(() => {
+      onPathContextMenu(undefined, undefined);
+    }, 100);
+    return;
+  }
+
   if (!updateMode.value) return;
 
   draggedCircle.value = null;

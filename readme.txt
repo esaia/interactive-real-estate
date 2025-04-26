@@ -82,7 +82,7 @@ With the this plugin, you'll be able to provide a truly immersive experience for
 Not sure how it works? Check out these resources:
 
 - [**Live Demo**](https://www.ireplugin.com/demos): See the plugin in action.
-- [**Video Tutorial**](https://www.youtube.com/watch?v=dQmqouszdK0): A step-by-step guide to using the plugin.
+- [**Video Tutorial**](https://www.youtube.com/watch?v=HmF62v03PQw): A step-by-step guide to using the plugin.
 - [**Documentation**](https://www.ireplugin.com/doc): Detailed instructions and FAQs.
 
 
@@ -101,7 +101,7 @@ Using this plugin may be complicated, For a step-by-step walkthrough on how to u
 
 [Watch the Video Tutorial](https://youtu.be/dQmqouszdK0)
 
-[youtube https://www.youtube.com/watch?v=dQmqouszdK0]
+[youtube https://www.youtube.com/watch?v=HmF62v03PQw]
 
 **This video covers:**
 - How to create a new interactive project.
