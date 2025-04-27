@@ -126,13 +126,16 @@ class Irep_Flat
             'price'        => isset($data['price']) ? floatval($data['price']) : 0.0,
             'offer_price'  => isset($data['offer_price']) ? floatval($data['offer_price']) : 0.0,
             'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
+            'click_action' => isset($data['click_action']) ? sanitize_text_field($data['click_action']) : '',
+            'follow_link'  => [
+                'link'        => isset($data['follow_link']['link']) ? sanitize_text_field($data['follow_link']['link']) : '',
+                'target'      => isset($data['follow_link']['target']) ? sanitize_text_field($data['follow_link']['target']) : '',
+            ],
             'type' => [
                 'title'       => isset($data['type']['title']) ? sanitize_text_field($data['type']['title']) : '',
                 'teaser'      => isset($data['type']['teaser']) ? sanitize_textarea_field($data['type']['teaser']) : '',
                 'area_m2'     => isset($data['type']['area_m2']) ? floatval($data['type']['area_m2']) : 0.0,
                 'rooms_count' => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
-                'click_action'    => isset($data['type']['click_action']) ? sanitize_text_field($data['type']['click_action']) : '',
-                'follow_link'     => isset($data['type']['follow_link']) ? sanitize_text_field($data['type']['follow_link']) : '',
                 'image_2d'    => isset($data['type']['image_2d']) && is_array($data['type']['image_2d'])
                     ? array_map('absint', $data['type']['image_2d'])
                     : [],
@@ -152,7 +155,7 @@ class Irep_Flat
 
         // Define required and non-required fields
         $required_fields = ['flat_number', 'price', 'project_id'];
-        $non_required_fields = ['floor_number', 'offer_price', 'conf', 'block_id', 'use_type'];
+        $non_required_fields = ['floor_number', 'offer_price', 'conf', 'block_id', 'use_type', 'click_action', 'follow_link'];
 
         // Adjust required fields based on use type
         if ($data['use_type']) {
@@ -171,7 +174,10 @@ class Irep_Flat
 
         // Handle the type data as JSON
         $params['type'] = irep_handle_json_data($data['type']);
+        $params['follow_link'] = irep_handle_json_data($data['follow_link']);
 
+
+        // irep_dd($params);
 
         $flat_id = Irep_DB::table($this->table_name)->create($params);
 
@@ -206,13 +212,16 @@ class Irep_Flat
             'price'        => isset($data['price']) ? floatval($data['price']) : 0.0,
             'offer_price'  => isset($data['offer_price']) ? floatval($data['offer_price']) : 0.0,
             'block_id'     => isset($data['block_id']) ? absint($data['block_id']) : 0,
+            'click_action' => isset($data['click_action']) ? sanitize_text_field($data['click_action']) : '',
+            'follow_link'  => [
+                'link'        => isset($data['follow_link']['link']) ? sanitize_text_field($data['follow_link']['link']) : '',
+                'target'      => isset($data['follow_link']['target']) ? sanitize_text_field($data['follow_link']['target']) : '',
+            ],
             'type' => [
                 'title'           => isset($data['type']['title']) ? sanitize_text_field($data['type']['title']) : '',
                 'teaser'          => isset($data['type']['teaser']) ? sanitize_textarea_field($data['type']['teaser']) : '',
                 'area_m2'         => isset($data['type']['area_m2']) ? floatval($data['type']['area_m2']) : 0.0,
                 'rooms_count'     => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
-                'click_action'    => isset($data['type']['click_action']) ? sanitize_text_field($data['type']['click_action']) : '',
-                'follow_link'     => isset($data['type']['follow_link']) ? sanitize_text_field($data['type']['follow_link']) : '',
                 'image_2d'        => isset($data['type']['image_2d']) && is_array($data['type']['image_2d'])
                     ? array_map('absint', $data['type']['image_2d'])
                     : [],
@@ -245,7 +254,7 @@ class Irep_Flat
         $required_data = irep_check_required_data($data, $required_fields);
 
         // Define and validate optional fields
-        $keys = ['floor_number', 'project_id', 'block_id', 'offer_price', 'conf', 'use_type'];
+        $keys = ['floor_number', 'project_id', 'block_id', 'offer_price', 'conf', 'use_type', 'click_action', 'follow_link'];
         $params = irep_validate_and_sanitize_input($data, $keys, false);
 
         // Merge required and optional fields
@@ -257,8 +266,7 @@ class Irep_Flat
         }
 
         $params['type'] = irep_handle_json_data($data['type']);
-
-
+        $params['follow_link'] = irep_handle_json_data($data['follow_link']);
 
         $updated_flat = Irep_DB::table($this->table_name)->where('id', '=',  $flat_id)->update($params);
 
@@ -322,6 +330,15 @@ class Irep_Flat
         if ($item['type']) {
             $item['type'] = irep_handle_json_data($item['type']);
         }
+
+        if ($item['follow_link']) {
+            $item['follow_link'] = irep_handle_json_data($item['follow_link']);
+
+            if (isset($item['follow_link']['target'])) {
+                $item['follow_link']['target'] = filter_var($item['follow_link']['target'], FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+
 
         // Process image data for 2D and 3D images, if available
         if (is_array($item['type']) && isset($item['type']['image_2d']) && !empty($item['type']['image_2d'])) {

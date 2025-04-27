@@ -16,6 +16,7 @@ import { pushToPlansPage, showToast } from "@/src/composables/helpers";
 import { useFlatsStore } from "@/src/stores/useFlats";
 import UploadImg from "../form/UploadImg.vue";
 import Radio from "../form/Radio.vue";
+import Checkbox from "../form/Checkbox.vue";
 
 const emits = defineEmits<{
   (e: "setActiveFlat", activeType: FlatItem): void;
@@ -47,13 +48,16 @@ const obj = reactive<any>({
   price: "",
   offer_price: "",
   block_id: null,
+  click_action: "",
+  follow_link: {
+    link: "",
+    target: true
+  },
   type: {
     title: "",
     teaser: "",
     area_m2: "",
     rooms_count: "",
-    click_action: "",
-    follow_link: "",
     image_2d: "",
     image_3d: ""
   }
@@ -196,7 +200,8 @@ onMounted(() => {
     obj.type_id = typesData.value.find((type) => type.value === typeInstance.type_id) ?? null;
     obj.floor_number = floorsNumberData.value.find((floor) => floor.value === typeInstance.floor_number) ?? null;
     obj.block_id = blockSelectData.value.find((block) => block.value === typeInstance.block_id) ?? null;
-
+    obj.click_action = typeInstance?.click_action ?? "";
+    obj.follow_link = typeInstance?.follow_link ?? { link: "", target: false };
     useType.value = typeInstance.use_type ? "true" : "false";
     if (typeInstance.type) {
       obj.type = typeInstance.type;
@@ -232,7 +237,22 @@ onMounted(() => {
       <Input v-model="obj.offer_price" placeholder="58000" label="Offer price" />
       <Select v-model="obj.conf" :data="confData" label="configuration" clearable />
 
+      <div class="w-full">
+        <p class="label">Action on click:</p>
+        <div class="flex items-center gap-3">
+          <Radio v-model="obj.click_action" label="Open flat modal" name="flat_click_action" value="" />
+          <Radio v-model="obj.click_action" label="Follow link" name="flat_click_action" value="follow_link" />
+        </div>
+      </div>
+
+      <div v-if="obj.click_action === 'follow_link'" class="w-full">
+        <Input v-model="obj.follow_link.link" placeholder="https://example.com" label="Link" />
+
+        <Checkbox v-model="obj.follow_link.target" title="Open in new window" class="mt-2" />
+      </div>
       <!-- <Select v-model="obj.block_id" :data="[]" label="Block" clearable /> -->
+
+      <div class="my-2 h-1 w-full bg-gray-50" />
 
       <div class="flex items-center gap-3">
         <Radio v-model="useType" label="Choose type" name="test name" value="true" />
@@ -261,21 +281,6 @@ onMounted(() => {
 
         <Input v-model="obj.type.area_m2" placeholder="62.5" label="area m²" is-float />
         <Input v-model="obj.type.rooms_count" placeholder="3" label="Rooms count" type="number" />
-
-        <div>
-          <p class="label">Action on click:</p>
-          <div class="flex items-center gap-3">
-            <Radio v-model="obj.type.click_action" label="Open flat" name="flat_click_action" value="" />
-            <Radio v-model="obj.type.click_action" label="Follow link" name="flat_click_action" value="follow_link" />
-          </div>
-        </div>
-
-        <Input
-          v-if="obj.type.click_action === 'follow_link'"
-          v-model="obj.type.follow_link"
-          placeholder="https://example.com"
-          label="Link"
-        />
 
         <UploadImg
           v-model="obj.type.image_2d"

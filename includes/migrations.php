@@ -91,8 +91,6 @@ function irep_create_tables()
         title VARCHAR(255) NOT NULL,
         teaser TEXT,
         project_id mediumint(9) NOT NULL,
-        click_action VARCHAR(255),
-        follow_link VARCHAR(255),
         image_2d " . ($isSQLite ? "TEXT" : "JSON") . ",
         image_3d " . ($isSQLite ? "TEXT" : "JSON") . ",
         gallery " . ($isSQLite ? "TEXT" : "JSON") . ",
@@ -105,9 +103,9 @@ function irep_create_tables()
     ) $charset_collate;";
 
     // Check if types table exists, if not, create it
-    // if (!$wpdb->get_var("SHOW TABLES LIKE '$types_table_name'")) {
-    dbDelta($types_sql);
-    // }
+    if (!$wpdb->get_var("SHOW TABLES LIKE '$types_table_name'")) {
+        dbDelta($types_sql);
+    }
 
     // Table for flats
     $flats_table_name = $wpdb->prefix . 'irep_flats';
@@ -120,6 +118,8 @@ function irep_create_tables()
         floor_number mediumint(9),
         conf VARCHAR(255),
         flat_number VARCHAR(255) NOT NULL,
+        click_action VARCHAR(255),
+        follow_link " . ($isSQLite ? "TEXT" : "JSON") . ",
         price DECIMAL(10, 2) NOT NULL,
         offer_price DECIMAL(10, 2),
         use_type BOOLEAN DEFAULT TRUE,
@@ -131,9 +131,9 @@ function irep_create_tables()
     ) $charset_collate;";
 
     // Check if flats table exists, if not, create it
-    if (!$wpdb->get_var("SHOW TABLES LIKE '$flats_table_name'")) {
-        dbDelta($flats_sql);
-    }
+    // if (!$wpdb->get_var("SHOW TABLES LIKE '$flats_table_name'")) {
+    dbDelta($flats_sql);
+    // }
 
     // Table for project metadata
     $meta_table_name = $wpdb->prefix . 'irep_project_meta';
