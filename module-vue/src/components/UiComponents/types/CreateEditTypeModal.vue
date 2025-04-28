@@ -8,7 +8,7 @@ import { useProjectStore } from "@/src/stores/useProject";
 import { storeToRefs } from "pinia";
 import { imageInterface, TypeItem } from "@/types/components";
 import { showToast } from "@/src/composables/helpers";
-import Radio from "../form/Radio.vue";
+import Delete from "../icons/Delete.vue";
 
 interface TypeFormInterface {
   title: string;
@@ -19,6 +19,7 @@ interface TypeFormInterface {
   area_m2: string;
   rooms_count: string;
   project_id: string;
+  other: { key: string; value: string }[];
 }
 
 const emits = defineEmits<{
@@ -42,10 +43,20 @@ const obj = reactive<TypeFormInterface>({
   gallery: null,
   area_m2: "",
   rooms_count: "",
-  project_id: id.value
+  project_id: id.value,
+  other: [{ key: "", value: "" }]
 });
 
 const loading = ref(false);
+
+const addOther = () => {
+  if (!obj.other) obj.other = [];
+  obj.other.push({ key: "", value: "" });
+};
+
+const removeOther = (index: number) => {
+  obj.other.splice(index, 1);
+};
 
 const submitForm = async () => {
   const params: any = { ...obj };
@@ -128,6 +139,7 @@ onMounted(() => {
     obj.image_2d = typeInstance.image_2d ?? null;
     obj.image_3d = typeInstance.image_3d ?? null;
     obj.gallery = typeInstance.gallery ?? null;
+    obj.other = typeInstance.other ?? null;
   }
 });
 </script>
@@ -152,6 +164,18 @@ onMounted(() => {
 
       <Input v-model="obj.area_m2" placeholder="62.5" label="area m²" is-float required />
       <Input v-model="obj.rooms_count" placeholder="3" label="Rooms count" type="number" />
+
+      <button @click.prevent="addOther">Add other type</button>
+
+      <div class="w-full space-y-2">
+        <div v-for="(other, i) in obj.other" :key="i" class="flex w-full items-end justify-center gap-2">
+          <button @click.prevent="removeOther(i)" class="[&_svg]:h-7 [&_svg]:w-7">
+            <Delete />
+          </button>
+          <Input v-model="other.key" placeholder="" label="Key" class="w-full" />
+          <Input v-model="other.value" placeholder="" label="Value" class="w-full" />
+        </div>
+      </div>
 
       <UploadImg
         v-model="obj.image_2d"

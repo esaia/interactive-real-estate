@@ -17,6 +17,7 @@ import { useFlatsStore } from "@/src/stores/useFlats";
 import UploadImg from "../form/UploadImg.vue";
 import Radio from "../form/Radio.vue";
 import Checkbox from "../form/Checkbox.vue";
+import Delete from "../icons/Delete.vue";
 
 const emits = defineEmits<{
   (e: "setActiveFlat", activeType: FlatItem): void;
@@ -58,6 +59,7 @@ const obj = reactive<any>({
     teaser: "",
     area_m2: "",
     rooms_count: "",
+    other: [{ key: "", value: "" }],
     image_2d: "",
     image_3d: ""
   }
@@ -96,6 +98,15 @@ const blockSelectData = computed(() => {
     }) || []
   );
 });
+
+const addOther = () => {
+  if (!obj?.type?.other) obj.type.other = [];
+  obj.type.other.push({ key: "", value: "" });
+};
+
+const removeOther = (index: number) => {
+  obj.type?.other?.splice(index, 1);
+};
 
 const submitForm = async () => {
   const params = {
@@ -250,7 +261,6 @@ onMounted(() => {
 
         <Checkbox v-model="obj.follow_link.target" title="Open in new window" class="mt-2" />
       </div>
-      <!-- <Select v-model="obj.block_id" :data="[]" label="Block" clearable /> -->
 
       <div class="my-2 h-1 w-full bg-gray-50" />
 
@@ -281,6 +291,18 @@ onMounted(() => {
 
         <Input v-model="obj.type.area_m2" placeholder="62.5" label="area m²" is-float />
         <Input v-model="obj.type.rooms_count" placeholder="3" label="Rooms count" type="number" />
+
+        <button @click.prevent="addOther">Add other type</button>
+
+        <div class="w-full space-y-2">
+          <div v-for="(other, i) in obj.type.other" :key="i" class="flex w-full items-end justify-center gap-2">
+            <button @click.prevent="removeOther(i)" class="[&_svg]:h-7 [&_svg]:w-7">
+              <Delete />
+            </button>
+            <Input v-model="other.key" placeholder="" label="Key" class="w-full" />
+            <Input v-model="other.value" placeholder="" label="Value" class="w-full" />
+          </div>
+        </div>
 
         <UploadImg
           v-model="obj.type.image_2d"

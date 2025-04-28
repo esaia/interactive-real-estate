@@ -96,6 +96,7 @@ class Irep_Type
     public function create_type($data)
     {
 
+
         $data = [
             'nonce'        => isset($data['nonce']) ? sanitize_text_field($data['nonce']) : '',
             'action'       => isset($data['action']) ? sanitize_key($data['action']) : '',
@@ -105,8 +106,9 @@ class Irep_Type
             'area_m2'      => isset($data['area_m2']) ? floatval($data['area_m2']) : 0,
             'rooms_count'  => isset($data['rooms_count']) ? absint($data['rooms_count']) : 0,
             'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
-            'image_2d'     => $data['image_2d'],
-            'image_3d'     => $data['image_3d'],
+            'image_2d'     => isset($data['image_2d']) ? $data['image_2d'] : null,
+            'image_3d'     => isset($data['image_3d']) ? $data['image_3d'] : null,
+            'other'        => $this->sanitize_other_field(isset($data['other']) ? $data['other'] : []),
         ];
 
 
@@ -128,6 +130,8 @@ class Irep_Type
         if (!empty($data['image_3d'])) {
             $non_required_data['image_3d'] = irep_handle_json_data($data['image_3d']);
         }
+
+        $non_required_data['other'] = irep_handle_json_data($data['other']);
 
         // Merge required and optional data before inserting into the database
         $data = array_merge($required_data, $non_required_data);
@@ -167,7 +171,9 @@ class Irep_Type
             'project_id'   => isset($data['project_id']) ? absint($data['project_id']) : 0,
             'image_2d'     => isset($data['image_2d']) ? $data['image_2d'] : '',
             'image_3d'     => isset($data['image_3d']) ? $data['image_3d'] : '',
+            'other'        => $this->sanitize_other_field(isset($data['other']) ? $data['other'] : []),
         ];
+
 
         irep_check_nonce($data['nonce'], 'irep_nonce');
         irep_has_project_id($data);
@@ -194,6 +200,7 @@ class Irep_Type
 
         $params['image_2d'] = irep_handle_json_data($data['image_2d']) ?? null;
         $params['image_3d'] = irep_handle_json_data($data['image_3d']) ?? null;
+        $params['other'] = irep_handle_json_data($data['other']) ?? null;
 
 
         $updated_block = Irep_DB::table($this->table_name)->where('id', '=',  $type_id)->update($params);
@@ -259,8 +266,28 @@ class Irep_Type
             $item['image_3d'] = array_map('irep_get_image_instance', $image_3d_ids);
         }
 
+
+        if ($item['other']) {
+            $item['other'] = irep_handle_json_data($item['other']);
+        }
+
         // Return the modified item
         return $item;
+    }
+
+
+    private function sanitize_other_field($other)
+    {
+        if (!is_array($other)) {
+            return [];
+        }
+
+        return array_map(function ($item) {
+            return [
+                'key'   => isset($item['key']) ? sanitize_text_field($item['key']) : '',
+                'value' => isset($item['value']) ? sanitize_text_field($item['value']) : '',
+            ];
+        }, $other);
     }
 }
 

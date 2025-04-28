@@ -136,6 +136,7 @@ class Irep_Flat
                 'teaser'      => isset($data['type']['teaser']) ? sanitize_textarea_field($data['type']['teaser']) : '',
                 'area_m2'     => isset($data['type']['area_m2']) ? floatval($data['type']['area_m2']) : 0.0,
                 'rooms_count' => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
+                'other'           => $this->sanitize_other_field(isset($data['type']['other']) ? $data['type']['other'] : []),
                 'image_2d'    => isset($data['type']['image_2d']) && is_array($data['type']['image_2d'])
                     ? array_map('absint', $data['type']['image_2d'])
                     : [],
@@ -222,6 +223,7 @@ class Irep_Flat
                 'teaser'          => isset($data['type']['teaser']) ? sanitize_textarea_field($data['type']['teaser']) : '',
                 'area_m2'         => isset($data['type']['area_m2']) ? floatval($data['type']['area_m2']) : 0.0,
                 'rooms_count'     => isset($data['type']['rooms_count']) ? absint($data['type']['rooms_count']) : 0,
+                'other'           => $this->sanitize_other_field(isset($data['type']['other']) ? $data['type']['other'] : []),
                 'image_2d'        => isset($data['type']['image_2d']) && is_array($data['type']['image_2d'])
                     ? array_map('absint', $data['type']['image_2d'])
                     : [],
@@ -267,6 +269,7 @@ class Irep_Flat
 
         $params['type'] = irep_handle_json_data($data['type']);
         $params['follow_link'] = irep_handle_json_data($data['follow_link']);
+
 
         $updated_flat = Irep_DB::table($this->table_name)->where('id', '=',  $flat_id)->update($params);
 
@@ -341,14 +344,36 @@ class Irep_Flat
 
 
         // Process image data for 2D and 3D images, if available
-        if (is_array($item['type']) && isset($item['type']['image_2d']) && !empty($item['type']['image_2d'])) {
-            $item['type']['image_2d'] = array_map('irep_get_image_instance', $item['type']['image_2d']);
-        }
-        if (is_array($item['type']) && isset($item['type']['image_3d']) && !empty($item['type']['image_3d'])) {
-            $item['type']['image_3d'] = array_map('irep_get_image_instance', $item['type']['image_3d']);
+        if (is_array($item['type'])) {
+            if (isset($item['type']['image_2d']) && !empty($item['type']['image_2d'])) {
+                $item['type']['image_2d'] = array_map('irep_get_image_instance', $item['type']['image_2d']);
+            }
+
+            if (isset($item['type']['image_3d']) && !empty($item['type']['image_3d'])) {
+                $item['type']['image_3d'] = array_map('irep_get_image_instance', $item['type']['image_3d']);
+            }
+
+
+            $item['type']['other'] = $item['type']['other'] ?? [];
         }
 
+
         return $item;
+    }
+
+
+    private function sanitize_other_field($other)
+    {
+        if (!is_array($other)) {
+            return [];
+        }
+
+        return array_map(function ($item) {
+            return [
+                'key'   => isset($item['key']) ? sanitize_text_field($item['key']) : '',
+                'value' => isset($item['value']) ? sanitize_text_field($item['value']) : '',
+            ];
+        }, $other);
     }
 
 

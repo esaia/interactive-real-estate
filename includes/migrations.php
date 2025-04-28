@@ -96,6 +96,7 @@ function irep_create_tables()
         gallery " . ($isSQLite ? "TEXT" : "JSON") . ",
         area_m2 DECIMAL(10, 2),
         rooms_count INT,
+        other " . ($isSQLite ? "TEXT" : "JSON") . ",
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id)" .
@@ -103,9 +104,9 @@ function irep_create_tables()
     ) $charset_collate;";
 
     // Check if types table exists, if not, create it
-    if (!$wpdb->get_var("SHOW TABLES LIKE '$types_table_name'")) {
-        dbDelta($types_sql);
-    }
+    // if (!$wpdb->get_var("SHOW TABLES LIKE '$types_table_name'")) {
+    dbDelta($types_sql);
+    // }
 
     // Table for flats
     $flats_table_name = $wpdb->prefix . 'irep_flats';
