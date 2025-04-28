@@ -11,16 +11,16 @@ add_action('plugins_loaded', 'irep_check_plugin_update');
 
 function irep_check_plugin_update()
 {
-    $current_version = get_option('irep_plugin_db_version');
+    $current_version = get_option('irep_plugin_version');
 
     if (!$current_version) {
         // Assume it's a fresh install or very old install
         irep_create_tables();
-        update_option('irep_plugin_db_version', IREP_PLUGIN_DB_VERSION);
-    } elseif ($current_version !== IREP_PLUGIN_DB_VERSION) {
+        update_option('irep_plugin_version', IREP_PLUGIN_VERSION);
+    } elseif ($current_version !== IREP_PLUGIN_VERSION) {
         // Handle actual version updates later if needed
         irep_create_tables();
-        update_option('irep_plugin_db_version', IREP_PLUGIN_DB_VERSION);
+        update_option('irep_plugin_version', IREP_PLUGIN_VERSION);
     }
 }
 

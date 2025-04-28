@@ -66,7 +66,7 @@ add_action('init', function () {
     define('IREP_PLUGIN_NAME', $plugin_data['Name'] ?? 'Interactive Real Estate');
 });
 
-define('IREP_PLUGIN_DB_VERSION', '1.0.9');
+define('IREP_PLUGIN_VERSION', '1.0.9');
 define('IREP_PLUGIN_FILE', __FILE__);
 define('IREP_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('IREP_PLUGIN_URL', admin_url('admin.php?page=interactive-real-estate'));

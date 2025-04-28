@@ -13,7 +13,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 == Description ==
 [Upgrade To Pro!](https://www.ireplugin.com/pricing) | [Live Demo](https://www.ireplugin.com/demos) | [Module Demo](https://www.ireplugin.com/module) | [Support](https://www.ireplugin.com/contact)
 
-### Interactive Building Module ###
+### Interactive Image ###
 [Interactive Real Estate](https://www.ireplugin.com/) is the most innovative WordPress plugin for creating **interactive buildings** and **property displays**. Quickly add pins, vector shapes, and create SVG, all without needing to write any code. This plugin makes you possible to **boost apartment sales**. With easy navigation through different building layers, users can get detailed information about each unit directly from the visual interface.
 
 

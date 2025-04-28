@@ -158,7 +158,7 @@ defineExpose({
           />
         </div>
 
-        <a href="https://youtu.be/dQmqouszdK0" target="_blank" class="animate-pulse underline">
+        <a href="https://www.youtube.com/watch?v=HmF62v03PQw" target="_blank" class="animate-pulse underline">
           Watch video tutorial
         </a>
 
